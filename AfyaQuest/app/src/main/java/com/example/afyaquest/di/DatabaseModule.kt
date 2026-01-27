@@ -89,4 +89,10 @@ object DatabaseModule {
     fun provideAchievementDao(database: AfyaQuestDatabase): AchievementDao {
         return database.achievementDao()
     }
+
+    @Provides
+    @Singleton
+    fun providePendingSyncDao(database: AfyaQuestDatabase): PendingSyncDao {
+        return database.pendingSyncDao()
+    }
 }

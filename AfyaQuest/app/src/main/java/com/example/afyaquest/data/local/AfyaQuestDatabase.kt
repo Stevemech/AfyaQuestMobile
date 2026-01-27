@@ -23,9 +23,13 @@ import com.example.afyaquest.data.local.entity.*
         ClientHouseEntity::class,
         HealthFacilityEntity::class,
         ProgressEntity::class,
-        AchievementEntity::class
+        AchievementEntity::class,
+        PendingReportEntity::class,
+        PendingQuizEntity::class,
+        PendingChatEntity::class,
+        PendingClientVisitEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class, StringListConverter::class)
@@ -40,6 +44,7 @@ abstract class AfyaQuestDatabase : RoomDatabase() {
     abstract fun healthFacilityDao(): HealthFacilityDao
     abstract fun progressDao(): ProgressDao
     abstract fun achievementDao(): AchievementDao
+    abstract fun pendingSyncDao(): PendingSyncDao
 
     companion object {
         const val DATABASE_NAME = "afyaquest_database"

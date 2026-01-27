@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Afya Quest</string>
+
+    <!-- Common -->
+    <string name="ok">Sawa</string>
+    <string name="cancel">Ghairi</string>
+    <string name="save">Hifadhi</string>
+    <string name="submit">Wasilisha</string>
+    <string name="back">Rudi</string>
+    <string name="next">Ifuatayo</string>
+    <string name="done">Imekamilika</string>
+    <string name="loading">Inapakia…</string>
+    <string name="error">Hitilafu</string>
+
+    <!-- Authentication -->
+    <string name="login">Ingia</string>
+    <string name="register">Jisajili</string>
+    <string name="logout">Toka</string>
+    <string name="email">Barua pepe</string>
+    <string name="password">Nenosiri</string>
+    <string name="confirm_password">Thibitisha Nenosiri</string>
+    <string name="full_name">Jina Kamili</string>
+    <string name="phone_number">Nambari ya Simu</string>
+    <string name="forgot_password">Umesahau nenosiri?</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard">Dashibodi</string>
+    <string name="welcome">Karibu</string>
+    <string name="streak">Mfululizo</string>
+    <string name="total_xp">Jumla ya XP</string>
+    <string name="lives">Maisha</string>
+    <string name="level">Kiwango</string>
+    <string name="rank">Daraja</string>
+    <string name="daily_todo">Kazi za Kila Siku</string>
+    <string name="learning_center">Kituo cha Kujifunza</string>
+
+    <!-- Daily Tasks -->
+    <string name="daily_questions">Maswali ya Kila Siku</string>
+    <string name="daily_questions_desc">Jibu maswali matatu ya kila siku ili kukusanya XP yako ya kila siku!</string>
+    <string name="daily_itinerary">Ratiba ya Kila Siku</string>
+    <string name="daily_itinerary_desc">Pata maeneo yaliyopangwa na wagonjwa hapa!</string>
+    <string name="daily_report">Ripoti ya Kila Siku</string>
+    <string name="daily_report_desc">Jaza ripoti mwishoni mwa siku.</string>
+
+    <!-- Learning Center -->
+    <string name="video_modules">Moduli za Video</string>
+    <string name="video_modules_desc">Tazama video za elimu na fanya mitihani!</string>
+    <string name="interactive_lessons">Masomo ya Maingiliano</string>
+    <string name="interactive_lessons_desc">Soma masomo na upate XP kwa kuyakamilisha!</string>
+    <string name="chat_with_steve">Ongea na Steve</string>
+    <string name="chat_with_steve_desc">Uliza Steve, msaidizi wako wa AI wa afya, maswali yoyote!</string>
+
+    <!-- Profile -->
+    <string name="profile">Wasifu</string>
+    <string name="overview">Muhtasari</string>
+    <string name="achievements">Mafanikio</string>
+    <string name="reports">Ripoti</string>
+    <string name="settings">Mipangilio</string>
+    <string name="reflections">Tafakari</string>
+
+    <!-- Achievements -->
+    <string name="achievements_unlocked">Mafanikio Yaliyofunguliwa</string>
+    <string name="achievements_locked">Mafanikio Yaliyofungwa</string>
+    <string name="unlocked_on">Imefunguliwa tarehe</string>
+    <string name="progress">Maendeleo</string>
+
+    <!-- Weekly Reflections -->
+    <string name="weekly_reflection">Tafakari ya Kila Wiki</string>
+    <string name="success_story">Hadithi ya Mafanikio</string>
+    <string name="challenges_faced">Changamoto Zilizokumbwa</string>
+    <string name="lessons_learned">Masomo Yaliyojifunzwa</string>
+    <string name="goals_next_week">Malengo ya Wiki Ijayo</string>
+    <string name="overall_rating">Ukadiriaji wa Jumla</string>
+
+    <!-- Settings -->
+    <string name="language">Lugha</string>
+    <string name="theme">Mandhari</string>
+    <string name="notifications">Arifa</string>
+    <string name="account">Akaunti</string>
+    <string name="about">Kuhusu</string>
+    <string name="privacy_policy">Sera ya Faragha</string>
+    <string name="terms_of_service">Masharti ya Huduma</string>
+
+    <!-- Theme -->
+    <string name="light_theme">Mandhari ya Mwanga</string>
+    <string name="dark_theme">Mandhari ya Giza</string>
+    <string name="system_default">Chaguo-msingi la Mfumo</string>
+
+    <!-- Sync Status -->
+    <string name="offline">Nje ya mtandao</string>
+    <string name="syncing">Inasawazisha…</string>
+    <string name="all_synced">Yote imesawazishwa</string>
+    <string name="sync_now">Sawazisha Sasa</string>
+    <string name="items_pending">vitu vinavyosubiri</string>
+    <string name="changes_will_sync">Mabadiliko yatasawazishwa unapokuwa mtandaoni</string>
+
+    <!-- Questions -->
+    <string name="question">Swali</string>
+    <string name="correct">Sahihi!</string>
+    <string name="incorrect">Sio sahihi</string>
+    <string name="explanation">Maelezo</string>
+    <string name="continue_text">Endelea</string>
+
+    <!-- XP and Gamification -->
+    <string name="xp_earned">XP iliyopatikana</string>
+    <string name="points">Alama</string>
+    <string name="level_up">Kiwango Kimepanda!</string>
+    <string name="congratulations">Hongera!</string>
+
+    <!-- Map -->
+    <string name="map">Ramani</string>
+    <string name="client_houses">Nyumba za Wateja</string>
+    <string name="health_facilities">Vituo vya Afya</string>
+    <string name="mark_as_visited">Weka alama kama imetembelewa</string>
+    <string name="visited">Imetembelewa</string>
+    <string name="pending">Inasubiri</string>
+    <string name="cancelled">Imeghairiwa</string>
+
+    <!-- Reports -->
+    <string name="patients_visited">Wagonjwa Waliotembelewa</string>
+    <string name="vaccines_administered">Chanjo Zilizotolewa</string>
+    <string name="health_education_sessions">Vipindi vya Elimu ya Afya</string>
+    <string name="referrals">Marejeleo</string>
+    <string name="challenges">Changamoto</string>
+    <string name="notes">Maelezo</string>
+
+    <!-- Chat -->
+    <string name="chat">Mazungumzo</string>
+    <string name="type_message">Andika ujumbe…</string>
+    <string name="send">Tuma</string>
+    <string name="online">Mtandaoni</string>
+
+    <!-- Errors -->
+    <string name="error_network">Hitilafu ya mtandao. Tafadhali jaribu tena.</string>
+    <string name="error_generic">Hitilafu fulani imetokea. Tafadhali jaribu tena.</string>
+    <string name="error_login_failed">Kuingia kumeshindwa. Tafadhali angalia maelezo yako.</string>
+</resources>
