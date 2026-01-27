@@ -1,0 +1,9 @@
+{
+  "name": "auth-verify",
+  "version": "1.0.0",
+  "description": "Lambda function to verify user email via link",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.529.0"
+  }
+}
