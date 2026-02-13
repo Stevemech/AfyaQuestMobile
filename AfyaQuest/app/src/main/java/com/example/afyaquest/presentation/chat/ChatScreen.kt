@@ -25,7 +25,7 @@ import com.example.afyaquest.domain.model.ChatMessage
 import kotlinx.coroutines.launch
 
 /**
- * AI Chat screen with Steve
+ * AI Chat screen with Fred
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +54,7 @@ fun ChatScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        // Steve's avatar
+                        // Fred's avatar
                         Box(
                             modifier = Modifier
                                 .size(40.dp)
@@ -70,7 +70,7 @@ fun ChatScreen(
 
                         Column {
                             Text(
-                                text = "Steve - AI Assistant",
+                                text = "Fred - AI Assistant",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
                             )
@@ -183,7 +183,7 @@ fun MessageBubble(
         horizontalArrangement = if (message.isUser) Arrangement.End else Arrangement.Start
     ) {
         if (!message.isUser) {
-            // Steve's avatar for AI messages
+            // Fred's avatar for AI messages
             Box(
                 modifier = Modifier
                     .size(32.dp)
@@ -267,7 +267,7 @@ fun TypingIndicator() {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start
     ) {
-        // Steve's avatar
+        // Fred's avatar
         Box(
             modifier = Modifier
                 .size(32.dp)

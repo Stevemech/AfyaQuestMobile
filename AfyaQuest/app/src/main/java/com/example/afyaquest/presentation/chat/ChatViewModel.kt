@@ -32,17 +32,17 @@ class ChatViewModel @Inject constructor(
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
     init {
-        // Add initial greeting from Steve
+        // Add initial greeting from Fred
         addInitialGreeting()
     }
 
     /**
-     * Add Steve's greeting message
+     * Add Fred's greeting message
      */
     private fun addInitialGreeting() {
         val greeting = ChatMessage(
             id = "initial",
-            text = "Hey there! I'm Steve, your friendly AI health assistant for Afya Quest. I'm here to help you with health education, study tips, and any questions about the platform. What can I help you learn today? 😊",
+            text = "Hey there! I'm Fred, your friendly AI health assistant for Afya Quest. I'm here to help you with health education, study tips, and any questions about the platform. What can I help you learn today? 😊",
             isUser = false,
             timestamp = LocalDateTime.now()
         )

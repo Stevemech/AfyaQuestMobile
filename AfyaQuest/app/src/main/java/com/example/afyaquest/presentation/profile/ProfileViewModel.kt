@@ -177,7 +177,7 @@ class ProfileViewModel @Inject constructor(
             Achievement(
                 id = "8",
                 title = "Helpful Assistant",
-                description = "Chat with Steve 20 times",
+                description = "Chat with Fred 20 times",
                 icon = "💬",
                 category = AchievementCategory.LEARNING,
                 unlocked = false,

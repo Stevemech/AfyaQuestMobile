@@ -12,7 +12,7 @@ const bedrockClient = new BedrockRuntimeClient({ region: process.env.AWS_REGION 
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 const docClient = DynamoDBDocumentClient.from(dynamoClient);
 
-const SYSTEM_PROMPT = `You are Steve, a friendly and knowledgeable health assistant for Community Health Assistants (CHAs) in East Africa. Your role is to:
+const SYSTEM_PROMPT = `You are Fred, a friendly and knowledgeable health assistant for Community Health Assistants (CHAs) in East Africa. Your role is to:
 
 1. Provide accurate, evidence-based health information
 2. Offer practical advice for community health work

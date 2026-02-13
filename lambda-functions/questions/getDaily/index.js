@@ -87,12 +87,11 @@ function generateSampleQuestions(date) {
                 "Only when hands look dirty",
                 "Every 2 hours"
             ],
-            correctAnswer: "Before and after patient contact",
-            correctAnswerIndex: 1,
+            correctAnswer: 1,
             explanation: "Healthcare workers should wash hands before and after every patient contact to prevent cross-contamination and protect both patients and themselves.",
             category: "hygiene",
             points: 30,
-            difficulty: "beginner",
+            difficulty: "easy",
             order: 1
         },
         {
@@ -105,12 +104,11 @@ function generateSampleQuestions(date) {
                 "9 months",
                 "12 months"
             ],
-            correctAnswer: "9 months",
-            correctAnswerIndex: 2,
+            correctAnswer: 2,
             explanation: "The first dose of measles vaccine is typically given at 9 months of age in most African countries, with a second dose at 15-18 months.",
             category: "prevention",
             points: 30,
-            difficulty: "intermediate",
+            difficulty: "medium",
             order: 2
         },
         {
@@ -123,12 +121,11 @@ function generateSampleQuestions(date) {
                 "Crying when hungry",
                 "Passing urine 6-8 times daily"
             ],
-            correctAnswer: "Difficulty breathing or fast breathing",
-            correctAnswerIndex: 1,
+            correctAnswer: 1,
             explanation: "Difficulty breathing or fast breathing in a newborn is a danger sign indicating possible serious infection or respiratory distress, requiring immediate medical attention.",
             category: "maternal",
             points: 30,
-            difficulty: "advanced",
+            difficulty: "hard",
             order: 3
         }
     ];

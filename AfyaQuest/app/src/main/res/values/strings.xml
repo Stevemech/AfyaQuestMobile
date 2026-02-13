@@ -49,8 +49,8 @@
     <string name="video_modules_desc">Watch educational videos and take quizzes!</string>
     <string name="interactive_lessons">Interactive Lessons</string>
     <string name="interactive_lessons_desc">Read lessons and earn XP by completing them!</string>
-    <string name="chat_with_steve">Chat with Steve</string>
-    <string name="chat_with_steve_desc">Ask Steve, your AI health assistant, any questions!</string>
+    <string name="chat_with_steve">Chat with Fred</string>
+    <string name="chat_with_steve_desc">Ask Fred, your AI health assistant, any questions!</string>
 
     <!-- Profile -->
     <string name="profile">Profile</string>

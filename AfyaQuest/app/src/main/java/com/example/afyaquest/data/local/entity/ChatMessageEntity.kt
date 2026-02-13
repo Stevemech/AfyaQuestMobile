@@ -7,7 +7,7 @@ import com.example.afyaquest.data.local.converters.DateConverter
 import java.util.Date
 
 /**
- * Room entity representing a chat message with the AI assistant (Steve).
+ * Room entity representing a chat message with the AI assistant (Fred).
  */
 @Entity(tableName = "chat_messages")
 @TypeConverters(DateConverter::class)

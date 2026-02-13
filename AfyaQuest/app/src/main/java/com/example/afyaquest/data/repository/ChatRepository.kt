@@ -60,7 +60,7 @@ class ChatRepository @Inject constructor(
 
         return when {
             lowerMessage.contains("hello") || lowerMessage.contains("hi") || lowerMessage.contains("hey") -> {
-                "Hey there! 😊 I'm Steve, your AI health assistant. I'm here to help you with health education, study tips, and any questions about Afya Quest. What can I help you learn today?"
+                "Hey there! 😊 I'm Fred, your AI health assistant. I'm here to help you with health education, study tips, and any questions about Afya Quest. What can I help you learn today?"
             }
             lowerMessage.contains("handwashing") || lowerMessage.contains("wash hands") -> {
                 "Great question about handwashing! 🧼 Remember the 7 steps: wet, apply soap, rub palms, between fingers, backs of hands, under nails, and rinse thoroughly for at least 20 seconds. This is one of the best ways to prevent disease transmission!"

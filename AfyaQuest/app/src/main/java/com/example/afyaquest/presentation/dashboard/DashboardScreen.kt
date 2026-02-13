@@ -370,8 +370,8 @@ fun LearningCenterSection(navController: NavController) {
         // AI Chat Assistant
         TaskCard(
             icon = "💬",
-            title = "Chat with Steve",
-            description = "Ask Steve, your AI health assistant, any questions!",
+            title = "Chat with Fred",
+            description = "Ask Fred, your AI health assistant, any questions!",
             isRequired = false,
             onClick = {
                 navController.navigate(Screen.Chat.route)

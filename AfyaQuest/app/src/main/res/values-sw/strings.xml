@@ -49,8 +49,8 @@
     <string name="video_modules_desc">Tazama video za elimu na fanya mitihani!</string>
     <string name="interactive_lessons">Masomo ya Maingiliano</string>
     <string name="interactive_lessons_desc">Soma masomo na upate XP kwa kuyakamilisha!</string>
-    <string name="chat_with_steve">Ongea na Steve</string>
-    <string name="chat_with_steve_desc">Uliza Steve, msaidizi wako wa AI wa afya, maswali yoyote!</string>
+    <string name="chat_with_steve">Ongea na Fred</string>
+    <string name="chat_with_steve_desc">Uliza Fred, msaidizi wako wa AI wa afya, maswali yoyote!</string>
 
     <!-- Profile -->
     <string name="profile">Wasifu</string>
