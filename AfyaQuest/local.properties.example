@@ -1,9 +1,9 @@
 # AWS Configuration
-aws.cognito.userPoolId=us-east-1_MxKriIgiC
-aws.cognito.clientId=3qkth9j9bcvvhl9b6q7ml7qih
+aws.cognito.userPoolId=us-east-1_VnugwDOMb
+aws.cognito.clientId=70vjg3trmh44me8b7bnvm6e8va
 aws.cognito.region=us-east-1
-api.gateway.baseUrl=https://qsk3ji709f.execute-api.us-east-1.amazonaws.com/prod
-cloudfront.domain=https://d1ghxtad04gj5x.cloudfront.net
+api.gateway.baseUrl=https://wyx1eyddt3.execute-api.us-east-1.amazonaws.com/prod
+cloudfront.domain=https://d2c7svayh8fll3.cloudfront.net
 dynamodb.table=AfyaQuestData
 dynamodb.region=us-east-1
 

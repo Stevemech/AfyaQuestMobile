@@ -9,7 +9,7 @@ echo "🚀 Starting Lambda deployment..."
 
 # Configuration
 REGION="us-east-1"
-ROLE_ARN="arn:aws:iam::556683673972:role/AfyaQuest-Lambda-Role"
+ROLE_ARN="arn:aws:iam::756401225362:role/AfyaQuest-Lambda-Role"
 RUNTIME="nodejs20.x"
 TIMEOUT=30
 MEMORY=512
@@ -17,8 +17,8 @@ MEMORY=512
 # Environment variables
 TABLE_NAME="AfyaQuestData"
 COGNITO_CLIENT_ID="${COGNITO_CLIENT_ID:-YOUR_CLIENT_ID}"
-CLOUDFRONT_DOMAIN="${CLOUDFRONT_DOMAIN:-d1ghxtad04gj5x.cloudfront.net}"
-S3_BUCKET="afyaquest-media"
+CLOUDFRONT_DOMAIN="${CLOUDFRONT_DOMAIN:-d2c7svayh8fll3.cloudfront.net}"
+S3_BUCKET="afyaquest-media-756401225362"
 BEDROCK_MODEL_ID="anthropic.claude-3-5-sonnet-20241022-v2:0"
 
 # Array of Lambda functions
