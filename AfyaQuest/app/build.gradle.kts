@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,6 +12,10 @@ plugins {
 android {
     namespace = "com.example.afyaquest"
     compileSdk = 36
+
+    val localProperties = Properties().apply {
+        rootProject.file("local.properties").takeIf { it.exists() }?.let { load(FileInputStream(it)) }
+    }
 
     defaultConfig {
         applicationId = "com.example.afyaquest"
@@ -22,6 +29,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] =
+            localProperties.getProperty("google.maps.apiKey", "")
     }
 
     buildTypes {
