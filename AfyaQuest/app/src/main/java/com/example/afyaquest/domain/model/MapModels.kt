@@ -40,3 +40,17 @@ enum class VisitStatus {
     VISITED,
     SCHEDULED
 }
+
+/**
+ * A single stop in the daily itinerary (ordered).
+ * Used to show "these are your stops for the day, do them in this order".
+ */
+data class ItineraryStop(
+    val order: Int,
+    val id: String,
+    val label: String,
+    val address: String,
+    val latitude: Double,
+    val longitude: Double,
+    val description: String? = null
+)

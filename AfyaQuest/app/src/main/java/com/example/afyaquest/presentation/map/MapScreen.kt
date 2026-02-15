@@ -1,31 +1,51 @@
 package com.example.afyaquest.presentation.map
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.LocalHospital
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.afyaquest.domain.model.ClientHouse
 import com.example.afyaquest.domain.model.HealthFacility
+import com.example.afyaquest.domain.model.ItineraryStop
 import com.example.afyaquest.domain.model.VisitStatus
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
+import com.google.maps.android.compose.rememberCameraPositionState
 
 /**
  * Map/Itinerary screen
- * Shows list of client houses to visit and health facilities
- * TODO: Integrate Google Maps for visual map display
+ * Shows Google Map with daily itinerary path, ordered stops list, client houses, and health facilities.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,14 +54,37 @@ fun MapScreen(
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val healthFacilities by viewModel.healthFacilities.collectAsState()
-    val selectedClient by viewModel.selectedClient.collectAsState()
+    val clientHouses by viewModel.clientHouses.collectAsState()
     val statusFilter by viewModel.statusFilter.collectAsState()
-    val filteredClients = viewModel.getFilteredClients()
+    val filteredClients = remember(clientHouses, statusFilter) {
+        if (statusFilter == null) clientHouses
+        else clientHouses.filter { it.status == statusFilter }
+    }
+    val dailyStops by viewModel.dailyItineraryStops.collectAsState()
+    // Collect real-time device location so route and "You are here" marker update when GPS changes.
+    val liveLocationLat by viewModel.liveLocationLatitude.collectAsState()
+    val liveLocationLng by viewModel.liveLocationLongitude.collectAsState()
+    val fullRoutePoints = remember(liveLocationLat, liveLocationLng, dailyStops) {
+        viewModel.getFullRoutePoints()
+    }
+
+    val context = LocalContext.current
+    // Permission launcher: when user grants ACCESS_FINE_LOCATION, start receiving GPS updates.
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) viewModel.startLocationUpdates()
+    }
+    LaunchedEffect(Unit) {
+        when (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            PackageManager.PERMISSION_GRANTED -> viewModel.startLocationUpdates()
+            else -> permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
 
     var showClientDetails by remember { mutableStateOf<ClientHouse?>(null) }
     var selectedTab by remember { mutableStateOf(0) }
 
-    // Show client details dialog
     showClientDetails?.let { client ->
         ClientDetailsDialog(
             client = client,
@@ -70,25 +113,39 @@ fun MapScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Tabs for Client Houses vs Health Facilities
             TabRow(selectedTabIndex = selectedTab) {
                 Tab(
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 },
-                    text = { Text("Client Houses") }
+                    text = { Text("Map") },
+                    icon = { Icon(Icons.Default.Map, contentDescription = null) }
                 )
                 Tab(
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 },
-                    text = { Text("Health Facilities") }
+                    text = { Text("Client Stops") },
+                    icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) }
+                )
+                Tab(
+                    selected = selectedTab == 2,
+                    onClick = { selectedTab = 2 },
+                    text = { Text("Health Facilities") },
+                    icon = { Icon(Icons.Default.LocalHospital, contentDescription = null) }
                 )
             }
 
             when (selectedTab) {
-                0 -> {
-                    // Client Houses tab
+                0 -> MapAndItineraryTab(
+                    dailyStops = dailyStops,
+                    fullRoutePoints = fullRoutePoints,
+                    liveLocationLat = liveLocationLat,
+                    liveLocationLng = liveLocationLng,
+                    defaultLat = viewModel.defaultLatitude,
+                    defaultLng = viewModel.defaultLongitude,
+                    defaultZoom = viewModel.defaultZoom
+                )
+                1 -> {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        // Status filter chips
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -116,8 +173,6 @@ fun MapScreen(
                                 label = { Text("Scheduled") }
                             )
                         }
-
-                        // Client houses list
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -132,18 +187,154 @@ fun MapScreen(
                         }
                     }
                 }
-                1 -> {
-                    // Health Facilities tab
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(healthFacilities) { facility ->
-                            HealthFacilityCard(facility = facility)
-                        }
+                2 -> LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(healthFacilities) { facility ->
+                        HealthFacilityCard(facility = facility)
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MapAndItineraryTab(
+    dailyStops: List<ItineraryStop>,
+    fullRoutePoints: List<Pair<Double, Double>>,
+    liveLocationLat: Double,
+    liveLocationLng: Double,
+    defaultLat: Double,
+    defaultLng: Double,
+    defaultZoom: Float
+) {
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(LatLng(defaultLat, defaultLng), defaultZoom)
+    }
+    val routeLatLngs = fullRoutePoints.map { LatLng(it.first, it.second) }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Map preview (in-app) with live location and route
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(280.dp)
+        ) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+                properties = remember { MapProperties() },
+                uiSettings = remember { MapUiSettings(zoomControlsEnabled = true) }
+            ) {
+                // Route: live location → stop 1 → stop 2 → …
+                routeLatLngs.takeIf { it.size >= 2 }?.let { points ->
+                    Polyline(
+                        points = points,
+                        color = MaterialTheme.colorScheme.primary,
+                        width = 12f,
+                        geodesic = true
+                    )
+                }
+                // Live location marker: real device GPS (Fused Location Provider) or default until first fix
+                Marker(
+                    state = MarkerState(position = LatLng(liveLocationLat, liveLocationLng)),
+                    title = "You are here",
+                    snippet = "Your location",
+                    icon = com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(
+                        com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_CYAN
+                    )
+                )
+                dailyStops.forEach { stop ->
+                    Marker(
+                        state = MarkerState(position = LatLng(stop.latitude, stop.longitude)),
+                        title = "${stop.order}. ${stop.label}",
+                        snippet = stop.address
+                    )
+                }
+            }
+        }
+
+        // "These are your stops for the day, do them in this order"
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Your stops for the day!",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                dailyStops.forEach { stop ->
+                    ItineraryStopRow(stop = stop)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = "Placeholder locations in Guatemala. Your location uses device GPS when permission is granted.",
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun ItineraryStopRow(stop: ItineraryStop) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                MaterialTheme.colorScheme.surface,
+                RoundedCornerShape(8.dp)
+            )
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Surface(
+            shape = RoundedCornerShape(8.dp),
+            color = MaterialTheme.colorScheme.primary
+        ) {
+            Text(
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                text = "${stop.order}",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = stop.label,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = stop.address,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            stop.description?.let { desc ->
+                Text(
+                    text = desc,
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.9f)
+                )
             }
         }
     }
