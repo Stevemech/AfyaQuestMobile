@@ -89,7 +89,7 @@ zip -r function.zip .
 aws lambda update-function-code \
   --function-name auth-register \
   --zip-file fileb://function.zip \
-  --region us-east-1
+  --region af-south-1
 ```
 
 ## Testing Functions
@@ -101,7 +101,7 @@ aws lambda invoke \
   --payload '{
     "body": "{\"email\":\"test@example.com\",\"password\":\"Test123!\",\"name\":\"Test User\",\"phone\":\"+254712345678\"}"
   }' \
-  --region us-east-1 \
+  --region af-south-1 \
   response.json
 cat response.json
 ```
@@ -113,7 +113,7 @@ aws lambda invoke \
   --payload '{
     "body": "{\"email\":\"test@example.com\",\"password\":\"Test123!\"}"
   }' \
-  --region us-east-1 \
+  --region af-south-1 \
   response.json
 cat response.json
 ```
@@ -123,7 +123,7 @@ cat response.json
 aws lambda invoke \
   --function-name questions-getDaily \
   --payload '{}' \
-  --region us-east-1 \
+  --region af-south-1 \
   response.json
 cat response.json
 ```
@@ -142,7 +142,7 @@ aws lambda invoke \
       }
     }
   }' \
-  --region us-east-1 \
+  --region af-south-1 \
   response.json
 cat response.json
 ```

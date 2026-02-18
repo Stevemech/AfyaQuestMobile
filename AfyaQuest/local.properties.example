@@ -1,11 +1,11 @@
 # AWS Configuration
-aws.cognito.userPoolId=us-east-1_VnugwDOMb
-aws.cognito.clientId=70vjg3trmh44me8b7bnvm6e8va
-aws.cognito.region=us-east-1
-api.gateway.baseUrl=https://wyx1eyddt3.execute-api.us-east-1.amazonaws.com/prod
-cloudfront.domain=https://d2c7svayh8fll3.cloudfront.net
+aws.cognito.userPoolId=af-south-1_YOUR_POOL_ID
+aws.cognito.clientId=YOUR_CLIENT_ID
+aws.cognito.region=af-south-1
+api.gateway.baseUrl=https://YOUR_API_ID.execute-api.af-south-1.amazonaws.com/prod
+cloudfront.domain=https://YOUR_CLOUDFRONT_DOMAIN.cloudfront.net
 dynamodb.table=AfyaQuestData
-dynamodb.region=us-east-1
+dynamodb.region=af-south-1
 
 # Google Maps API Key (Optional - get from Google Cloud Console)
 google.maps.apiKey=YOUR_GOOGLE_MAPS_API_KEY_HERE

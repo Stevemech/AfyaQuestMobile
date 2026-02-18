@@ -16,12 +16,12 @@ echo "📦 Creating deployment package..."
 zip -r function.zip . -x "*.sh" -x "*.md"
 
 # Check if function exists
-if aws lambda get-function --function-name auth-verify --region us-east-1 >/dev/null 2>&1; then
+if aws lambda get-function --function-name auth-verify --region af-south-1 >/dev/null 2>&1; then
     echo "♻️  Updating existing function..."
     aws lambda update-function-code \
         --function-name auth-verify \
         --zip-file fileb://function.zip \
-        --region us-east-1
+        --region af-south-1
 else
     echo "🆕 Creating new function..."
     aws lambda create-function \
@@ -32,7 +32,7 @@ else
         --zip-file fileb://function.zip \
         --timeout 30 \
         --memory-size 512 \
-        --region us-east-1 \
+        --region af-south-1 \
         --environment Variables="{COGNITO_CLIENT_ID=70vjg3trmh44me8b7bnvm6e8va}"
 fi
 

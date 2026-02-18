@@ -8,7 +8,7 @@ set -e
 echo "🚀 Starting Lambda deployment..."
 
 # Configuration
-REGION="us-east-1"
+REGION="af-south-1"
 ROLE_ARN="arn:aws:iam::756401225362:role/AfyaQuest-Lambda-Role"
 RUNTIME="nodejs20.x"
 TIMEOUT=30
@@ -26,8 +26,13 @@ declare -A LAMBDAS=(
     ["auth/register"]="auth-register"
     ["auth/login"]="auth-login"
     ["auth/getCurrentUser"]="auth-getCurrentUser"
+    ["auth/verify"]="auth-verify"
     ["chat/sendMessage"]="chat-sendMessage"
     ["questions/getDaily"]="questions-getDaily"
+    ["progress/getUser"]="progress-getUser"
+    ["progress/updateLesson"]="progress-updateLesson"
+    ["progress/submitQuiz"]="progress-submitQuiz"
+    ["progress/updateStreak"]="progress-updateStreak"
 )
 
 # Function to deploy a Lambda

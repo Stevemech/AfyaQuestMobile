@@ -21,7 +21,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     // TODO: Replace with your actual API URL from local.properties
-    private const val BASE_URL = "https://wyx1eyddt3.execute-api.us-east-1.amazonaws.com/prod/"
+    private const val BASE_URL = "https://wyx1eyddt3.execute-api.af-south-1.amazonaws.com/prod/"
 
     @Provides
     @Singleton

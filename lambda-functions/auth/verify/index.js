@@ -5,7 +5,7 @@
 
 const { CognitoIdentityProviderClient, ConfirmSignUpCommand } = require("@aws-sdk/client-cognito-identity-provider");
 
-const cognitoClient = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
 
 exports.handler = async (event) => {
     console.log('Verify request:', JSON.stringify(event, null, 2));

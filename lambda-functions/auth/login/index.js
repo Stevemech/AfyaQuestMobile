@@ -7,9 +7,8 @@ const { CognitoIdentityProviderClient, InitiateAuthCommand } = require("@aws-sdk
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, GetCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 
-// All services in us-east-1
-const cognitoClient = new CognitoIdentityProviderClient({ region: 'us-east-1' });
-const dynamoClient = new DynamoDBClient({ region: 'us-east-1' });
+const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
+const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 const docClient = DynamoDBDocumentClient.from(dynamoClient);
 
 exports.handler = async (event) => {
