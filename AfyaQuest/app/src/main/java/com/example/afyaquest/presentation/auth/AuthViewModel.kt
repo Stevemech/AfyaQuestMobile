@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.afyaquest.data.repository.AuthRepository
 import com.example.afyaquest.domain.model.User
+import com.example.afyaquest.util.LanguageManager
 import com.example.afyaquest.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -15,8 +16,22 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val languageManager: LanguageManager
 ) : ViewModel() {
+
+    val currentLanguage: StateFlow<String> = languageManager.getCurrentLanguageFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = languageManager.getCurrentLanguage()
+        )
+
+    fun changeLanguage(languageCode: String) {
+        viewModelScope.launch {
+            languageManager.setLanguage(languageCode)
+        }
+    }
 
     private val _loginState = MutableStateFlow<Resource<User>?>(null)
     val loginState: StateFlow<Resource<User>?> = _loginState.asStateFlow()

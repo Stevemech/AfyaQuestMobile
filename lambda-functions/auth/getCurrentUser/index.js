@@ -13,8 +13,9 @@ exports.handler = async (event) => {
     console.log('Get current user request:', JSON.stringify(event, null, 2));
 
     try {
-        // Extract user ID from Cognito authorizer
-        const userId = event.requestContext?.authorizer?.claims?.sub;
+        // Extract user ID from Cognito authorizer (HTTP API v2 JWT format)
+        const userId = event.requestContext?.authorizer?.jwt?.claims?.sub
+            || event.requestContext?.authorizer?.claims?.sub;
 
         if (!userId) {
             return {

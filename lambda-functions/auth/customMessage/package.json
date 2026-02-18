@@ -1,0 +1,6 @@
+{
+  "name": "auth-custom-message",
+  "version": "1.0.0",
+  "description": "Cognito Custom Message trigger for AfyaQuest email verification",
+  "main": "index.js"
+}

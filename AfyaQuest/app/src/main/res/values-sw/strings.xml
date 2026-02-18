@@ -24,6 +24,13 @@
     <string name="full_name">Jina Kamili</string>
     <string name="phone_number">Nambari ya Simu</string>
     <string name="forgot_password">Umesahau nenosiri?</string>
+    <string name="welcome_back">Karibu Tena</string>
+    <string name="sign_in_subtitle">Ingia ili kuendelea na safari yako ya afya</string>
+    <string name="sign_in">Ingia</string>
+    <string name="no_account">Huna akaunti?</string>
+    <string name="sign_up">Jisajili</string>
+    <string name="show_password">Onyesha nenosiri</string>
+    <string name="hide_password">Ficha nenosiri</string>
 
     <!-- Dashboard -->
     <string name="dashboard">Dashibodi</string>

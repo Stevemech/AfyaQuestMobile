@@ -24,6 +24,13 @@
     <string name="full_name">Full Name</string>
     <string name="phone_number">Phone Number</string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="sign_in_subtitle">Sign in to continue your health journey</string>
+    <string name="sign_in">Sign In</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
 
     <!-- Dashboard -->
     <string name="dashboard">Dashboard</string>

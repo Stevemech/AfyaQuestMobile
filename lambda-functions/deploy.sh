@@ -5,6 +5,8 @@
 
 set -e
 
+export AWS_PROFILE=afyaquest
+
 echo "🚀 Starting Lambda deployment..."
 
 # Configuration
@@ -16,7 +18,7 @@ MEMORY=512
 
 # Environment variables
 TABLE_NAME="AfyaQuestData"
-COGNITO_CLIENT_ID="${COGNITO_CLIENT_ID:-YOUR_CLIENT_ID}"
+COGNITO_CLIENT_ID="${COGNITO_CLIENT_ID:-3oj94klb6jejp4lbal9ninv870}"
 CLOUDFRONT_DOMAIN="${CLOUDFRONT_DOMAIN:-d2c7svayh8fll3.cloudfront.net}"
 S3_BUCKET="afyaquest-media-756401225362"
 BEDROCK_MODEL_ID="anthropic.claude-3-5-sonnet-20241022-v2:0"
@@ -27,6 +29,7 @@ declare -A LAMBDAS=(
     ["auth/login"]="auth-login"
     ["auth/getCurrentUser"]="auth-getCurrentUser"
     ["auth/verify"]="auth-verify"
+    ["auth/customMessage"]="auth-customMessage"
     ["chat/sendMessage"]="chat-sendMessage"
     ["questions/getDaily"]="questions-getDaily"
     ["progress/getUser"]="progress-getUser"
