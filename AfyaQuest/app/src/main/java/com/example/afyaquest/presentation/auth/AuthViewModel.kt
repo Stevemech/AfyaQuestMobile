@@ -57,7 +57,7 @@ class AuthViewModel @Inject constructor(
      */
     fun login(email: String, password: String) {
         viewModelScope.launch {
-            authRepository.login(email, password)
+            authRepository.login(email.trim(), password)
                 .collect { resource ->
                     _loginState.value = resource
                     if (resource is Resource.Success) {
@@ -81,7 +81,7 @@ class AuthViewModel @Inject constructor(
         phone: String?
     ) {
         viewModelScope.launch {
-            authRepository.register(email, password, name, phone)
+            authRepository.register(email.trim(), password, name.trim(), phone?.trim())
                 .collect { resource ->
                     _registerState.value = resource
                 }
