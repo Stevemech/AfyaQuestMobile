@@ -1,5 +1,6 @@
 package com.example.afyaquest.presentation.settings
 
+import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.afyaquest.presentation.profile.ProfileViewModel
 import com.example.afyaquest.util.LanguageManager
+import kotlinx.coroutines.launch
 
 /**
  * Settings screen
@@ -30,6 +33,8 @@ fun SettingsScreen(
 ) {
     val currentLanguage by viewModel.currentLanguage.collectAsState()
     var showLanguageDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -166,8 +171,11 @@ fun SettingsScreen(
             currentLanguage = currentLanguage,
             onDismiss = { showLanguageDialog = false },
             onLanguageSelected = { languageCode ->
-                viewModel.changeLanguage(languageCode)
-                showLanguageDialog = false
+                scope.launch {
+                    viewModel.changeLanguage(languageCode)
+                    showLanguageDialog = false
+                    (context as? Activity)?.recreate()
+                }
             }
         )
     }

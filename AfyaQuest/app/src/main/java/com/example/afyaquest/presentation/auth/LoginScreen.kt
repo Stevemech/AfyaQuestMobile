@@ -1,5 +1,6 @@
 package com.example.afyaquest.presentation.auth
 
+import android.app.Activity
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,6 +36,7 @@ import com.example.afyaquest.R
 import com.example.afyaquest.presentation.navigation.Screen
 import com.example.afyaquest.util.LanguageManager
 import com.example.afyaquest.util.Resource
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 /**
@@ -54,6 +56,7 @@ fun LoginScreen(
     val focusManager = LocalFocusManager.current
     val snackbarHostState = remember { SnackbarHostState() }
     val currentLanguage by viewModel.currentLanguage.collectAsState()
+    val scope = rememberCoroutineScope()
 
     // Create a locale-aware context so stringResource() updates instantly
     val context = LocalContext.current
@@ -95,7 +98,12 @@ fun LoginScreen(
                 // Language toggle at the top
                 LanguageToggle(
                     currentLanguage = currentLanguage,
-                    onLanguageSelected = { viewModel.changeLanguage(it) },
+                    onLanguageSelected = { lang ->
+                        scope.launch {
+                            viewModel.changeLanguage(lang)
+                            (context as? Activity)?.recreate()
+                        }
+                    },
                     modifier = Modifier.align(Alignment.TopEnd)
                 )
 

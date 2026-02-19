@@ -1,5 +1,6 @@
 package com.example.afyaquest.presentation.report
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.afyaquest.domain.model.DailyReport
@@ -10,6 +11,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import com.example.afyaquest.R
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,6 +23,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class DailyReportViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val xpManager: XpManager
     // TODO: Inject ReportsRepository when backend is ready
 ) : ViewModel() {
@@ -42,12 +46,12 @@ class DailyReportViewModel @Inject constructor(
     private val _submissionState = MutableStateFlow<Resource<String>?>(null)
     val submissionState: StateFlow<Resource<String>?> = _submissionState.asStateFlow()
 
-    val healthEducationTopics = listOf(
-        "Hygiene",
-        "Nutrition",
-        "Disease Prevention",
-        "Maternal Health",
-        "Child Care"
+    val healthEducationTopics: List<String> get() = listOf(
+        context.getString(R.string.category_hygiene),
+        context.getString(R.string.category_nutrition),
+        context.getString(R.string.category_disease_prevention),
+        context.getString(R.string.category_maternal_health),
+        context.getString(R.string.category_child_care)
     )
 
     fun setPatientsVisited(value: String) {
@@ -90,7 +94,7 @@ class DailyReportViewModel @Inject constructor(
      */
     fun submitReport() {
         if (!isFormValid()) {
-            _submissionState.value = Resource.Error("Please fill in all required fields")
+            _submissionState.value = Resource.Error(context.getString(R.string.fill_required_fields))
             return
         }
 
@@ -122,11 +126,11 @@ class DailyReportViewModel @Inject constructor(
                     "Submitted daily report"
                 )
 
-                _submissionState.value = Resource.Success("Report submitted successfully!")
+                _submissionState.value = Resource.Success(context.getString(R.string.report_submitted_success))
 
             } catch (e: Exception) {
                 _submissionState.value = Resource.Error(
-                    e.localizedMessage ?: "Failed to submit report"
+                    e.localizedMessage ?: context.getString(R.string.submission_failed)
                 )
             }
         }

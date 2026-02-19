@@ -1,9 +1,12 @@
 package com.example.afyaquest.presentation.videomodules
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.example.afyaquest.R
 import com.example.afyaquest.domain.model.VideoCategory
 import com.example.afyaquest.domain.model.VideoModule
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,6 +17,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class VideoModulesViewModel @Inject constructor(
+    @ApplicationContext private val context: Context
     // TODO: Inject VideosRepository when backend is ready
 ) : ViewModel() {
 
@@ -48,12 +52,12 @@ class VideoModulesViewModel @Inject constructor(
      * In production, this would fetch from API
      */
     private fun loadVideos() {
-        // Sample video data
+        // Sample video data - titles and descriptions from localized strings
         _videos.value = listOf(
             VideoModule(
                 id = "1",
-                title = "Module 1: Health Assessments",
-                description = "Learn how to conduct comprehensive health assessments using the Medical Detective's Handbook",
+                title = context.getString(R.string.video_module_1_title),
+                description = context.getString(R.string.video_module_1_desc),
                 thumbnail = "🎬",
                 duration = "6:50",
                 category = VideoCategory.BASICS,
@@ -62,8 +66,8 @@ class VideoModulesViewModel @Inject constructor(
             ),
             VideoModule(
                 id = "2",
-                title = "Module 2: Water Sanitation Practices",
-                description = "Understanding water treatment and safe storage",
+                title = context.getString(R.string.video_module_2_title),
+                description = context.getString(R.string.video_module_2_desc),
                 thumbnail = "💧",
                 duration = "15:45",
                 category = VideoCategory.SANITATION,
@@ -72,8 +76,8 @@ class VideoModulesViewModel @Inject constructor(
             ),
             VideoModule(
                 id = "3",
-                title = "Module 3: Maternal and Child Health",
-                description = "Essential care for mothers and children",
+                title = context.getString(R.string.video_module_3_title),
+                description = context.getString(R.string.video_module_3_desc),
                 thumbnail = "👶",
                 duration = "20:15",
                 category = VideoCategory.MATERNAL,
@@ -82,8 +86,8 @@ class VideoModulesViewModel @Inject constructor(
             ),
             VideoModule(
                 id = "4",
-                title = "Module 4: Vaccination Programs",
-                description = "Understanding vaccination schedules and importance",
+                title = context.getString(R.string.video_module_4_title),
+                description = context.getString(R.string.video_module_4_desc),
                 thumbnail = "💉",
                 duration = "18:00",
                 category = VideoCategory.IMMUNIZATION,
@@ -92,8 +96,8 @@ class VideoModulesViewModel @Inject constructor(
             ),
             VideoModule(
                 id = "5",
-                title = "Module 5: Emergency First Aid",
-                description = "Learn essential emergency first aid techniques for common medical situations",
+                title = context.getString(R.string.video_module_5_title),
+                description = context.getString(R.string.video_module_5_desc),
                 thumbnail = "🚨",
                 duration = "7:21",
                 category = VideoCategory.EMERGENCY,
@@ -102,8 +106,8 @@ class VideoModulesViewModel @Inject constructor(
             ),
             VideoModule(
                 id = "6",
-                title = "Module 6: Nutrition Basics",
-                description = "Understanding balanced nutrition and dietary needs",
+                title = context.getString(R.string.video_module_6_title),
+                description = context.getString(R.string.video_module_6_desc),
                 thumbnail = "🥗",
                 duration = "12:30",
                 category = VideoCategory.NUTRITION,
@@ -112,8 +116,8 @@ class VideoModulesViewModel @Inject constructor(
             ),
             VideoModule(
                 id = "7",
-                title = "Module 7: Disease Prevention",
-                description = "Common diseases and prevention strategies",
+                title = context.getString(R.string.video_module_7_title),
+                description = context.getString(R.string.video_module_7_desc),
                 thumbnail = "🛡️",
                 duration = "14:15",
                 category = VideoCategory.DISEASE_PREVENTION,
@@ -175,13 +179,13 @@ class VideoModulesViewModel @Inject constructor(
      */
     fun getCategoryDisplayName(category: VideoCategory): String {
         return when (category) {
-            VideoCategory.BASICS -> "Health Assessment"
-            VideoCategory.SANITATION -> "Sanitation"
-            VideoCategory.MATERNAL -> "Maternal Health"
-            VideoCategory.IMMUNIZATION -> "Immunization"
-            VideoCategory.EMERGENCY -> "Emergency"
-            VideoCategory.NUTRITION -> "Nutrition"
-            VideoCategory.DISEASE_PREVENTION -> "Disease Prevention"
+            VideoCategory.BASICS -> context.getString(R.string.video_category_basics)
+            VideoCategory.SANITATION -> context.getString(R.string.video_category_sanitation)
+            VideoCategory.MATERNAL -> context.getString(R.string.video_category_maternal)
+            VideoCategory.IMMUNIZATION -> context.getString(R.string.video_category_immunization)
+            VideoCategory.EMERGENCY -> context.getString(R.string.video_category_emergency)
+            VideoCategory.NUTRITION -> context.getString(R.string.video_category_nutrition)
+            VideoCategory.DISEASE_PREVENTION -> context.getString(R.string.video_category_disease_prevention)
         }
     }
 }

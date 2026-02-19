@@ -16,10 +16,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.afyaquest.R
 import com.example.afyaquest.domain.model.Difficulty
 import com.example.afyaquest.domain.model.Question
 import com.example.afyaquest.util.Resource
@@ -59,10 +61,10 @@ fun DailyQuestionsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Daily Questions", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.daily_questions), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
@@ -103,21 +105,21 @@ fun DailyQuestionsScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "Failed to load questions",
+                            text = stringResource(R.string.failed_to_load_questions),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.error
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = (questionsState as Resource.Error).message ?: "Unknown error",
+                            text = (questionsState as Resource.Error).message ?: stringResource(R.string.unknown_error),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = { navController.popBackStack() }) {
-                            Text("Go Back")
+                            Text(stringResource(R.string.go_back))
                         }
                     }
                 }
@@ -135,13 +137,13 @@ fun DailyQuestionsScreen(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "No questions available",
+                                text = stringResource(R.string.no_questions_available),
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Button(onClick = { navController.popBackStack() }) {
-                                Text("Go Back")
+                                Text(stringResource(R.string.go_back))
                             }
                         }
                     }
@@ -185,7 +187,7 @@ fun DailyQuestionsScreen(
                                         onClick = { viewModel.nextQuestion() },
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        Text("Next Question →", fontSize = 16.sp)
+                                        Text(stringResource(R.string.next_question), fontSize = 16.sp)
                                     }
                                 } else {
                                     // Show summary before finish button
@@ -201,7 +203,7 @@ fun DailyQuestionsScreen(
                                         onClick = { viewModel.finishQuiz() },
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        Text("Finish Quiz", fontSize = 16.sp)
+                                        Text(stringResource(R.string.finish_quiz), fontSize = 16.sp)
                                     }
                                 }
                             }
@@ -231,7 +233,7 @@ fun QuestionProgress(
 ) {
     Column {
         Text(
-            text = "Question $current of $total",
+            text = stringResource(R.string.question_progress, current, total),
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -257,6 +259,11 @@ fun QuestionCard(
     showExplanation: Boolean,
     onAnswerSelect: (Int) -> Unit
 ) {
+    val difficultyLabel = when (question.difficulty) {
+        Difficulty.EASY -> stringResource(R.string.difficulty_easy)
+        Difficulty.MEDIUM -> stringResource(R.string.difficulty_medium)
+        Difficulty.HARD -> stringResource(R.string.difficulty_hard)
+    }
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -280,7 +287,7 @@ fun QuestionCard(
                     modifier = Modifier.padding(0.dp)
                 ) {
                     Text(
-                        text = question.difficulty.name,
+                        text = difficultyLabel,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
@@ -294,7 +301,7 @@ fun QuestionCard(
                     modifier = Modifier.padding(0.dp)
                 ) {
                     Text(
-                        text = "${question.points} points",
+                        text = stringResource(R.string.points_label, question.points),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         fontSize = 12.sp,
                         color = Color.White
@@ -354,7 +361,7 @@ fun QuestionCard(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Explanation:",
+                            text = stringResource(R.string.explanation),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -465,6 +472,7 @@ fun QuizSummaryCard(
     totalQuestions: Int,
     lives: Int
 ) {
+    val summaryText = stringResource(R.string.quiz_score_summary, correctAnswers, totalQuestions)
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -477,7 +485,7 @@ fun QuizSummaryCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "🎉 Quiz Complete!",
+                text = stringResource(R.string.quiz_complete),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onTertiaryContainer
@@ -486,7 +494,7 @@ fun QuizSummaryCard(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "You got $correctAnswers out of $totalQuestions questions correct!",
+                text = summaryText,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onTertiaryContainer
@@ -498,17 +506,17 @@ fun QuizSummaryCard(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Lives Gained", fontSize = 12.sp)
+                    Text(stringResource(R.string.lives_gained), fontSize = 12.sp)
                     Text("${correctAnswers * 2} ❤️", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Lives Lost", fontSize = 12.sp)
+                    Text(stringResource(R.string.lives_lost), fontSize = 12.sp)
                     Text("${totalQuestions - correctAnswers} 💔", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Current Lives", fontSize = 12.sp)
+                    Text(stringResource(R.string.current_lives), fontSize = 12.sp)
                     Text("$lives ❤️", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
             }

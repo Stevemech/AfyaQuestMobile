@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.example.afyaquest.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,15 +49,15 @@ class MapViewModel @Inject constructor(
     }
 
     // -------------------------------------------------------------------------
-    // Default map camera (Guatemala City area). Used when no location available.
+    // Default map camera (Kajiado district, Kenya). Used when no location available.
     // -------------------------------------------------------------------------
-    val defaultLatitude = 14.6349
-    val defaultLongitude = -90.5069
+    val defaultLatitude = -1.93
+    val defaultLongitude = 36.7820
     val defaultZoom = 12f
 
-    // Default "You are here" in Guatemala (used when [USE_REAL_DEVICE_LOCATION] is false or before first GPS fix).
-    private val defaultLiveLatitude = 14.6520
-    private val defaultLiveLongitude = -90.5350
+    // Default "You are here" in Kenya (used when [USE_REAL_DEVICE_LOCATION] is false or before first GPS fix).
+    private val defaultLiveLatitude = -1.93
+    private val defaultLiveLongitude = 36.9801
 
     // -------------------------------------------------------------------------
     // Live location (real GPS when [USE_REAL_DEVICE_LOCATION] is true, else Guatemala default).
@@ -112,110 +113,111 @@ class MapViewModel @Inject constructor(
      * Includes both Kenya and Guatemala placeholder data. In production, fetch from API.
      */
     private fun loadMapData() {
-        // —— Kenya: health facilities ——
+        // —— Kenya: health facilities (localized) ——
+        val s = { resId: Int -> context.getString(resId) }
         val kenyaHealthFacilities = listOf(
             HealthFacility(
                 id = "k-hf1",
-                name = "Kajiado Referral Hospital",
+                name = s(R.string.facility_kajiado_referral_hospital_name),
                 type = FacilityType.HOSPITAL,
                 latitude = -1.8522,
                 longitude = 36.7820,
-                servicesAvailable = listOf("Emergency", "Maternity", "Pediatrics", "Surgery", "Outpatient", "Laboratory"),
+                servicesAvailable = listOf(s(R.string.service_emergency), s(R.string.service_maternity), s(R.string.service_pediatrics), s(R.string.service_surgery), s(R.string.service_outpatient), s(R.string.service_laboratory)),
                 distance = 20.3
             ),
             HealthFacility(
                 id = "k-hf2",
-                name = "AIC Kajiado Hospital",
+                name = s(R.string.facility_aic_kajiado_hospital_name),
                 type = FacilityType.HOSPITAL,
                 latitude = -1.8489,
                 longitude = 36.7845,
-                servicesAvailable = listOf("Emergency", "Maternity", "Pediatrics", "Outpatient", "X-Ray"),
+                servicesAvailable = listOf(s(R.string.service_emergency), s(R.string.service_maternity), s(R.string.service_pediatrics), s(R.string.service_outpatient), s(R.string.service_xray)),
                 distance = 19.8
             ),
             HealthFacility(
                 id = "k-hf3",
-                name = "Kitengela Sub-County Hospital",
+                name = s(R.string.facility_kitengela_subcounty_hospital_name),
                 type = FacilityType.HOSPITAL,
                 latitude = -1.4737,
                 longitude = 36.9532,
-                servicesAvailable = listOf("Emergency", "Maternity", "Surgery", "Laboratory", "Pharmacy"),
+                servicesAvailable = listOf(s(R.string.service_emergency), s(R.string.service_maternity), s(R.string.service_surgery), s(R.string.service_laboratory), s(R.string.service_pharmacy)),
                 distance = 42.7
             ),
             HealthFacility(
                 id = "k-hf4",
-                name = "Kajiado Airport Dispensary",
+                name = s(R.string.facility_kajiado_airport_dispensary_name),
                 type = FacilityType.CLINIC,
                 latitude = -1.8595,
                 longitude = 36.9801,
-                servicesAvailable = listOf("Primary Care", "Vaccination", "Family Planning"),
+                servicesAvailable = listOf(s(R.string.service_primary_care), s(R.string.service_vaccination), s(R.string.service_family_planning)),
                 distance = 0.3
             )
         )
 
-        // —— Kenya: client houses ——
+        // —— Kenya: client houses (localized) ——
         val kenyaClientHouses = listOf(
             ClientHouse(
                 id = "k1",
-                address = "123 Airport Road",
-                clientName = "Selina Nkoya Family",
+                address = s(R.string.address_123_airport_road),
+                clientName = s(R.string.client_selina_nkoya_family_name),
                 latitude = -1.8623,
                 longitude = 36.9789,
                 status = VisitStatus.TO_VISIT,
                 distance = 0.5,
-                description = "Maternal health check-up needed"
+                description = s(R.string.desc_maternal_health_checkup_needed)
             ),
             ClientHouse(
                 id = "k2",
-                address = "45 Bissil Road",
-                clientName = "Ole Sankale Household",
+                address = s(R.string.address_45_bissil_road),
+                clientName = s(R.string.client_ole_sankale_household_name),
                 latitude = -1.8712,
                 longitude = 36.9901,
                 status = VisitStatus.TO_VISIT,
                 distance = 1.8,
-                description = "Child vaccination due"
+                description = s(R.string.desc_child_vaccination_due)
             ),
             ClientHouse(
                 id = "k3",
-                address = "78 Mashuuru Village",
-                clientName = "Grace Nasieku",
+                address = s(R.string.address_78_mashuuru_village),
+                clientName = s(R.string.client_grace_nasieku_name),
                 latitude = -1.8753,
                 longitude = 36.8201,
                 status = VisitStatus.VISITED,
-                lastVisit = "2 days ago",
+                lastVisit = s(R.string.time_2_days_ago),
                 distance = 16.7,
-                description = "Follow-up completed"
+                description = s(R.string.desc_followup_completed)
             ),
             ClientHouse(
                 id = "k4",
-                address = "22 Kajiado Town",
-                clientName = "David Lekishon Family",
+                address = s(R.string.address_22_kajiado_town),
+                clientName = s(R.string.client_david_lekishon_family_name),
                 latitude = -1.8512,
                 longitude = 36.7798,
                 status = VisitStatus.SCHEDULED,
-                nextVisit = "Tomorrow 10:00 AM",
+                nextVisit = s(R.string.time_tomorrow_10_am),
                 distance = 20.1,
-                description = "Family planning consultation"
+                description = s(R.string.desc_family_planning_consultation)
             ),
             ClientHouse(
                 id = "k5",
-                address = "89 Oloosirkon Area",
-                clientName = "Peter Kisemei Household",
+                address = s(R.string.address_89_oloosirkon_area),
+                clientName = s(R.string.client_peter_kisemei_household_name),
                 latitude = -1.7901,
                 longitude = 36.9267,
                 status = VisitStatus.TO_VISIT,
                 distance = 9.7,
-                description = "Hypertension screening needed"
+                description = s(R.string.desc_hypertension_screening_needed)
             ),
             ClientHouse(
                 id = "k6",
-                address = "34 Magadi Road",
-                clientName = "Mary Ole Sankale",
+                address = s(R.string.address_34_magadi_road),
+                clientName = s(R.string.client_mary_ole_sankale_name),
                 latitude = -1.9012,
                 longitude = 37.0123,
                 status = VisitStatus.SCHEDULED,
-                nextVisit = "Friday 2:00 PM",
+                nextVisit = s(R.string.time_friday_2_pm),
                 distance = 6.2,
-                description = "Prenatal care appointment"
+                description = s(R.string.desc_prenatal_care_appointment)
             )
         )
 
@@ -310,13 +312,13 @@ class MapViewModel @Inject constructor(
         _healthFacilities.value = kenyaHealthFacilities + guatemalaHealthFacilities
         _clientHouses.value = kenyaClientHouses + guatemalaClientHouses
 
-        // Today's itinerary — ordered stops (path for the map). Guatemala demo for map path.
+        // Today's itinerary — ordered stops (path for the map). Kenya demo (localized).
         _dailyItineraryStops.value = listOf(
-            ItineraryStop(order = 1, id = "1", label = "Familia Hernández", address = "Zona 3, Guatemala City", latitude = 14.6389, longitude = -90.5089, description = "Maternal health check-up"),
-            ItineraryStop(order = 2, id = "2", label = "Casa López", address = "Zona 7, Guatemala City", latitude = 14.6222, longitude = -90.5212, description = "Child vaccination due"),
-            ItineraryStop(order = 3, id = "hf2", label = "Centro de Salud Zona 1", address = "Zona 1", latitude = 14.6412, longitude = -90.5189, description = "Drop-off / pick-up supplies"),
-            ItineraryStop(order = 4, id = "4", label = "Casa Martínez", address = "Zona 5, Mixco", latitude = 14.6312, longitude = -90.5321, description = "Family planning consultation"),
-            ItineraryStop(order = 5, id = "5", label = "Familia Rodríguez", address = "Zona 12, Guatemala City", latitude = 14.6156, longitude = -90.4789, description = "Hypertension screening")
+            ItineraryStop(order = 1, id = "k1", label = s(R.string.client_selina_nkoya_family_name), address = s(R.string.address_123_airport_road), latitude = -1.8623, longitude = 36.9789, description = s(R.string.desc_maternal_health_checkup_needed)),
+            ItineraryStop(order = 2, id = "k2", label = s(R.string.client_ole_sankale_household_name), address = s(R.string.address_45_bissil_road), latitude = -1.8712, longitude = 36.9901, description = s(R.string.desc_child_vaccination_due)),
+            ItineraryStop(order = 3, id = "k-hf4", label = s(R.string.facility_kajiado_airport_dispensary_name), address = s(R.string.address_near_kajiado_airport), latitude = -1.8595, longitude = 36.9801, description = s(R.string.desc_dropoff_pickup_supplies)),
+            ItineraryStop(order = 4, id = "k5", label = s(R.string.client_peter_kisemei_household_name), address = s(R.string.address_89_oloosirkon_area), latitude = -1.7901, longitude = 36.9267, description = s(R.string.desc_hypertension_screening_needed)),
+            ItineraryStop(order = 5, id = "k-hf1", label = s(R.string.facility_kajiado_referral_hospital_name), address = s(R.string.address_kajiado_town), latitude = -1.8522, longitude = 36.7820, description = s(R.string.service_outpatient)),
         )
     }
 
@@ -421,7 +423,7 @@ class MapViewModel @Inject constructor(
             if (client.id == clientId) {
                 client.copy(
                     status = VisitStatus.VISITED,
-                    lastVisit = "Just now"
+                    lastVisit = context.getString(R.string.time_just_now)
                 )
             } else {
                 client

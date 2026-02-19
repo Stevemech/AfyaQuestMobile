@@ -1,7 +1,9 @@
 package com.example.afyaquest.presentation.chat
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.afyaquest.R
 import com.example.afyaquest.data.repository.ChatRepository
 import com.example.afyaquest.domain.model.ChatMessage
 import com.example.afyaquest.domain.model.ChatRequest
@@ -10,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -19,6 +22,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class ChatViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val chatRepository: ChatRepository
 ) : ViewModel() {
 
@@ -42,7 +46,7 @@ class ChatViewModel @Inject constructor(
     private fun addInitialGreeting() {
         val greeting = ChatMessage(
             id = "initial",
-            text = "Hey there! I'm Fred, your friendly AI health assistant for Afya Quest. I'm here to help you with health education, study tips, and any questions about the platform. What can I help you learn today? 😊",
+            text = context.getString(R.string.fred_greeting),
             isUser = false,
             timestamp = LocalDateTime.now()
         )
@@ -107,10 +111,10 @@ class ChatViewModel @Inject constructor(
                 }
 
             } catch (e: Exception) {
-                // Add error message
+                // Add error message (localized)
                 val errorMsg = ChatMessage(
                     id = (System.currentTimeMillis() + 1).toString(),
-                    text = "Sorry, I encountered an error. Please try again. ${e.message ?: ""}",
+                    text = "${context.getString(R.string.fred_error)} ${e.message ?: ""}".trim(),
                     isUser = false,
                     timestamp = LocalDateTime.now()
                 )

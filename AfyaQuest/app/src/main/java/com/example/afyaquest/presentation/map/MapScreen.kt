@@ -9,9 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Map
@@ -22,7 +20,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
+import com.example.afyaquest.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -99,10 +99,10 @@ fun MapScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Daily Itinerary", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.daily_itinerary), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -117,19 +117,19 @@ fun MapScreen(
                 Tab(
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 },
-                    text = { Text("Map") },
+                    text = { Text(stringResource(R.string.map)) },
                     icon = { Icon(Icons.Default.Map, contentDescription = null) }
                 )
                 Tab(
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 },
-                    text = { Text("Client Stops") },
+                    text = { Text(stringResource(R.string.client_stops)) },
                     icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) }
                 )
                 Tab(
                     selected = selectedTab == 2,
                     onClick = { selectedTab = 2 },
-                    text = { Text("Health Facilities") },
+                    text = { Text(stringResource(R.string.health_facilities)) },
                     icon = { Icon(Icons.Default.LocalHospital, contentDescription = null) }
                 )
             }
@@ -155,22 +155,22 @@ fun MapScreen(
                             FilterChip(
                                 selected = statusFilter == null,
                                 onClick = { viewModel.setStatusFilter(null) },
-                                label = { Text("All") }
+                                label = { Text(stringResource(R.string.all)) }
                             )
                             FilterChip(
                                 selected = statusFilter == VisitStatus.TO_VISIT,
                                 onClick = { viewModel.setStatusFilter(VisitStatus.TO_VISIT) },
-                                label = { Text("To Visit") }
+                                label = { Text(stringResource(R.string.to_visit)) }
                             )
                             FilterChip(
                                 selected = statusFilter == VisitStatus.VISITED,
                                 onClick = { viewModel.setStatusFilter(VisitStatus.VISITED) },
-                                label = { Text("Visited") }
+                                label = { Text(stringResource(R.string.visited)) }
                             )
                             FilterChip(
                                 selected = statusFilter == VisitStatus.SCHEDULED,
                                 onClick = { viewModel.setStatusFilter(VisitStatus.SCHEDULED) },
-                                label = { Text("Scheduled") }
+                                label = { Text(stringResource(R.string.scheduled)) }
                             )
                         }
                         LazyColumn(
@@ -241,8 +241,8 @@ private fun MapAndItineraryTab(
                 // Live location marker: real device GPS (Fused Location Provider) or default until first fix
                 Marker(
                     state = MarkerState(position = LatLng(liveLocationLat, liveLocationLng)),
-                    title = "You are here",
-                    snippet = "Your location",
+                    title = stringResource(R.string.you_are_here),
+                    snippet = stringResource(R.string.your_location),
                     icon = com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(
                         com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_CYAN
                     )
@@ -259,24 +259,41 @@ private fun MapAndItineraryTab(
 
         // "These are your stops for the day, do them in this order"
         Surface(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                // Take remaining space so the list can scroll instead of being cut off.
+                .weight(1f),
             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Your stops for the day!",
+                    text = stringResource(R.string.your_stops_for_the_day),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                dailyStops.forEach { stop ->
-                    ItineraryStopRow(stop = stop)
-                    Spacer(modifier = Modifier.height(8.dp))
+
+                if (dailyStops.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.no_stops_for_today),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(bottom = 8.dp)
+                    ) {
+                        items(dailyStops) { stop ->
+                            ItineraryStopRow(stop = stop)
+                        }
+                    }
                 }
             }
         }
@@ -285,7 +302,7 @@ private fun MapAndItineraryTab(
 
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = "Placeholder locations in Guatemala. Your location uses device GPS when permission is granted.",
+            text = stringResource(R.string.map_location_disclaimer),
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -352,9 +369,9 @@ fun ClientHouseCard(
     }
 
     val statusText = when (client.status) {
-        VisitStatus.TO_VISIT -> "To Visit"
-        VisitStatus.VISITED -> "Visited"
-        VisitStatus.SCHEDULED -> "Scheduled"
+        VisitStatus.TO_VISIT -> stringResource(R.string.to_visit)
+        VisitStatus.VISITED -> stringResource(R.string.visited)
+        VisitStatus.SCHEDULED -> stringResource(R.string.scheduled)
     }
 
     Card(
@@ -428,6 +445,12 @@ fun ClientHouseCard(
 
 @Composable
 fun HealthFacilityCard(facility: HealthFacility) {
+    val facilityTypeLabel = when (facility.type) {
+        com.example.afyaquest.domain.model.FacilityType.HOSPITAL -> stringResource(R.string.facility_type_hospital)
+        com.example.afyaquest.domain.model.FacilityType.CLINIC -> stringResource(R.string.facility_type_clinic)
+        com.example.afyaquest.domain.model.FacilityType.HEALTH_CENTER -> stringResource(R.string.facility_type_health_center)
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -448,7 +471,7 @@ fun HealthFacilityCard(facility: HealthFacility) {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = facility.type.name.replace("_", " "),
+                        text = facilityTypeLabel,
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -467,7 +490,7 @@ fun HealthFacilityCard(facility: HealthFacility) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Services:",
+                text = stringResource(R.string.services) + ":",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -495,28 +518,28 @@ fun ClientDetailsDialog(
         title = { Text(client.clientName) },
         text = {
             Column {
-                Text("Address: ${client.address}")
+                Text("${stringResource(R.string.address)}: ${client.address}")
                 Spacer(modifier = Modifier.height(8.dp))
 
                 client.description?.let {
-                    Text("Description: $it")
+                    Text("${stringResource(R.string.description)}: $it")
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
                 client.distance?.let {
-                    Text("Distance: ${it}km")
+                    Text("${stringResource(R.string.distance)}: ${it}km")
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
                 when (client.status) {
                     VisitStatus.VISITED -> {
                         client.lastVisit?.let {
-                            Text("Last visit: $it")
+                            Text("${stringResource(R.string.last_visit)}: $it")
                         }
                     }
                     VisitStatus.SCHEDULED -> {
                         client.nextVisit?.let {
-                            Text("Next visit: $it")
+                            Text("${stringResource(R.string.next_visit)}: $it")
                         }
                     }
                     else -> {}
@@ -526,13 +549,13 @@ fun ClientDetailsDialog(
         confirmButton = {
             if (client.status != VisitStatus.VISITED) {
                 Button(onClick = onMarkVisited) {
-                    Text("Mark as Visited")
+                    Text(stringResource(R.string.mark_as_visited))
                 }
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Close")
+                Text(stringResource(R.string.close))
             }
         }
     )

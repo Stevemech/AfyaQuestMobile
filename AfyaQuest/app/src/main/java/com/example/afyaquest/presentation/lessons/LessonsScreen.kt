@@ -13,11 +13,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.afyaquest.R
 import com.example.afyaquest.domain.model.Difficulty
 import com.example.afyaquest.domain.model.Lesson
 import com.example.afyaquest.domain.model.LessonCategory
@@ -51,10 +53,10 @@ fun LessonsScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Interactive Lessons", fontWeight = FontWeight.Bold) },
+                    title = { Text(stringResource(R.string.interactive_lessons), fontWeight = FontWeight.Bold) },
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                         }
                     }
                 )
@@ -81,7 +83,7 @@ fun LessonsScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "${viewModel.getCompletedCount()}/${viewModel.getTotalLessons()} Lessons Completed",
+                            text = stringResource(R.string.lessons_completed, viewModel.getCompletedCount(), viewModel.getTotalLessons()),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
@@ -93,7 +95,7 @@ fun LessonsScreen(
 
                 // Category filter
                 Text(
-                    text = "Categories",
+                    text = stringResource(R.string.categories),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -109,7 +111,7 @@ fun LessonsScreen(
                         FilterChip(
                             selected = selectedCategory == null,
                             onClick = { viewModel.setCategory(null) },
-                            label = { Text("All") }
+                            label = { Text(stringResource(R.string.all)) }
                         )
                     }
 
@@ -133,7 +135,7 @@ fun LessonsScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No lessons available",
+                            text = stringResource(R.string.no_lessons_available),
                             fontSize = 16.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -161,6 +163,11 @@ fun LessonCard(
     lesson: Lesson,
     onClick: () -> Unit
 ) {
+    val difficultyLabel = when (lesson.difficulty) {
+        Difficulty.EASY -> stringResource(R.string.difficulty_easy)
+        Difficulty.MEDIUM -> stringResource(R.string.difficulty_medium)
+        Difficulty.HARD -> stringResource(R.string.difficulty_hard)
+    }
     val difficultyColor = when (lesson.difficulty) {
         Difficulty.EASY -> Color(0xFF4CAF50)
         Difficulty.MEDIUM -> Color(0xFFFF9800)
@@ -220,7 +227,7 @@ fun LessonCard(
                     containerColor = difficultyColor
                 ) {
                     Text(
-                        text = lesson.difficulty.name,
+                        text = difficultyLabel,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         fontSize = 11.sp,
                         color = Color.White
@@ -232,7 +239,7 @@ fun LessonCard(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer
                 ) {
                     Text(
-                        text = "⏱️ ${lesson.estimatedMinutes} min",
+                        text = stringResource(R.string.min_format, lesson.estimatedMinutes.toString()),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -244,7 +251,7 @@ fun LessonCard(
                     containerColor = MaterialTheme.colorScheme.tertiaryContainer
                 ) {
                     Text(
-                        text = "💎 ${lesson.points} XP",
+                        text = stringResource(R.string.xp_format, lesson.points),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
@@ -268,10 +275,10 @@ fun LessonDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Lesson", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.lesson), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -290,7 +297,7 @@ fun LessonDetailScreen(
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
-                        Text("Mark as Complete (+${lesson.points} XP)")
+                        Text(stringResource(R.string.mark_complete_xp, lesson.points))
                     }
                 }
             }
@@ -322,10 +329,15 @@ fun LessonDetailScreen(
                     Difficulty.MEDIUM -> Color(0xFFFF9800)
                     Difficulty.HARD -> Color(0xFFF44336)
                 }
+                val difficultyLabel = when (lesson.difficulty) {
+                    Difficulty.EASY -> stringResource(R.string.difficulty_easy)
+                    Difficulty.MEDIUM -> stringResource(R.string.difficulty_medium)
+                    Difficulty.HARD -> stringResource(R.string.difficulty_hard)
+                }
 
                 Badge(containerColor = difficultyColor) {
                     Text(
-                        text = lesson.difficulty.name,
+                        text = difficultyLabel,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         color = Color.White
                     )
@@ -333,7 +345,7 @@ fun LessonDetailScreen(
 
                 Badge(containerColor = MaterialTheme.colorScheme.secondaryContainer) {
                     Text(
-                        text = "${lesson.estimatedMinutes} min",
+                        text = stringResource(R.string.min_format, lesson.estimatedMinutes.toString()),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
@@ -364,7 +376,7 @@ fun LessonDetailScreen(
                         Text(text = "✓", fontSize = 24.sp)
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Lesson completed!",
+                            text = stringResource(R.string.lesson_completed),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )

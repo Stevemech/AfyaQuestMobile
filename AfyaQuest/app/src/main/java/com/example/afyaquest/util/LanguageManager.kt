@@ -8,7 +8,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,8 +27,12 @@ class LanguageManager @Inject constructor(
         const val LANGUAGE_ENGLISH = "en"
         const val LANGUAGE_SWAHILI = "sw"
 
-        private val Context.languageDataStore by preferencesDataStore(name = "language_prefs")
-        private val LANGUAGE_KEY = stringPreferencesKey("selected_language")
+        /** Same name as DataStore; also used so MainActivity.attachBaseContext can read locale before DI. */
+        const val LANGUAGE_PREFS_NAME = "language_prefs"
+        const val LANGUAGE_KEY = "selected_language"
+
+        private val Context.languageDataStore by preferencesDataStore(name = LANGUAGE_PREFS_NAME)
+        private val LANGUAGE_KEY_DS = stringPreferencesKey(LANGUAGE_KEY)
     }
 
     /**
@@ -34,12 +40,20 @@ class LanguageManager @Inject constructor(
      */
     fun getCurrentLanguageFlow(): Flow<String> {
         return context.languageDataStore.data.map { preferences ->
-            preferences[LANGUAGE_KEY] ?: LANGUAGE_ENGLISH
+            preferences[LANGUAGE_KEY_DS] ?: LANGUAGE_ENGLISH
         }
     }
 
     /**
-     * Get current language synchronously
+     * Get current language synchronously from SharedPreferences.
+     */
+    fun getCurrentLanguageBlocking(): String {
+        return context.getSharedPreferences(LANGUAGE_PREFS_NAME, Context.MODE_PRIVATE)
+            .getString(LANGUAGE_KEY, LANGUAGE_ENGLISH) ?: LANGUAGE_ENGLISH
+    }
+
+    /**
+     * Get current language from default locale.
      */
     fun getCurrentLanguage(): String {
         return Locale.getDefault().language.let { lang ->
@@ -56,11 +70,32 @@ class LanguageManager @Inject constructor(
     suspend fun setLanguage(languageCode: String) {
         // Save to DataStore
         context.languageDataStore.edit { preferences ->
-            preferences[LANGUAGE_KEY] = languageCode
+            preferences[LANGUAGE_KEY_DS] = languageCode
         }
+
+        // Save to SharedPreferences synchronously so attachBaseContext (after recreate) sees it.
+        context.getSharedPreferences(LANGUAGE_PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putString(LANGUAGE_KEY, languageCode)
+            .commit()
 
         // Apply to app
         applyLanguage(languageCode)
+    }
+
+    /**
+     * Apply saved language at app/activity start.
+     */
+    fun applySavedLanguageBlocking() {
+        runBlocking {
+            val lang = context.languageDataStore.data.first()[LANGUAGE_KEY_DS] ?: LANGUAGE_ENGLISH
+            // Keep SharedPreferences in sync for attachBaseContext
+            context.getSharedPreferences(LANGUAGE_PREFS_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putString(LANGUAGE_KEY, lang)
+                .commit()
+            applyLanguage(lang)
+        }
     }
 
     /**

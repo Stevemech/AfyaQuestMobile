@@ -24,13 +24,12 @@ class AuthViewModel @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = languageManager.getCurrentLanguage()
+            // Prefer persisted selection so the UI doesn't briefly/default to English.
+            initialValue = languageManager.getCurrentLanguageBlocking()
         )
 
-    fun changeLanguage(languageCode: String) {
-        viewModelScope.launch {
-            languageManager.setLanguage(languageCode)
-        }
+    suspend fun changeLanguage(languageCode: String) {
+        languageManager.setLanguage(languageCode)
     }
 
     private val _loginState = MutableStateFlow<Resource<User>?>(null)

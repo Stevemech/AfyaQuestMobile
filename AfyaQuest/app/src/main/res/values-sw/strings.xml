@@ -32,6 +32,10 @@
     <string name="show_password">Onyesha nenosiri</string>
     <string name="hide_password">Ficha nenosiri</string>
 
+    <!-- Language names (for picker) -->
+    <string name="english">Kiingereza</string>
+    <string name="kiswahili">Kiswahili</string>
+
     <!-- Dashboard -->
     <string name="dashboard">Dashibodi</string>
     <string name="welcome">Karibu</string>
@@ -42,6 +46,9 @@
     <string name="rank">Daraja</string>
     <string name="daily_todo">Kazi za Kila Siku</string>
     <string name="learning_center">Kituo cha Kujifunza</string>
+    <string name="xp_value_format">%d XP</string>
+    <string name="level_value">Kiwango %d</string>
+    <string name="xp_to_level_format">%1$d XP hadi Kiwango %2$d</string>
 
     <!-- Daily Tasks -->
     <string name="daily_questions">Maswali ya Kila Siku</string>
@@ -103,12 +110,25 @@
     <string name="items_pending">vitu vinavyosubiri</string>
     <string name="changes_will_sync">Mabadiliko yatasawazishwa unapokuwa mtandaoni</string>
 
-    <!-- Questions -->
+    <!-- Questions / Daily Questions -->
     <string name="question">Swali</string>
     <string name="correct">Sahihi!</string>
     <string name="incorrect">Sio sahihi</string>
-    <string name="explanation">Maelezo</string>
+    <string name="explanation">Maelezo:</string>
     <string name="continue_text">Endelea</string>
+    <string name="failed_to_load_questions">Imeshindwa kupakia maswali</string>
+    <string name="unknown_error">Hitilafu isiyojulikana</string>
+    <string name="go_back">Rudi Nyuma</string>
+    <string name="no_questions_available">Hakuna maswali yanayopatikana</string>
+    <string name="question_progress">Swali %1$d kati ya %2$d</string>
+    <string name="next_question">Swali Linalofuata →</string>
+    <string name="finish_quiz">Maliza Jaribio</string>
+    <string name="points_label">%d alama</string>
+    <string name="quiz_complete">🎉 Jaribio Limekamilika!</string>
+    <string name="quiz_score_summary">Umepata %1$d kati ya %2$d maswali sahihi!</string>
+    <string name="lives_gained">Maisha Yaliyopatikana</string>
+    <string name="lives_lost">Maisha Yaliyopotea</string>
+    <string name="current_lives">Maisha ya Sasa</string>
 
     <!-- XP and Gamification -->
     <string name="xp_earned">XP iliyopatikana</string>
@@ -116,28 +136,213 @@
     <string name="level_up">Kiwango Kimepanda!</string>
     <string name="congratulations">Hongera!</string>
 
-    <!-- Map -->
+    <!-- Map / Daily Itinerary -->
     <string name="map">Ramani</string>
     <string name="client_houses">Nyumba za Wateja</string>
+    <string name="client_stops">Maegesho ya Wateja</string>
     <string name="health_facilities">Vituo vya Afya</string>
     <string name="mark_as_visited">Weka alama kama imetembelewa</string>
     <string name="visited">Imetembelewa</string>
     <string name="pending">Inasubiri</string>
     <string name="cancelled">Imeghairiwa</string>
+    <string name="all">Yote</string>
+    <string name="to_visit">Ya Kutembelea</string>
+    <string name="scheduled">Iliyopangwa</string>
+    <string name="you_are_here">Uko hapa</string>
+    <string name="your_location">Mahali ulipo</string>
+    <string name="your_stops_for_the_day">Maegesho yako kwa leo!</string>
+    <string name="no_stops_for_today">Hakuna maegesho ya leo.</string>
+    <string name="map_location_disclaimer">Wilaya ya Kajiado, Kenya. Mahali ulipo hutumia GPS ya kifaa wakati ruhusa imetolewa.</string>
+    <string name="close">Funga</string>
+    <string name="address">Anwani</string>
+    <string name="description">Maelezo</string>
+    <string name="distance">Umbali</string>
+    <string name="last_visit">Tembeleo la mwisho</string>
+    <string name="next_visit">Tembeleo linalofuata</string>
+    <string name="services">Huduma</string>
 
-    <!-- Reports -->
+    <!-- Reports / Daily Report -->
     <string name="patients_visited">Wagonjwa Waliotembelewa</string>
     <string name="vaccines_administered">Chanjo Zilizotolewa</string>
     <string name="health_education_sessions">Vipindi vya Elimu ya Afya</string>
     <string name="referrals">Marejeleo</string>
     <string name="challenges">Changamoto</string>
     <string name="notes">Maelezo</string>
+    <string name="daily_report_intro">Jaza ripoti yako ya kila siku kufuatilia shughuli zako na kupata XP!</string>
+    <string name="patients_visited_label">Idadi ya Wagonjwa Waliotembelewa *</string>
+    <string name="vaccinations_administered_label">Chanjo Zilizotolewa *</string>
+    <string name="health_education_topics_label">Mada za Elimu ya Afya Zilizofunikwa *</string>
+    <string name="challenges_faced_label">Changamoto Zilizokumbwa</string>
+    <string name="additional_notes">Maelezo ya Ziada</string>
+    <string name="submit_report">Wasilisha Ripoti</string>
+    <string name="required_fields_note">* Sehemu zinazohitajika</string>
+    <string name="report_submitted">Ripoti imewasilishwa!</string>
+    <string name="submission_failed">Wasilisho limeshindwa</string>
+
+    <!-- Video Modules -->
+    <string name="categories">Jamii</string>
+    <string name="no_videos_available">Hakuna video zinazopatikana</string>
+    <string name="videos_watched">Video Zilizotazamwa</string>
+    <string name="quizzes_complete">Jaribio Zimekamilika</string>
+    <string name="watch_video">Tazama Video</string>
+    <string name="watch_again">Tazama Tena</string>
+    <string name="take_quiz">Fanya Jaribio</string>
+    <string name="retake_quiz">Fanya Jaribio Tena</string>
+    <string name="watched">✓ Imetazamwa</string>
+    <string name="quiz_check">Jaribio ✓</string>
+
+    <!-- Video Modules (sample data / categories) -->
+    <string name="video_module_1_title">Moduli 1: Tathmini za Afya</string>
+    <string name="video_module_1_desc">Jifunze jinsi ya kufanya tathmini kamili za afya kwa kutumia Mwongozo wa Mpelelezi wa Matibabu</string>
+    <string name="video_module_2_title">Moduli 2: Mbinu za Usafi wa Maji</string>
+    <string name="video_module_2_desc">Kuelewa utibu wa maji na uhifadhi salama</string>
+    <string name="video_module_3_title">Moduli 3: Afya ya Mama na Mtoto</string>
+    <string name="video_module_3_desc">Utunzaji muhimu kwa mama na watoto</string>
+    <string name="video_module_4_title">Moduli 4: Programu za Chanjo</string>
+    <string name="video_module_4_desc">Kuelewa ratiba za chanjo na umuhimu wake</string>
+    <string name="video_module_5_title">Moduli 5: Huduma ya Kwanza ya Dharura</string>
+    <string name="video_module_5_desc">Jifunze mbinu muhimu za huduma ya kwanza ya dharura kwa hali za kawaida za kiafya</string>
+    <string name="video_module_6_title">Moduli 6: Misingi ya Lishe</string>
+    <string name="video_module_6_desc">Kuelewa lishe bora na mahitaji ya chakula</string>
+    <string name="video_module_7_title">Moduli 7: Kuzuia Magonjwa</string>
+    <string name="video_module_7_desc">Magonjwa ya kawaida na mbinu za kuyazuia</string>
+
+    <string name="video_category_basics">Tathmini ya Afya</string>
+    <string name="video_category_sanitation">Usafi</string>
+    <string name="video_category_maternal">Afya ya Mama</string>
+    <string name="video_category_immunization">Chanjo</string>
+    <string name="video_category_emergency">Dharura</string>
+    <string name="video_category_nutrition">Lishe</string>
+    <string name="video_category_disease_prevention">Kuzuia Magonjwa</string>
+
+    <!-- Interactive Lessons -->
+    <string name="lessons_completed">%1$d/%2$d Masomo Yamekamilika</string>
+    <string name="no_lessons_available">Hakuna masomo yanayopatikana</string>
+    <string name="lesson">Somo</string>
+
+    <!-- Map / Daily Itinerary (sample data) -->
+    <string name="facility_type_hospital">Hospitali</string>
+    <string name="facility_type_clinic">Kliniki</string>
+    <string name="facility_type_health_center">Kituo cha Afya</string>
+
+    <string name="service_emergency">Dharura</string>
+    <string name="service_maternity">Uzazi</string>
+    <string name="service_pediatrics">Huduma za Watoto</string>
+    <string name="service_surgery">Upasuaji</string>
+    <string name="service_outpatient">Wagonjwa wa Nje</string>
+    <string name="service_laboratory">Maabara</string>
+    <string name="service_xray">Eksirei</string>
+    <string name="service_primary_care">Huduma ya Msingi</string>
+    <string name="service_vaccination">Chanjo</string>
+    <string name="service_family_planning">Uzazi wa Mpango</string>
+    <string name="service_pharmacy">Famasi</string>
+
+    <string name="facility_kajiado_referral_hospital_name">Hospitali ya Rufaa ya Kajiado</string>
+    <string name="facility_aic_kajiado_hospital_name">Hospitali ya AIC Kajiado</string>
+    <string name="facility_kitengela_subcounty_hospital_name">Hospitali ya Kaunti Ndogo ya Kitengela</string>
+    <string name="facility_kajiado_airport_dispensary_name">Zahanati ya Uwanja wa Ndege ya Kajiado</string>
+
+    <string name="client_selina_nkoya_family_name">Familia ya Selina Nkoya</string>
+    <string name="client_ole_sankale_household_name">Kaya ya Ole Sankale</string>
+    <string name="client_grace_nasieku_name">Grace Nasieku</string>
+    <string name="client_david_lekishon_family_name">Familia ya David Lekishon</string>
+    <string name="client_peter_kisemei_household_name">Kaya ya Peter Kisemei</string>
+    <string name="client_mary_ole_sankale_name">Mary Ole Sankale</string>
+
+    <string name="address_123_airport_road">123 Barabara ya Uwanja wa Ndege</string>
+    <string name="address_45_bissil_road">45 Barabara ya Bissil</string>
+    <string name="address_78_blood_bank">78 Barabara ya Blood Bank</string>
+    <string name="address_78_mashuuru_village">78 Kijiji cha Mashuuru</string>
+    <string name="address_22_kajiado_town">22 Mji wa Kajiado</string>
+    <string name="address_kajiado_town">Mji wa Kajiado</string>
+    <string name="address_89_oloosirkon_area">89 Eneo la Oloosirkon</string>
+    <string name="address_34_magadi_road">34 Barabara ya Magadi</string>
+    <string name="address_near_kajiado_airport">Karibu na Uwanja wa Ndege wa Kajiado</string>
+
+    <string name="desc_maternal_health_checkup_needed">Inahitajika uchunguzi wa afya ya mama</string>
+    <string name="desc_child_vaccination_due">Chanjo ya mtoto inahitajika</string>
+    <string name="desc_dropoff_pickup_supplies">Kupeleka / kuchukua vifaa</string>
+    <string name="desc_family_planning_consultation">Ushauri wa uzazi wa mpango</string>
+    <string name="desc_hypertension_screening_needed">Inahitajika uchunguzi wa shinikizo la damu</string>
+    <string name="desc_followup_completed">Ufuatiliaji umekamilika</string>
+    <string name="desc_prenatal_care_appointment">Miadi ya kliniki ya ujauzito</string>
+
+    <string name="time_2_days_ago">Siku 2 zilizopita</string>
+    <string name="time_just_now">Hivi sasa</string>
+    <string name="time_tomorrow_10_am">Kesho saa 10:00 asubuhi</string>
+    <string name="time_friday_2_pm">Ijumaa saa 2:00 mchana</string>
+    <string name="mark_complete_xp">Weka alama kama Imekamilika (+%d XP)</string>
+    <string name="lesson_completed">Somo limekamilika!</string>
+    <string name="min_format">⏱️ %s dak</string>
+    <string name="xp_format">💎 %d XP</string>
+    <string name="difficulty_easy">Rahisi</string>
+    <string name="difficulty_medium">Wastani</string>
+    <string name="difficulty_hard">Ngumu</string>
+
+    <!-- Lesson categories -->
+    <string name="category_hygiene">Usafi</string>
+    <string name="category_nutrition">Lishe</string>
+    <string name="category_maternal_health">Afya ya Wajawazito</string>
+    <string name="category_child_care">Utunzaji wa Watoto</string>
+    <string name="category_disease_prevention">Kuzuia Magonjwa</string>
+    <string name="category_first_aid">Aidhi ya Kwanza</string>
+    <string name="category_medication">Dawa</string>
+    <string name="category_health_education">Elimu ya Afya</string>
+
+    <!-- Lesson 1: Handwashing -->
+    <string name="lesson_1_title">Mbinu za Kuosha Mikono Kwa Ufasaha</string>
+    <string name="lesson_1_description">Jifunze hatua 7 za kuosha mikono kwa usafi ili kuzuia kueneza magonjwa</string>
+    <string name="lesson_1_content"># Mbinu za Kuosha Mikono Kwa Ufasaha\n\n## Kwa Nini Kuosha Mikono Ni Muhimu\nKuosha mikono ni moja ya njia bora za kuzuia kueneza magonjwa na maambukizi.\n\n## Hatua 7\n\n1. **Nyoshea mikono** kwa maji safi yanayotiririka\n2. **Paka sabuni** na sugua vizuri\n3. **Sugua viganja pamoja**\n4. **Sugua kati ya vidole**\n5. **Safisha nyuma ya mikono**\n6. **Safisha chini ya kucha**\n7. **Sua kwa ukamilifu**\n\n## Muda wa Kuosha Mikono\n- Kabla ya kuandaa chakula\n- Kabla ya kula\n- Baada ya kutumia choo\n- Baada ya kukohoa au kupiga chafya\n- Baada ya kugusa wanyama\n\n## Muda\nOsha mikono kwa angalau **sekunde 20** - kama urefu wa kuimba \"Happy Birthday\" mara mbili!</string>
+
+    <!-- Lesson 2: Nutrition -->
+    <string name="lesson_2_title">Lishe Kamili kwa Watoto</string>
+    <string name="lesson_2_description">Kuelewa mahitaji ya lishe kwa watoto wanaokua</string>
+    <string name="lesson_2_content"># Lishe Kamili kwa Watoto\n\n## Makundi ya Chakula Muhimu\n\n### 1. Protini\n- Maharage, kunde, mayai, samaki, nyama\n- Huunda misuli yenye nguvu na inasaidia ukuaji\n\n### 2. Wanga\n- Ugali, mchele, viazi, mkate\n- Inatoa nishati kwa shughuli za kila siku\n\n### 3. Matunda na Mboga\n- Majani meusi, maembe, ndizi, nyanya\n- Tajiri kwa vitamini na madini\n\n### 4. Maziwa\n- Maziwa, yogati (ikiwa inapatikana)\n- Mifupa na meno yenye nguvu\n\n## Vidokezo vya Kupanga Chakula\n- Toa aina mbalimbali kila siku\n- Jumuisha matunda na mboga wenye rangi\n- Hakikisha sehemu zinazolingana\n- Toa maji safi ya kunywa</string>
+
+    <!-- Lesson 3: Prenatal -->
+    <string name="lesson_3_title">Mambo Muhimu ya Utunzaji Kabla ya Kuzaliwa</string>
+    <string name="lesson_3_description">Mambo muhimu ya afya ya mama wakati wa ujauzito</string>
+    <string name="lesson_3_content"># Mambo Muhimu ya Utunzaji Kabla ya Kuzaliwa\n\n## Maangalio ya Kawaida\nTembelea kituo cha afya angalau mara 4 wakati wa ujauzito:\n- Mara moja katika miezi 3 ya kwanza\n- Mara moja kati ya miezi 4-6\n- Mara mbili katika miezi 3 ya mwisho\n\n## Lishe Wakati wa Ujauzito\n- Ongeza kiasi cha chakula\n- Take chumvi za chuma na folic acid\n- Kunywa maji mengi safi\n\n## Ishara za Onyo\nTafuta msaada mara moja ikiwa:\n- Kichwa kinakuuma sana\n- Utaona mbali\n- Damu inatoka kwenye uke\n- Tumbo linaumwa sana\n- Mtoto haongei\n\n## Kuzuia Malaria\n- Lala chini ya wavu uliotibiwa wa mbu\n- Take dawa ya kuzuia kama ilivyoagizwa</string>
+
+    <!-- Lesson 4: Vaccination -->
+    <string name="lesson_4_title">Ratiba ya Chanjo za Watoto</string>
+    <string name="lesson_4_description">Kuelewa lini na kwa nini watoto wanahitaji chanjo</string>
+    <string name="lesson_4_content"># Ratiba ya Chanjo za Watoto\n\n## Wakati wa Kuzaliwa\n- BCG (kifua kikuu)\n- Polio 0\n\n## Wiki 6\n- Polio 1\n- Pentavalent 1\n- PCV 1\n\n## Wiki 10\n- Polio 2\n- Pentavalent 2\n- PCV 2\n\n## Wiki 14\n- Polio 3\n- Pentavalent 3\n- PCV 3\n\n## Miezi 9\n- Surua\n- Hom ya Manjano\n\n## Kwa Nini Chanjo Ni Muhimu\nChanjo zinawlinda watoto dhidi ya magonjwa makali na kuokoa maisha.</string>
+
+    <!-- Lesson 5: Malaria -->
+    <string name="lesson_5_title">Kuzuia Malaria</string>
+    <string name="lesson_5_description">Mbinu za kuzuia malaria katika jamii yako</string>
+    <string name="lesson_5_content"># Kuzuia Malaria\n\n## Matumizi ya Wavu wa Mbu\n- Lala chini ya wavu uliotibiwa wa mbu\n- Karibia mashimo mara moja\n- Tiba wavu tena kila miezi 6-12\n\n## Udhibiti wa Mazingira\n- Ondoa maji yaliyosimama\n- Weka mazingira safi\n- Fyeka vichaka karibu na nyumba\n\n## Ugunduzi wa Mapema\nAngalia dalili:\n- Homa\n- Baridi\n- Kichwa kuuma\n- Mwili kuuma\n\n## Matibabu\n- Tafuta msaada wa matibabu mara moja\n- Kamilisha mwongozo wote wa dawa\n- Pumzika na kunywa maji</string>
+
+    <!-- Lesson 6: CPR -->
+    <string name="lesson_6_title">Misingi ya CPR</string>
+    <string name="lesson_6_description">Mbinu za kuokoa maisha za CPR kwa watu wazima na watoto</string>
+    <string name="lesson_6_content"># Misingi ya CPR\n\n## Lini Kufanya CPR\n- Mtu hayuko tazamani\n- Hapumui au anapumua kwa shida\n- Hakuna pulse\n\n## Hatua kwa Watu Wazima\n\n### 1. Mwite Msaada\nPiga simu ya dharura mara moja\n\n### 2. Mweka Nafasi\nMlaze chini juu ya uso mgumu\n\n### 3. Kuweka Mikono\nKatikati ya kifua, kati ya matiti\n\n### 4. Misukumo\n- Sukuma kwa nguvu na haraka\n- Angalau inchi 2 kwa kina\n- Kasi: 100-120 kwa dakika\n- Misukumo 30\n\n### 5. Pumzi za Uokoaji\n- Inua kichwa nyuma\n- Inua kidevu\n- Toa pumzi 2\n\n### 6. Rudia\nEndelea mzunguko: misukumo 30, pumzi 2\n\n## Kwa Watoto\n- Tumia mkono mmoja kwa misukumo\n- Kinacho chini: karibu inchi 2\n- Uwiano sawa: 30:2</string>
 
     <!-- Chat -->
     <string name="chat">Mazungumzo</string>
     <string name="type_message">Andika ujumbe…</string>
     <string name="send">Tuma</string>
     <string name="online">Mtandaoni</string>
+    <string name="fred_ai_assistant">Fred - Msaidizi wa AI</string>
+    <string name="send_message">Tuma ujumbe</string>
+
+    <!-- Fred\'s messages (localized) -->
+    <string name="fred_greeting">Habari! Mimi ni Fred, msaidizi wako wa AI wa afya kwa Afya Quest. Niko hapa kukusaidia na elimu ya afya, vidokezo vya kusoma, na maswali yoyote kuhusu jukwaa. Ninaweza kukusaidia kujifunza nini leo? 😊</string>
+    <string name="fred_response_hello">Habari! 😊 Mimi ni Fred, msaidizi wako wa AI wa afya. Niko hapa kukusaidia na elimu ya afya, vidokezo vya kusoma, na maswali yoyote kuhusu Afya Quest. Ninaweza kukusaidia kujifunza nini leo?</string>
+    <string name="fred_response_handwashing">Swali zuri kuhusu kuosha mikono! 🧼 Kumbuka hatua 7: nyoshea maji, paka sabuni, sugua viganja, kati ya vidole, nyuma ya mikono, chini ya kucha, na sua kwa ukamilifu kwa angalau sekunde 20. Hii ni moja ya njia bora za kuzuia kueneza magonjwa!</string>
+    <string name="fred_response_malaria">Kuzuia malaria ni muhimu sana! 🦟 Mbinu kuu ni: kulala chini ya wavu uliotibiwa wa mbu, kuondoa maji yaliyosimama, kuweka mazingira safi, na kutafuta msaada wa matibabu mara moja ikiwa dalili zinaonekana (homa, baridi, kichwa kuuma). Kamilisha mwongozo wote wa dawa ikiwa umepangiwa.</string>
+    <string name="fred_response_vaccination">Chanjo ni muhimu kwa afya ya watoto! 💉 Watoto wanapaswa kupata chanjo wakati wa kuzaliwa (BCG, Polio 0), wiki 6, wiki 10, wiki 14 (Polio, Pentavalent, mfululizo wa PCV), na miezi 9 (Surua, Hom ya Manjano). Hizi zinawlinda dhidi ya magonjwa makali na kuokoa maisha!</string>
+    <string name="fred_response_nutrition">Lishe kamili ni muhimu! 🥗 Watoto wanahitaji protini (maharage, mayai, samaki), wanga (ugali, mchele), matunda na mboga (majani meusi, maembe), na maziwa inapopatikana. Toa aina mbalimbali, vyakula vyenye rangi, na maji mengi safi kila siku.</string>
+    <string name="fred_response_xp">Unatafuta kupata XP zaidi? 💎 Kamilisha maswali yako ya kila siku (XP 30 kwa kila jibu sahihi), wasilisha ripoti za kila siku (XP 50), kamilisha masomo ya maingiliano (XP 50-100), na tazama moduli za video! Endelea na mfululizo wako kwa XP ya ziada. Unaweza!</string>
+    <string name="fred_response_streak">Mfululizo ni ushirikiano wako wa kila siku! 🔥 Ingia na kamilisha shughuli angalau moja kila siku ili kudumisha mfululizo wako. Mfululizo mrefu unakupatia XP ya ziada na unaonyesha jitihada yako ya kujifunza. Usivunje mnyororo!</string>
+    <string name="fred_response_thanks">Karibu sana! 😊 Nico hapa siku zote kukusaidia katika safari yako ya kujifunza. Endelea na kazi nzuri kama Msaidizi wa Afya wa Jamii - unafanya tofauti halisi katika jamii yako! Jisikie huru kuniuuliza chochote wakati wowote.</string>
+    <string name="fred_response_cpr">CPR ni ujuzi unaookoa maisha! 🚨 Kumbuka: angalia ikiwa mtu hayuko tazamani na hapumui, mwite msaada, mlaze chini, weka mikono katikati ya kifua, toa misukumo 30 (100-120/dakika, kina inchi 2), kisha pumzi 2 za uokoaji. Rudia mzunguko wa 30:2.</string>
+    <string name="fred_response_default">Hilo ni swali lenye kupendeza! Nico hapa kusaidia na elimu ya afya, vidokezo vya kusoma, na mwongozo wa jukwaa. Unaweza kutueleza zaidi unataka kujifunza nini? Ninaweza kusaidia na mada kama kuosha mikono, lishe, kuzuia malaria, chanjo, CPR, afya ya wajawazito, na zaidi! 📚</string>
+    <string name="fred_error">Samahani, nimekumbwa na hitilafu. Tafadhali jaribu tena.</string>
+
+    <string name="fill_required_fields">Tafadhali jaza sehemu zote zinazohitajika</string>
+    <string name="report_submitted_success">Ripoti imewasilishwa kikamilifu!</string>
 
     <!-- Errors -->
     <string name="error_network">Hitilafu ya mtandao. Tafadhali jaribu tena.</string>

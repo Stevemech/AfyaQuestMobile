@@ -9,12 +9,14 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.afyaquest.R
 import com.example.afyaquest.util.Resource
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,12 +43,15 @@ fun DailyReportScreen(
 
     var showEducationDropdown by remember { mutableStateOf(false) }
 
+    val reportSubmittedMsg = stringResource(R.string.report_submitted)
+    val submissionFailedMsg = stringResource(R.string.submission_failed)
+
     // Handle submission state
     LaunchedEffect(submissionState) {
         when (submissionState) {
             is Resource.Success -> {
                 snackbarHostState.showSnackbar(
-                    (submissionState as Resource.Success).data ?: "Report submitted!",
+                    (submissionState as Resource.Success).data ?: reportSubmittedMsg,
                     duration = SnackbarDuration.Short
                 )
                 viewModel.resetSubmissionState()
@@ -54,7 +59,7 @@ fun DailyReportScreen(
             }
             is Resource.Error -> {
                 snackbarHostState.showSnackbar(
-                    (submissionState as Resource.Error).message ?: "Submission failed",
+                    (submissionState as Resource.Error).message ?: submissionFailedMsg,
                     duration = SnackbarDuration.Short
                 )
                 viewModel.resetSubmissionState()
@@ -67,10 +72,10 @@ fun DailyReportScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Daily Report", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.daily_report), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
@@ -104,7 +109,7 @@ fun DailyReportScreen(
                 ) {
                     Text(text = "📝 ", fontSize = 24.sp)
                     Text(
-                        text = "Fill out your daily report to track your activities and earn XP!",
+                        text = stringResource(R.string.daily_report_intro),
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     )
@@ -117,7 +122,7 @@ fun DailyReportScreen(
             OutlinedTextField(
                 value = patientsVisited,
                 onValueChange = { viewModel.setPatientsVisited(it) },
-                label = { Text("Number of Patients Visited *") },
+                label = { Text(stringResource(R.string.patients_visited_label)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
@@ -129,7 +134,7 @@ fun DailyReportScreen(
             OutlinedTextField(
                 value = vaccinationsGiven,
                 onValueChange = { viewModel.setVaccinationsGiven(it) },
-                label = { Text("Vaccinations Administered *") },
+                label = { Text(stringResource(R.string.vaccinations_administered_label)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
@@ -146,7 +151,7 @@ fun DailyReportScreen(
                     value = healthEducation,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Health Education Topics Covered *") },
+                    label = { Text(stringResource(R.string.health_education_topics_label)) },
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = showEducationDropdown)
                     },
@@ -178,7 +183,7 @@ fun DailyReportScreen(
             OutlinedTextField(
                 value = challenges,
                 onValueChange = { viewModel.setChallenges(it) },
-                label = { Text("Challenges Faced") },
+                label = { Text(stringResource(R.string.challenges_faced_label)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
@@ -191,7 +196,7 @@ fun DailyReportScreen(
             OutlinedTextField(
                 value = notes,
                 onValueChange = { viewModel.setNotes(it) },
-                label = { Text("Additional Notes") },
+                label = { Text(stringResource(R.string.additional_notes)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
@@ -214,7 +219,7 @@ fun DailyReportScreen(
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
-                    Text("Submit Report", fontSize = 16.sp)
+                    Text(stringResource(R.string.submit_report), fontSize = 16.sp)
                 }
             }
 
@@ -222,7 +227,7 @@ fun DailyReportScreen(
 
             // Required fields note
             Text(
-                text = "* Required fields",
+                text = stringResource(R.string.required_fields_note),
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

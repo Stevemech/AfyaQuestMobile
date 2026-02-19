@@ -15,12 +15,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.afyaquest.R
 import com.example.afyaquest.domain.model.VideoCategory
 import com.example.afyaquest.domain.model.VideoModule
 
@@ -40,10 +42,10 @@ fun VideoModulesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Video Modules", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.video_modules), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -65,7 +67,7 @@ fun VideoModulesScreen(
 
             // Category filter
             Text(
-                text = "Categories",
+                text = stringResource(R.string.categories),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp)
@@ -82,7 +84,7 @@ fun VideoModulesScreen(
                     FilterChip(
                         selected = selectedCategory == null,
                         onClick = { viewModel.setCategory(null) },
-                        label = { Text("All") }
+                        label = { Text(stringResource(R.string.all)) }
                     )
                 }
 
@@ -107,7 +109,7 @@ fun VideoModulesScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "No videos available",
+                        text = stringResource(R.string.no_videos_available),
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -141,6 +143,8 @@ fun StatsCard(
     quizCompletedCount: Int,
     totalVideos: Int
 ) {
+    val videosWatchedLabel = stringResource(R.string.videos_watched)
+    val quizzesCompleteLabel = stringResource(R.string.quizzes_complete)
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -158,11 +162,11 @@ fun StatsCard(
         ) {
             StatItem(
                 value = "$watchedCount/$totalVideos",
-                label = "Videos Watched"
+                label = videosWatchedLabel
             )
             StatItem(
                 value = "$quizCompletedCount/$totalVideos",
-                label = "Quizzes Complete"
+                label = quizzesCompleteLabel
             )
         }
     }
@@ -270,7 +274,7 @@ fun VideoModuleCard(
                                 modifier = Modifier.padding(0.dp)
                             ) {
                                 Text(
-                                    text = "✓ Watched",
+                                    text = stringResource(R.string.watched),
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                     fontSize = 11.sp,
                                     color = Color.White
@@ -285,7 +289,7 @@ fun VideoModuleCard(
                                 modifier = Modifier.padding(0.dp)
                             ) {
                                 Text(
-                                    text = "Quiz ✓",
+                                    text = stringResource(R.string.quiz_check),
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                     fontSize = 11.sp,
                                     color = Color.White
@@ -307,7 +311,7 @@ fun VideoModuleCard(
                     onClick = onVideoClick,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(if (video.watched) "Watch Again" else "Watch Video")
+                    Text(if (video.watched) stringResource(R.string.watch_again) else stringResource(R.string.watch_video))
                 }
 
                 if (video.hasQuiz) {
@@ -316,7 +320,7 @@ fun VideoModuleCard(
                         modifier = Modifier.weight(1f),
                         enabled = video.watched
                     ) {
-                        Text(if (video.quizComplete) "Retake Quiz" else "Take Quiz")
+                        Text(if (video.quizComplete) stringResource(R.string.retake_quiz) else stringResource(R.string.take_quiz))
                     }
                 }
             }

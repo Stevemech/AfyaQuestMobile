@@ -95,10 +95,8 @@ class ProfileViewModel @Inject constructor(
     /**
      * Change language
      */
-    fun changeLanguage(languageCode: String) {
-        viewModelScope.launch {
-            languageManager.setLanguage(languageCode)
-        }
+    suspend fun changeLanguage(languageCode: String) {
+        languageManager.setLanguage(languageCode)
     }
 
     /**

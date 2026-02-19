@@ -1,5 +1,6 @@
 package com.example.afyaquest.presentation.dashboard
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,25 +10,30 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.afyaquest.R
+import com.example.afyaquest.presentation.profile.ProfileViewModel
+import com.example.afyaquest.util.LanguageManager
 import com.example.afyaquest.presentation.auth.AuthViewModel
 import com.example.afyaquest.presentation.navigation.Screen
 import com.example.afyaquest.presentation.components.SyncStatusIndicator
+import kotlinx.coroutines.launch
 
 /**
  * Dashboard screen - main hub of the app
@@ -38,32 +44,68 @@ import com.example.afyaquest.presentation.components.SyncStatusIndicator
 fun DashboardScreen(
     navController: NavController,
     dashboardViewModel: DashboardViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     val xpData by dashboardViewModel.xpData.collectAsState()
     val scrollState = rememberScrollState()
     val isConnected by dashboardViewModel.isConnected.collectAsState()
     val unsyncedCount by dashboardViewModel.unsyncedCount.collectAsState()
+    var showLanguageMenu by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Afya Quest", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.app_name), fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = Color.White,
                     actionIconContentColor = Color.White
                 ),
                 actions = {
+                    // Language toggle
+                    Box {
+                        IconButton(onClick = { showLanguageMenu = true }) {
+                            Icon(Icons.Default.Language, contentDescription = stringResource(R.string.language))
+                        }
+                        DropdownMenu(
+                            expanded = showLanguageMenu,
+                            onDismissRequest = { showLanguageMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.english)) },
+                                onClick = {
+                                    showLanguageMenu = false
+                                    scope.launch {
+                                        profileViewModel.changeLanguage(LanguageManager.LANGUAGE_ENGLISH)
+                                        // Recreate so Activity resources update after language is saved.
+                                        (context as? Activity)?.recreate()
+                                    }
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.kiswahili)) },
+                                onClick = {
+                                    showLanguageMenu = false
+                                    scope.launch {
+                                        profileViewModel.changeLanguage(LanguageManager.LANGUAGE_SWAHILI)
+                                        (context as? Activity)?.recreate()
+                                    }
+                                }
+                            )
+                        }
+                    }
                     IconButton(onClick = {
                         navController.navigate(Screen.Profile.route)
                     }) {
-                        Icon(Icons.Default.Person, contentDescription = "Profile")
+                        Icon(Icons.Default.Person, contentDescription = stringResource(R.string.profile))
                     }
                     IconButton(onClick = {
                         navController.navigate(Screen.Settings.route)
                     }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                        Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.settings))
                     }
                     IconButton(onClick = {
                         authViewModel.logout()
@@ -71,7 +113,7 @@ fun DashboardScreen(
                             popUpTo(0) { inclusive = true }
                         }
                     }) {
-                        Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Logout")
+                        Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = stringResource(R.string.logout))
                     }
                 }
             )
@@ -147,21 +189,21 @@ fun StatsHeader(
         StatItem(
             icon = "🔥",
             value = streak.toString(),
-            label = "Streak"
+            label = stringResource(R.string.streak)
         )
 
         // XP
         StatItem(
             icon = "💎",
-            value = "$xp XP",
-            label = "Total XP"
+            value = stringResource(R.string.xp_value_format, xp),
+            label = stringResource(R.string.total_xp)
         )
 
         // Lives
         StatItem(
             icon = "❤️",
             value = lives.toString(),
-            label = "Lives"
+            label = stringResource(R.string.lives)
         )
     }
 }
@@ -219,7 +261,7 @@ fun UserLevelCard(
             ) {
                 Column {
                     Text(
-                        text = "Level $level",
+                        text = stringResource(R.string.level_value, level),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -265,7 +307,7 @@ fun UserLevelCard(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "$xpForNextLevel XP to Level ${level + 1}",
+                    text = stringResource(R.string.xp_to_level_format, xpForNextLevel, level + 1),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -280,7 +322,7 @@ fun DailyTasksSection(navController: NavController) {
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         Text(
-            text = "Daily To-Do",
+            text = stringResource(R.string.daily_todo),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -291,8 +333,8 @@ fun DailyTasksSection(navController: NavController) {
         // Daily Questions Task
         TaskCard(
             icon = "📊",
-            title = "Daily Questions!",
-            description = "Answer your three daily questions to collect your daily XP!",
+            title = stringResource(R.string.daily_questions),
+            description = stringResource(R.string.daily_questions_desc),
             isRequired = true,
             onClick = {
                 navController.navigate(Screen.DailyQuestions.route)
@@ -304,8 +346,8 @@ fun DailyTasksSection(navController: NavController) {
         // Daily Itinerary Task
         TaskCard(
             icon = "🗺️",
-            title = "Daily Itinerary",
-            description = "Find your scheduled locations and patients here!",
+            title = stringResource(R.string.daily_itinerary),
+            description = stringResource(R.string.daily_itinerary_desc),
             isRequired = true,
             onClick = {
                 navController.navigate(Screen.Map.route)
@@ -317,8 +359,8 @@ fun DailyTasksSection(navController: NavController) {
         // Daily Report Task
         TaskCard(
             icon = "📝",
-            title = "Daily Report",
-            description = "Fill out the report at the end of the day.",
+            title = stringResource(R.string.daily_report),
+            description = stringResource(R.string.daily_report_desc),
             isRequired = true,
             onClick = {
                 navController.navigate(Screen.DailyReport.route)
@@ -333,7 +375,7 @@ fun LearningCenterSection(navController: NavController) {
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         Text(
-            text = "Learning Center",
+            text = stringResource(R.string.learning_center),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -344,8 +386,8 @@ fun LearningCenterSection(navController: NavController) {
         // Video Modules Task
         TaskCard(
             icon = "🎬",
-            title = "Video Modules",
-            description = "Watch educational videos and take quizzes!",
+            title = stringResource(R.string.video_modules),
+            description = stringResource(R.string.video_modules_desc),
             isRequired = false,
             onClick = {
                 navController.navigate(Screen.VideoModules.route)
@@ -357,8 +399,8 @@ fun LearningCenterSection(navController: NavController) {
         // Interactive Lessons Task
         TaskCard(
             icon = "📚",
-            title = "Interactive Lessons",
-            description = "Read lessons and earn XP by completing them!",
+            title = stringResource(R.string.interactive_lessons),
+            description = stringResource(R.string.interactive_lessons_desc),
             isRequired = false,
             onClick = {
                 navController.navigate(Screen.Lessons.route)
@@ -370,8 +412,8 @@ fun LearningCenterSection(navController: NavController) {
         // AI Chat Assistant
         TaskCard(
             icon = "💬",
-            title = "Chat with Fred",
-            description = "Ask Fred, your AI health assistant, any questions!",
+            title = stringResource(R.string.chat_with_steve),
+            description = stringResource(R.string.chat_with_steve_desc),
             isRequired = false,
             onClick = {
                 navController.navigate(Screen.Chat.route)

@@ -15,12 +15,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.afyaquest.R
 import com.example.afyaquest.domain.model.ChatMessage
 import kotlinx.coroutines.launch
 
@@ -70,12 +72,12 @@ fun ChatScreen(
 
                         Column {
                             Text(
-                                text = "Fred - AI Assistant",
+                                text = stringResource(R.string.fred_ai_assistant),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
                             )
                             Text(
-                                text = "Online",
+                                text = stringResource(R.string.online),
                                 fontSize = 12.sp,
                                 color = Color(0xFF4CAF50)
                             )
@@ -107,7 +109,7 @@ fun ChatScreen(
                         modifier = Modifier
                             .weight(1f)
                             .heightIn(min = 56.dp, max = 120.dp),
-                        placeholder = { Text("Type your message...") },
+                        placeholder = { Text(stringResource(R.string.type_message)) },
                         enabled = !isLoading,
                         shape = RoundedCornerShape(28.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -132,7 +134,7 @@ fun ChatScreen(
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.Send,
-                            contentDescription = "Send message",
+                            contentDescription = stringResource(R.string.send_message),
                             tint = Color.White
                         )
                     }

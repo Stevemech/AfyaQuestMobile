@@ -32,6 +32,10 @@
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
 
+    <!-- Language names (for picker) -->
+    <string name="english">English</string>
+    <string name="kiswahili">Kiswahili</string>
+
     <!-- Dashboard -->
     <string name="dashboard">Dashboard</string>
     <string name="welcome">Welcome</string>
@@ -42,6 +46,9 @@
     <string name="rank">Rank</string>
     <string name="daily_todo">Daily To-Do</string>
     <string name="learning_center">Learning Center</string>
+    <string name="xp_value_format">%d XP</string>
+    <string name="level_value">Level %d</string>
+    <string name="xp_to_level_format">%1$d XP to Level %2$d</string>
 
     <!-- Daily Tasks -->
     <string name="daily_questions">Daily Questions</string>
@@ -103,12 +110,25 @@
     <string name="items_pending">items pending</string>
     <string name="changes_will_sync">Changes will sync when online</string>
 
-    <!-- Questions -->
+    <!-- Questions / Daily Questions -->
     <string name="question">Question</string>
     <string name="correct">Correct!</string>
     <string name="incorrect">Incorrect</string>
-    <string name="explanation">Explanation</string>
+    <string name="explanation">Explanation:</string>
     <string name="continue_text">Continue</string>
+    <string name="failed_to_load_questions">Failed to load questions</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="go_back">Go Back</string>
+    <string name="no_questions_available">No questions available</string>
+    <string name="question_progress">Question %1$d of %2$d</string>
+    <string name="next_question">Next Question →</string>
+    <string name="finish_quiz">Finish Quiz</string>
+    <string name="points_label">%d points</string>
+    <string name="quiz_complete">🎉 Quiz Complete!</string>
+    <string name="quiz_score_summary">You got %1$d out of %2$d questions correct!</string>
+    <string name="lives_gained">Lives Gained</string>
+    <string name="lives_lost">Lives Lost</string>
+    <string name="current_lives">Current Lives</string>
 
     <!-- XP and Gamification -->
     <string name="xp_earned">XP Earned</string>
@@ -116,28 +136,214 @@
     <string name="level_up">Level Up!</string>
     <string name="congratulations">Congratulations!</string>
 
-    <!-- Map -->
+    <!-- Map / Daily Itinerary -->
     <string name="map">Map</string>
     <string name="client_houses">Client Houses</string>
+    <string name="client_stops">Client Stops</string>
     <string name="health_facilities">Health Facilities</string>
     <string name="mark_as_visited">Mark as Visited</string>
     <string name="visited">Visited</string>
     <string name="pending">Pending</string>
     <string name="cancelled">Cancelled</string>
+    <string name="all">All</string>
+    <string name="to_visit">To Visit</string>
+    <string name="scheduled">Scheduled</string>
+    <string name="you_are_here">You are here</string>
+    <string name="your_location">Your location</string>
+    <string name="your_stops_for_the_day">Your stops for the day!</string>
+    <string name="no_stops_for_today">No stops for today.</string>
+    <string name="map_location_disclaimer">Kajiado district, Kenya. Your location uses device GPS when permission is granted.</string>
+    <string name="close">Close</string>
+    <string name="address">Address</string>
+    <string name="description">Description</string>
+    <string name="distance">Distance</string>
+    <string name="last_visit">Last visit</string>
+    <string name="next_visit">Next visit</string>
+    <string name="services">Services</string>
 
-    <!-- Reports -->
+    <!-- Reports / Daily Report -->
     <string name="patients_visited">Patients Visited</string>
     <string name="vaccines_administered">Vaccines Administered</string>
     <string name="health_education_sessions">Health Education Sessions</string>
     <string name="referrals">Referrals</string>
     <string name="challenges">Challenges</string>
     <string name="notes">Notes</string>
+    <string name="daily_report_intro">Fill out your daily report to track your activities and earn XP!</string>
+    <string name="patients_visited_label">Number of Patients Visited *</string>
+    <string name="vaccinations_administered_label">Vaccinations Administered *</string>
+    <string name="health_education_topics_label">Health Education Topics Covered *</string>
+    <string name="challenges_faced_label">Challenges Faced</string>
+    <string name="additional_notes">Additional Notes</string>
+    <string name="submit_report">Submit Report</string>
+    <string name="required_fields_note">* Required fields</string>
+    <string name="report_submitted">Report submitted!</string>
+    <string name="submission_failed">Submission failed</string>
+
+    <!-- Video Modules -->
+    <string name="categories">Categories</string>
+    <string name="no_videos_available">No videos available</string>
+    <string name="videos_watched">Videos Watched</string>
+    <string name="quizzes_complete">Quizzes Complete</string>
+    <string name="watch_video">Watch Video</string>
+    <string name="watch_again">Watch Again</string>
+    <string name="take_quiz">Take Quiz</string>
+    <string name="retake_quiz">Retake Quiz</string>
+    <string name="watched">✓ Watched</string>
+    <string name="quiz_check">Quiz ✓</string>
+
+    <!-- Video Modules (sample data / categories) -->
+    <string name="video_module_1_title">Module 1: Health Assessments</string>
+    <string name="video_module_1_desc">Learn how to conduct comprehensive health assessments using the Medical Detective\'s Handbook</string>
+    <string name="video_module_2_title">Module 2: Water Sanitation Practices</string>
+    <string name="video_module_2_desc">Understanding water treatment and safe storage</string>
+    <string name="video_module_3_title">Module 3: Maternal and Child Health</string>
+    <string name="video_module_3_desc">Essential care for mothers and children</string>
+    <string name="video_module_4_title">Module 4: Vaccination Programs</string>
+    <string name="video_module_4_desc">Understanding vaccination schedules and importance</string>
+    <string name="video_module_5_title">Module 5: Emergency First Aid</string>
+    <string name="video_module_5_desc">Learn essential emergency first aid techniques for common medical situations</string>
+    <string name="video_module_6_title">Module 6: Nutrition Basics</string>
+    <string name="video_module_6_desc">Understanding balanced nutrition and dietary needs</string>
+    <string name="video_module_7_title">Module 7: Disease Prevention</string>
+    <string name="video_module_7_desc">Common diseases and prevention strategies</string>
+
+    <string name="video_category_basics">Health Assessment</string>
+    <string name="video_category_sanitation">Sanitation</string>
+    <string name="video_category_maternal">Maternal Health</string>
+    <string name="video_category_immunization">Immunization</string>
+    <string name="video_category_emergency">Emergency</string>
+    <string name="video_category_nutrition">Nutrition</string>
+    <string name="video_category_disease_prevention">Disease Prevention</string>
+
+    <!-- Interactive Lessons -->
+    <string name="lessons_completed">%1$d/%2$d Lessons Completed</string>
+    <string name="no_lessons_available">No lessons available</string>
+    <string name="lesson">Lesson</string>
+
+    <!-- Map / Daily Itinerary (sample data) -->
+    <string name="facility_type_hospital">Hospital</string>
+    <string name="facility_type_clinic">Clinic</string>
+    <string name="facility_type_health_center">Health Center</string>
+
+    <string name="service_emergency">Emergency</string>
+    <string name="service_maternity">Maternity</string>
+    <string name="service_pediatrics">Pediatrics</string>
+    <string name="service_surgery">Surgery</string>
+    <string name="service_outpatient">Outpatient</string>
+    <string name="service_laboratory">Laboratory</string>
+    <string name="service_xray">X-Ray</string>
+    <string name="service_primary_care">Primary Care</string>
+    <string name="service_vaccination">Vaccination</string>
+    <string name="service_family_planning">Family Planning</string>
+    <string name="service_pharmacy">Pharmacy</string>
+
+    <string name="facility_kajiado_referral_hospital_name">Kajiado Referral Hospital</string>
+    <string name="facility_aic_kajiado_hospital_name">AIC Kajiado Hospital</string>
+    <string name="facility_kitengela_subcounty_hospital_name">Kitengela Sub-County Hospital</string>
+    <string name="facility_kajiado_airport_dispensary_name">Kajiado Airport Dispensary</string>
+
+    <string name="client_selina_nkoya_family_name">Selina Nkoya Family</string>
+    <string name="client_ole_sankale_household_name">Ole Sankale Household</string>
+    <string name="client_grace_nasieku_name">Grace Nasieku</string>
+    <string name="client_david_lekishon_family_name">David Lekishon Family</string>
+    <string name="client_peter_kisemei_household_name">Peter Kisemei Household</string>
+    <string name="client_mary_ole_sankale_name">Mary Ole Sankale</string>
+
+    <string name="address_123_airport_road">123 Airport Road</string>
+    <string name="address_45_bissil_road">45 Bissil Road</string>
+    <string name="address_78_blood_bank">78 Blood Bank Road</string>
+    <string name="address_mashuuru_village">Mashuuru Village</string>
+    <string name="address_78_mashuuru_village">78 Mashuuru Village</string>
+    <string name="address_22_kajiado_town">22 Kajiado Town</string>
+    <string name="address_kajiado_town">Kajiado Town</string>
+    <string name="address_89_oloosirkon_area">89 Oloosirkon Area</string>
+    <string name="address_34_magadi_road">34 Magadi Road</string>
+    <string name="address_near_kajiado_airport">Near Kajiado Airport</string>
+
+    <string name="desc_maternal_health_checkup_needed">Maternal health check-up needed</string>
+    <string name="desc_child_vaccination_due">Child vaccination due</string>
+    <string name="desc_dropoff_pickup_supplies">Drop-off / pick-up supplies</string>
+    <string name="desc_family_planning_consultation">Family planning consultation</string>
+    <string name="desc_hypertension_screening_needed">Hypertension screening needed</string>
+    <string name="desc_followup_completed">Follow-up completed</string>
+    <string name="desc_prenatal_care_appointment">Prenatal care appointment</string>
+
+    <string name="time_2_days_ago">2 days ago</string>
+    <string name="time_just_now">Just now</string>
+    <string name="time_tomorrow_10_am">Tomorrow 10:00 AM</string>
+    <string name="time_friday_2_pm">Friday 2:00 PM</string>
+    <string name="mark_complete_xp">Mark as Complete (+%d XP)</string>
+    <string name="lesson_completed">Lesson completed!</string>
+    <string name="min_format">⏱️ %s min</string>
+    <string name="xp_format">💎 %d XP</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+
+    <!-- Lesson categories -->
+    <string name="category_hygiene">Hygiene</string>
+    <string name="category_nutrition">Nutrition</string>
+    <string name="category_maternal_health">Maternal Health</string>
+    <string name="category_child_care">Child Care</string>
+    <string name="category_disease_prevention">Disease Prevention</string>
+    <string name="category_first_aid">First Aid</string>
+    <string name="category_medication">Medication</string>
+    <string name="category_health_education">Health Education</string>
+
+    <!-- Lesson 1: Handwashing -->
+    <string name="lesson_1_title">Proper Handwashing Techniques</string>
+    <string name="lesson_1_description">Learn the 7 steps of proper handwashing to prevent disease transmission</string>
+    <string name="lesson_1_content"># Proper Handwashing Techniques\n\n## Why Handwashing Matters\nHandwashing is one of the most effective ways to prevent the spread of diseases and infections.\n\n## The 7 Steps\n\n1. **Wet hands** with clean, running water\n2. **Apply soap** and lather well\n3. **Rub palms together**\n4. **Rub between fingers**\n5. **Clean backs of hands**\n6. **Clean under nails**\n7. **Rinse thoroughly**\n\n## When to Wash Hands\n- Before preparing food\n- Before eating\n- After using the toilet\n- After coughing or sneezing\n- After touching animals\n\n## Duration\nWash hands for at least **20 seconds** - about as long as singing \"Happy Birthday\" twice!</string>
+
+    <!-- Lesson 2: Nutrition -->
+    <string name="lesson_2_title">Balanced Diet for Children</string>
+    <string name="lesson_2_description">Understanding nutritional needs for growing children</string>
+    <string name="lesson_2_content"># Balanced Diet for Children\n\n## Essential Food Groups\n\n### 1. Proteins\n- Beans, lentils, eggs, fish, meat\n- Builds strong muscles and supports growth\n\n### 2. Carbohydrates\n- Ugali, rice, potatoes, bread\n- Provides energy for daily activities\n\n### 3. Fruits &amp; Vegetables\n- Dark leafy greens, mangoes, bananas, tomatoes\n- Rich in vitamins and minerals\n\n### 4. Dairy\n- Milk, yogurt (if available)\n- Strong bones and teeth\n\n## Meal Planning Tips\n- Offer variety each day\n- Include colorful fruits and vegetables\n- Ensure adequate portions\n- Provide clean drinking water</string>
+
+    <!-- Lesson 3: Prenatal -->
+    <string name="lesson_3_title">Prenatal Care Essentials</string>
+    <string name="lesson_3_description">Key aspects of maternal health during pregnancy</string>
+    <string name="lesson_3_content"># Prenatal Care Essentials\n\n## Regular Check-ups\nVisit health facility at least 4 times during pregnancy:\n- Once in first 3 months\n- Once between 4-6 months\n- Twice in last 3 months\n\n## Nutrition During Pregnancy\n- Increase food intake\n- Take iron and folic acid supplements\n- Drink plenty of clean water\n\n## Warning Signs\nSeek immediate help if:\n- Severe headache\n- Blurred vision\n- Vaginal bleeding\n- Severe abdominal pain\n- Reduced baby movement\n\n## Malaria Prevention\n- Sleep under treated mosquito net\n- Take preventive medication as prescribed</string>
+
+    <!-- Lesson 4: Vaccination -->
+    <string name="lesson_4_title">Child Vaccination Schedule</string>
+    <string name="lesson_4_description">Understanding when and why children need vaccines</string>
+    <string name="lesson_4_content"># Child Vaccination Schedule\n\n## At Birth\n- BCG (tuberculosis)\n- Polio 0\n\n## 6 Weeks\n- Polio 1\n- Pentavalent 1\n- PCV 1\n\n## 10 Weeks\n- Polio 2\n- Pentavalent 2\n- PCV 2\n\n## 14 Weeks\n- Polio 3\n- Pentavalent 3\n- PCV 3\n\n## 9 Months\n- Measles\n- Yellow Fever\n\n## Why Vaccines Matter\nVaccines protect children from serious diseases and save lives.</string>
+
+    <!-- Lesson 5: Malaria -->
+    <string name="lesson_5_title">Malaria Prevention</string>
+    <string name="lesson_5_description">Strategies to prevent malaria in your community</string>
+    <string name="lesson_5_content"># Malaria Prevention\n\n## Use of Mosquito Nets\n- Sleep under insecticide-treated nets\n- Repair holes immediately\n- Re-treat nets every 6-12 months\n\n## Environmental Control\n- Remove standing water\n- Keep surroundings clean\n- Clear bush around homes\n\n## Early Detection\nLook for symptoms:\n- Fever\n- Chills\n- Headache\n- Body aches\n\n## Treatment\n- Seek medical help immediately\n- Complete full course of medication\n- Rest and drink fluids</string>
+
+    <!-- Lesson 6: CPR -->
+    <string name="lesson_6_title">CPR Basics</string>
+    <string name="lesson_6_description">Life-saving CPR techniques for adults and children</string>
+    <string name="lesson_6_content"># CPR Basics\n\n## When to Perform CPR\n- Person is unconscious\n- Not breathing or gasping\n- No pulse\n\n## Steps for Adults\n\n### 1. Call for Help\nCall emergency services immediately\n\n### 2. Position\nLay person flat on firm surface\n\n### 3. Hand Placement\nCenter of chest, between nipples\n\n### 4. Compressions\n- Push hard and fast\n- At least 2 inches deep\n- Rate: 100-120 per minute\n- 30 compressions\n\n### 5. Rescue Breaths\n- Tilt head back\n- Lift chin\n- Give 2 breaths\n\n### 6. Repeat\nContinue cycle: 30 compressions, 2 breaths\n\n## For Children\n- Use one hand for compressions\n- Less depth: about 2 inches\n- Same ratio: 30:2</string>
 
     <!-- Chat -->
     <string name="chat">Chat</string>
     <string name="type_message">Type your message…</string>
     <string name="send">Send</string>
     <string name="online">Online</string>
+    <string name="fred_ai_assistant">Fred - AI Assistant</string>
+    <string name="send_message">Send message</string>
+
+    <!-- Fred\'s messages (localized) -->
+    <string name="fred_greeting">Hey there! I\'m Fred, your friendly AI health assistant for Afya Quest. I\'m here to help you with health education, study tips, and any questions about the platform. What can I help you learn today? 😊</string>
+    <string name="fred_response_hello">Hey there! 😊 I\'m Fred, your AI health assistant. I\'m here to help you with health education, study tips, and any questions about Afya Quest. What can I help you learn today?</string>
+    <string name="fred_response_handwashing">Great question about handwashing! 🧼 Remember the 7 steps: wet, apply soap, rub palms, between fingers, backs of hands, under nails, and rinse thoroughly for at least 20 seconds. This is one of the best ways to prevent disease transmission!</string>
+    <string name="fred_response_malaria">Malaria prevention is crucial! 🦟 The key strategies are: sleeping under insecticide-treated nets, removing standing water, keeping surroundings clean, and seeking immediate medical help if symptoms appear (fever, chills, headache). Always complete the full course of medication if prescribed.</string>
+    <string name="fred_response_vaccination">Vaccinations are vital for child health! 💉 Children should receive vaccines at birth (BCG, Polio 0), 6 weeks, 10 weeks, 14 weeks (Polio, Pentavalent, PCV series), and 9 months (Measles, Yellow Fever). These protect against serious diseases and save lives!</string>
+    <string name="fred_response_nutrition">Balanced nutrition is essential! 🥗 Children need proteins (beans, eggs, fish), carbohydrates (ugali, rice), fruits &amp; vegetables (dark leafy greens, mangoes), and dairy when available. Offer variety, colorful foods, and plenty of clean water daily.</string>
+    <string name="fred_response_xp">Looking to earn more XP? 💎 Complete your daily questions (30 XP each correct answer), submit daily reports (50 XP), finish interactive lessons (50-100 XP), and watch video modules! Keep your streak going for bonus XP. You\'ve got this!</string>
+    <string name="fred_response_streak">Streaks are your daily commitment! 🔥 Log in and complete at least one activity every day to maintain your streak. Longer streaks earn you bonus XP and show your dedication to learning. Don\'t break the chain!</string>
+    <string name="fred_response_thanks">You\'re very welcome! 😊 I\'m always here to help you on your learning journey. Keep up the great work as a Community Health Assistant - you\'re making a real difference in your community! Feel free to ask me anything anytime.</string>
+    <string name="fred_response_cpr">CPR is a life-saving skill! 🚨 Remember: check if person is unconscious and not breathing, call for help, position them flat, place hands at center of chest, give 30 compressions (100-120/min, 2 inches deep), then 2 rescue breaths. Repeat the 30:2 cycle.</string>
+    <string name="fred_response_default">That\'s an interesting question! I\'m here to help with health education, study tips, and platform guidance. Could you tell me more about what you\'d like to learn? I can help with topics like handwashing, nutrition, malaria prevention, vaccinations, CPR, maternal health, and more! 📚</string>
+    <string name="fred_error">Sorry, I encountered an error. Please try again.</string>
+
+    <string name="fill_required_fields">Please fill in all required fields</string>
+    <string name="report_submitted_success">Report submitted successfully!</string>
 
     <!-- Errors -->
     <string name="error_network">Network error. Please try again.</string>
