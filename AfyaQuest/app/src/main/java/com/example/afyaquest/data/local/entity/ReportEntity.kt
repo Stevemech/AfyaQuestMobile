@@ -19,7 +19,7 @@ data class ReportEntity(
     val date: String, // Format: YYYY-MM-DD
     val patientsVisited: Int = 0,
     val vaccinationsGiven: Int = 0,
-    val healthEducationSessions: Int = 0,
+    val healthEducation: String = "",
     val challenges: String? = null,
     val notes: String? = null,
     val isSynced: Boolean = false, // Track sync status for offline support

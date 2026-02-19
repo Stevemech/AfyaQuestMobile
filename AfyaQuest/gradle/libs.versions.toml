@@ -46,6 +46,9 @@ coil = "2.7.0"
 # WorkManager
 work = "2.9.1"
 
+# ML Kit
+mlkitDigitalInk = "18.1.0"
+
 # DataStore
 datastore = "1.1.1"
 
@@ -106,6 +109,9 @@ exoplayer = { group = "com.google.android.exoplayer", name = "exoplayer", versio
 
 # Image Loading
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+# ML Kit Digital Ink Recognition
+mlkit-digital-ink-recognition = { group = "com.google.mlkit", name = "digital-ink-recognition", version.ref = "mlkitDigitalInk" }
 
 # WorkManager
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }

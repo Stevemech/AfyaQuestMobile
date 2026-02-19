@@ -3,7 +3,9 @@ package com.example.afyaquest.presentation.report
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.afyaquest.data.repository.ReportsRepository
 import com.example.afyaquest.domain.model.DailyReport
+import com.example.afyaquest.util.LanguageManager
 import com.example.afyaquest.util.Resource
 import com.example.afyaquest.util.XpManager
 import com.example.afyaquest.util.XpRewards
@@ -24,8 +26,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DailyReportViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val xpManager: XpManager
-    // TODO: Inject ReportsRepository when backend is ready
+    private val xpManager: XpManager,
+    private val reportsRepository: ReportsRepository,
+    private val languageManager: LanguageManager
 ) : ViewModel() {
 
     private val _patientsVisited = MutableStateFlow("")
@@ -46,6 +49,17 @@ class DailyReportViewModel @Inject constructor(
     private val _submissionState = MutableStateFlow<Resource<String>?>(null)
     val submissionState: StateFlow<Resource<String>?> = _submissionState.asStateFlow()
 
+    private val _selectedTab = MutableStateFlow(0)
+    val selectedTab: StateFlow<Int> = _selectedTab.asStateFlow()
+
+    private val _reportHistory = MutableStateFlow<List<DailyReport>>(emptyList())
+    val reportHistory: StateFlow<List<DailyReport>> = _reportHistory.asStateFlow()
+
+    private val _historyLoading = MutableStateFlow(false)
+    val historyLoading: StateFlow<Boolean> = _historyLoading.asStateFlow()
+
+    fun getCurrentLanguage(): String = languageManager.getCurrentLanguage()
+
     val healthEducationTopics: List<String> get() = listOf(
         context.getString(R.string.category_hygiene),
         context.getString(R.string.category_nutrition),
@@ -53,6 +67,34 @@ class DailyReportViewModel @Inject constructor(
         context.getString(R.string.category_maternal_health),
         context.getString(R.string.category_child_care)
     )
+
+    init {
+        loadReportHistory()
+    }
+
+    fun selectTab(index: Int) {
+        _selectedTab.value = index
+    }
+
+    fun loadReportHistory() {
+        viewModelScope.launch {
+            _historyLoading.value = true
+            reportsRepository.getReportsForCurrentUser().collect { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        _reportHistory.value = resource.data ?: emptyList()
+                        _historyLoading.value = false
+                    }
+                    is Resource.Error -> {
+                        _historyLoading.value = false
+                    }
+                    is Resource.Loading -> {
+                        _historyLoading.value = true
+                    }
+                }
+            }
+        }
+    }
 
     fun setPatientsVisited(value: String) {
         // Only allow non-negative numbers
@@ -117,17 +159,29 @@ class DailyReportViewModel @Inject constructor(
                     notes = _notes.value
                 )
 
-                // TODO: Submit to backend when repository is available
-                // For now, just award XP and mark as successful
-
-                // Award XP for submitting daily report
-                xpManager.addXP(
-                    XpRewards.DAILY_REPORT,
-                    "Submitted daily report"
-                )
-
-                _submissionState.value = Resource.Success(context.getString(R.string.report_submitted_success))
-
+                reportsRepository.saveReport(report).collect { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            // Award XP for submitting daily report
+                            xpManager.addXP(
+                                XpRewards.DAILY_REPORT,
+                                "Submitted daily report"
+                            )
+                            _submissionState.value = Resource.Success(
+                                context.getString(R.string.report_submitted_success)
+                            )
+                            resetForm()
+                        }
+                        is Resource.Error -> {
+                            _submissionState.value = Resource.Error(
+                                resource.message ?: context.getString(R.string.submission_failed)
+                            )
+                        }
+                        is Resource.Loading -> {
+                            _submissionState.value = Resource.Loading()
+                        }
+                    }
+                }
             } catch (e: Exception) {
                 _submissionState.value = Resource.Error(
                     e.localizedMessage ?: context.getString(R.string.submission_failed)
@@ -152,6 +206,5 @@ class DailyReportViewModel @Inject constructor(
         _healthEducation.value = ""
         _challenges.value = ""
         _notes.value = ""
-        _submissionState.value = null
     }
 }

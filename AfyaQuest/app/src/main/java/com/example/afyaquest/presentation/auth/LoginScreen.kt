@@ -1,7 +1,5 @@
 package com.example.afyaquest.presentation.auth
 
-import android.app.Activity
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,7 +34,6 @@ import com.example.afyaquest.presentation.navigation.Screen
 import com.example.afyaquest.util.LanguageManager
 import com.example.afyaquest.util.Resource
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 /**
  * Login screen for user authentication.
@@ -58,14 +54,6 @@ fun LoginScreen(
     val currentLanguage by viewModel.currentLanguage.collectAsState()
     val scope = rememberCoroutineScope()
 
-    // Create a locale-aware context so stringResource() updates instantly
-    val context = LocalContext.current
-    val localizedContext = remember(currentLanguage) {
-        val locale = Locale(currentLanguage)
-        val config = Configuration(context.resources.configuration).apply { setLocale(locale) }
-        context.createConfigurationContext(config)
-    }
-
     // Handle login state changes
     LaunchedEffect(loginState) {
         when (loginState) {
@@ -85,154 +73,151 @@ fun LoginScreen(
         }
     }
 
-    CompositionLocalProvider(LocalContext provides localizedContext) {
-        Scaffold(
-            snackbarHost = { SnackbarHost(snackbarHostState) }
-        ) { paddingValues ->
-            Box(
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(24.dp)
+        ) {
+            // Language toggle at the top
+            LanguageToggle(
+                currentLanguage = currentLanguage,
+                onLanguageSelected = { lang ->
+                    scope.launch {
+                        viewModel.changeLanguage(lang)
+                    }
+                },
+                modifier = Modifier.align(Alignment.TopEnd)
+            )
+
+            // Centered login form
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(24.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Language toggle at the top
-                LanguageToggle(
-                    currentLanguage = currentLanguage,
-                    onLanguageSelected = { lang ->
-                        scope.launch {
-                            viewModel.changeLanguage(lang)
-                            (context as? Activity)?.recreate()
-                        }
-                    },
-                    modifier = Modifier.align(Alignment.TopEnd)
+                // Title
+                Text(
+                    text = stringResource(R.string.welcome_back),
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
                 )
 
-                // Centered login form
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Title
-                    Text(
-                        text = stringResource(R.string.welcome_back),
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.sign_in_subtitle),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
 
-                    Text(
-                        text = stringResource(R.string.sign_in_subtitle),
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    )
+                Spacer(modifier = Modifier.height(48.dp))
 
-                    Spacer(modifier = Modifier.height(48.dp))
+                // Email field
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text(stringResource(R.string.email)) },
+                    leadingIcon = {
+                        Icon(Icons.Default.Email, contentDescription = null)
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    ),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-                    // Email field
-                    OutlinedTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        label = { Text(stringResource(R.string.email)) },
-                        leadingIcon = {
-                            Icon(Icons.Default.Email, contentDescription = null)
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Email,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                        ),
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Password field
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = { Text(stringResource(R.string.password)) },
-                        leadingIcon = {
-                            Icon(Icons.Default.Lock, contentDescription = null)
-                        },
-                        trailingIcon = {
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                    contentDescription = if (passwordVisible) {
-                                        stringResource(R.string.hide_password)
-                                    } else {
-                                        stringResource(R.string.show_password)
-                                    }
-                                )
-                            }
-                        },
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                focusManager.clearFocus()
-                                if (email.isNotBlank() && password.isNotBlank()) {
-                                    viewModel.login(email, password)
+                // Password field
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text(stringResource(R.string.password)) },
+                    leadingIcon = {
+                        Icon(Icons.Default.Lock, contentDescription = null)
+                    },
+                    trailingIcon = {
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(
+                                imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                contentDescription = if (passwordVisible) {
+                                    stringResource(R.string.hide_password)
+                                } else {
+                                    stringResource(R.string.show_password)
                                 }
-                            }
-                        ),
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    // Login button
-                    Button(
-                        onClick = {
+                            )
+                        }
+                    },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
                             if (email.isNotBlank() && password.isNotBlank()) {
                                 viewModel.login(email, password)
                             }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        enabled = loginState !is Resource.Loading
-                    ) {
-                        if (loginState is Resource.Loading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        } else {
-                            Text(stringResource(R.string.sign_in), fontSize = 16.sp)
                         }
-                    }
+                    ),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                    // Register link
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(R.string.no_account) + " ",
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                // Login button
+                Button(
+                    onClick = {
+                        if (email.isNotBlank() && password.isNotBlank()) {
+                            viewModel.login(email, password)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    enabled = loginState !is Resource.Loading
+                ) {
+                    if (loginState is Resource.Loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
-                        TextButton(
-                            onClick = {
-                                navController.navigate(Screen.Register.route)
-                            }
-                        ) {
-                            Text(stringResource(R.string.sign_up))
+                    } else {
+                        Text(stringResource(R.string.sign_in), fontSize = 16.sp)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Register link
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.no_account) + " ",
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                    TextButton(
+                        onClick = {
+                            navController.navigate(Screen.Register.route)
                         }
+                    ) {
+                        Text(stringResource(R.string.sign_up))
                     }
                 }
             }

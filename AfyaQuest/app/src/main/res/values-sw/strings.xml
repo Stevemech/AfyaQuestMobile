@@ -344,6 +344,16 @@
     <string name="fill_required_fields">Tafadhali jaza sehemu zote zinazohitajika</string>
     <string name="report_submitted_success">Ripoti imewasilishwa kikamilifu!</string>
 
+    <!-- Input Assist (Speech-to-Text / Handwriting) -->
+    <string name="speech_to_text">Hotuba hadi maandishi</string>
+    <string name="handwriting_input">Maandishi ya mkono</string>
+    <string name="draw_here">Andika hapa</string>
+    <string name="clear">Futa</string>
+    <string name="recognizing">Inatambua…</string>
+    <string name="speech_not_available">Utambuzi wa hotuba haupatikani</string>
+    <string name="downloading_model">Inapakua mfano wa maandishi…</string>
+    <string name="handwriting_model_ready">Mfano wa maandishi tayari</string>
+
     <!-- Errors -->
     <string name="error_network">Hitilafu ya mtandao. Tafadhali jaribu tena.</string>
     <string name="error_generic">Hitilafu fulani imetokea. Tafadhali jaribu tena.</string>

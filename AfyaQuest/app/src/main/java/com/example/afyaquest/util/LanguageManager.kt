@@ -1,22 +1,22 @@
 package com.example.afyaquest.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Manages app language/locale settings
+ * Manages app language/locale settings on a per-user basis.
+ *
+ * Language preferences are stored in SharedPreferences keyed by user ID so each
+ * user gets their own language setting. A global key is kept in sync for
+ * [android.app.Activity.attachBaseContext] which runs before Hilt injection.
  */
 @Singleton
 class LanguageManager @Inject constructor(
@@ -27,80 +27,135 @@ class LanguageManager @Inject constructor(
         const val LANGUAGE_ENGLISH = "en"
         const val LANGUAGE_SWAHILI = "sw"
 
-        /** Same name as DataStore; also used so MainActivity.attachBaseContext can read locale before DI. */
+        /** SharedPreferences file name - also read by MainActivity.attachBaseContext. */
         const val LANGUAGE_PREFS_NAME = "language_prefs"
+
+        /** Global key used by attachBaseContext (always reflects the active language). */
         const val LANGUAGE_KEY = "selected_language"
 
-        private val Context.languageDataStore by preferencesDataStore(name = LANGUAGE_PREFS_NAME)
-        private val LANGUAGE_KEY_DS = stringPreferencesKey(LANGUAGE_KEY)
+        private const val USER_LANG_PREFIX = "lang_"
     }
 
+    /** The currently logged-in user's ID, or null when on the login screen. */
+    private var currentUserId: String? = null
+
+    private val _currentLanguage = MutableStateFlow(readGlobalLanguage())
+
+    // ── Public API ──────────────────────────────────────────────────────
+
     /**
-     * Get current language as Flow
+     * Switch to per-user language preferences.
+     *
+     * Call after a successful login. If this user has no saved preference yet
+     * the current language (e.g. whatever was chosen on the login screen) is
+     * adopted as their preference.
+     *
+     * Call with `null` on logout to revert to the global (login-screen) pref.
      */
-    fun getCurrentLanguageFlow(): Flow<String> {
-        return context.languageDataStore.data.map { preferences ->
-            preferences[LANGUAGE_KEY_DS] ?: LANGUAGE_ENGLISH
+    fun setCurrentUser(userId: String?) {
+        currentUserId = userId
+
+        if (userId == null) {
+            // Logout – the global key already reflects the last active language.
+            return
         }
+
+        val prefs = getPrefs()
+        val userKey = userLangKey(userId)
+
+        var lang = prefs.getString(userKey, null)
+        if (lang == null) {
+            // First login on this device – inherit current language.
+            lang = _currentLanguage.value
+            prefs.edit().putString(userKey, lang).commit()
+        }
+
+        // Keep global key in sync for attachBaseContext after process death.
+        prefs.edit().putString(LANGUAGE_KEY, lang).commit()
+
+        _currentLanguage.value = lang
+        applyLanguage(lang)
     }
 
     /**
-     * Get current language synchronously from SharedPreferences.
+     * Observe the current language reactively (for Compose StateFlows).
+     */
+    fun getCurrentLanguageFlow(): Flow<String> = _currentLanguage
+
+    /**
+     * Synchronous read – safe to call from non-coroutine contexts.
      */
     fun getCurrentLanguageBlocking(): String {
-        return context.getSharedPreferences(LANGUAGE_PREFS_NAME, Context.MODE_PRIVATE)
-            .getString(LANGUAGE_KEY, LANGUAGE_ENGLISH) ?: LANGUAGE_ENGLISH
+        return getPrefs().getString(activeKey(), LANGUAGE_ENGLISH) ?: LANGUAGE_ENGLISH
     }
 
     /**
-     * Get current language from default locale.
+     * Convenience accessor backed by the StateFlow.
      */
-    fun getCurrentLanguage(): String {
-        return Locale.getDefault().language.let { lang ->
-            when (lang) {
-                LANGUAGE_SWAHILI -> LANGUAGE_SWAHILI
-                else -> LANGUAGE_ENGLISH
-            }
-        }
-    }
+    fun getCurrentLanguage(): String = _currentLanguage.value
 
     /**
-     * Set app language
+     * Persist a new language choice and apply it immediately.
      */
     suspend fun setLanguage(languageCode: String) {
-        // Save to DataStore
-        context.languageDataStore.edit { preferences ->
-            preferences[LANGUAGE_KEY_DS] = languageCode
-        }
+        val prefs = getPrefs()
+        // Save to user-specific key (or global if not logged in).
+        prefs.edit().putString(activeKey(), languageCode).commit()
+        // Always mirror to global key for attachBaseContext.
+        prefs.edit().putString(LANGUAGE_KEY, languageCode).commit()
 
-        // Save to SharedPreferences synchronously so attachBaseContext (after recreate) sees it.
-        context.getSharedPreferences(LANGUAGE_PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(LANGUAGE_KEY, languageCode)
-            .commit()
-
-        // Apply to app
+        _currentLanguage.value = languageCode
         applyLanguage(languageCode)
     }
 
     /**
-     * Apply saved language at app/activity start.
+     * Called once in [MainActivity.onCreate] to ensure the locale is applied
+     * after the Activity is fully created. Reads from the active key (user or
+     * global) and syncs the global key.
      */
     fun applySavedLanguageBlocking() {
-        runBlocking {
-            val lang = context.languageDataStore.data.first()[LANGUAGE_KEY_DS] ?: LANGUAGE_ENGLISH
-            // Keep SharedPreferences in sync for attachBaseContext
-            context.getSharedPreferences(LANGUAGE_PREFS_NAME, Context.MODE_PRIVATE)
-                .edit()
-                .putString(LANGUAGE_KEY, lang)
-                .commit()
-            applyLanguage(lang)
+        val lang = getPrefs().getString(activeKey(), LANGUAGE_ENGLISH) ?: LANGUAGE_ENGLISH
+        getPrefs().edit().putString(LANGUAGE_KEY, lang).commit()
+        _currentLanguage.value = lang
+        applyLanguage(lang)
+    }
+
+    // ── Display helpers ─────────────────────────────────────────────────
+
+    fun getLanguageDisplayName(languageCode: String): String {
+        return when (languageCode) {
+            LANGUAGE_ENGLISH -> "English"
+            LANGUAGE_SWAHILI -> "Kiswahili"
+            else -> "English"
         }
     }
 
-    /**
-     * Apply language to context
-     */
+    fun getAvailableLanguages(): List<Pair<String, String>> {
+        return listOf(
+            LANGUAGE_ENGLISH to "English",
+            LANGUAGE_SWAHILI to "Kiswahili"
+        )
+    }
+
+    // ── Internals ───────────────────────────────────────────────────────
+
+    private fun getPrefs(): SharedPreferences {
+        return context.getSharedPreferences(LANGUAGE_PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
+    private fun userLangKey(userId: String): String = "$USER_LANG_PREFIX$userId"
+
+    /** Returns the SharedPreferences key for the current context (user or global). */
+    private fun activeKey(): String {
+        val uid = currentUserId
+        return if (uid != null) userLangKey(uid) else LANGUAGE_KEY
+    }
+
+    private fun readGlobalLanguage(): String {
+        return context.getSharedPreferences(LANGUAGE_PREFS_NAME, Context.MODE_PRIVATE)
+            .getString(LANGUAGE_KEY, LANGUAGE_ENGLISH) ?: LANGUAGE_ENGLISH
+    }
+
     private fun applyLanguage(languageCode: String) {
         val locale = Locale(languageCode)
         Locale.setDefault(locale)
@@ -113,26 +168,5 @@ class LanguageManager @Inject constructor(
         }
 
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
-    }
-
-    /**
-     * Get display name for language
-     */
-    fun getLanguageDisplayName(languageCode: String): String {
-        return when (languageCode) {
-            LANGUAGE_ENGLISH -> "English"
-            LANGUAGE_SWAHILI -> "Kiswahili"
-            else -> "English"
-        }
-    }
-
-    /**
-     * Get all available languages
-     */
-    fun getAvailableLanguages(): List<Pair<String, String>> {
-        return listOf(
-            LANGUAGE_ENGLISH to "English",
-            LANGUAGE_SWAHILI to "Kiswahili"
-        )
     }
 }

@@ -45,14 +45,48 @@ class LanguageManagerTest {
     @Test
     fun `setLanguage changes language preference`() = runBlocking {
         languageManager.setLanguage(LanguageManager.LANGUAGE_SWAHILI)
-
-        // Note: In real test, would verify DataStore value
-        // This is a simplified test
+        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguageBlocking())
     }
 
     @Test
     fun `language constants are correct`() {
         assertEquals("en", LanguageManager.LANGUAGE_ENGLISH)
         assertEquals("sw", LanguageManager.LANGUAGE_SWAHILI)
+    }
+
+    @Test
+    fun `per-user language is isolated`() = runBlocking {
+        // User A sets Swahili
+        languageManager.setCurrentUser("userA")
+        languageManager.setLanguage(LanguageManager.LANGUAGE_SWAHILI)
+        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguage())
+
+        // User B logs in – first time, inherits current language (Swahili from above)
+        languageManager.setCurrentUser("userB")
+        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguage())
+
+        // User B switches to English
+        languageManager.setLanguage(LanguageManager.LANGUAGE_ENGLISH)
+        assertEquals(LanguageManager.LANGUAGE_ENGLISH, languageManager.getCurrentLanguage())
+
+        // Switch back to User A – should still be Swahili
+        languageManager.setCurrentUser("userA")
+        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguage())
+    }
+
+    @Test
+    fun `logout reverts to global preference`() = runBlocking {
+        // Set global to English
+        languageManager.setLanguage(LanguageManager.LANGUAGE_ENGLISH)
+
+        // User logs in and sets Swahili
+        languageManager.setCurrentUser("user1")
+        languageManager.setLanguage(LanguageManager.LANGUAGE_SWAHILI)
+
+        // Logout
+        languageManager.setCurrentUser(null)
+
+        // Global key should still reflect last active language (Swahili)
+        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguage())
     }
 }

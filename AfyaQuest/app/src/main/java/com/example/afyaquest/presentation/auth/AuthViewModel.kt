@@ -62,6 +62,10 @@ class AuthViewModel @Inject constructor(
                     _loginState.value = resource
                     if (resource is Resource.Success) {
                         _isLoggedIn.value = true
+                        // Load per-user language preference (or inherit login-screen choice).
+                        resource.data?.let { user ->
+                            languageManager.setCurrentUser(user.id)
+                        }
                     }
                 }
         }
@@ -89,6 +93,7 @@ class AuthViewModel @Inject constructor(
      */
     fun logout() {
         authRepository.logout()
+        languageManager.setCurrentUser(null)
         _isLoggedIn.value = false
         _loginState.value = null
         _registerState.value = null

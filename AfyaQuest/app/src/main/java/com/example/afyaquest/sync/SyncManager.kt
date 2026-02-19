@@ -4,8 +4,11 @@ import android.content.Context
 import android.util.Log
 import androidx.work.*
 import com.example.afyaquest.data.local.dao.PendingSyncDao
+import com.example.afyaquest.data.local.dao.ReportDao
 import com.example.afyaquest.data.local.entity.*
+import com.example.afyaquest.data.remote.ApiService
 import com.example.afyaquest.util.NetworkMonitor
+import com.example.afyaquest.util.TokenManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -20,7 +23,10 @@ import javax.inject.Singleton
 class SyncManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val pendingSyncDao: PendingSyncDao,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    private val apiService: ApiService,
+    private val tokenManager: TokenManager,
+    private val reportDao: ReportDao
 ) {
 
     private val workManager = WorkManager.getInstance(context)
@@ -129,28 +135,45 @@ class SyncManager @Inject constructor(
     }
 
     /**
-     * Sync pending reports
+     * Sync pending reports to the API
      * @return number of reports synced
      */
     suspend fun syncReports(): Int {
         val unsyncedReports = pendingSyncDao.getUnsyncedReports()
         var syncedCount = 0
 
+        val idToken = tokenManager.getIdToken() ?: return 0
+
         for (report in unsyncedReports) {
             try {
-                // TODO: Call API to submit report
-                // val result = reportsRepository.submitReport(report)
+                val requestBody = mapOf<String, Any>(
+                    "date" to report.date,
+                    "patientsVisited" to report.patientsVisited,
+                    "vaccinationsGiven" to report.vaccinationsGiven,
+                    "healthEducation" to report.healthEducation,
+                    "challenges" to report.challenges,
+                    "notes" to report.notes
+                )
 
-                // For now, simulate successful sync
-                Log.d("SyncManager", "Syncing report: ${report.id}")
+                val response = apiService.createReport("Bearer $idToken", requestBody)
 
-                // Mark as synced
-                pendingSyncDao.markReportSynced(report.id)
-                syncedCount++
+                if (response.isSuccessful) {
+                    // Mark pending report as synced
+                    pendingSyncDao.markReportSynced(report.id)
 
+                    // Also mark the main report entity as synced if it exists
+                    val reportEntity = reportDao.getReportByUserAndDate(report.userId, report.date)
+                    if (reportEntity != null) {
+                        reportDao.markReportAsSynced(reportEntity.id)
+                    }
+
+                    syncedCount++
+                    Log.d("SyncManager", "Synced report: ${report.id}")
+                } else {
+                    Log.e("SyncManager", "Failed to sync report ${report.id}: ${response.code()}")
+                }
             } catch (e: Exception) {
                 Log.e("SyncManager", "Failed to sync report ${report.id}: ${e.message}")
-                // Continue with next item
             }
         }
 
@@ -168,8 +191,6 @@ class SyncManager @Inject constructor(
         for (quiz in unsyncedQuizzes) {
             try {
                 // TODO: Call API to submit quiz result
-                // val result = questionsRepository.submitQuiz(quiz)
-
                 Log.d("SyncManager", "Syncing quiz: ${quiz.id}")
 
                 // Mark as synced
@@ -195,8 +216,6 @@ class SyncManager @Inject constructor(
         for (chat in unsyncedChats) {
             try {
                 // TODO: Call API to send chat message
-                // val result = chatRepository.sendMessage(chat)
-
                 Log.d("SyncManager", "Syncing chat: ${chat.id}")
 
                 // Mark as synced with mock response
@@ -226,8 +245,6 @@ class SyncManager @Inject constructor(
         for (visit in unsyncedVisits) {
             try {
                 // TODO: Call API to update client visit status
-                // val result = mapRepository.updateClientStatus(visit)
-
                 Log.d("SyncManager", "Syncing client visit: ${visit.id}")
 
                 // Mark as synced

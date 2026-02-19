@@ -117,6 +117,9 @@ dependencies {
     // Video Player
     implementation(libs.exoplayer)
 
+    // ML Kit Digital Ink Recognition
+    implementation(libs.mlkit.digital.ink.recognition)
+
     // Image Loading
     implementation(libs.coil.compose)
 

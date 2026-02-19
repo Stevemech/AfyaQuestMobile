@@ -342,8 +342,21 @@
     <string name="fred_response_default">That\'s an interesting question! I\'m here to help with health education, study tips, and platform guidance. Could you tell me more about what you\'d like to learn? I can help with topics like handwashing, nutrition, malaria prevention, vaccinations, CPR, maternal health, and more! 📚</string>
     <string name="fred_error">Sorry, I encountered an error. Please try again.</string>
 
+    <string name="new_report">New Report</string>
+    <string name="report_history">History</string>
+    <string name="no_reports_yet">No reports submitted yet. Submit your first daily report!</string>
     <string name="fill_required_fields">Please fill in all required fields</string>
     <string name="report_submitted_success">Report submitted successfully!</string>
+
+    <!-- Input Assist (Speech-to-Text / Handwriting) -->
+    <string name="speech_to_text">Speech to text</string>
+    <string name="handwriting_input">Handwriting</string>
+    <string name="draw_here">Draw here</string>
+    <string name="clear">Clear</string>
+    <string name="recognizing">Recognizing…</string>
+    <string name="speech_not_available">Speech recognition not available</string>
+    <string name="downloading_model">Downloading handwriting model…</string>
+    <string name="handwriting_model_ready">Handwriting model ready</string>
 
     <!-- Errors -->
     <string name="error_network">Network error. Please try again.</string>

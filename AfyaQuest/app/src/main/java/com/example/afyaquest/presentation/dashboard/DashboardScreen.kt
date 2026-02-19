@@ -1,6 +1,5 @@
 package com.example.afyaquest.presentation.dashboard
 
-import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,7 +51,6 @@ fun DashboardScreen(
     val unsyncedCount by dashboardViewModel.unsyncedCount.collectAsState()
     var showLanguageMenu by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -80,8 +77,6 @@ fun DashboardScreen(
                                     showLanguageMenu = false
                                     scope.launch {
                                         profileViewModel.changeLanguage(LanguageManager.LANGUAGE_ENGLISH)
-                                        // Recreate so Activity resources update after language is saved.
-                                        (context as? Activity)?.recreate()
                                     }
                                 }
                             )
@@ -91,7 +86,6 @@ fun DashboardScreen(
                                     showLanguageMenu = false
                                     scope.launch {
                                         profileViewModel.changeLanguage(LanguageManager.LANGUAGE_SWAHILI)
-                                        (context as? Activity)?.recreate()
                                     }
                                 }
                             )
