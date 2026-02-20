@@ -11,7 +11,8 @@ data class DailyReport(
     val vaccinationsGiven: Int,
     val healthEducation: String,
     val challenges: String = "",
-    val notes: String = ""
+    val notes: String = "",
+    val isSynced: Boolean = false
 )
 
 /**

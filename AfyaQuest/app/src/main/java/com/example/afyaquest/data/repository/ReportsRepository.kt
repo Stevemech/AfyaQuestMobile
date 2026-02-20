@@ -101,6 +101,7 @@ class ReportsRepository @Inject constructor(
         vaccinationsGiven = vaccinationsGiven,
         healthEducation = healthEducation,
         challenges = challenges ?: "",
-        notes = notes ?: ""
+        notes = notes ?: "",
+        isSynced = isSynced
     )
 }

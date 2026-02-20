@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -488,7 +490,8 @@ private fun ReportHistoryContent(
             Text(
                 text = stringResource(R.string.no_reports_yet),
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
             )
         }
     } else {
@@ -497,6 +500,17 @@ private fun ReportHistoryContent(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            item {
+                ReportSummaryCard(reports)
+            }
+            item {
+                Text(
+                    text = stringResource(R.string.your_reports),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
+                )
+            }
             items(reports, key = { it.id }) { report ->
                 ReportHistoryCard(report)
             }
@@ -505,7 +519,79 @@ private fun ReportHistoryContent(
 }
 
 @Composable
+private fun ReportSummaryCard(reports: List<DailyReport>) {
+    val totalPatients = reports.sumOf { it.patientsVisited }
+    val totalVaccinations = reports.sumOf { it.vaccinationsGiven }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = stringResource(R.string.your_activity_summary),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                SummaryStatItem(
+                    value = reports.size.toString(),
+                    label = stringResource(R.string.total_reports_count)
+                )
+                SummaryStatItem(
+                    value = totalPatients.toString(),
+                    label = stringResource(R.string.patients_visited)
+                )
+                SummaryStatItem(
+                    value = totalVaccinations.toString(),
+                    label = stringResource(R.string.vaccines_administered)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SummaryStatItem(value: String, label: String) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(
+            text = value,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
 private fun ReportHistoryCard(report: DailyReport) {
+    val formattedDate = remember(report.date) {
+        try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault())
+            val parsed = inputFormat.parse(report.date)
+            if (parsed != null) outputFormat.format(parsed) else report.date
+        } catch (_: Exception) {
+            report.date
+        }
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -516,14 +602,42 @@ private fun ReportHistoryCard(report: DailyReport) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(
-                text = report.date,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            // Date row with sync status badge
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = formattedDate,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (report.isSynced)
+                        MaterialTheme.colorScheme.primaryContainer
+                    else
+                        MaterialTheme.colorScheme.secondaryContainer
+                ) {
+                    Text(
+                        text = if (report.isSynced)
+                            stringResource(R.string.synced_status)
+                        else
+                            stringResource(R.string.pending_sync_status),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = if (report.isSynced)
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        else
+                            MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+            }
 
             HorizontalDivider()
 
+            // Stats row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -540,7 +654,7 @@ private fun ReportHistoryCard(report: DailyReport) {
                         fontWeight = FontWeight.SemiBold
                     )
                 }
-                Column {
+                Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = stringResource(R.string.vaccines_administered),
                         style = MaterialTheme.typography.labelSmall,

@@ -341,8 +341,16 @@
     <string name="fred_response_default">Hilo ni swali lenye kupendeza! Nico hapa kusaidia na elimu ya afya, vidokezo vya kusoma, na mwongozo wa jukwaa. Unaweza kutueleza zaidi unataka kujifunza nini? Ninaweza kusaidia na mada kama kuosha mikono, lishe, kuzuia malaria, chanjo, CPR, afya ya wajawazito, na zaidi! 📚</string>
     <string name="fred_error">Samahani, nimekumbwa na hitilafu. Tafadhali jaribu tena.</string>
 
+    <string name="new_report">Ripoti Mpya</string>
+    <string name="report_history">Historia</string>
+    <string name="no_reports_yet">Hakuna ripoti zilizowasilishwa bado. Wasilisha ripoti yako ya kwanza ya kila siku!</string>
     <string name="fill_required_fields">Tafadhali jaza sehemu zote zinazohitajika</string>
     <string name="report_submitted_success">Ripoti imewasilishwa kikamilifu!</string>
+    <string name="your_activity_summary">Muhtasari wa Shughuli Zako</string>
+    <string name="total_reports_count">Ripoti</string>
+    <string name="synced_status">Imesawazishwa ✓</string>
+    <string name="pending_sync_status">Inasubiri Usawazishaji</string>
+    <string name="your_reports">Ripoti Zako</string>
 
     <!-- Input Assist (Speech-to-Text / Handwriting) -->
     <string name="speech_to_text">Hotuba hadi maandishi</string>

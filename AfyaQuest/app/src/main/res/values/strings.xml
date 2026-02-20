@@ -347,6 +347,11 @@
     <string name="no_reports_yet">No reports submitted yet. Submit your first daily report!</string>
     <string name="fill_required_fields">Please fill in all required fields</string>
     <string name="report_submitted_success">Report submitted successfully!</string>
+    <string name="your_activity_summary">Your Activity Summary</string>
+    <string name="total_reports_count">Reports</string>
+    <string name="synced_status">Synced ✓</string>
+    <string name="pending_sync_status">Pending Sync</string>
+    <string name="your_reports">Your Reports</string>
 
     <!-- Input Assist (Speech-to-Text / Handwriting) -->
     <string name="speech_to_text">Speech to text</string>
