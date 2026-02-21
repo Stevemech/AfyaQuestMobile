@@ -16,4 +16,10 @@ sealed class Screen(val route: String) {
     object Settings : Screen("settings")
     object Chat : Screen("chat")
     object Map : Screen("map")
+    object ModuleQuiz : Screen("module_quiz/{moduleId}") {
+        fun createRoute(moduleId: String) = "module_quiz/$moduleId"
+    }
+    object VideoPlayer : Screen("video_player/{moduleId}") {
+        fun createRoute(moduleId: String) = "video_player/$moduleId"
+    }
 }

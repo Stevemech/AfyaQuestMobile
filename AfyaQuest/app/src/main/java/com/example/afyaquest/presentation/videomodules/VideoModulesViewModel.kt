@@ -123,6 +123,39 @@ class VideoModulesViewModel @Inject constructor(
                 category = VideoCategory.DISEASE_PREVENTION,
                 hasQuiz = true,
                 watched = false
+            ),
+            VideoModule(
+                id = "8",
+                title = "Module 8: Male Reproductive System",
+                description = "Understanding the anatomy and function of the male reproductive system",
+                thumbnail = "🔬",
+                duration = "",
+                category = VideoCategory.BASICS,
+                videoUrl = "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Male+Reproductive+System+(1).mp4",
+                hasQuiz = true,
+                watched = false
+            ),
+            VideoModule(
+                id = "9",
+                title = "Module 9: Female Reproductive System",
+                description = "Understanding the anatomy and function of the female reproductive system",
+                thumbnail = "🔬",
+                duration = "",
+                category = VideoCategory.BASICS,
+                videoUrl = "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Female+Reproductive+System.mp4",
+                hasQuiz = true,
+                watched = false
+            ),
+            VideoModule(
+                id = "10",
+                title = "Module 10: Urinary System",
+                description = "Understanding the organs, functions, and common conditions of the urinary system",
+                thumbnail = "🔬",
+                duration = "",
+                category = VideoCategory.BASICS,
+                videoUrl = "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Urinary+System.mov",
+                hasQuiz = true,
+                watched = false
             )
         )
     }
@@ -170,6 +203,12 @@ class VideoModulesViewModel @Inject constructor(
     /**
      * Get stats
      */
+    fun getVideoUrl(videoId: String): String? =
+        _videos.value.find { it.id == videoId }?.videoUrl
+
+    fun getVideoTitle(videoId: String): String =
+        _videos.value.find { it.id == videoId }?.title ?: "Video"
+
     fun getWatchedCount(): Int = _watchedVideos.value.size
     fun getQuizCompletedCount(): Int = _completedQuizzes.value.size
     fun getTotalVideos(): Int = _videos.value.size

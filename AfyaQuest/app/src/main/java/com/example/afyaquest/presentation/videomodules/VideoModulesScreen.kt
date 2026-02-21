@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import com.example.afyaquest.R
 import com.example.afyaquest.domain.model.VideoCategory
 import com.example.afyaquest.domain.model.VideoModule
+import com.example.afyaquest.presentation.navigation.Screen
 
 /**
  * Video Modules screen
@@ -37,6 +38,8 @@ fun VideoModulesScreen(
     viewModel: VideoModulesViewModel = hiltViewModel()
 ) {
     val selectedCategory by viewModel.selectedCategory.collectAsState()
+    val watchedVideos by viewModel.watchedVideos.collectAsState()
+    val completedQuizzes by viewModel.completedQuizzes.collectAsState()
     val filteredVideos = viewModel.getFilteredVideos()
 
     Scaffold(
@@ -123,11 +126,14 @@ fun VideoModulesScreen(
                         VideoModuleCard(
                             video = video,
                             onVideoClick = {
-                                // TODO: Navigate to video player
-                                viewModel.markVideoWatched(video.id)
+                                if (video.videoUrl != null) {
+                                    navController.navigate(Screen.VideoPlayer.createRoute(video.id))
+                                } else {
+                                    viewModel.markVideoWatched(video.id)
+                                }
                             },
                             onQuizClick = {
-                                // TODO: Navigate to module quiz
+                                navController.navigate(Screen.ModuleQuiz.createRoute(video.id))
                             }
                         )
                     }
