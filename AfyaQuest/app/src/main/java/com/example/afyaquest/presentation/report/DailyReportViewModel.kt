@@ -191,6 +191,15 @@ class DailyReportViewModel @Inject constructor(
     }
 
     /**
+     * Delete a report by ID.
+     */
+    fun deleteReport(reportId: String) {
+        viewModelScope.launch {
+            reportsRepository.deleteReport(reportId)
+        }
+    }
+
+    /**
      * Reset submission state
      */
     fun resetSubmissionState() {

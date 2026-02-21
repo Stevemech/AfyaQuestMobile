@@ -62,9 +62,9 @@ class AuthViewModel @Inject constructor(
                     _loginState.value = resource
                     if (resource is Resource.Success) {
                         _isLoggedIn.value = true
-                        // Load per-user language preference (or inherit login-screen choice).
+                        // Carry over the login-screen language choice into the user session.
                         resource.data?.let { user ->
-                            languageManager.setCurrentUser(user.id)
+                            languageManager.setCurrentUser(user.id, inheritScreenLanguage = true)
                         }
                     }
                 }

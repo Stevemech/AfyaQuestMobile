@@ -40,7 +40,8 @@ exports.handler = async (event) => {
         const { message } = body;
 
         // Extract user ID from authorizer
-        const userId = event.requestContext?.authorizer?.claims?.sub;
+        const userId = event.requestContext?.authorizer?.jwt?.claims?.sub
+            || event.requestContext?.authorizer?.claims?.sub;
 
         if (!userId) {
             return {

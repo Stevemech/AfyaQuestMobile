@@ -25,11 +25,13 @@ import androidx.compose.ui.unit.sp
 fun SyncStatusIndicator(
     isConnected: Boolean,
     unsyncedCount: Int,
+    isSyncing: Boolean = false,
+    errorMessage: String? = null,
     modifier: Modifier = Modifier,
     onSyncClick: (() -> Unit)? = null
 ) {
     AnimatedVisibility(
-        visible = !isConnected || unsyncedCount > 0,
+        visible = !isConnected || unsyncedCount > 0 || isSyncing || errorMessage != null,
         enter = fadeIn(),
         exit = fadeOut(),
         modifier = modifier
@@ -39,10 +41,9 @@ fun SyncStatusIndicator(
                 .fillMaxWidth()
                 .padding(8.dp),
             shape = RoundedCornerShape(8.dp),
-            color = if (isConnected) {
-                MaterialTheme.colorScheme.primaryContainer
-            } else {
-                MaterialTheme.colorScheme.errorContainer
+            color = when {
+                !isConnected || errorMessage != null -> MaterialTheme.colorScheme.errorContainer
+                else -> MaterialTheme.colorScheme.primaryContainer
             },
             tonalElevation = 2.dp
         ) {
@@ -57,43 +58,46 @@ fun SyncStatusIndicator(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(
-                        imageVector = when {
-                            !isConnected -> Icons.Default.CloudOff
-                            unsyncedCount > 0 -> Icons.Default.CloudSync
-                            else -> Icons.Default.CloudDone
-                        },
-                        contentDescription = null,
-                        tint = if (isConnected) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.error
-                        }
-                    )
+                    if (isSyncing) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    } else {
+                        Icon(
+                            imageVector = when {
+                                !isConnected -> Icons.Default.CloudOff
+                                errorMessage != null -> Icons.Default.CloudOff
+                                unsyncedCount > 0 -> Icons.Default.CloudSync
+                                else -> Icons.Default.CloudDone
+                            },
+                            contentDescription = null,
+                            tint = when {
+                                !isConnected || errorMessage != null -> MaterialTheme.colorScheme.error
+                                else -> MaterialTheme.colorScheme.primary
+                            }
+                        )
+                    }
 
                     Column {
                         Text(
-                            text = if (isConnected) {
-                                if (unsyncedCount > 0) "Syncing..." else "All synced"
-                            } else {
-                                "Offline"
+                            text = when {
+                                isSyncing -> "Syncing..."
+                                !isConnected -> "Offline"
+                                errorMessage != null -> errorMessage
+                                unsyncedCount > 0 -> "$unsyncedCount item${if (unsyncedCount > 1) "s" else ""} pending"
+                                else -> "All synced"
                             },
                             fontSize = 14.sp,
                             fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
-                            color = if (isConnected) {
-                                MaterialTheme.colorScheme.onPrimaryContainer
-                            } else {
-                                MaterialTheme.colorScheme.onErrorContainer
+                            color = when {
+                                !isConnected || errorMessage != null -> MaterialTheme.colorScheme.onErrorContainer
+                                else -> MaterialTheme.colorScheme.onPrimaryContainer
                             }
                         )
 
-                        if (unsyncedCount > 0) {
-                            Text(
-                                text = "$unsyncedCount item${if (unsyncedCount > 1) "s" else ""} pending",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        } else if (!isConnected) {
+                        if (!isConnected) {
                             Text(
                                 text = "Changes will sync when online",
                                 fontSize = 12.sp,
@@ -103,9 +107,9 @@ fun SyncStatusIndicator(
                     }
                 }
 
-                if (isConnected && unsyncedCount > 0 && onSyncClick != null) {
+                if (isConnected && (unsyncedCount > 0 || errorMessage != null) && !isSyncing && onSyncClick != null) {
                     TextButton(onClick = onSyncClick) {
-                        Text("Sync Now")
+                        Text(if (errorMessage != null) "Retry" else "Sync Now")
                     }
                 }
             }

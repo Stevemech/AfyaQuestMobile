@@ -6,6 +6,9 @@
     <!-- Common -->
     <string name="ok">Sawa</string>
     <string name="cancel">Ghairi</string>
+    <string name="delete">Futa</string>
+    <string name="delete_report_title">Futa Ripoti</string>
+    <string name="delete_report_confirm">Una uhakika unataka kufuta ripoti hii? Hii haiwezi kutenduliwa.</string>
     <string name="save">Hifadhi</string>
     <string name="submit">Wasilisha</string>
     <string name="back">Rudi</string>

@@ -68,12 +68,13 @@ interface ApiService {
         @Body request: QuizSubmissionRequest
     ): Response<QuizSubmissionResponse>
 
+
     // ==================== Reports ====================
 
     @POST("reports")
     suspend fun createReport(
         @Header("Authorization") token: String,
-        @Body request: Map<String, Any>
+        @Body request: @JvmSuppressWildcards Map<String, Any>
     ): Response<Map<String, Any>>
 
     @GET("reports")

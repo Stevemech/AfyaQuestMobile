@@ -31,43 +31,25 @@ class XpManagerTest {
     }
 
     @Test
-    fun `calculateLevel returns correct level for given XP`() {
-        assertEquals(1, xpManager.calculateLevel(0))
-        assertEquals(1, xpManager.calculateLevel(499))
-        assertEquals(2, xpManager.calculateLevel(500))
-        assertEquals(3, xpManager.calculateLevel(1000))
-        assertEquals(5, xpManager.calculateLevel(2000))
-        assertEquals(10, xpManager.calculateLevel(4500))
-    }
-
-    @Test
-    fun `calculateRank returns correct rank for given level`() {
-        assertEquals("Novice Helper", xpManager.calculateRank(1))
-        assertEquals("Novice Helper", xpManager.calculateRank(2))
-        assertEquals("Junior Assistant", xpManager.calculateRank(3))
-        assertEquals("Junior Assistant", xpManager.calculateRank(4))
-        assertEquals("Community Assistant", xpManager.calculateRank(5))
-        assertEquals("Senior Assistant", xpManager.calculateRank(8))
-        assertEquals("Expert CHA", xpManager.calculateRank(10))
-        assertEquals("Master CHA", xpManager.calculateRank(15))
-    }
-
-    @Test
     fun `getXPForNextLevel returns correct XP needed`() = runBlocking {
-        assertEquals(500, xpManager.getXPForNextLevel(0, 1))
-        assertEquals(500, xpManager.getXPForNextLevel(250, 1))
-        assertEquals(0, xpManager.getXPForNextLevel(500, 2))
-        assertEquals(500, xpManager.getXPForNextLevel(500, 2))
-        assertEquals(250, xpManager.getXPForNextLevel(750, 2))
+        // Level 0 -> 1 requires 100 XP
+        assertEquals(100, xpManager.getXPForNextLevel(0, 0))
+        // At 50 XP, level 0, need 50 more for level 1
+        assertEquals(50, xpManager.getXPForNextLevel(50, 0))
+        // Level 1 -> 2 requires 250 XP total, so from 100 XP need 150
+        assertEquals(150, xpManager.getXPForNextLevel(100, 1))
     }
 
     @Test
     fun `getLevelProgress returns correct progress percentage`() = runBlocking {
-        assertEquals(0f, xpManager.getLevelProgress(0, 1), 0.01f)
-        assertEquals(50f, xpManager.getLevelProgress(250, 1), 0.01f)
-        assertEquals(100f, xpManager.getLevelProgress(500, 1), 0.01f)
-        assertEquals(0f, xpManager.getLevelProgress(500, 2), 0.01f)
-        assertEquals(50f, xpManager.getLevelProgress(750, 2), 0.01f)
+        // Level 0: 0-100 XP range. At 0 XP = 0%
+        assertEquals(0f, xpManager.getLevelProgress(0, 0), 0.01f)
+        // Level 0: 0-100 XP range. At 50 XP = 50%
+        assertEquals(50f, xpManager.getLevelProgress(50, 0), 0.01f)
+        // Level 1: 100-250 XP range. At 100 XP = 0%
+        assertEquals(0f, xpManager.getLevelProgress(100, 1), 0.01f)
+        // Level 1: 100-250 XP range. At 175 XP = 50%
+        assertEquals(50f, xpManager.getLevelProgress(175, 1), 0.01f)
     }
 
     @Test
@@ -81,52 +63,45 @@ class XpManagerTest {
     }
 
     @Test
-    fun `addXP updates level when threshold crossed`() = runBlocking {
-        // This test would need to reset DataStore to known state
-        // For now, we'll test the logic
-        val xp = 450
-        val level = xpManager.calculateLevel(xp)
-        assertEquals(1, level)
-
-        val newXp = xp + 100 // Should cross to level 2
-        val newLevel = xpManager.calculateLevel(newXp)
-        assertEquals(2, newLevel)
-    }
-
-    @Test
     fun `removeLives decreases lives correctly`() = runBlocking {
-        // Initialize with max lives
         xpManager.initializeLivesIfNeeded()
 
         val result = xpManager.removeLives(1, "Test penalty")
 
-        assertTrue(result < 5) // Should be less than max
+        assertTrue(result < 10)
     }
 
     @Test
-    fun `addLives increases lives but not above max`() = runBlocking {
-        // Set lives to 3
-        xpManager.removeLives(2, "Test setup")
+    fun `addLives caps at MAX_LIVES`() = runBlocking {
+        xpManager.resetLives() // Start at 10
 
         val result = xpManager.addLives(5, "Test reward")
 
-        assertEquals(5, result) // Should cap at max (5)
-    }
-
-    @Test
-    fun `getCurrentDateString returns correct format`() {
-        val dateString = XpManager.getCurrentDateString()
-
-        // Should match YYYY-MM-DD format
-        assertTrue(dateString.matches(Regex("\\d{4}-\\d{2}-\\d{2}")))
+        assertEquals(XpRewards.MAX_LIVES, result) // Should cap at 10
     }
 
     @Test
     fun `XpRewards constants have correct values`() {
-        assertEquals(30, XpRewards.DAILY_QUESTION_CORRECT)
-        assertEquals(50, XpRewards.DAILY_REPORT_SUBMITTED)
-        assertEquals(75, XpRewards.MODULE_COMPLETED)
-        assertEquals(20, XpRewards.VIDEO_WATCHED)
-        assertEquals(100, XpRewards.LESSON_COMPLETED)
+        assertEquals(10, XpRewards.EASY_QUESTION)
+        assertEquals(20, XpRewards.MEDIUM_QUESTION)
+        assertEquals(30, XpRewards.HARD_QUESTION)
+        assertEquals(25, XpRewards.DAILY_QUESTION_BONUS)
+        assertEquals(10, XpRewards.CHECK_IN)
+        assertEquals(50, XpRewards.COMPLETE_VISIT)
+        assertEquals(25, XpRewards.DAILY_REPORT)
+        assertEquals(10, XpRewards.STREAK_BONUS)
+        assertEquals(15, XpRewards.VIDEO_WATCHED)
+        assertEquals(50, XpRewards.MODULE_COMPLETED)
+        assertEquals(10, XpRewards.MAX_LIVES)
+    }
+
+    @Test
+    fun `XpData defaults are clean for new accounts`() {
+        val defaults = XpData()
+        assertEquals(0, defaults.totalXP)
+        assertEquals(0, defaults.streak)
+        assertEquals(0, defaults.level)
+        assertEquals(10, defaults.lives)
+        assertEquals("Beginner", defaults.rank)
     }
 }

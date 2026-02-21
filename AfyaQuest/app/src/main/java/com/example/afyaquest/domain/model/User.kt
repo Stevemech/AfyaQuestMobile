@@ -10,9 +10,9 @@ data class User(
     val phone: String? = null,
     val role: String = "cha", // cha, supervisor, admin
     val language: String = "en",
-    val level: Int = 1,
+    val level: Int = 0,
     val totalPoints: Int = 0,
-    val rank: String = "Bronze CHA",
+    val rank: String = "Beginner",
     val currentStreak: Int = 0,
     val isActive: Boolean = true
 )

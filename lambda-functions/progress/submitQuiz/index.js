@@ -4,13 +4,43 @@ const { DynamoDBDocumentClient, PutCommand, UpdateCommand, GetCommand } = requir
 const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 const docClient = DynamoDBDocumentClient.from(client);
 
+const MAX_LIVES = 10;
+
+const XP_BY_DIFFICULTY = {
+    easy: 10,
+    medium: 20,
+    hard: 30
+};
+
+const XP_REWARDS = {
+    DAILY_QUESTION_BONUS: 25 // For perfect score
+};
+
+/** Progressive level thresholds matching the mobile app */
+const LEVEL_THRESHOLDS = [0, 100, 250, 500, 850, 1300, 1900, 2650, 3550, 4600];
+const XP_PER_LEVEL_AFTER_TABLE = 1200;
+
+function calculateLevel(totalXP) {
+    for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
+        if (totalXP >= LEVEL_THRESHOLDS[i]) {
+            if (i === LEVEL_THRESHOLDS.length - 1 && totalXP > LEVEL_THRESHOLDS[i]) {
+                const extraXP = totalXP - LEVEL_THRESHOLDS[i];
+                return i + Math.floor(extraXP / XP_PER_LEVEL_AFTER_TABLE);
+            }
+            return i;
+        }
+    }
+    return 0;
+}
+
 /**
  * Submit quiz results
  * Awards XP for correct answers and manages lives
  */
 exports.handler = async (event) => {
     try {
-        const userId = event.requestContext?.authorizer?.claims?.sub;
+        const userId = event.requestContext?.authorizer?.jwt?.claims?.sub
+            || event.requestContext?.authorizer?.claims?.sub;
 
         if (!userId) {
             return {
@@ -37,23 +67,30 @@ exports.handler = async (event) => {
             };
         }
 
-        const XP_REWARDS = {
-            DAILY_QUESTION_CORRECT: 30,
-            DAILY_QUESTION_BONUS: 50 // For perfect score
-        };
-
         const timestamp = new Date().toISOString();
         const score = Math.round((correctAnswers / totalQuestions) * 100);
 
-        // Calculate XP earned
-        let xpEarned = correctAnswers * XP_REWARDS.DAILY_QUESTION_CORRECT;
-        if (score === 100) {
-            xpEarned += XP_REWARDS.DAILY_QUESTION_BONUS; // Bonus for perfect score
+        // Calculate XP earned based on difficulty of each answer
+        let xpEarned = 0;
+        if (answers && answers.length > 0) {
+            for (const answer of answers) {
+                if (answer.isCorrect) {
+                    const difficulty = (answer.difficulty || 'medium').toLowerCase();
+                    xpEarned += XP_BY_DIFFICULTY[difficulty] || XP_BY_DIFFICULTY.medium;
+                }
+            }
+        } else {
+            // Fallback: use medium XP per correct answer
+            xpEarned = correctAnswers * XP_BY_DIFFICULTY.medium;
         }
 
-        // Calculate lives change
-        const livesGained = correctAnswers * 2; // +2 lives per correct answer
-        const livesLost = incorrectAnswers || 0; // -1 life per incorrect answer
+        if (score === 100) {
+            xpEarned += XP_REWARDS.DAILY_QUESTION_BONUS;
+        }
+
+        // Calculate lives change: +1 per correct, -1 per incorrect
+        const livesGained = correctAnswers;
+        const livesLost = incorrectAnswers || 0;
 
         // Save quiz result
         await docClient.send(new PutCommand({
@@ -90,8 +127,8 @@ exports.handler = async (event) => {
             const currentLives = userResult.Item.lives || 10;
 
             const newTotalXP = currentTotalXP + xpEarned;
-            const newLevel = Math.floor(newTotalXP / 500) + 1;
-            const newLives = Math.max(currentLives + livesGained - livesLost, 0);
+            const newLevel = calculateLevel(newTotalXP);
+            const newLives = Math.min(Math.max(currentLives + livesGained - livesLost, 0), MAX_LIVES);
 
             // Update user profile
             await docClient.send(new UpdateCommand({

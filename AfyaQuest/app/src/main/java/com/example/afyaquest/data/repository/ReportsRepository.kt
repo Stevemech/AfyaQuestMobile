@@ -94,6 +94,13 @@ class ReportsRepository @Inject constructor(
         return reportDao.getReportByUserAndDate(userId, date) != null
     }
 
+    /**
+     * Delete a report by ID.
+     */
+    suspend fun deleteReport(reportId: String) {
+        reportDao.deleteReportById(reportId)
+    }
+
     private fun ReportEntity.toDailyReport() = DailyReport(
         id = id,
         date = date,

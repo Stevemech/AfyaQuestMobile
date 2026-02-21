@@ -34,6 +34,7 @@ import com.example.afyaquest.presentation.components.HandwritingDialog
 import com.example.afyaquest.presentation.components.InputAssistRow
 import com.example.afyaquest.util.LanguageManager
 import com.example.afyaquest.util.Resource
+import androidx.compose.material.icons.filled.Delete
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -142,7 +143,8 @@ fun DailyReportScreen(
                 )
                 1 -> ReportHistoryContent(
                     reports = reportHistory,
-                    isLoading = historyLoading
+                    isLoading = historyLoading,
+                    onDeleteReport = { reportId -> viewModel.deleteReport(reportId) }
                 )
             }
         }
@@ -471,7 +473,8 @@ private fun ReportFormContent(
 @Composable
 private fun ReportHistoryContent(
     reports: List<DailyReport>,
-    isLoading: Boolean
+    isLoading: Boolean,
+    onDeleteReport: (String) -> Unit
 ) {
     if (isLoading) {
         Box(
@@ -512,7 +515,10 @@ private fun ReportHistoryContent(
                 )
             }
             items(reports, key = { it.id }) { report ->
-                ReportHistoryCard(report)
+                ReportHistoryCard(
+                    report = report,
+                    onDelete = { onDeleteReport(report.id) }
+                )
             }
         }
     }
@@ -580,7 +586,38 @@ private fun SummaryStatItem(value: String, label: String) {
 }
 
 @Composable
-private fun ReportHistoryCard(report: DailyReport) {
+private fun ReportHistoryCard(
+    report: DailyReport,
+    onDelete: () -> Unit
+) {
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
+
+    if (showDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirmation = false },
+            title = { Text(stringResource(R.string.delete_report_title)) },
+            text = { Text(stringResource(R.string.delete_report_confirm)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteConfirmation = false
+                        onDelete()
+                    }
+                ) {
+                    Text(
+                        stringResource(R.string.delete),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirmation = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
     val formattedDate = remember(report.date) {
         try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -602,7 +639,7 @@ private fun ReportHistoryCard(report: DailyReport) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Date row with sync status badge
+            // Date row with sync status badge and delete button
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -611,7 +648,8 @@ private fun ReportHistoryCard(report: DailyReport) {
                 Text(
                     text = formattedDate,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
                 )
                 Surface(
                     shape = RoundedCornerShape(12.dp),
@@ -631,6 +669,17 @@ private fun ReportHistoryCard(report: DailyReport) {
                             MaterialTheme.colorScheme.onPrimaryContainer
                         else
                             MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+                IconButton(
+                    onClick = { showDeleteConfirmation = true },
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.delete),
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }

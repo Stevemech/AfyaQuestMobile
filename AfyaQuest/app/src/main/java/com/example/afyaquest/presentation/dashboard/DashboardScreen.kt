@@ -49,6 +49,8 @@ fun DashboardScreen(
     val scrollState = rememberScrollState()
     val isConnected by dashboardViewModel.isConnected.collectAsState()
     val unsyncedCount by dashboardViewModel.unsyncedCount.collectAsState()
+    val isSyncing by dashboardViewModel.isSyncing.collectAsState()
+    val syncError by dashboardViewModel.syncError.collectAsState()
     var showLanguageMenu by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
@@ -124,6 +126,8 @@ fun DashboardScreen(
             SyncStatusIndicator(
                 isConnected = isConnected,
                 unsyncedCount = unsyncedCount,
+                isSyncing = isSyncing,
+                errorMessage = syncError,
                 onSyncClick = { dashboardViewModel.triggerSync() }
             )
 

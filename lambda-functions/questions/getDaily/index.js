@@ -90,7 +90,7 @@ function generateSampleQuestions(date) {
             correctAnswer: 1,
             explanation: "Healthcare workers should wash hands before and after every patient contact to prevent cross-contamination and protect both patients and themselves.",
             category: "hygiene",
-            points: 30,
+            points: 10,
             difficulty: "easy",
             order: 1
         },
@@ -107,7 +107,7 @@ function generateSampleQuestions(date) {
             correctAnswer: 2,
             explanation: "The first dose of measles vaccine is typically given at 9 months of age in most African countries, with a second dose at 15-18 months.",
             category: "prevention",
-            points: 30,
+            points: 20,
             difficulty: "medium",
             order: 2
         },

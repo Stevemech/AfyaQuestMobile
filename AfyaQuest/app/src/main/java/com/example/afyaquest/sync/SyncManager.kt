@@ -10,8 +10,13 @@ import com.example.afyaquest.data.remote.ApiService
 import com.example.afyaquest.util.NetworkMonitor
 import com.example.afyaquest.util.TokenManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,6 +35,66 @@ class SyncManager @Inject constructor(
 ) {
 
     private val workManager = WorkManager.getInstance(context)
+
+    private val _isSyncing = MutableStateFlow(false)
+    val isSyncing: StateFlow<Boolean> = _isSyncing.asStateFlow()
+
+    private val _lastSyncError = MutableStateFlow<String?>(null)
+    val lastSyncError: StateFlow<String?> = _lastSyncError.asStateFlow()
+
+    /**
+     * Run sync immediately on the calling coroutine (not via WorkManager).
+     * Returns the total number of items synced.
+     */
+    suspend fun syncNow(): Int = withContext(Dispatchers.IO) {
+        if (_isSyncing.value) return@withContext 0
+        _isSyncing.value = true
+        _lastSyncError.value = null
+        try {
+            if (!networkMonitor.isCurrentlyConnected()) {
+                _lastSyncError.value = "No internet connection"
+                return@withContext 0
+            }
+
+            val token = tokenManager.getIdToken()
+            if (token.isNullOrBlank()) {
+                _lastSyncError.value = "Session expired. Please log in again."
+                return@withContext 0
+            }
+
+            val reports = syncReports()
+            val quizzes = syncQuizzes()
+            val chats = syncChats()
+            val visits = syncClientVisits()
+
+            val total = reports + quizzes + chats + visits
+
+            // Check if items remain unsynced after attempting sync
+            if (total == 0) {
+                val remaining = pendingSyncDao.getUnsyncedReports().size +
+                    pendingSyncDao.getUnsyncedQuizzes().size +
+                    pendingSyncDao.getUnsyncedChats().size +
+                    pendingSyncDao.getUnsyncedClientVisits().size
+                if (remaining > 0) {
+                    _lastSyncError.value = "Sync failed for $remaining item(s). Will retry."
+                }
+            }
+
+            val sevenDaysAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
+            pendingSyncDao.deleteSyncedReports(sevenDaysAgo)
+            pendingSyncDao.deleteSyncedQuizzes(sevenDaysAgo)
+            pendingSyncDao.deleteSyncedChats(sevenDaysAgo)
+            pendingSyncDao.deleteSyncedClientVisits(sevenDaysAgo)
+
+            total
+        } catch (e: Exception) {
+            Log.e("SyncManager", "syncNow failed: ${e.message}")
+            _lastSyncError.value = "Sync failed: ${e.message}"
+            0
+        } finally {
+            _isSyncing.value = false
+        }
+    }
 
     /**
      * Flow combining all unsynced counts
@@ -185,23 +250,14 @@ class SyncManager @Inject constructor(
      * @return number of quizzes synced
      */
     suspend fun syncQuizzes(): Int {
+        // Daily question answers are applied locally (XP/lives). Mark as synced
+        // so the pending count clears. Module quiz results use a separate path.
         val unsyncedQuizzes = pendingSyncDao.getUnsyncedQuizzes()
         var syncedCount = 0
-
         for (quiz in unsyncedQuizzes) {
-            try {
-                // TODO: Call API to submit quiz result
-                Log.d("SyncManager", "Syncing quiz: ${quiz.id}")
-
-                // Mark as synced
-                pendingSyncDao.markQuizSynced(quiz.id)
-                syncedCount++
-
-            } catch (e: Exception) {
-                Log.e("SyncManager", "Failed to sync quiz ${quiz.id}: ${e.message}")
-            }
+            pendingSyncDao.markQuizSynced(quiz.id)
+            syncedCount++
         }
-
         return syncedCount
     }
 
@@ -211,21 +267,35 @@ class SyncManager @Inject constructor(
      */
     suspend fun syncChats(): Int {
         val unsyncedChats = pendingSyncDao.getUnsyncedChats()
+        if (unsyncedChats.isEmpty()) return 0
         var syncedCount = 0
+
+        val idToken = tokenManager.getIdToken() ?: return 0
 
         for (chat in unsyncedChats) {
             try {
-                // TODO: Call API to send chat message
-                Log.d("SyncManager", "Syncing chat: ${chat.id}")
-
-                // Mark as synced with mock response
-                pendingSyncDao.markChatSynced(
-                    chat.id,
-                    received = true,
-                    response = "Message synced"
+                val requestBody = mapOf(
+                    "message" to chat.message,
+                    "conversationHistory" to chat.conversationHistory
                 )
-                syncedCount++
 
+                val response = apiService.sendChatMessage(
+                    "Bearer $idToken",
+                    requestBody
+                )
+
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    pendingSyncDao.markChatSynced(
+                        chat.id,
+                        received = true,
+                        response = responseBody?.get("response") ?: "Synced"
+                    )
+                    syncedCount++
+                    Log.d("SyncManager", "Synced chat: ${chat.id}")
+                } else {
+                    Log.e("SyncManager", "Failed to sync chat ${chat.id}: ${response.code()}")
+                }
             } catch (e: Exception) {
                 Log.e("SyncManager", "Failed to sync chat ${chat.id}: ${e.message}")
             }

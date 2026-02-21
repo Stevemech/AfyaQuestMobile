@@ -69,24 +69,6 @@ fun SettingsScreen(
                 )
             }
 
-            item {
-                SettingsItem(
-                    icon = Icons.Default.Palette,
-                    title = "Theme",
-                    subtitle = "System Default",
-                    onClick = { /* TODO: Show theme dialog */ }
-                )
-            }
-
-            item {
-                SettingsItem(
-                    icon = Icons.Default.Notifications,
-                    title = "Notifications",
-                    subtitle = "Manage notification preferences",
-                    onClick = { /* TODO: Navigate to notifications */ }
-                )
-            }
-
             // Account Section
             item {
                 Spacer(modifier = Modifier.height(16.dp))

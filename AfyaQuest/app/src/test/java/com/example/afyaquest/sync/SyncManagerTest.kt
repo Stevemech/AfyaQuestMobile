@@ -1,11 +1,17 @@
 package com.example.afyaquest.sync
 
 import android.content.Context
+import android.util.Log
 import androidx.test.core.app.ApplicationProvider
+import androidx.work.Configuration
+import androidx.work.testing.WorkManagerTestInitHelper
 import com.example.afyaquest.data.local.dao.PendingSyncDao
+import com.example.afyaquest.data.local.dao.ReportDao
 import com.example.afyaquest.data.local.entity.PendingReportEntity
 import com.example.afyaquest.data.local.entity.PendingQuizEntity
+import com.example.afyaquest.data.remote.ApiService
 import com.example.afyaquest.util.NetworkMonitor
+import com.example.afyaquest.util.TokenManager
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -34,6 +40,15 @@ class SyncManagerTest {
     @Mock
     private lateinit var networkMonitor: NetworkMonitor
 
+    @Mock
+    private lateinit var apiService: ApiService
+
+    @Mock
+    private lateinit var tokenManager: TokenManager
+
+    @Mock
+    private lateinit var reportDao: ReportDao
+
     private lateinit var syncManager: SyncManager
 
     @Before
@@ -41,13 +56,18 @@ class SyncManagerTest {
         MockitoAnnotations.openMocks(this)
         context = ApplicationProvider.getApplicationContext()
 
+        val config = Configuration.Builder()
+            .setMinimumLoggingLevel(Log.DEBUG)
+            .build()
+        WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
+
         // Mock flow responses
         whenever(pendingSyncDao.getUnsyncedReportsCount()).thenReturn(flowOf(0))
         whenever(pendingSyncDao.getUnsyncedQuizzesCount()).thenReturn(flowOf(0))
         whenever(pendingSyncDao.getUnsyncedChatsCount()).thenReturn(flowOf(0))
         whenever(pendingSyncDao.getUnsyncedClientVisitsCount()).thenReturn(flowOf(0))
 
-        syncManager = SyncManager(context, pendingSyncDao, networkMonitor)
+        syncManager = SyncManager(context, pendingSyncDao, networkMonitor, apiService, tokenManager, reportDao)
     }
 
     @Test
@@ -56,9 +76,8 @@ class SyncManagerTest {
             userId = "user1",
             date = "2024-01-27",
             patientsVisited = 5,
-            vaccinesAdministered = 10,
-            healthEducationSessions = 2,
-            referrals = 1,
+            vaccinationsGiven = 10,
+            healthEducation = "2 sessions",
             challenges = "Test challenges",
             notes = "Test notes"
         )
@@ -98,15 +117,15 @@ class SyncManagerTest {
                 userId = "user1",
                 date = "2024-01-27",
                 patientsVisited = 5,
-                vaccinesAdministered = 10,
-                healthEducationSessions = 2,
-                referrals = 1,
+                vaccinationsGiven = 10,
+                healthEducation = "2 sessions",
                 challenges = "Test",
                 notes = "Test"
             )
         )
 
         whenever(pendingSyncDao.getUnsyncedReports()).thenReturn(reports)
+        whenever(tokenManager.getIdToken()).thenReturn("test-token")
 
         val count = syncManager.syncReports()
 
@@ -117,6 +136,7 @@ class SyncManagerTest {
     @Test
     fun `syncReports returns 0 when no unsynced items`() = runBlocking {
         whenever(pendingSyncDao.getUnsyncedReports()).thenReturn(emptyList())
+        whenever(tokenManager.getIdToken()).thenReturn("test-token")
 
         val count = syncManager.syncReports()
 

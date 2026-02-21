@@ -22,9 +22,9 @@ data class UserEntity(
     val location: String? = null,
     val supervisorId: String? = null,
     val language: String = "en", // 'en' or 'sw'
-    val level: Int = 1,
+    val level: Int = 0,
     val totalPoints: Int = 0,
-    val rank: String = "Bronze CHA", // Bronze, Silver, Gold, Platinum
+    val rank: String = "Beginner",
     val profilePictureUrl: String? = null,
     val currentStreak: Int = 0,
     val lastActiveDate: Date? = null,

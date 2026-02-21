@@ -46,13 +46,14 @@ class LanguageManager @Inject constructor(
     /**
      * Switch to per-user language preferences.
      *
-     * Call after a successful login. If this user has no saved preference yet
-     * the current language (e.g. whatever was chosen on the login screen) is
-     * adopted as their preference.
-     *
      * Call with `null` on logout to revert to the global (login-screen) pref.
+     *
+     * @param inheritScreenLanguage Pass `true` when called right after a
+     *   successful login so the language chosen on the login screen carries
+     *   over. On app-restart (no login screen shown) leave as `false` to
+     *   restore the user's saved preference.
      */
-    fun setCurrentUser(userId: String?) {
+    fun setCurrentUser(userId: String?, inheritScreenLanguage: Boolean = false) {
         currentUserId = userId
 
         if (userId == null) {
@@ -63,13 +64,15 @@ class LanguageManager @Inject constructor(
         val prefs = getPrefs()
         val userKey = userLangKey(userId)
 
-        var lang = prefs.getString(userKey, null)
-        if (lang == null) {
-            // First login on this device – inherit current language.
-            lang = _currentLanguage.value
-            prefs.edit().putString(userKey, lang).commit()
+        val lang = if (inheritScreenLanguage) {
+            // Login screen → adopt whatever language is currently shown.
+            _currentLanguage.value
+        } else {
+            // App restart → restore per-user preference, falling back to current.
+            prefs.getString(userKey, null) ?: _currentLanguage.value
         }
 
+        prefs.edit().putString(userKey, lang).commit()
         // Keep global key in sync for attachBaseContext after process death.
         prefs.edit().putString(LANGUAGE_KEY, lang).commit()
 

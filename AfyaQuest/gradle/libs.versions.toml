@@ -61,6 +61,7 @@ mockitoKotlin = "5.2.1"
 robolectric = "4.11.1"
 coroutinesTest = "1.8.0"
 archCoreTesting = "2.2.0"
+androidxTestCore = "1.6.1"
 
 [libraries]
 # Core Android
@@ -133,6 +134,8 @@ mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", versio
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCoreTesting" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
+androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "work" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

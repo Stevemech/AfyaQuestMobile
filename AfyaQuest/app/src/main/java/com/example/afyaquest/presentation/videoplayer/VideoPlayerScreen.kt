@@ -15,9 +15,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.example.afyaquest.presentation.videomodules.VideoModulesViewModel
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ui.PlayerView
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,7 +33,12 @@ fun VideoPlayerScreen(
     val videoUrl = viewModel.getVideoUrl(moduleId)
 
     val exoPlayer = remember {
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
+            .build()
         ExoPlayer.Builder(context).build().apply {
+            setAudioAttributes(audioAttributes, /* handleAudioFocus = */ true)
             if (videoUrl != null) {
                 setMediaItem(MediaItem.fromUri(videoUrl))
                 prepare()

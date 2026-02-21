@@ -3,6 +3,7 @@ package com.example.afyaquest.presentation.dailyquestions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.afyaquest.data.repository.QuestionsRepository
+import com.example.afyaquest.domain.model.Difficulty
 import com.example.afyaquest.domain.model.Question
 import com.example.afyaquest.domain.model.QuizAnswer
 import com.example.afyaquest.domain.model.QuizSubmissionRequest
@@ -97,14 +98,19 @@ class DailyQuestionsViewModel @Inject constructor(
             _score.value += question.points
             _correctAnswers.value += 1
 
-            // Award XP
+            // Award XP based on question difficulty
+            val xpReward = when (question.difficulty) {
+                Difficulty.EASY -> XpRewards.EASY_QUESTION
+                Difficulty.MEDIUM -> XpRewards.MEDIUM_QUESTION
+                Difficulty.HARD -> XpRewards.HARD_QUESTION
+            }
             viewModelScope.launch {
                 xpManager.addXP(
-                    XpRewards.DAILY_QUESTION_CORRECT,
+                    xpReward,
                     "Correct answer: ${question.question.take(50)}..."
                 )
-                // Add 2 lives for correct answer
-                xpManager.addLives(2, "Correct answer!")
+                // Add 1 life for correct answer (capped at MAX_LIVES)
+                xpManager.addLives(1, "Correct answer!")
             }
         } else {
             // Remove 1 life for wrong answer
