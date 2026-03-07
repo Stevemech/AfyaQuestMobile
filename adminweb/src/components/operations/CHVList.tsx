@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { CHV } from '../../types';
@@ -11,11 +12,103 @@ interface CHVListProps {
   onSearchChange: (q: string) => void;
 }
 
+function formatLastActive(lastActive: string, t: (key: string) => string): string {
+  // If already human-readable (e.g. "2 days ago"), return as-is
+  if (!lastActive.includes('T') && !lastActive.match(/^\d{4}-\d{2}-\d{2}/)) {
+    return lastActive;
+  }
+  // Parse ISO date
+  const date = new Date(lastActive);
+  if (isNaN(date.getTime())) return lastActive;
+
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return t('chvList.today');
+  if (diffDays === 1) return t('chvList.yesterday');
+  if (diffDays < 7) return `${diffDays} ${t('chvList.daysAgo')}`;
+
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+type StatusFilter = 'all' | 'active' | 'inactive' | 'caution';
+type SortOption = 'name' | 'lastActive' | 'completionRate';
+
+function Dropdown({ label, options, value, onChange }: {
+  label: string;
+  options: { value: string; label: string }[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const selected = options.find(o => o.value === value);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1 px-2 py-1 border border-border rounded text-text-secondary hover:border-primary"
+      >
+        {label}{selected ? `: ${selected.label}` : ''} <ChevronDown size={12} />
+      </button>
+      {open && (
+        <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-lg shadow-lg z-20 min-w-[120px]">
+          {options.map(opt => (
+            <button
+              key={opt.value}
+              onClick={() => { onChange(opt.value); setOpen(false); }}
+              className={`block w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 ${
+                value === opt.value ? 'text-primary font-medium' : 'text-text-secondary'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, onSearchChange }: CHVListProps) {
   const { t } = useTranslation();
-  const filtered = chvs.filter(c =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [sortBy, setSortBy] = useState<SortOption>('name');
+
+  const filtered = chvs
+    .filter(c => {
+      if (!c.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      if (statusFilter !== 'all' && c.status !== statusFilter) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      if (sortBy === 'completionRate') return (b.completionRate ?? 0) - (a.completionRate ?? 0);
+      return 0;
+    });
+
+  const statusOptions = [
+    { value: 'all', label: t('reportsPage.allCHVs') },
+    { value: 'active', label: t('chvList.active') },
+    { value: 'caution', label: t('chvList.caution') },
+    { value: 'inactive', label: t('chvList.inactive') },
+  ];
+
+  const sortOptions = [
+    { value: 'name', label: t('chvList.name') },
+    { value: 'completionRate', label: t('chvList.completionRate') },
+  ];
 
   return (
     <div className="bg-white rounded-xl border border-border shadow-sm overflow-hidden">
@@ -39,28 +132,33 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
         </div>
 
         {/* Filters */}
-        <div className="flex gap-2 mt-3 text-xs">
+        <div className="flex gap-2 mt-3 text-xs items-center">
           <span className="text-text-secondary">{t('chvList.status')}</span>
-          <button className="flex items-center gap-1 px-2 py-1 border border-border rounded text-text-secondary hover:border-primary">
-            {t('chvList.active')} <ChevronDown size={12} />
-          </button>
-          <button className="flex items-center gap-1 px-2 py-1 border border-border rounded text-text-secondary hover:border-primary">
-            {t('chvList.lowActivity')} <ChevronDown size={12} />
-          </button>
+          <Dropdown
+            label={t('chvList.status').replace(':', '')}
+            options={statusOptions}
+            value={statusFilter}
+            onChange={v => setStatusFilter(v as StatusFilter)}
+          />
         </div>
-        <div className="flex gap-2 mt-2 text-xs">
-          <span className="text-text-secondary">{t('chvList.filter')}</span>
-          <button className="flex items-center gap-1 px-2 py-1 border border-border rounded text-text-secondary hover:border-primary">
-            {t('chvList.distance')}: {t('chvList.distance')} <ChevronDown size={12} />
-          </button>
-          <button className="flex items-center gap-1 px-2 py-1 border border-border rounded text-text-secondary hover:border-primary">
-            {t('chvList.dating')} <ChevronDown size={12} />
-          </button>
+        <div className="flex gap-2 mt-2 text-xs items-center">
+          <span className="text-text-secondary">{t('chvList.sortLabel')}</span>
+          <Dropdown
+            label={t('chvDetail.sortBy').replace(':', '')}
+            options={sortOptions}
+            value={sortBy}
+            onChange={v => setSortBy(v as SortOption)}
+          />
         </div>
       </div>
 
       {/* CHV List */}
       <div className="max-h-[calc(100vh-380px)] overflow-y-auto">
+        {filtered.length === 0 && (
+          <div className="p-6 text-center text-sm text-text-secondary">
+            {t('chvList.noCHVsFound')}
+          </div>
+        )}
         {filtered.map(chv => (
           <button
             key={chv.id}
@@ -83,14 +181,10 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
                       <span className="w-3 h-3 rounded-full bg-success inline-block" />
                     )}
                   </div>
-                  <div className="flex items-center gap-1">
-                    {(chv.flags || []).map((f, i) => (
-                      <StatusBadge key={i} type={f as 'active' | 'caution' | 'danger'} label={f === 'caution' ? 'Caution' : f === 'active' ? 'Active' : undefined} />
-                    ))}
-                    {(!chv.flags || chv.flags.length === 0) && (
-                      <StatusBadge type={chv.status === 'active' ? 'active' : chv.status === 'caution' ? 'caution' : 'inactive'} label={chv.status} />
-                    )}
-                  </div>
+                  <StatusBadge
+                    type={chv.status === 'active' ? 'active' : chv.status === 'caution' ? 'caution' : 'inactive'}
+                    label={t(`chvList.status_${chv.status}`)}
+                  />
                 </div>
                 <p className="text-xs text-text-secondary mt-0.5">{chv.clinic}</p>
                 <div className="flex items-center justify-between mt-1">
@@ -106,11 +200,11 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
                     </span>
                   </div>
                   <span className="text-lg font-bold text-text-primary">
-                    {chv.totalPoints != null ? `${chv.totalPoints} pts` : `${chv.completionRate ?? 0}%`}
+                    {chv.totalPoints != null ? `${chv.totalPoints} ${t('chvList.points')}` : `${chv.completionRate ?? 0}%`}
                   </span>
                 </div>
                 <p className="text-xs text-text-secondary mt-0.5">
-                  {t('chvList.lastActive')} {chv.lastActive}
+                  {t('chvList.lastActive')} {formatLastActive(chv.lastActive, t)}
                 </p>
               </div>
             </div>

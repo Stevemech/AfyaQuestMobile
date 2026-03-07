@@ -17,10 +17,20 @@ const cak = {
       reportsArchive: 'Yakb\'al taq tzij',
     },
 
+    // Sidebar
+    sidebar: {
+      signOut: 'Tel pa ri samaj',
+      signOutTitle: 'Tel pa ri samaj',
+      signOutConfirm: 'La kan nawajo\' yatel pa ri samaj? K\'o chi natikirisaj chik.',
+      cancel: 'Tiq\'at',
+    },
+
     // Header
     header: {
       noOrganization: 'Majun moloj',
       searchCHV: 'Tikanoj CHV...',
+      notifications: 'Taq rutzijol',
+      noNotifications: 'Majun k\'ak\'a\' rutzijol',
     },
 
     // Login
@@ -32,12 +42,13 @@ const cak = {
       password: 'Ewan tzij',
       passwordPlaceholder: 'Titz\'ib\'aj ri ewan tzij',
       signingIn: 'Tajin nitikirisax...',
+      forgotPassword: 'La xasach ri ewan atzij?',
     },
 
     // Operations
     operations: {
       loadingCHVs: 'Tajin yesamajix CHV...',
-      reportsArchiveTab: 'Taq tzij: Yakb\'al',
+      reportsArchiveTab: 'Yakb\'al taq tzij',
       selectCHV: 'Ticha\' jun CHV richin natz\'et ri rub\'anikil',
     },
 
@@ -49,11 +60,24 @@ const cak = {
       status: 'Rub\'anikil:',
       active: 'Tajin nisamaj',
       lowActivity: 'Jub\'a\' nisamaj',
+      caution: 'Tichajix',
+      inactive: 'Man nisamaj ta',
       filter: 'Chajinisaxik:',
       distance: 'Janipe\' najt',
       dating: 'Q\'ij',
       level: 'Ruwach\'ulew',
       lastActive: 'Ruk\'isib\'al samaj:',
+      name: 'B\'i\'aj',
+      completionRate: 'Ronojel tz\'aqat',
+      sortLabel: 'Tichol:',
+      noCHVsFound: 'Majun CHV xilitaj',
+      points: 'etal',
+      today: 'Wakami',
+      yesterday: 'Iwir',
+      daysAgo: 'q\'ij yan xik\'o',
+      status_active: 'Tajin nisamaj',
+      status_caution: 'Tichajix',
+      status_inactive: 'Man nisamaj ta',
     },
 
     // CHV Detail
@@ -65,25 +89,39 @@ const cak = {
       sortBy: 'Tichol chi:',
       distance: 'Janipe\' najt',
       reassignHouse: 'Tiyo\'x chik ri Ja',
+      reassignComingSoon: 'Ri ruchakuxik tiyo\'x chik ja nipe yan.',
       houseId: 'Rub\'i\' Ja',
       distanceKm: 'Janipe\' najt (km)',
       visitStatus: 'Rub\'anikil Tz\'etonisaxik',
       priority: 'Nab\'ey Samaj',
       sortByDistance: 'Tichol chi: Janipe\' najt',
       autoOptimize: 'Pa Rub\'eyal Utz Chik',
+      routeOptimized: 'Xb\'an utz ri b\'ey.',
+      pendingHousesCHV: 'Taq Ja Tajin Noyob\'ex (Re CHV)',
+      pendingHousesAllCHVs: 'Taq Ja Tajin Noyob\'ex (Konojel CHV)',
       pendingHousesAll: 'Taq Ja Tajin Noyob\'ex (Konojel CHV)',
       overdue: 'Xik\'o ri q\'ij',
+      highPriority: 'Nima Nab\'ey',
       highPrio: 'Nima Nab\'ey',
-      sz: 'Nim',
+      sz: 'Nimilaj',
       house: 'Ja',
       assignedCHV: 'Ya\'on CHV',
       mapView: 'Rutz\'etik Ruwach\'ulew',
+      mapComingSoon: 'Rutz\'etik ruwach\'ulew nipe yan',
       noPendingHouses: 'Majun ja tajin noyob\'ex',
+      noHousesAssigned: 'Man ya\'on ta taq ja.',
       overdueCHVs: 'CHV Xik\'o ri q\'ij',
       mornings: 'Saq\'ij',
       priors: 'Nab\'ey taq',
       distanceFromClinic: 'Janipe\' najt chi re Aq\'omab\'al',
       daysPending: 'Jarupe\' Q\'ij Noyob\'ex',
+      days: 'q\'ij',
+      visitStatus_pending: 'Tajin noyob\'ex',
+      visitStatus_completed: 'Tz\'aqat',
+      visitStatus_overdue: 'Xik\'o ri q\'ij',
+      priority_high: 'Nimalaj',
+      priority_medium: 'Nik\'aj',
+      priority_low: 'Jub\'a\'',
     },
 
     // Analytics
@@ -103,12 +141,17 @@ const cak = {
     chvProgress: {
       title: 'Rub\'eyal CHV',
       expand: 'Tinik\'ox',
+      collapse: 'Titz\'apix',
       chv: 'CHV',
       module1: 'Tijonik 1',
       module2: 'Tijonik 2',
       riskFlag: 'Retal K\'ayewal',
       notStarted: 'Man xtikirisax ta',
       assign: 'Tiyo\'x',
+      completed: 'Tz\'aqat',
+      notCompleted: 'Man tz\'aqat ta',
+      lowScore: 'Ko\'ol retal',
+      showAll: 'Tik\'ut konojel ({{count}})',
     },
 
     // Weekly Reports
@@ -123,11 +166,14 @@ const cak = {
       highRisk: 'Nimalaj K\'ayewal',
       flag: 'Retal',
       comparison: 'Tuk\'ulib\'axik',
+      noReports: 'Majun tzij re re q\'ijul',
+      showingLastWeek: 'Nik\'ut taq tzij re ri xik\'o wuqu\' q\'ij',
     },
 
     // Reports Page
     reportsPage: {
       loading: 'Tajin yesamajix taq tzij...',
+      loadingTimeout: 'Yalan najt nisamajix. Tichap chik.',
       title: 'Yakb\'al taq Tzij',
       createItinerary: 'Tinuk\' jun B\'ey',
       chv: 'CHV',
@@ -147,6 +193,10 @@ const cak = {
       chvId: 'ID re CHV',
       stopsJson: 'Taq K\'olib\'al (JSON)',
       creating: 'Tajin ninuk\'...',
+      clearDate: 'Tiyuj ri q\'ij',
+      syncedStatus: 'Taq tzij xnuk\'ux',
+      notSyncedStatus: 'Taq tzij man xnuk\'ux ta',
+      viewReport: 'Titz\'et rub\'anikil tzij',
     },
 
     // Settings Page
@@ -158,6 +208,7 @@ const cak = {
       moduleId: 'ID re Tijonik',
       assigning: 'Tajin niyo\'x...',
       assignModule: 'Tiyo\'x Tijonik',
+      selectModule: 'Ticha\' jun tijonik...',
       moduleAssigned: 'Xya\' ri tijonik',
       failedAssign: 'Man xtikir ta xuya\' ri tijonik:',
       createItinerary: 'Tinuk\' jun B\'ey',
@@ -167,6 +218,11 @@ const cak = {
       failedItinerary: 'Man xtikir ta xnuk\' ri b\'ey:',
       moduleManagement: 'Ruchakuxik taq Tijonik',
       addModule: 'Titz\'aqatisax Tijonik',
+      moduleName: 'Rub\'i\' tijonik',
+      moduleCategory: 'Ruwach (achi\'el BASICS)',
+      moduleAdded: 'Xtz\'aqatisax tijonik',
+      moduleDeleted: 'Xresax tijonik',
+      confirmDelete: 'Tiyuj',
       mandatory: 'K\'atzinel',
       reportSettings: 'Runuk\'ik taq Tzij',
       reportSchedule: 'Rucholajil taq Tzij',
@@ -174,6 +230,10 @@ const cak = {
       weekly: 'Jujun Wuqu\' Q\'ij',
       biWeekly: 'Kab\' Wuqu\' Q\'ij',
       saveSettings: 'Tiyak Runuk\'ik',
+      settingsSaved: 'Xyak ri runuk\'ik',
+      chvIdRequired: 'Titz\'ib\'aj ri ID re CHV',
+      moduleIdRequired: 'Ticha\' jun tijonik',
+      dateRequired: 'Ticha\' jun q\'ij',
     },
 
     // Language

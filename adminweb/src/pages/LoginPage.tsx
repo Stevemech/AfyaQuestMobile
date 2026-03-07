@@ -84,6 +84,12 @@ export default function LoginPage() {
           >
             {loading ? t('login.signingIn') : t('login.signIn')}
           </button>
+
+          <p className="text-center mt-4">
+            <a href="mailto:afyaquest.rice@gmail.com" className="text-sm text-primary hover:underline">
+              {t('login.forgotPassword')}
+            </a>
+          </p>
         </form>
       </div>
     </div>

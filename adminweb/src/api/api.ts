@@ -20,7 +20,16 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   });
   if (!res.ok) {
     const body = await res.text();
-    throw new Error(body || res.statusText);
+    // Parse JSON error responses to extract user-friendly message
+    try {
+      const parsed = JSON.parse(body);
+      throw new Error(parsed.details || parsed.error || parsed.message || res.statusText);
+    } catch (parseErr) {
+      if (parseErr instanceof SyntaxError) {
+        throw new Error(body || res.statusText);
+      }
+      throw parseErr;
+    }
   }
   return res.json();
 }

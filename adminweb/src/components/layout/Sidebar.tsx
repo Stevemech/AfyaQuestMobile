@@ -1,17 +1,19 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, BarChart3, FileText, Settings, ChevronDown } from 'lucide-react';
+import { Home, BarChart3, FileText, Settings, LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthContext';
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
   const { t } = useTranslation();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const navItems = [
-    { to: '/settings', label: t('nav.settings'), icon: Settings },
     { to: '/operations', label: t('nav.operations'), icon: Home },
     { to: '/analytics', label: t('nav.chvAnalytics'), icon: BarChart3 },
     { to: '/reports', label: t('nav.reportsArchive'), icon: FileText },
+    { to: '/settings', label: t('nav.settings'), icon: Settings },
   ];
 
   return (
@@ -45,26 +47,9 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Bottom settings link */}
-      <div className="px-3 py-2">
-        <NavLink
-          to="/settings"
-          className={({ isActive }) =>
-            `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-              isActive
-                ? 'bg-primary-light text-primary'
-                : 'text-text-secondary hover:bg-gray-50'
-            }`
-          }
-        >
-          <Settings size={18} />
-          {t('nav.settings')}
-        </NavLink>
-      </div>
-
       {/* User section */}
       <div className="border-t border-border px-4 py-3">
-        <button onClick={logout} className="flex items-center gap-3 w-full text-left group">
+        <div className="flex items-center gap-3 w-full">
           <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center text-primary font-semibold text-sm">
             {user?.name?.charAt(0) || 'A'}
           </div>
@@ -72,9 +57,39 @@ export default function Sidebar() {
             <p className="text-sm font-medium text-text-primary truncate">{t('admin')}</p>
             <p className="text-xs text-text-secondary truncate">{user?.name || 'Admin User'}</p>
           </div>
-          <ChevronDown size={16} className="text-text-secondary" />
-        </button>
+          <button
+            onClick={() => setShowLogoutConfirm(true)}
+            className="p-1.5 rounded-lg hover:bg-gray-100 text-text-secondary hover:text-danger transition-colors"
+            title={t('sidebar.signOut')}
+          >
+            <LogOut size={16} />
+          </button>
+        </div>
       </div>
+
+      {/* Logout confirmation dialog */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50" onClick={() => setShowLogoutConfirm(false)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-sm w-full mx-4 p-6" onClick={e => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold text-text-primary mb-2">{t('sidebar.signOutTitle')}</h3>
+            <p className="text-sm text-text-secondary mb-6">{t('sidebar.signOutConfirm')}</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="flex-1 py-2 border border-border rounded-lg text-sm font-medium text-text-primary hover:bg-gray-50"
+              >
+                {t('sidebar.cancel')}
+              </button>
+              <button
+                onClick={() => { setShowLogoutConfirm(false); logout(); }}
+                className="flex-1 py-2 bg-danger text-white rounded-lg text-sm font-medium hover:bg-red-600"
+              >
+                {t('sidebar.signOut')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </aside>
   );
 }

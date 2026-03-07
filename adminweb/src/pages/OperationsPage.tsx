@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CHVList from '../components/operations/CHVList';
 import CHVDetail from '../components/operations/CHVDetail';
@@ -9,6 +9,7 @@ import type { CHV, House } from '../types';
 export default function OperationsPage() {
   const { searchQuery } = useOutletContext<{ organization: string; searchQuery: string }>();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [chvs, setChvs] = useState<CHV[]>([]);
   const [selectedCHV, setSelectedCHV] = useState<CHV | null>(null);
   const [houses, setHouses] = useState<House[]>([]);
@@ -39,7 +40,8 @@ export default function OperationsPage() {
       .catch(() => setHouses([]));
   }, [selectedCHV?.id]);
 
-  const search = searchQuery || localSearch;
+  // Only use local search, ignore global header search for operations
+  const search = localSearch;
 
   if (loading) {
     return (
@@ -69,11 +71,17 @@ export default function OperationsPage() {
         <button className="pb-3 border-b-2 border-primary text-sm font-medium text-text-primary">
           {t('nav.operations')}
         </button>
-        <button className="pb-3 text-sm font-medium text-text-secondary hover:text-text-primary">
+        <button
+          onClick={() => navigate('/analytics')}
+          className="pb-3 text-sm font-medium text-text-secondary hover:text-text-primary"
+        >
           {t('nav.chvAnalytics')}
         </button>
-        <button className="pb-3 text-sm font-medium text-text-secondary hover:text-text-primary">
-          {t('operations.reportsArchiveTab')}
+        <button
+          onClick={() => navigate('/reports')}
+          className="pb-3 text-sm font-medium text-text-secondary hover:text-text-primary"
+        >
+          {t('nav.reportsArchive')}
         </button>
       </div>
 

@@ -17,10 +17,20 @@ const en = {
       reportsArchive: 'Reports Archive',
     },
 
+    // Sidebar
+    sidebar: {
+      signOut: 'Sign Out',
+      signOutTitle: 'Sign Out',
+      signOutConfirm: 'Are you sure you want to sign out? You will need to log in again.',
+      cancel: 'Cancel',
+    },
+
     // Header
     header: {
       noOrganization: 'No Organization',
       searchCHV: 'Search CHV...',
+      notifications: 'Notifications',
+      noNotifications: 'No new notifications',
     },
 
     // Login
@@ -32,12 +42,13 @@ const en = {
       password: 'Password',
       passwordPlaceholder: 'Enter your password',
       signingIn: 'Signing in...',
+      forgotPassword: 'Forgot password?',
     },
 
     // Operations
     operations: {
       loadingCHVs: 'Loading CHVs...',
-      reportsArchiveTab: 'Reports: Archive',
+      reportsArchiveTab: 'Reports Archive',
       selectCHV: 'Select a CHV to view details',
     },
 
@@ -49,11 +60,25 @@ const en = {
       status: 'Status:',
       active: 'Active',
       lowActivity: 'Low Activity',
+      caution: 'Caution',
+      inactive: 'Inactive',
       filter: 'Filter:',
       distance: 'Distance',
-      dating: 'Dating',
+      dating: 'Date',
       level: 'Level',
       lastActive: 'Last Active:',
+      name: 'Name',
+      completionRate: 'Completion Rate',
+      sortLabel: 'Sort:',
+      noCHVsFound: 'No CHVs found matching your filters',
+      points: 'pts',
+      today: 'Today',
+      yesterday: 'Yesterday',
+      daysAgo: 'days ago',
+      // Translated status labels
+      status_active: 'Active',
+      status_caution: 'Caution',
+      status_inactive: 'Inactive',
     },
 
     // CHV Detail
@@ -65,25 +90,41 @@ const en = {
       sortBy: 'Sort by:',
       distance: 'Distance',
       reassignHouse: 'Reassign House',
+      reassignComingSoon: 'House reassignment feature coming soon.',
       houseId: 'House ID',
       distanceKm: 'Distance (km)',
       visitStatus: 'Visit Status',
       priority: 'Priority',
       sortByDistance: 'Sort by: Distance',
       autoOptimize: 'Auto-Optimize Route',
+      routeOptimized: 'Route optimized by shortest distance.',
+      pendingHousesCHV: 'Pending Houses (This CHV)',
+      pendingHousesAllCHVs: 'Pending Houses (All CHVs)',
       pendingHousesAll: 'Pending Houses (All CHVs)',
       overdue: 'Overdue',
-      highPrio: 'High Prio',
-      sz: 'Sz',
+      highPriority: 'High Priority',
+      highPrio: 'High Priority',
+      sz: 'Size',
       house: 'House',
       assignedCHV: 'Assigned CHV',
       mapView: 'Map View',
+      mapComingSoon: 'Interactive map coming soon',
       noPendingHouses: 'No pending houses',
+      noHousesAssigned: 'No houses assigned yet.',
       overdueCHVs: 'Overdue CHVs',
       mornings: 'Mornings',
       priors: 'Priors',
       distanceFromClinic: 'Distance from Clinic',
       daysPending: 'Days Pending',
+      days: 'days',
+      // Visit status translations
+      visitStatus_pending: 'Pending',
+      visitStatus_completed: 'Completed',
+      visitStatus_overdue: 'Overdue',
+      // Priority translations
+      priority_high: 'High',
+      priority_medium: 'Medium',
+      priority_low: 'Low',
     },
 
     // Analytics
@@ -103,12 +144,17 @@ const en = {
     chvProgress: {
       title: 'CHV Progress',
       expand: 'Expand',
+      collapse: 'Collapse',
       chv: 'CHV',
       module1: 'Module 1',
       module2: 'Module 2',
       riskFlag: 'Risk Flag',
       notStarted: 'Not started',
       assign: 'Assign',
+      completed: 'Completed',
+      notCompleted: 'Not completed',
+      lowScore: 'Low score',
+      showAll: 'Show all ({{count}})',
     },
 
     // Weekly Reports
@@ -123,11 +169,14 @@ const en = {
       highRisk: 'High Risk',
       flag: 'Flag',
       comparison: 'Comparison',
+      noReports: 'No reports for this period',
+      showingLastWeek: 'Showing data from the previous week',
     },
 
     // Reports Page
     reportsPage: {
       loading: 'Loading reports...',
+      loadingTimeout: 'Loading is taking longer than expected. Please try again.',
       title: 'Reports Archive',
       createItinerary: 'Create Itinerary',
       chv: 'CHV',
@@ -147,6 +196,10 @@ const en = {
       chvId: 'CHV ID',
       stopsJson: 'Stops (JSON array)',
       creating: 'Creating...',
+      clearDate: 'Clear date',
+      syncedStatus: 'Data synced successfully',
+      notSyncedStatus: 'Data not yet synced - may be pending upload',
+      viewReport: 'View report details',
     },
 
     // Settings Page
@@ -158,6 +211,7 @@ const en = {
       moduleId: 'Module ID',
       assigning: 'Assigning...',
       assignModule: 'Assign Module',
+      selectModule: 'Select a module...',
       moduleAssigned: 'Module assigned successfully',
       failedAssign: 'Failed to assign module:',
       createItinerary: 'Create Itinerary',
@@ -167,6 +221,11 @@ const en = {
       failedItinerary: 'Failed to create itinerary:',
       moduleManagement: 'Module Management',
       addModule: 'Add Module',
+      moduleName: 'Module name',
+      moduleCategory: 'Category (e.g. BASICS)',
+      moduleAdded: 'Module added',
+      moduleDeleted: 'Module removed',
+      confirmDelete: 'Delete',
       mandatory: 'Mandatory',
       reportSettings: 'Report Settings',
       reportSchedule: 'Report Schedule',
@@ -174,6 +233,10 @@ const en = {
       weekly: 'Weekly',
       biWeekly: 'Bi-Weekly',
       saveSettings: 'Save Settings',
+      settingsSaved: 'Settings saved successfully',
+      chvIdRequired: 'Please enter a CHV ID',
+      moduleIdRequired: 'Please select a module',
+      dateRequired: 'Please select a date',
     },
 
     // Language
