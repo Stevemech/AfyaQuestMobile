@@ -19,6 +19,7 @@ import com.example.afyaquest.presentation.lessons.LessonsScreen
 import com.example.afyaquest.presentation.chat.ChatScreen
 import com.example.afyaquest.presentation.profile.ProfileScreen
 import com.example.afyaquest.presentation.modulequiz.ModuleQuizScreen
+import com.example.afyaquest.presentation.assignments.AssignmentsScreen
 import com.example.afyaquest.presentation.settings.SettingsScreen
 import com.example.afyaquest.presentation.videoplayer.VideoPlayerScreen
 
@@ -89,6 +90,11 @@ fun NavGraph(navController: NavHostController) {
         // Settings screen
         composable(route = Screen.Settings.route) {
             SettingsScreen(navController = navController)
+        }
+
+        // Assignments screen
+        composable(route = Screen.Assignments.route) {
+            AssignmentsScreen(navController = navController)
         }
 
         // Module Quiz screen

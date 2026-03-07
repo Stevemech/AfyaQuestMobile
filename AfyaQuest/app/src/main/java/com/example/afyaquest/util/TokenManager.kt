@@ -52,8 +52,10 @@ class TokenManager @Inject constructor(
         val timestamp = sharedPreferences.getLong(KEY_TOKEN_TIMESTAMP, 0)
         val currentTime = System.currentTimeMillis()
         val tokenAge = currentTime - timestamp
-        // Token valid for 24 hours (86400000 ms)
-        return tokenAge < 86400000 && getIdToken() != null
+        // Consider session valid if we have a refresh token (30 day lifetime)
+        // and the original login was within 30 days
+        val thirtyDaysMs = 30L * 24 * 60 * 60 * 1000
+        return tokenAge < thirtyDaysMs && getRefreshToken() != null
     }
 
     fun clearTokens() {

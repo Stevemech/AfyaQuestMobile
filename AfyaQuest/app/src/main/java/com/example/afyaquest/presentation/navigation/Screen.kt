@@ -22,4 +22,5 @@ sealed class Screen(val route: String) {
     object VideoPlayer : Screen("video_player/{moduleId}") {
         fun createRoute(moduleId: String) = "video_player/$moduleId"
     }
+    object Assignments : Screen("assignments")
 }

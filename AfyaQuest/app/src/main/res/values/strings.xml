@@ -365,6 +365,30 @@
     <string name="downloading_model">Downloading handwriting model…</string>
     <string name="handwriting_model_ready">Handwriting model ready</string>
 
+    <!-- Assignments -->
+    <string name="assignments">Assignments</string>
+    <string name="assigned_to_you">Assigned to You</string>
+    <string name="view_all">View All</string>
+    <string name="no_assignments">No Assignments</string>
+    <string name="no_assignments_desc">Your admin hasn\'t assigned any tasks yet. Check back later!</string>
+    <string name="failed_to_load_assignments">Failed to load assignments</string>
+    <string name="retry">Retry</string>
+    <string name="refresh">Refresh</string>
+    <string name="total_assigned">Total</string>
+    <string name="mandatory">Mandatory</string>
+    <string name="modules">Modules</string>
+    <string name="lessons">Lessons</string>
+    <string name="completed">Completed</string>
+    <string name="in_progress">In Progress</string>
+    <string name="assigned">Assigned</string>
+    <string name="due_date_label">Due: %s</string>
+    <string name="assigned_on">Assigned: %s</string>
+    <string name="go_to_modules">Go to Modules</string>
+    <string name="go_to_lessons">Go to Lessons</string>
+    <string name="go_to_report">Go to Report</string>
+    <string name="open">Open</string>
+    <string name="more_assignments">+%d more assignments</string>
+
     <!-- Errors -->
     <string name="error_network">Network error. Please try again.</string>
     <string name="error_generic">An error occurred. Please try again.</string>

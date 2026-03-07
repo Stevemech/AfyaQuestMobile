@@ -28,9 +28,12 @@ import androidx.navigation.NavController
 import com.example.afyaquest.R
 import com.example.afyaquest.presentation.profile.ProfileViewModel
 import com.example.afyaquest.util.LanguageManager
+import com.example.afyaquest.data.remote.dto.AssignmentDto
+import com.example.afyaquest.presentation.assignments.AssignmentsViewModel
 import com.example.afyaquest.presentation.auth.AuthViewModel
 import com.example.afyaquest.presentation.navigation.Screen
 import com.example.afyaquest.presentation.components.SyncStatusIndicator
+import com.example.afyaquest.util.Resource
 import kotlinx.coroutines.launch
 
 /**
@@ -43,9 +46,11 @@ fun DashboardScreen(
     navController: NavController,
     dashboardViewModel: DashboardViewModel = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+    assignmentsViewModel: AssignmentsViewModel = hiltViewModel()
 ) {
     val xpData by dashboardViewModel.xpData.collectAsState()
+    val assignmentsState by assignmentsViewModel.assignmentsState.collectAsState()
     val scrollState = rememberScrollState()
     val isConnected by dashboardViewModel.isConnected.collectAsState()
     val unsyncedCount by dashboardViewModel.unsyncedCount.collectAsState()
@@ -161,6 +166,14 @@ fun DashboardScreen(
 
             // Daily To-Do Section
             DailyTasksSection(navController)
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Assigned to You Section
+            AssignedToYouSection(
+                assignmentsState = assignmentsState,
+                navController = navController
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -426,6 +439,200 @@ fun LearningCenterSection(navController: NavController) {
                 navController.navigate(Screen.Chat.route)
             }
         )
+    }
+}
+
+@Composable
+fun AssignedToYouSection(
+    assignmentsState: Resource<List<AssignmentDto>>?,
+    navController: NavController
+) {
+    // Only show if there are pending assignments
+    val assignments = (assignmentsState as? Resource.Success)?.data ?: emptyList()
+    val pending = assignments.filter { it.status != "completed" }
+    if (pending.isEmpty() && assignmentsState !is Resource.Loading) return
+
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.assigned_to_you),
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            if (pending.isNotEmpty()) {
+                TextButton(onClick = { navController.navigate(Screen.Assignments.route) }) {
+                    Text(stringResource(R.string.view_all))
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        when (assignmentsState) {
+            is Resource.Loading, null -> {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    }
+                }
+            }
+            is Resource.Error -> {
+                // Silently hide on error — assignments are supplementary
+            }
+            is Resource.Success -> {
+                // Show up to 3 pending assignments as compact cards
+                pending.take(3).forEach { assignment ->
+                    AssignmentPreviewCard(
+                        assignment = assignment,
+                        onClick = {
+                            when (assignment.type) {
+                                "module" -> navController.navigate(Screen.VideoModules.route)
+                                "lesson" -> navController.navigate(Screen.Lessons.route)
+                                "report" -> navController.navigate(Screen.DailyReport.route)
+                                else -> navController.navigate(Screen.Assignments.route)
+                            }
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                if (pending.size > 3) {
+                    TextButton(
+                        onClick = { navController.navigate(Screen.Assignments.route) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.more_assignments, pending.size - 3))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AssignmentPreviewCard(
+    assignment: AssignmentDto,
+    onClick: () -> Unit
+) {
+    val icon = when (assignment.type) {
+        "module" -> "🎬"
+        "lesson" -> "📚"
+        "report" -> "📝"
+        else -> "📋"
+    }
+
+    val typeLabel = when (assignment.type) {
+        "module" -> stringResource(R.string.video_modules)
+        "lesson" -> stringResource(R.string.interactive_lessons)
+        "report" -> stringResource(R.string.daily_report)
+        else -> assignment.type
+    }
+
+    val itemId = assignment.moduleId ?: assignment.lessonId
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(
+                        if (assignment.mandatory)
+                            MaterialTheme.colorScheme.errorContainer
+                        else
+                            MaterialTheme.colorScheme.primaryContainer
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = icon, fontSize = 22.sp)
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = typeLabel,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    if (assignment.mandatory) {
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = stringResource(R.string.mandatory),
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+                if (itemId != null) {
+                    Text(
+                        text = itemId,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            if (assignment.dueDate != null) {
+                Text(
+                    text = formatDueDate(assignment.dueDate),
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+private fun formatDueDate(isoDate: String): String {
+    return try {
+        val parts = isoDate.take(10).split("-")
+        if (parts.size == 3) {
+            val months = listOf(
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            )
+            val month = months.getOrElse(parts[1].toInt() - 1) { parts[1] }
+            val day = parts[2].toInt()
+            "Due $month $day"
+        } else {
+            isoDate.take(10)
+        }
+    } catch (e: Exception) {
+        isoDate.take(10)
     }
 }
 

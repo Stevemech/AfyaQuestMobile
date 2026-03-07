@@ -365,6 +365,30 @@
     <string name="downloading_model">Niqasäx ri kib\'onil tz\'ib\'anïk\u2026</string>
     <string name="handwriting_model_ready">Ütz chik ri kib\'onil tz\'ib\'anïk</string>
 
+    <!-- Assignments -->
+    <string name="assignments">Taq Samaj Ya\'on</string>
+    <string name="assigned_to_you">Ya\'on Chawe</string>
+    <string name="view_all">Titz\'et Ronojel</string>
+    <string name="no_assignments">Majun Samaj</string>
+    <string name="no_assignments_desc">Ri animaläj man jani\' nuya\' ta samaj chawe. ¡Tatzolij pe jun chik!</string>
+    <string name="failed_to_load_assignments">Man xtikirel ta xesamajïx ri taq ya\'oj</string>
+    <string name="retry">Titojtob\'ëx chik</string>
+    <string name="refresh">Tik\'exïx</string>
+    <string name="total_assigned">Ronojel</string>
+    <string name="mandatory">K\'atzinel</string>
+    <string name="modules">Taq ch\'akulal</string>
+    <string name="lessons">Taq tijonem</string>
+    <string name="completed">Xtz\'aqät</string>
+    <string name="in_progress">Tajin nisamajïx</string>
+    <string name="assigned">Ya\'on</string>
+    <string name="due_date_label">Q\'ij richin: %s</string>
+    <string name="assigned_on">Ya\'on: %s</string>
+    <string name="go_to_modules">Tib\'e pa taq Ch\'akulal</string>
+    <string name="go_to_lessons">Tib\'e pa taq Tijonem</string>
+    <string name="go_to_report">Tib\'e pa Rutzijol</string>
+    <string name="open">Tijaq</string>
+    <string name="more_assignments">+%d ch\'aqa\' chik taq samaj</string>
+
     <!-- Errors -->
     <string name="error_network">Sachoj pa k\'amaya\'l. Tab\'ana\' utzil, tatojtob\'ej jun chik.</string>
     <string name="error_generic">K\'o jun sachoj xk\'ulwachitäj. Tab\'ana\' utzil, tatojtob\'ej jun chik.</string>

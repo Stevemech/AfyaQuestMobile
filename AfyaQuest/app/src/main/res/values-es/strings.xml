@@ -365,6 +365,30 @@
     <string name="downloading_model">Descargando modelo de escritura…</string>
     <string name="handwriting_model_ready">Modelo de escritura listo</string>
 
+    <!-- Assignments -->
+    <string name="assignments">Asignaciones</string>
+    <string name="assigned_to_you">Asignado para Ti</string>
+    <string name="view_all">Ver Todo</string>
+    <string name="no_assignments">Sin Asignaciones</string>
+    <string name="no_assignments_desc">Tu administrador aún no te ha asignado tareas. ¡Vuelve más tarde!</string>
+    <string name="failed_to_load_assignments">Error al cargar asignaciones</string>
+    <string name="retry">Reintentar</string>
+    <string name="refresh">Actualizar</string>
+    <string name="total_assigned">Total</string>
+    <string name="mandatory">Obligatorio</string>
+    <string name="modules">Módulos</string>
+    <string name="lessons">Lecciones</string>
+    <string name="completed">Completado</string>
+    <string name="in_progress">En Progreso</string>
+    <string name="assigned">Asignado</string>
+    <string name="due_date_label">Fecha límite: %s</string>
+    <string name="assigned_on">Asignado: %s</string>
+    <string name="go_to_modules">Ir a Módulos</string>
+    <string name="go_to_lessons">Ir a Lecciones</string>
+    <string name="go_to_report">Ir a Reporte</string>
+    <string name="open">Abrir</string>
+    <string name="more_assignments">+%d más asignaciones</string>
+
     <!-- Errors -->
     <string name="error_network">Error de red. Por favor, intenta de nuevo.</string>
     <string name="error_generic">Ocurrió un error. Por favor, intenta de nuevo.</string>
