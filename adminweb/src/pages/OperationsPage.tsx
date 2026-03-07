@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CHVList from '../components/operations/CHVList';
 import CHVDetail from '../components/operations/CHVDetail';
@@ -7,7 +7,6 @@ import { api } from '../api/api';
 import type { CHV, House } from '../types';
 
 export default function OperationsPage() {
-  const { searchQuery } = useOutletContext<{ organization: string; searchQuery: string }>();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [chvs, setChvs] = useState<CHV[]>([]);
