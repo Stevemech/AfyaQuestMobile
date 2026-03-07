@@ -69,6 +69,23 @@ interface ApiService {
     ): Response<QuizSubmissionResponse>
 
 
+    // ==================== Organizations ====================
+
+    @GET("organizations")
+    suspend fun getOrganizations(): Response<OrganizationsResponse>
+
+    // ==================== Itineraries & Assignments ====================
+
+    @GET("user/itineraries")
+    suspend fun getItineraries(
+        @Header("Authorization") token: String
+    ): Response<ItinerariesResponse>
+
+    @GET("user/assignments")
+    suspend fun getAssignments(
+        @Header("Authorization") token: String
+    ): Response<AssignmentsResponse>
+
     // ==================== Reports ====================
 
     @POST("reports")

@@ -14,5 +14,6 @@ data class User(
     val totalPoints: Int = 0,
     val rank: String = "Beginner",
     val currentStreak: Int = 0,
-    val isActive: Boolean = true
+    val isActive: Boolean = true,
+    val organization: String? = null
 )

@@ -29,6 +29,7 @@ data class UserEntity(
     val currentStreak: Int = 0,
     val lastActiveDate: Date? = null,
     val isActive: Boolean = true,
+    val organization: String? = null,
     val createdAt: Date = Date(),
     val updatedAt: Date = Date()
 )

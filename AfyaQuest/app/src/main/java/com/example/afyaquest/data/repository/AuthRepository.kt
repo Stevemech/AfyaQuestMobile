@@ -34,7 +34,8 @@ class AuthRepository @Inject constructor(
         password: String,
         name: String,
         phone: String?,
-        role: String = "cha"
+        role: String = "cha",
+        organization: String? = null
     ): Flow<Resource<String>> = flow {
         emit(Resource.Loading())
 
@@ -47,6 +48,9 @@ class AuthRepository @Inject constructor(
             )
             if (!phone.isNullOrBlank()) {
                 request["phone"] = phone
+            }
+            if (!organization.isNullOrBlank()) {
+                request["organization"] = organization
             }
 
             val response = apiService.register(request)
@@ -194,7 +198,8 @@ class AuthRepository @Inject constructor(
         totalPoints = totalPoints,
         rank = rank,
         currentStreak = currentStreak,
-        isActive = isActive
+        isActive = isActive,
+        organization = organization
     )
 
     private fun UserDto.toUserEntity() = UserEntity(
@@ -209,6 +214,7 @@ class AuthRepository @Inject constructor(
         rank = rank,
         currentStreak = currentStreak,
         isActive = isActive,
+        organization = organization,
         createdAt = Date(),
         updatedAt = Date()
     )
@@ -224,6 +230,7 @@ class AuthRepository @Inject constructor(
         totalPoints = totalPoints,
         rank = rank,
         currentStreak = currentStreak,
-        isActive = isActive
+        isActive = isActive,
+        organization = organization
     )
 }

@@ -34,6 +34,8 @@ fun RegisterScreen(
     navController: NavController,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
+    var selectedOrganization by remember { mutableStateOf("") }
+    var organizationExpanded by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
@@ -43,6 +45,7 @@ fun RegisterScreen(
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     val registerState by viewModel.registerState.collectAsState()
+    val organizations by viewModel.organizations.collectAsState()
     val focusManager = LocalFocusManager.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
@@ -110,6 +113,47 @@ fun RegisterScreen(
             )
 
             Spacer(modifier = Modifier.height(32.dp))
+
+            // Organization dropdown
+            if (organizations.isNotEmpty()) {
+                ExposedDropdownMenuBox(
+                    expanded = organizationExpanded,
+                    onExpandedChange = { organizationExpanded = !organizationExpanded },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = organizations.find { it.id == selectedOrganization }?.name ?: "",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Organization") },
+                        leadingIcon = {
+                            Icon(Icons.Default.Business, contentDescription = "Organization")
+                        },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = organizationExpanded)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = organizationExpanded,
+                        onDismissRequest = { organizationExpanded = false }
+                    ) {
+                        organizations.forEach { org ->
+                            DropdownMenuItem(
+                                text = { Text("${org.name} - ${org.location}") },
+                                onClick = {
+                                    selectedOrganization = org.id
+                                    organizationExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
             // Name field
             OutlinedTextField(
@@ -259,7 +303,10 @@ fun RegisterScreen(
             Button(
                 onClick = {
                     if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank() && password == confirmPassword) {
-                        viewModel.register(email, password, name, phone.ifBlank { null })
+                        viewModel.register(
+                            email, password, name, phone.ifBlank { null },
+                            organization = selectedOrganization.ifBlank { null }
+                        )
                     }
                 },
                 modifier = Modifier

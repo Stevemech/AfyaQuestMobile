@@ -29,7 +29,7 @@ import com.example.afyaquest.data.local.entity.*
         PendingChatEntity::class,
         PendingClientVisitEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class, StringListConverter::class)

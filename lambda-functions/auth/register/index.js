@@ -6,7 +6,6 @@
 const { CognitoIdentityProviderClient, SignUpCommand } = require("@aws-sdk/client-cognito-identity-provider");
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
-const { randomUUID } = require("crypto");
 
 const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION });
@@ -17,18 +16,26 @@ exports.handler = async (event) => {
 
     try {
         const body = JSON.parse(event.body);
-        const { email, password, name, phone, role = 'cha' } = body;
+        const { email, password, name, phone, role = 'cha', organization } = body;
 
         // Validate input
         if (!email || !password || !name) {
             return {
                 statusCode: 400,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
                 body: JSON.stringify({ error: 'Email, password, and name are required' })
             };
         }
 
-        // Create user in Cognito (only standard attributes)
+        if (!organization) {
+            return {
+                statusCode: 400,
+                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+                body: JSON.stringify({ error: 'Organization is required' })
+            };
+        }
+
+        // Create user in Cognito
         const signUpParams = {
             ClientId: process.env.COGNITO_CLIENT_ID,
             Username: email,
@@ -39,7 +46,6 @@ exports.handler = async (event) => {
             ]
         };
 
-        // Add phone number if provided
         if (phone) {
             signUpParams.UserAttributes.push({ Name: 'phone_number', Value: phone });
         }
@@ -58,6 +64,7 @@ exports.handler = async (event) => {
             name,
             phone: phone || null,
             role,
+            organization,
             language: 'en',
             level: 0,
             totalPoints: 0,
@@ -71,12 +78,10 @@ exports.handler = async (event) => {
             updatedAt: new Date().toISOString()
         };
 
-        const putCommand = new PutCommand({
+        await docClient.send(new PutCommand({
             TableName: process.env.DYNAMODB_TABLE,
             Item: userProfile
-        });
-
-        await docClient.send(putCommand);
+        }));
 
         return {
             statusCode: 201,
@@ -108,10 +113,7 @@ exports.handler = async (event) => {
 
         return {
             statusCode,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify({ error: errorMessage, details: error.message })
         };
     }

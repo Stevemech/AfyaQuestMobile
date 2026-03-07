@@ -4,13 +4,17 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Looper
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.afyaquest.data.remote.ApiService
 import com.example.afyaquest.domain.model.ClientHouse
 import com.example.afyaquest.domain.model.FacilityType
 import com.example.afyaquest.domain.model.HealthFacility
 import com.example.afyaquest.domain.model.ItineraryStop
 import com.example.afyaquest.domain.model.VisitStatus
+import com.example.afyaquest.util.TokenManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -23,6 +27,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -35,7 +40,9 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val apiService: ApiService,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
 
     companion object {
@@ -106,6 +113,7 @@ class MapViewModel @Inject constructor(
 
     init {
         loadMapData()
+        fetchItinerariesFromApi()
     }
 
     /**
@@ -223,6 +231,7 @@ class MapViewModel @Inject constructor(
         )
 
         // Today's itinerary — ordered stops (path for the map)
+        // These are hardcoded fallback stops; the API fetch in fetchItinerariesFromApi() will override them if successful.
         _dailyItineraryStops.value = listOf(
             ItineraryStop(order = 1, id = "1", label = s(R.string.client_familia_hernandez_name), address = s(R.string.address_calle_real_chimaltenango), latitude = 14.6425, longitude = -90.8170, description = s(R.string.desc_maternal_health_checkup_needed)),
             ItineraryStop(order = 2, id = "2", label = s(R.string.client_casa_lopez_name), address = s(R.string.address_canton_san_jacinto), latitude = 14.6310, longitude = -90.8290, description = s(R.string.desc_child_vaccination_due)),
@@ -230,6 +239,40 @@ class MapViewModel @Inject constructor(
             ItineraryStop(order = 4, id = "5", label = s(R.string.client_familia_rodriguez_name), address = s(R.string.address_barrio_el_calvario), latitude = 14.6475, longitude = -90.8320, description = s(R.string.desc_hypertension_screening_needed)),
             ItineraryStop(order = 5, id = "hf1", label = s(R.string.facility_hospital_nacional_chimaltenango_name), address = s(R.string.address_salida_antigua_guatemala), latitude = 14.6614, longitude = -90.8194, description = s(R.string.service_outpatient)),
         )
+    }
+
+    /**
+     * Fetch today's itinerary from the API.
+     * On success, replaces the hardcoded fallback stops.
+     * On failure, keeps the hardcoded stops.
+     */
+    private fun fetchItinerariesFromApi() {
+        viewModelScope.launch {
+            try {
+                val idToken = tokenManager.getIdToken() ?: return@launch
+                val response = apiService.getItineraries("Bearer $idToken")
+                if (response.isSuccessful) {
+                    val body = response.body() ?: return@launch
+                    // Find today's itinerary (or the first one available)
+                    val itinerary = body.itineraries.firstOrNull() ?: return@launch
+                    if (itinerary.stops.isNotEmpty()) {
+                        _dailyItineraryStops.value = itinerary.stops.map { stopDto ->
+                            ItineraryStop(
+                                order = stopDto.order,
+                                id = stopDto.houseId ?: "stop-${stopDto.order}",
+                                label = stopDto.label,
+                                address = stopDto.address,
+                                latitude = stopDto.latitude,
+                                longitude = stopDto.longitude,
+                                description = stopDto.description
+                            )
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("MapViewModel", "Failed to fetch itineraries from API, using fallback: ${e.message}")
+            }
+        }
     }
 
     // -------------------------------------------------------------------------

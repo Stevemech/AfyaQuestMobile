@@ -2,6 +2,8 @@ package com.example.afyaquest.presentation.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.afyaquest.data.remote.ApiService
+import com.example.afyaquest.data.remote.dto.OrganizationDto
 import com.example.afyaquest.data.repository.AuthRepository
 import com.example.afyaquest.domain.model.User
 import com.example.afyaquest.util.LanguageManager
@@ -17,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val languageManager: LanguageManager
+    private val languageManager: LanguageManager,
+    private val apiService: ApiService
 ) : ViewModel() {
 
     val currentLanguage: StateFlow<String> = languageManager.getCurrentLanguageFlow()
@@ -41,8 +44,12 @@ class AuthViewModel @Inject constructor(
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
 
+    private val _organizations = MutableStateFlow<List<OrganizationDto>>(emptyList())
+    val organizations: StateFlow<List<OrganizationDto>> = _organizations.asStateFlow()
+
     init {
         checkLoginStatus()
+        fetchOrganizations()
     }
 
     /**
@@ -50,6 +57,24 @@ class AuthViewModel @Inject constructor(
      */
     private fun checkLoginStatus() {
         _isLoggedIn.value = authRepository.isLoggedIn()
+    }
+
+    /**
+     * Fetch available organizations from the API.
+     */
+    private fun fetchOrganizations() {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getOrganizations()
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        _organizations.value = it.organizations
+                    }
+                }
+            } catch (_: Exception) {
+                // Silently fail — organizations list stays empty
+            }
+        }
     }
 
     /**
@@ -78,10 +103,11 @@ class AuthViewModel @Inject constructor(
         email: String,
         password: String,
         name: String,
-        phone: String?
+        phone: String?,
+        organization: String? = null
     ) {
         viewModelScope.launch {
-            authRepository.register(email.trim(), password, name.trim(), phone?.trim())
+            authRepository.register(email.trim(), password, name.trim(), phone?.trim(), organization = organization)
                 .collect { resource ->
                     _registerState.value = resource
                 }
