@@ -37,7 +37,8 @@
 
     <!-- Language names (for picker) -->
     <string name="english">English</string>
-    <string name="kiswahili">Kiswahili</string>
+    <string name="espanol">Español</string>
+    <string name="kaqchikel">Kaqchikel</string>
 
     <!-- Dashboard -->
     <string name="dashboard">Dashboard</string>
@@ -155,7 +156,7 @@
     <string name="your_location">Your location</string>
     <string name="your_stops_for_the_day">Your stops for the day!</string>
     <string name="no_stops_for_today">No stops for today.</string>
-    <string name="map_location_disclaimer">Kajiado district, Kenya. Your location uses device GPS when permission is granted.</string>
+    <string name="map_location_disclaimer">Chimaltenango, Guatemala. Your location uses device GPS when permission is granted.</string>
     <string name="close">Close</string>
     <string name="address">Address</string>
     <string name="description">Description</string>
@@ -240,28 +241,26 @@
     <string name="service_family_planning">Family Planning</string>
     <string name="service_pharmacy">Pharmacy</string>
 
-    <string name="facility_kajiado_referral_hospital_name">Kajiado Referral Hospital</string>
-    <string name="facility_aic_kajiado_hospital_name">AIC Kajiado Hospital</string>
-    <string name="facility_kitengela_subcounty_hospital_name">Kitengela Sub-County Hospital</string>
-    <string name="facility_kajiado_airport_dispensary_name">Kajiado Airport Dispensary</string>
+    <string name="facility_hospital_nacional_chimaltenango_name">Hospital Nacional de Chimaltenango</string>
+    <string name="facility_centro_salud_chimaltenango_name">Centro de Salud Chimaltenango</string>
+    <string name="facility_hospital_san_juan_comalapa_name">Hospital San Juan Comalapa</string>
+    <string name="facility_puesto_salud_parramos_name">Puesto de Salud Parramos</string>
 
-    <string name="client_selina_nkoya_family_name">Selina Nkoya Family</string>
-    <string name="client_ole_sankale_household_name">Ole Sankale Household</string>
-    <string name="client_grace_nasieku_name">Grace Nasieku</string>
-    <string name="client_david_lekishon_family_name">David Lekishon Family</string>
-    <string name="client_peter_kisemei_household_name">Peter Kisemei Household</string>
-    <string name="client_mary_ole_sankale_name">Mary Ole Sankale</string>
+    <string name="client_familia_hernandez_name">Familia Hernández</string>
+    <string name="client_casa_lopez_name">Casa López</string>
+    <string name="client_familia_garcia_name">Familia García</string>
+    <string name="client_casa_martinez_name">Casa Martínez</string>
+    <string name="client_familia_rodriguez_name">Familia Rodríguez</string>
+    <string name="client_familia_cumes_name">Familia Cumes</string>
 
-    <string name="address_123_airport_road">123 Airport Road</string>
-    <string name="address_45_bissil_road">45 Bissil Road</string>
-    <string name="address_78_blood_bank">78 Blood Bank Road</string>
-    <string name="address_mashuuru_village">Mashuuru Village</string>
-    <string name="address_78_mashuuru_village">78 Mashuuru Village</string>
-    <string name="address_22_kajiado_town">22 Kajiado Town</string>
-    <string name="address_kajiado_town">Kajiado Town</string>
-    <string name="address_89_oloosirkon_area">89 Oloosirkon Area</string>
-    <string name="address_34_magadi_road">34 Magadi Road</string>
-    <string name="address_near_kajiado_airport">Near Kajiado Airport</string>
+    <string name="address_calle_real_chimaltenango">Calle Real, Chimaltenango</string>
+    <string name="address_canton_san_jacinto">Cantón San Jacinto</string>
+    <string name="address_aldea_san_andres_itzapa">Aldea San Andrés Itzapa</string>
+    <string name="address_colonia_las_victorias">Colonia Las Victorias</string>
+    <string name="address_barrio_el_calvario">Barrio El Calvario</string>
+    <string name="address_km_54_ruta_interamericana">Km 54 Ruta Interamericana</string>
+    <string name="address_centro_chimaltenango">Centro, Chimaltenango</string>
+    <string name="address_salida_antigua_guatemala">Salida a Antigua Guatemala</string>
 
     <string name="desc_maternal_health_checkup_needed">Maternal health check-up needed</string>
     <string name="desc_child_vaccination_due">Child vaccination due</string>

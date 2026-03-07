@@ -155,7 +155,8 @@ fun DailyReportScreen(
  * Returns the BCP-47 speech recognition locale tag for the current app language.
  */
 private fun speechLocale(language: String): String = when (language) {
-    LanguageManager.LANGUAGE_SWAHILI -> "sw-TZ"
+    LanguageManager.LANGUAGE_SPANISH -> "es-GT"
+    LanguageManager.LANGUAGE_KAQCHIKEL -> "es-GT"
     else -> "en-US"
 }
 
@@ -163,7 +164,8 @@ private fun speechLocale(language: String): String = when (language) {
  * Returns the BCP-47 tag for ML Kit Digital Ink model download.
  */
 private fun handwritingLocale(language: String): String = when (language) {
-    LanguageManager.LANGUAGE_SWAHILI -> "sw-TZ"
+    LanguageManager.LANGUAGE_SPANISH -> "es-GT"
+    LanguageManager.LANGUAGE_KAQCHIKEL -> "es-GT"
     else -> "en-US"
 }
 

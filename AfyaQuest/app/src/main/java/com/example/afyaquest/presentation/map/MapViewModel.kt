@@ -49,15 +49,15 @@ class MapViewModel @Inject constructor(
     }
 
     // -------------------------------------------------------------------------
-    // Default map camera (Kajiado district, Kenya). Used when no location available.
+    // Default map camera (Chimaltenango, Guatemala). Used when no location available.
     // -------------------------------------------------------------------------
-    val defaultLatitude = -1.93
-    val defaultLongitude = 36.7820
-    val defaultZoom = 12f
+    val defaultLatitude = 14.6392
+    val defaultLongitude = -90.8208
+    val defaultZoom = 13f
 
-    // Default "You are here" in Kenya (used when [USE_REAL_DEVICE_LOCATION] is false or before first GPS fix).
-    private val defaultLiveLatitude = -1.93
-    private val defaultLiveLongitude = 36.9801
+    // Default "You are here" in Guatemala (used when [USE_REAL_DEVICE_LOCATION] is false or before first GPS fix).
+    private val defaultLiveLatitude = 14.6350
+    private val defaultLiveLongitude = -90.8185
 
     // -------------------------------------------------------------------------
     // Live location (real GPS when [USE_REAL_DEVICE_LOCATION] is true, else Guatemala default).
@@ -110,215 +110,125 @@ class MapViewModel @Inject constructor(
 
     /**
      * Load health facilities, client houses, and today's ordered itinerary.
-     * Includes both Kenya and Guatemala placeholder data. In production, fetch from API.
+     * Uses Chimaltenango, Guatemala placeholder data. In production, fetch from API.
      */
     private fun loadMapData() {
-        // —— Kenya: health facilities (localized) ——
         val s = { resId: Int -> context.getString(resId) }
-        val kenyaHealthFacilities = listOf(
+
+        // —— Health facilities (Chimaltenango area, Guatemala) ——
+        _healthFacilities.value = listOf(
             HealthFacility(
-                id = "k-hf1",
-                name = s(R.string.facility_kajiado_referral_hospital_name),
+                id = "hf1",
+                name = s(R.string.facility_hospital_nacional_chimaltenango_name),
                 type = FacilityType.HOSPITAL,
-                latitude = -1.8522,
-                longitude = 36.7820,
+                latitude = 14.6614,
+                longitude = -90.8194,
                 servicesAvailable = listOf(s(R.string.service_emergency), s(R.string.service_maternity), s(R.string.service_pediatrics), s(R.string.service_surgery), s(R.string.service_outpatient), s(R.string.service_laboratory)),
-                distance = 20.3
+                distance = 0.8
             ),
             HealthFacility(
-                id = "k-hf2",
-                name = s(R.string.facility_aic_kajiado_hospital_name),
-                type = FacilityType.HOSPITAL,
-                latitude = -1.8489,
-                longitude = 36.7845,
-                servicesAvailable = listOf(s(R.string.service_emergency), s(R.string.service_maternity), s(R.string.service_pediatrics), s(R.string.service_outpatient), s(R.string.service_xray)),
-                distance = 19.8
-            ),
-            HealthFacility(
-                id = "k-hf3",
-                name = s(R.string.facility_kitengela_subcounty_hospital_name),
-                type = FacilityType.HOSPITAL,
-                latitude = -1.4737,
-                longitude = 36.9532,
-                servicesAvailable = listOf(s(R.string.service_emergency), s(R.string.service_maternity), s(R.string.service_surgery), s(R.string.service_laboratory), s(R.string.service_pharmacy)),
-                distance = 42.7
-            ),
-            HealthFacility(
-                id = "k-hf4",
-                name = s(R.string.facility_kajiado_airport_dispensary_name),
+                id = "hf2",
+                name = s(R.string.facility_centro_salud_chimaltenango_name),
                 type = FacilityType.CLINIC,
-                latitude = -1.8595,
-                longitude = 36.9801,
+                latitude = 14.6380,
+                longitude = -90.8215,
                 servicesAvailable = listOf(s(R.string.service_primary_care), s(R.string.service_vaccination), s(R.string.service_family_planning)),
                 distance = 0.3
+            ),
+            HealthFacility(
+                id = "hf3",
+                name = s(R.string.facility_hospital_san_juan_comalapa_name),
+                type = FacilityType.HOSPITAL,
+                latitude = 14.7414,
+                longitude = -90.8886,
+                servicesAvailable = listOf(s(R.string.service_emergency), s(R.string.service_maternity), s(R.string.service_outpatient), s(R.string.service_xray)),
+                distance = 12.5
+            ),
+            HealthFacility(
+                id = "hf4",
+                name = s(R.string.facility_puesto_salud_parramos_name),
+                type = FacilityType.CLINIC,
+                latitude = 14.6128,
+                longitude = -90.8042,
+                servicesAvailable = listOf(s(R.string.service_primary_care), s(R.string.service_vaccination), s(R.string.service_pharmacy)),
+                distance = 3.2
             )
         )
 
-        // —— Kenya: client houses (localized) ——
-        val kenyaClientHouses = listOf(
+        // —— Client houses (Chimaltenango area, Guatemala) ——
+        _clientHouses.value = listOf(
             ClientHouse(
-                id = "k1",
-                address = s(R.string.address_123_airport_road),
-                clientName = s(R.string.client_selina_nkoya_family_name),
-                latitude = -1.8623,
-                longitude = 36.9789,
+                id = "1",
+                address = s(R.string.address_calle_real_chimaltenango),
+                clientName = s(R.string.client_familia_hernandez_name),
+                latitude = 14.6425,
+                longitude = -90.8170,
                 status = VisitStatus.TO_VISIT,
                 distance = 0.5,
                 description = s(R.string.desc_maternal_health_checkup_needed)
             ),
             ClientHouse(
-                id = "k2",
-                address = s(R.string.address_45_bissil_road),
-                clientName = s(R.string.client_ole_sankale_household_name),
-                latitude = -1.8712,
-                longitude = 36.9901,
+                id = "2",
+                address = s(R.string.address_canton_san_jacinto),
+                clientName = s(R.string.client_casa_lopez_name),
+                latitude = 14.6310,
+                longitude = -90.8290,
                 status = VisitStatus.TO_VISIT,
-                distance = 1.8,
+                distance = 1.2,
                 description = s(R.string.desc_child_vaccination_due)
             ),
             ClientHouse(
-                id = "k3",
-                address = s(R.string.address_78_mashuuru_village),
-                clientName = s(R.string.client_grace_nasieku_name),
-                latitude = -1.8753,
-                longitude = 36.8201,
+                id = "3",
+                address = s(R.string.address_aldea_san_andres_itzapa),
+                clientName = s(R.string.client_familia_garcia_name),
+                latitude = 14.6190,
+                longitude = -90.8410,
                 status = VisitStatus.VISITED,
                 lastVisit = s(R.string.time_2_days_ago),
-                distance = 16.7,
+                distance = 3.1,
                 description = s(R.string.desc_followup_completed)
             ),
             ClientHouse(
-                id = "k4",
-                address = s(R.string.address_22_kajiado_town),
-                clientName = s(R.string.client_david_lekishon_family_name),
-                latitude = -1.8512,
-                longitude = 36.7798,
+                id = "4",
+                address = s(R.string.address_colonia_las_victorias),
+                clientName = s(R.string.client_casa_martinez_name),
+                latitude = 14.6520,
+                longitude = -90.8095,
                 status = VisitStatus.SCHEDULED,
                 nextVisit = s(R.string.time_tomorrow_10_am),
-                distance = 20.1,
+                distance = 1.8,
                 description = s(R.string.desc_family_planning_consultation)
             ),
             ClientHouse(
-                id = "k5",
-                address = s(R.string.address_89_oloosirkon_area),
-                clientName = s(R.string.client_peter_kisemei_household_name),
-                latitude = -1.7901,
-                longitude = 36.9267,
+                id = "5",
+                address = s(R.string.address_barrio_el_calvario),
+                clientName = s(R.string.client_familia_rodriguez_name),
+                latitude = 14.6475,
+                longitude = -90.8320,
                 status = VisitStatus.TO_VISIT,
-                distance = 9.7,
+                distance = 1.6,
                 description = s(R.string.desc_hypertension_screening_needed)
             ),
             ClientHouse(
-                id = "k6",
-                address = s(R.string.address_34_magadi_road),
-                clientName = s(R.string.client_mary_ole_sankale_name),
-                latitude = -1.9012,
-                longitude = 37.0123,
+                id = "6",
+                address = s(R.string.address_km_54_ruta_interamericana),
+                clientName = s(R.string.client_familia_cumes_name),
+                latitude = 14.6265,
+                longitude = -90.8130,
                 status = VisitStatus.SCHEDULED,
                 nextVisit = s(R.string.time_friday_2_pm),
-                distance = 6.2,
+                distance = 2.0,
                 description = s(R.string.desc_prenatal_care_appointment)
             )
         )
 
-        // —— Guatemala: health facilities ——
-        val guatemalaHealthFacilities = listOf(
-            HealthFacility(
-                id = "hf1",
-                name = "Hospital General San Juan de Dios",
-                type = FacilityType.HOSPITAL,
-                latitude = 14.6289,
-                longitude = -90.5132,
-                servicesAvailable = listOf("Emergency", "Maternity", "Pediatrics", "Surgery", "Laboratory"),
-                distance = 2.1
-            ),
-            HealthFacility(
-                id = "hf2",
-                name = "Centro de Salud Zona 1",
-                type = FacilityType.CLINIC,
-                latitude = 14.6412,
-                longitude = -90.5189,
-                servicesAvailable = listOf("Primary Care", "Vaccination", "Family Planning"),
-                distance = 1.8
-            ),
-            HealthFacility(
-                id = "hf3",
-                name = "Hospital Roosevelt",
-                type = FacilityType.HOSPITAL,
-                latitude = 14.6123,
-                longitude = -90.4892,
-                servicesAvailable = listOf("Emergency", "Maternity", "Outpatient", "X-Ray"),
-                distance = 3.5
-            )
-        )
-
-        // —— Guatemala: client houses ——
-        val guatemalaClientHouses = listOf(
-            ClientHouse(
-                id = "1",
-                address = "Zona 3, Guatemala City",
-                clientName = "Familia Hernández",
-                latitude = 14.6389,
-                longitude = -90.5089,
-                status = VisitStatus.TO_VISIT,
-                distance = 0.6,
-                description = "Maternal health check-up"
-            ),
-            ClientHouse(
-                id = "2",
-                address = "Zona 7, Guatemala City",
-                clientName = "Casa López",
-                latitude = 14.6222,
-                longitude = -90.5212,
-                status = VisitStatus.TO_VISIT,
-                distance = 1.2,
-                description = "Child vaccination due"
-            ),
-            ClientHouse(
-                id = "3",
-                address = "Zona 10, Guatemala City",
-                clientName = "Familia García",
-                latitude = 14.5989,
-                longitude = -90.4956,
-                status = VisitStatus.VISITED,
-                lastVisit = "2 days ago",
-                distance = 2.8,
-                description = "Follow-up completed"
-            ),
-            ClientHouse(
-                id = "4",
-                address = "Zona 5, Mixco",
-                clientName = "Casa Martínez",
-                latitude = 14.6312,
-                longitude = -90.5321,
-                status = VisitStatus.SCHEDULED,
-                nextVisit = "Tomorrow 10:00 AM",
-                distance = 1.5,
-                description = "Family planning consultation"
-            ),
-            ClientHouse(
-                id = "5",
-                address = "Zona 12, Guatemala City",
-                clientName = "Familia Rodríguez",
-                latitude = 14.6156,
-                longitude = -90.4789,
-                status = VisitStatus.TO_VISIT,
-                distance = 2.3,
-                description = "Hypertension screening"
-            )
-        )
-
-        // Combined lists: Kenya + Guatemala (nothing removed)
-        _healthFacilities.value = kenyaHealthFacilities + guatemalaHealthFacilities
-        _clientHouses.value = kenyaClientHouses + guatemalaClientHouses
-
-        // Today's itinerary — ordered stops (path for the map). Kenya demo (localized).
+        // Today's itinerary — ordered stops (path for the map)
         _dailyItineraryStops.value = listOf(
-            ItineraryStop(order = 1, id = "k1", label = s(R.string.client_selina_nkoya_family_name), address = s(R.string.address_123_airport_road), latitude = -1.8623, longitude = 36.9789, description = s(R.string.desc_maternal_health_checkup_needed)),
-            ItineraryStop(order = 2, id = "k2", label = s(R.string.client_ole_sankale_household_name), address = s(R.string.address_45_bissil_road), latitude = -1.8712, longitude = 36.9901, description = s(R.string.desc_child_vaccination_due)),
-            ItineraryStop(order = 3, id = "k-hf4", label = s(R.string.facility_kajiado_airport_dispensary_name), address = s(R.string.address_near_kajiado_airport), latitude = -1.8595, longitude = 36.9801, description = s(R.string.desc_dropoff_pickup_supplies)),
-            ItineraryStop(order = 4, id = "k5", label = s(R.string.client_peter_kisemei_household_name), address = s(R.string.address_89_oloosirkon_area), latitude = -1.7901, longitude = 36.9267, description = s(R.string.desc_hypertension_screening_needed)),
-            ItineraryStop(order = 5, id = "k-hf1", label = s(R.string.facility_kajiado_referral_hospital_name), address = s(R.string.address_kajiado_town), latitude = -1.8522, longitude = 36.7820, description = s(R.string.service_outpatient)),
+            ItineraryStop(order = 1, id = "1", label = s(R.string.client_familia_hernandez_name), address = s(R.string.address_calle_real_chimaltenango), latitude = 14.6425, longitude = -90.8170, description = s(R.string.desc_maternal_health_checkup_needed)),
+            ItineraryStop(order = 2, id = "2", label = s(R.string.client_casa_lopez_name), address = s(R.string.address_canton_san_jacinto), latitude = 14.6310, longitude = -90.8290, description = s(R.string.desc_child_vaccination_due)),
+            ItineraryStop(order = 3, id = "hf2", label = s(R.string.facility_centro_salud_chimaltenango_name), address = s(R.string.address_centro_chimaltenango), latitude = 14.6380, longitude = -90.8215, description = s(R.string.desc_dropoff_pickup_supplies)),
+            ItineraryStop(order = 4, id = "5", label = s(R.string.client_familia_rodriguez_name), address = s(R.string.address_barrio_el_calvario), latitude = 14.6475, longitude = -90.8320, description = s(R.string.desc_hypertension_screening_needed)),
+            ItineraryStop(order = 5, id = "hf1", label = s(R.string.facility_hospital_nacional_chimaltenango_name), address = s(R.string.address_salida_antigua_guatemala), latitude = 14.6614, longitude = -90.8194, description = s(R.string.service_outpatient)),
         )
     }
 

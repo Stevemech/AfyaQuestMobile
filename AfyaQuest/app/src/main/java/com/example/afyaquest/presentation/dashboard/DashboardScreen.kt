@@ -83,11 +83,20 @@ fun DashboardScreen(
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text(stringResource(R.string.kiswahili)) },
+                                text = { Text(stringResource(R.string.espanol)) },
                                 onClick = {
                                     showLanguageMenu = false
                                     scope.launch {
-                                        profileViewModel.changeLanguage(LanguageManager.LANGUAGE_SWAHILI)
+                                        profileViewModel.changeLanguage(LanguageManager.LANGUAGE_SPANISH)
+                                    }
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.kaqchikel)) },
+                                onClick = {
+                                    showLanguageMenu = false
+                                    scope.launch {
+                                        profileViewModel.changeLanguage(LanguageManager.LANGUAGE_KAQCHIKEL)
                                     }
                                 }
                             )

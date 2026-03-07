@@ -25,7 +25,8 @@ class LanguageManager @Inject constructor(
 
     companion object {
         const val LANGUAGE_ENGLISH = "en"
-        const val LANGUAGE_SWAHILI = "sw"
+        const val LANGUAGE_SPANISH = "es"
+        const val LANGUAGE_KAQCHIKEL = "cak"
 
         /** SharedPreferences file name - also read by MainActivity.attachBaseContext. */
         const val LANGUAGE_PREFS_NAME = "language_prefs"
@@ -128,7 +129,8 @@ class LanguageManager @Inject constructor(
     fun getLanguageDisplayName(languageCode: String): String {
         return when (languageCode) {
             LANGUAGE_ENGLISH -> "English"
-            LANGUAGE_SWAHILI -> "Kiswahili"
+            LANGUAGE_SPANISH -> "Español"
+            LANGUAGE_KAQCHIKEL -> "Kaqchikel"
             else -> "English"
         }
     }
@@ -136,7 +138,8 @@ class LanguageManager @Inject constructor(
     fun getAvailableLanguages(): List<Pair<String, String>> {
         return listOf(
             LANGUAGE_ENGLISH to "English",
-            LANGUAGE_SWAHILI to "Kiswahili"
+            LANGUAGE_SPANISH to "Español",
+            LANGUAGE_KAQCHIKEL to "Kaqchikel"
         )
     }
 

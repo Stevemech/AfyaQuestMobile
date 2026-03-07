@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Afya Quest</string>
+
+    <!-- Common -->
+    <string name="ok">Ütz</string>
+    <string name="cancel">Tich\'aj</string>
+    <string name="delete">Tiyuj</string>
+    <string name="delete_report_title">Tiyuj ri Rutzijol</string>
+    <string name="delete_report_confirm">La kan nawajo\' nayuj re rutzijol re\'? Man tikirel ta nitzolïx.</string>
+    <string name="save">Tiyak</string>
+    <string name="submit">Titaq</string>
+    <string name="back">Titzolïx</string>
+    <string name="next">Jun chik</string>
+    <string name="done">Xtz\'aqät</string>
+    <string name="loading">Nisamajïx\u2026</string>
+    <string name="error">Sachoj</string>
+
+    <!-- Authentication -->
+    <string name="login">Tok</string>
+    <string name="register">Titz\'ib\'äx ab\'i\'</string>
+    <string name="logout">Tel</string>
+    <string name="email">Taqoya\'l</string>
+    <string name="password">Ewan tzij</string>
+    <string name="confirm_password">Tijikib\'äx ri Ewan Tzij</string>
+    <string name="full_name">Tz\'aqät B\'i\'aj</string>
+    <string name="phone_number">Rajilab\'al oyonib\'äl</string>
+    <string name="forgot_password">La xasäch ri ewan tzij?</string>
+    <string name="welcome_back">Ütz Apetik Chik</string>
+    <string name="sign_in_subtitle">Katoka\' richin nasamajij ri ab\'ey pa k\'aslemal</string>
+    <string name="sign_in">Katoka\'</string>
+    <string name="no_account">La man k\'o ta ataqoya\'l?</string>
+    <string name="sign_up">Tatz\'ib\'aj ab\'i\'</string>
+    <string name="show_password">Tak\'ut ri ewan tzij</string>
+    <string name="hide_password">Tawewaj ri ewan tzij</string>
+
+    <!-- Language names (for picker) -->
+    <string name="english">English</string>
+    <string name="espanol">Español</string>
+    <string name="kaqchikel">Kaqchikel</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard">Tikirib\'äl</string>
+    <string name="welcome">Ütz apetik</string>
+    <string name="streak">Junamiläj</string>
+    <string name="total_xp">Ronojel XP</string>
+    <string name="lives">K\'aslemal</string>
+    <string name="level">Ruk\'aslem</string>
+    <string name="rank">Ruk\'oj</string>
+    <string name="daily_todo">Rusamaj Jujun Q\'ij</string>
+    <string name="learning_center">K\'olib\'äl Tijonik</string>
+    <string name="xp_value_format">%d XP</string>
+    <string name="level_value">Ruk\'aslem %d</string>
+    <string name="xp_to_level_format">%1$d XP k\'a pa Ruk\'aslem %2$d</string>
+
+    <!-- Daily Tasks -->
+    <string name="daily_questions">Kik\'utunïk Jujun Q\'ij</string>
+    <string name="daily_questions_desc">Katzolij oxi\' k\'utunïk jujun q\'ij richin ye\'amolo\' ri XP!</string>
+    <string name="daily_itinerary">Rub\'ey Jujun Q\'ij</string>
+    <string name="daily_itinerary_desc">Ke\'awila\' ri k\'olib\'äl chuqa\' ri yab\'il winäq wawe\'!</string>
+    <string name="daily_report">Rutzijol Jujun Q\'ij</string>
+    <string name="daily_report_desc">Tatz\'aqatisaj ri rutzijol pa ruk\'isib\'äl ri q\'ij.</string>
+
+    <!-- Learning Center -->
+    <string name="video_modules">Taq Silowachib\'äl</string>
+    <string name="video_modules_desc">Ke\'atzu\' ri taq silowachib\'äl chuqa\' tab\'ana\' ri taq moloj k\'utunïk!</string>
+    <string name="interactive_lessons">Taq Tijonik</string>
+    <string name="interactive_lessons_desc">Ke\'asik\'ij ri taq tijonik chuqa\' ke\'amolo\' XP toq ye\'atz\'aqatisaj!</string>
+    <string name="chat_with_steve">Katzijon rik\'in Fred</string>
+    <string name="chat_with_steve_desc">Tak\'utuj chi re Fred, ri ato\'onel pa k\'aslemal, achike k\'utunïk nawajo\'!</string>
+
+    <!-- Profile -->
+    <string name="profile">Ruwäch</string>
+    <string name="overview">Rutzijoxkil</string>
+    <string name="achievements">Taq Q\'axoj</string>
+    <string name="reports">Taq Rutzijol</string>
+    <string name="settings">Taq Runuk\'ulem</string>
+    <string name="reflections">Taq Na\'oj</string>
+
+    <!-- Achievements -->
+    <string name="achievements_unlocked">Taq Q\'axoj Ejaqon</string>
+    <string name="achievements_locked">Taq Q\'axoj Tz\'apin</string>
+    <string name="unlocked_on">Xjaq pa</string>
+    <string name="progress">Rub\'eyal</string>
+
+    <!-- Weekly Reflections -->
+    <string name="weekly_reflection">Runa\'oj Jujun Wuqu\' Q\'ij</string>
+    <string name="success_story">Rub\'ixik Q\'axoj</string>
+    <string name="challenges_faced">Taq K\'axk\'olil Xkïl</string>
+    <string name="lessons_learned">Taq Tijonik Xk\'ul</string>
+    <string name="goals_next_week">Taq Rayb\'äl ri Jun Chik Wuqu\' Q\'ij</string>
+    <string name="overall_rating">Ronojel Ruk\'aslem</string>
+
+    <!-- Settings -->
+    <string name="language">Ch\'ab\'äl</string>
+    <string name="theme">Ruwäch</string>
+    <string name="notifications">Taq Rutzijol</string>
+    <string name="account">Taqoya\'l</string>
+    <string name="about">Chi rij</string>
+    <string name="privacy_policy">Runa\'oj Ichinanem</string>
+    <string name="terms_of_service">Taq Rub\'anikil Samaj</string>
+
+    <!-- Theme -->
+    <string name="light_theme">Saqil Ruwäch</string>
+    <string name="dark_theme">Q\'equmal Ruwäch</string>
+    <string name="system_default">Rucholajem K\'oja\'</string>
+
+    <!-- Sync Status -->
+    <string name="offline">Man k\'o ta pa k\'amaya\'l</string>
+    <string name="syncing">Niximon\u2026</string>
+    <string name="all_synced">Ronojel ximon</string>
+    <string name="sync_now">Tiximon Wakami</string>
+    <string name="items_pending">taq wachinäq yoyob\'en</string>
+    <string name="changes_will_sync">Ri taq jaloj xkeximon toq xatok pa k\'amaya\'l</string>
+
+    <!-- Questions / Daily Questions -->
+    <string name="question">K\'utunïk</string>
+    <string name="correct">Ütz!</string>
+    <string name="incorrect">Man ütz ta</string>
+    <string name="explanation">Rutzijoxkil:</string>
+    <string name="continue_text">Titikïr chik</string>
+    <string name="failed_to_load_questions">Man xetikirel ta xesamajïx ri taq k\'utunïk</string>
+    <string name="unknown_error">Man etaman ta ruwäch ri sachoj</string>
+    <string name="go_back">Titzolïx</string>
+    <string name="no_questions_available">Man k\'o ta taq k\'utunïk</string>
+    <string name="question_progress">K\'utunïk %1$d chi ke ri %2$d</string>
+    <string name="next_question">Jun Chik K\'utunïk \u2192</string>
+    <string name="finish_quiz">Titz\'aqatisäx ri Moloj K\'utunïk</string>
+    <string name="points_label">%d ch\'utaq</string>
+    <string name="quiz_complete">\uD83C\uDF89 Xtz\'aqät ri Moloj K\'utunïk!</string>
+    <string name="quiz_score_summary">Xe\'awila\' %1$d chi ke ri %2$d taq k\'utunïk!</string>
+    <string name="lives_gained">K\'aslemal Xk\'ul</string>
+    <string name="lives_lost">K\'aslemal Xsäch</string>
+    <string name="current_lives">K\'aslemal Wakami</string>
+
+    <!-- XP and Gamification -->
+    <string name="xp_earned">XP Xk\'ul</string>
+    <string name="points">Ch\'utaq</string>
+    <string name="level_up">Xjote\' Ruk\'aslem!</string>
+    <string name="congratulations">Kakiköt!</string>
+
+    <!-- Map / Daily Itinerary -->
+    <string name="map">Ruwäch Rulewal</string>
+    <string name="client_houses">Kachoch Winäq</string>
+    <string name="client_stops">Kik\'olib\'äl Winäq</string>
+    <string name="health_facilities">Kik\'olib\'äl K\'aslemal</string>
+    <string name="mark_as_visited">Tiya\' retal chi xb\'an</string>
+    <string name="visited">Xb\'an</string>
+    <string name="pending">Noyob\'en</string>
+    <string name="cancelled">Xq\'at</string>
+    <string name="all">Ronojel</string>
+    <string name="to_visit">Richin Nib\'an</string>
+    <string name="scheduled">Ya\'on retal</string>
+    <string name="you_are_here">At k\'o wawe\'</string>
+    <string name="your_location">Akuchi\' yat k\'o wi</string>
+    <string name="your_stops_for_the_day">Ri ak\'olib\'äl richin re q\'ij re\'!</string>
+    <string name="no_stops_for_today">Man k\'o ta ak\'olib\'äl richin wakami.</string>
+    <string name="map_location_disclaimer">Chimaltenango, Guatemala. Ri ak\'olib\'äl nrokisaj GPS toq ya\'on q\'ij.</string>
+    <string name="close">Titz\'apïx</string>
+    <string name="address">Ochochib\'äl</string>
+    <string name="description">Rutzijoxkil</string>
+    <string name="distance">Runajtil</string>
+    <string name="last_visit">Ruk\'isib\'äl b\'ey</string>
+    <string name="next_visit">Jun chik b\'ey</string>
+    <string name="services">Taq Samaj</string>
+
+    <!-- Reports / Daily Report -->
+    <string name="patients_visited">Yab\'il Winäq Xetz\'et</string>
+    <string name="vaccines_administered">Taq Tz\'u\' Xeya\'</string>
+    <string name="health_education_sessions">Taq Moloj Tijonik pa K\'aslemal</string>
+    <string name="referrals">Taq Taqonem</string>
+    <string name="challenges">Taq K\'axk\'olil</string>
+    <string name="notes">Taq Tz\'ib\'anïk</string>
+    <string name="daily_report_intro">Tatz\'aqatisaj ri atzijol jujun q\'ij richin naya\' ketal ri asamaj chuqa\' ye\'amolo\' XP!</string>
+    <string name="patients_visited_label">Kajilab\'al Yab\'il Winäq Xetz\'et *</string>
+    <string name="vaccinations_administered_label">Taq Tz\'u\' Xeya\' *</string>
+    <string name="health_education_topics_label">Taq Ruwäch Tijonik pa K\'aslemal *</string>
+    <string name="challenges_faced_label">Taq K\'axk\'olil Xkïl</string>
+    <string name="additional_notes">Ch\'aqa\' chik Taq Tz\'ib\'anïk</string>
+    <string name="submit_report">Titaq ri Rutzijol</string>
+    <string name="required_fields_note">* K\'atzinel taq k\'ojlib\'äl</string>
+    <string name="report_submitted">Xtaq ri rutzijol!</string>
+    <string name="submission_failed">Man xtikirel ta xtaq</string>
+
+    <!-- Video Modules -->
+    <string name="categories">Taq Ruwäch</string>
+    <string name="no_videos_available">Man k\'o ta taq silowachib\'äl</string>
+    <string name="videos_watched">Silowachib\'äl Xetz\'et</string>
+    <string name="quizzes_complete">Moloj K\'utunïk Xetz\'aqät</string>
+    <string name="watch_video">Tatzu\' ri Silowachib\'äl</string>
+    <string name="watch_again">Tatzu\' Jun Chik</string>
+    <string name="take_quiz">Tab\'ana\' ri Moloj K\'utunïk</string>
+    <string name="retake_quiz">Tab\'ana\' Jun Chik</string>
+    <string name="watched">\u2713 Xtz\'et</string>
+    <string name="quiz_check">Moloj K\'utunïk \u2713</string>
+
+    <!-- Video Modules (sample data / categories) -->
+    <string name="video_module_1_title">Nab\'ey: Rutz\'etik K\'aslemal</string>
+    <string name="video_module_1_desc">Tawetamaj achike rub\'eyal nab\'an jun tz\'aqät rutz\'etik k\'aslemal</string>
+    <string name="video_module_2_title">Ruka\'n: Ruch\'ajch\'ojil Ya\'</string>
+    <string name="video_module_2_desc">Tawetamaj ri ruch\'ajch\'ojil ya\' chuqa\' ri ütz ruyakom</string>
+    <string name="video_module_3_title">Rox: Ruk\'aslemal Nan chuqa\' Ak\'wala\'</string>
+    <string name="video_module_3_desc">K\'atzinel taq samaj kichin ri taq nan chuqa\' ri ak\'wala\'</string>
+    <string name="video_module_4_title">Rukaj: Taq Tz\'u\' Richin Ak\'wala\'</string>
+    <string name="video_module_4_desc">Tawetamaj achike ora\' chuqa\' achike ruma k\'atzinel ri taq tz\'u\'</string>
+    <string name="video_module_5_title">Ro\': Nab\'ey To\'ïk pa Sachoj</string>
+    <string name="video_module_5_desc">Tawetamaj ri taq nab\'ey to\'ïk pa sachoj richin ri jutaqil taq yab\'il</string>
+    <string name="video_module_6_title">Ruwaq: Ruq\'ij Wa\'im</string>
+    <string name="video_module_6_desc">Tawetamaj ri ütz wa\'im chuqa\' ri achike nik\'atzin chi re ri ruch\'akul</string>
+    <string name="video_module_7_title">Ruwuq: Richajixik Yab\'il</string>
+    <string name="video_module_7_desc">Jutaqil taq yab\'il chuqa\' achike rub\'eyal nikichajij ki\'</string>
+
+    <string name="video_category_basics">Rutz\'etik K\'aslemal</string>
+    <string name="video_category_sanitation">Ch\'ajch\'ojil</string>
+    <string name="video_category_maternal">Ruk\'aslemal Nan</string>
+    <string name="video_category_immunization">Taq Tz\'u\'</string>
+    <string name="video_category_emergency">Sachoj</string>
+    <string name="video_category_nutrition">Wa\'im</string>
+    <string name="video_category_disease_prevention">Richajixik Yab\'il</string>
+
+    <!-- Interactive Lessons -->
+    <string name="lessons_completed">%1$d/%2$d Taq Tijonik Xetz\'aqät</string>
+    <string name="no_lessons_available">Man k\'o ta taq tijonik</string>
+    <string name="lesson">Tijonik</string>
+
+    <!-- Map / Daily Itinerary (sample data) -->
+    <string name="facility_type_hospital">Kowilab\'äl</string>
+    <string name="facility_type_clinic">Ajkunab\'äl</string>
+    <string name="facility_type_health_center">K\'olib\'äl K\'aslemal</string>
+
+    <string name="service_emergency">Sachoj</string>
+    <string name="service_maternity">Ruk\'aslemal Aläs</string>
+    <string name="service_pediatrics">Richin Ak\'wala\'</string>
+    <string name="service_surgery">Q\'atb\'äl Ch\'akul</string>
+    <string name="service_outpatient">Man K\'o ta Chi Kowilab\'äl</string>
+    <string name="service_laboratory">Nik\'ob\'äl</string>
+    <string name="service_xray">Rayos X</string>
+    <string name="service_primary_care">Nab\'ey To\'ïk</string>
+    <string name="service_vaccination">Tz\'u\'</string>
+    <string name="service_family_planning">Runuk\'ulem Ach\'alalri\'ïl</string>
+    <string name="service_pharmacy">Ajkunab\'äl</string>
+
+    <string name="facility_hospital_nacional_chimaltenango_name">Kowilab\'äl Chimaltenango</string>
+    <string name="facility_centro_salud_chimaltenango_name">K\'olib\'äl K\'aslemal Chimaltenango</string>
+    <string name="facility_hospital_san_juan_comalapa_name">Kowilab\'äl San Juan Comalapa</string>
+    <string name="facility_puesto_salud_parramos_name">Ajkunab\'äl Parramos</string>
+
+    <string name="client_familia_hernandez_name">Rach\'alalri\'ïl Hernández</string>
+    <string name="client_casa_lopez_name">Rachoch López</string>
+    <string name="client_familia_garcia_name">Rach\'alalri\'ïl García</string>
+    <string name="client_casa_martinez_name">Rachoch Martínez</string>
+    <string name="client_familia_rodriguez_name">Rach\'alalri\'ïl Rodríguez</string>
+    <string name="client_familia_cumes_name">Rach\'alalri\'ïl Cumes</string>
+
+    <string name="address_calle_real_chimaltenango">Calle Real, Chimaltenango</string>
+    <string name="address_canton_san_jacinto">Cantón San Jacinto</string>
+    <string name="address_aldea_san_andres_itzapa">Tinamït San Andrés Itzapa</string>
+    <string name="address_colonia_las_victorias">Colonia Las Victorias</string>
+    <string name="address_barrio_el_calvario">Barrio El Calvario</string>
+    <string name="address_km_54_ruta_interamericana">Km 54 Rub\'ey Interamericana</string>
+    <string name="address_centro_chimaltenango">Runik\'ajal, Chimaltenango</string>
+    <string name="address_salida_antigua_guatemala">Rub\'ey pa Antigua Guatemala</string>
+
+    <string name="desc_maternal_health_checkup_needed">Nik\'atzin rutz\'etik ruk\'aslemal ri nan</string>
+    <string name="desc_child_vaccination_due">Rub\'ey rutz\'u\' ri ak\'wal</string>
+    <string name="desc_dropoff_pickup_supplies">Keya\' / Kemolo\' taq wachinäq</string>
+    <string name="desc_family_planning_consultation">Runuk\'ulem ach\'alalri\'ïl</string>
+    <string name="desc_hypertension_screening_needed">Nik\'atzin rutz\'etik ruchukul kik\'el</string>
+    <string name="desc_followup_completed">Xtz\'aqät ri rub\'eyik</string>
+    <string name="desc_prenatal_care_appointment">Rutz\'etik ruk\'aslemal ri nan</string>
+
+    <string name="time_2_days_ago">Ka\'i\' q\'ij kan</string>
+    <string name="time_just_now">Wakami</string>
+    <string name="time_tomorrow_10_am">Chwa\'q 10:00 AM</string>
+    <string name="time_friday_2_pm">Waqxaqib\'al 2:00 PM</string>
+    <string name="mark_complete_xp">Tiya\' retal chi xtz\'aqät (+%d XP)</string>
+    <string name="lesson_completed">Xtz\'aqät ri tijonik!</string>
+    <string name="min_format">\u23F1\uFE0F %s ch\'uti ramaj</string>
+    <string name="xp_format">\uD83D\uDC8E %d XP</string>
+    <string name="difficulty_easy">Man k\'ax ta</string>
+    <string name="difficulty_medium">Loman</string>
+    <string name="difficulty_hard">K\'ax</string>
+
+    <!-- Lesson categories -->
+    <string name="category_hygiene">Ch\'ajch\'ojil</string>
+    <string name="category_nutrition">Wa\'im</string>
+    <string name="category_maternal_health">Ruk\'aslemal Nan</string>
+    <string name="category_child_care">Kichajinik Ak\'wala\'</string>
+    <string name="category_disease_prevention">Richajixik Yab\'il</string>
+    <string name="category_first_aid">Nab\'ey To\'ïk</string>
+    <string name="category_medication">Kunaj</string>
+    <string name="category_health_education">Tijonik pa K\'aslemal</string>
+
+    <!-- Lesson 1: Handwashing -->
+    <string name="lesson_1_title">Ütz Ruch\'ajik Q\'ab\'</string>
+    <string name="lesson_1_description">Tawetamaj ri wuqu\' taq ruxaq richin nab\'an ütz ruch\'ajik q\'ab\' richin nichajïx ri yab\'il</string>
+    <string name="lesson_1_content"># Ütz Ruch\'ajik Q\'ab\'\n\n## Achike Ruma K\'atzinel Ruch\'ajik Q\'ab\'\nRi ruch\'ajik q\'ab\' jun chi ke ri nimaläj taq rub\'eyal richin nichajïx ri yab\'il.\n\n## Ri Wuqu\' taq Ruxaq\n\n1. **Taya\'a\' ya\'** chi kij ri aq\'ab\'\n2. **Takuyu\' jabón** chuqa\' tak\'ojo\' ütz\n3. **Tach\'ajo\' ri aq\'ab\' chi kixo\'l**\n4. **Tach\'ajo\' chi kikojol ri arï\'**\n5. **Tach\'ajo\' ri chi rij ri aq\'ab\'**\n6. **Tach\'ajo\' chuxe\' ri arixk\'aq**\n7. **Tab\'ana\' ütz ruch\'ajik rik\'in ya\'**\n\n## Achike Ora\' Nik\'atzin Nach\'aj Aq\'ab\'\n- Chuwäch nanuk\'u\' ri wa\n- Chuwäch natij ri wa\n- Chi rij nawokisaj ri ja\n- Chi rij nakoq\'ej o naxik\'a\'\n- Chi rij nachäp ri taq chicop\n\n## Jarupe\' Ramaj\nTach\'aja\' aq\'ab\' jun juwinäq segundo — achi\'el nab\'ïx ka\'i\' mul ri \"Happy Birthday\"!</string>
+
+    <!-- Lesson 2: Nutrition -->
+    <string name="lesson_2_title">Ütz Wa\'im Richin Ak\'wala\'</string>
+    <string name="lesson_2_description">Tawetamaj ri achike nik\'atzin chi ke ri ak\'wala\' richin ütz nik\'ïy</string>
+    <string name="lesson_2_content"># Ütz Wa\'im Richin Ak\'wala\'\n\n## K\'atzinel taq Ruwäch Wa\'im\n\n### 1. Proteína\n- Kinäq\', lenteja, endecha, kar, tib\'aj\n- Nikiköl ri ch\'akul chuqa\' nikito\'o\' ri nik\'ïyik\n\n### 2. Wanga\n- Ixim, arroz, papas, kaxlan wa\n- Nikikowin nikiya\' ruchuk\'ab\' richin jujun q\'ij\n\n### 3. Ruwäch Che\' chuqa\' Ichaj\n- Q\'ana\' ichaj, mango, sek, tomate\n- K\'ïy taq vitamina chuqa\' minerales k\'o chi kik\'in\n\n### 4. Ruk\'wa\' Wakax\n- Ruk\'wa\' wakax, yogur (we k\'o)\n- Richin ko\'öl taq b\'aq chuqa\' eje\'\n\n## Taq Na\'oj Richin Wa\'im\n- Taya\' jalajöj taq ruwäch wa jujun q\'ij\n- Takuyu\' ruwäch che\' chuqa\' ichaj rik\'in k\'ïy taq rub\'onil\n- Tajikib\'a\' chi k\'o ronojel ri nik\'atzin\n- Taya\' ch\'ajch\'öj ya\' richin nitij</string>
+
+    <!-- Lesson 3: Prenatal -->
+    <string name="lesson_3_title">Richajinik K\'aslemal Chuwäch Ri Aläxik</string>
+    <string name="lesson_3_description">K\'atzinel taq na\'oj richin ruk\'aslemal ri nan toq k\'o rak\'wal</string>
+    <string name="lesson_3_content"># Richajinik K\'aslemal Chuwäch Ri Aläxik\n\n## Jutaqil Rutz\'etik\nKatb\'e pa kowilab\'äl man jun ta kaji\' mul toq k\'o ri ak\'wal:\n- Jun mul pa ri nab\'ey oxi\' ik\'\n- Jun mul chi kikojol ri kaji\' - waqib\' ik\'\n- Ka\'i\' mul pa ri ruk\'isib\'äl oxi\' ik\'\n\n## Wa\'im Toq K\'o Ak\'wal\n- Tanimaj ri wa\'im\n- Taya\' hierro chuqa\' ácido fólico\n- Katuk\'a\' k\'ïy ch\'ajch\'öj ya\'\n\n## Taq Retal Itzel\nTatzukuj to\'ïk we:\n- Nïm k\'axk\'ol pa jolom\n- Man ütz ta natz\'ët\n- Kik\'el nipe\n- Nïm k\'axk\'ol pa pamaj\n- Ri ak\'wal man nisilïx ta\n\n## Richajixik Malaria\n- Katwär chuxe\' malla richin sik\'\n- Taya\' ri kunaj achi\'el nib\'ïx</string>
+
+    <!-- Lesson 4: Vaccination -->
+    <string name="lesson_4_title">Rub\'ey Kitz\'u\' Ak\'wala\'</string>
+    <string name="lesson_4_description">Tawetamaj achike ora\' chuqa\' achike ruma k\'atzinel ri taq tz\'u\' chi ke ri ak\'wala\'</string>
+    <string name="lesson_4_content"># Rub\'ey Kitz\'u\' Ak\'wala\'\n\n## Toq Xaläx\n- BCG (tuberculosis)\n- Polio 0\n\n## 6 Wuqu\' Q\'ij\n- Polio 1\n- Pentavalent 1\n- PCV 1\n\n## 10 Wuqu\' Q\'ij\n- Polio 2\n- Pentavalent 2\n- PCV 2\n\n## 14 Wuqu\' Q\'ij\n- Polio 3\n- Pentavalent 3\n- PCV 3\n\n## 9 Ik\'\n- Sarampión\n- Fiebre Amarilla\n\n## Achike Ruma K\'atzinel ri Taq Tz\'u\'\nRi taq tz\'u\' nikichajij ri ak\'wala\' chi kiwäch ri nimaläj taq yab\'il chuqa\' nikito\'o\' ri kik\'aslemal.</string>
+
+    <!-- Lesson 5: Malaria -->
+    <string name="lesson_5_title">Richajixik Malaria</string>
+    <string name="lesson_5_description">Taq rub\'eyal richin nichajïx ri malaria pa ri atinamït</string>
+    <string name="lesson_5_content"># Richajixik Malaria\n\n## Rokisaxik Malla Richin Sik\'\n- Katwär chuxe\' malla rik\'in kunaj\n- Tachojmirisaj ri taq jul aninäq\n- Taya\' kunaj chik pa waqib\' - kab\'lajuj ik\'\n\n## Richajinik Rulewal\n- Telesäx ri ya\' k\'o wi\n- Taya\' ütz chi re ri ak\'olib\'äl\n- Taq\'ata\' ri q\'ayïs naqaj chi re ri ja\n\n## Aninäq Rutz\'etik\nTawila\' ri taq retal:\n- K\'atan\n- Tew\n- K\'axk\'ol pa jolom\n- K\'axk\'ol pa ch\'akul\n\n## Kunaj\n- Tatzukuj to\'ïk aninäq\n- Tatz\'aqatisaj ronojel ri kunaj\n- Katuxlan chuqa\' katuk\'a\' ya\'</string>
+
+    <!-- Lesson 6: CPR -->
+    <string name="lesson_6_title">Ruq\'ij CPR</string>
+    <string name="lesson_6_description">Taq rub\'eyal CPR richin nito\'on ri k\'aslemal kichin nimaläj winäq chuqa\' ak\'wala\'</string>
+    <string name="lesson_6_content"># Ruq\'ij CPR\n\n## Achike Ora\' Nab\'an CPR\n- Ri winäq man k\'o ta retamab\'al\n- Man nuxlan ta o k\'ax nuxlan\n- Man k\'o ta ruchukul kik\'el\n\n## Taq Ruxaq Richin Nimaläj Winäq\n\n### 1. Tawokoj To\'ïk\nTawokoj ri ajto\'onel aninäq\n\n### 2. Taya\' Ruk\'ojlib\'al\nTakana\' ruwäch pa jun ko\'öl k\'ojlib\'äl\n\n### 3. Taya\' Aq\'ab\'\nPa runik\'ajal ri ak\'u\'x, chi kikojol ri taq k\'u\'x\n\n### 4. Taq Tz\'ub\'uxïk\n- Tatz\'ub\'uj rik\'in ruchuk\'ab\' chuqa\' aninäq\n- Man jun ta ka\'i\' pulgada runimirisaxik\n- Rajilab\'al: 100-120 pa jun ch\'uti ramaj\n- 30 taq tz\'ub\'uxïk\n\n### 5. Taq Ruxla\'n Rito\'ik\n- Tak\'oso\' ri jolom chi rij\n- Tajotob\'a\' ri xäk\'äl\n- Taya\' ka\'i\' uxla\'n\n\n### 6. Tab\'ana\' Jun Chik\nTatikïr chik: 30 taq tz\'ub\'uxïk, ka\'i\' uxla\'n\n\n## Richin Ak\'wala\'\n- Tawokisaj jun q\'ab\' richin ri taq tz\'ub\'uxïk\n- Ko\'öl runimirisaxik: achi\'el ka\'i\' pulgada\n- Junam rajilab\'al: 30:2</string>
+
+    <!-- Chat -->
+    <string name="chat">Tzijonem</string>
+    <string name="type_message">Tatz\'ib\'aj ri atzij\u2026</string>
+    <string name="send">Titaq</string>
+    <string name="online">K\'o pa k\'amaya\'l</string>
+    <string name="fred_ai_assistant">Fred - Ato\'onel AI</string>
+    <string name="send_message">Titaq ri tzij</string>
+
+    <!-- Fred\'s messages (localized) -->
+    <string name="fred_greeting">Ütz apetik! Yin Fred, ri ato\'onel AI pa k\'aslemal richin Afya Quest. Yin k\'o wawe\' richin yinto\'on awik\'in pa tijonik pa k\'aslemal, taq na\'oj richin natijon, chuqa\' achike na k\'utunïk chi rij ri k\'oja\'. Achike yitikïr yinto\'on awik\'in wakami? \uD83D\uDE0A</string>
+    <string name="fred_response_hello">Ütz apetik! \uD83D\uDE0A Yin Fred, ri ato\'onel AI pa k\'aslemal. Yin k\'o wawe\' richin yinto\'on awik\'in pa tijonik pa k\'aslemal, taq na\'oj richin natijon, chuqa\' achike na k\'utunïk chi rij Afya Quest. Achike yitikïr yinto\'on awik\'in wakami?</string>
+    <string name="fred_response_handwashing">Ütz k\'utunïk chi rij ruch\'ajik q\'ab\'! \uD83E\uDDFC Tanataj ri wuqu\' taq ruxaq: taya\'a\' ya\', takuyu\' jabón, tach\'ajo\' ri aq\'ab\', chi kikojol ri arï\', chi rij ri aq\'ab\', chuxe\' ri arixk\'aq, chuqa\' tab\'ana\' ütz ruch\'ajik rik\'in ya\' jun juwinäq segundo. Re\' jun chi ke ri nimaläj taq rub\'eyal richin nichajïx ri yab\'il!</string>
+    <string name="fred_response_malaria">Yalan k\'atzinel richajixik malaria! \uD83E\uDD9F Ri nimaläj taq rub\'eyal rija\': katwär chuxe\' malla rik\'in kunaj, telesäx ri ya\' k\'o wi, taya\' ütz chi re ri ak\'olib\'äl, chuqa\' tatzukuj to\'ïk aninäq we yetz\'etetäj ri taq retal (k\'atan, tew, k\'axk\'ol pa jolom). Junelïk tatz\'aqatisaj ronojel ri kunaj we ya\'on chawe.</string>
+    <string name="fred_response_vaccination">Yalan k\'atzinel ri taq tz\'u\' richin kik\'aslemal ri ak\'wala\'! \uD83D\uDC89 Ri ak\'wala\' nik\'atzin nikik\'ul ri taq tz\'u\' toq ye\'aläx (BCG, Polio 0), pa 6 wuqu\' q\'ij, 10 wuqu\' q\'ij, 14 wuqu\' q\'ij (Polio, Pentavalent, PCV), chuqa\' 9 ik\' (Sarampión, Fiebre Amarilla). Re taq re\' nikichajij chi kiwäch nimaläj taq yab\'il!</string>
+    <string name="fred_response_nutrition">Yalan k\'atzinel ri ütz wa\'im! \uD83E\uDD57 Ri ak\'wala\' nik\'atzin proteína (kinäq\', endecha, kar), wanga (ixim, arroz), ruwäch che\' chuqa\' ichaj (q\'ana\' ichaj, mango), chuqa\' ruk\'wa\' wakax we k\'o. Taya\' jalajöj taq ruwäch wa, taq wa\'im rik\'in k\'ïy rub\'onil, chuqa\' k\'ïy ch\'ajch\'öj ya\' jujun q\'ij.</string>
+    <string name="fred_response_xp">La nawajo\' ye\'amolo\' ch\'aqa\' chik XP? \uD83D\uDC8E Tatz\'aqatisaj ri ak\'utunïk jujun q\'ij (30 XP pa jujun ütz tzolin tzij), tataq ri taq atzijol jujun q\'ij (50 XP), tatz\'aqatisaj ri taq tijonik (50-100 XP), chuqa\' ke\'atzu\' ri taq silowachib\'äl! Junelïk tib\'an ri asamaj richin ch\'aqa\' chik XP. Yatikïr!</string>
+    <string name="fred_response_streak">Ri junamiläj ja ri asamaj jujun q\'ij! \uD83D\uDD25 Katoka\' chuqa\' tab\'ana\' man jun ta jun samaj jujun q\'ij richin najikib\'a\' ri ajunamiläj. Ri nïm taq junamiläj nikiya\' ch\'aqa\' chik XP chuqa\' nik\'ut ri awochoch pa tijonik. Man tayuj ta ri b\'ey!</string>
+    <string name="fred_response_thanks">Matyox chawe! \uD83D\uDE0A Yin junelïk k\'o wawe\' richin yinto\'on awik\'in pa ri ab\'ey pa tijonik. Junelïk tab\'ana\' ri ütz asamaj achi\'el Ato\'onel pa K\'aslemal pa Tinamït — yab\'anon jun nimaläj jaloj pa ri atinamït! Junelïk tak\'utuj chwe achike nawajo\'.</string>
+    <string name="fred_response_cpr">Ri CPR jun samaj richin nito\'on ri k\'aslemal! \uD83D\uDEA8 Tanataj: tatz\'eta\' we ri winäq man k\'o ta retamab\'al chuqa\' man nuxlan ta, tawokoj to\'ïk, takana\' ruwäch, taya\' aq\'ab\' pa runik\'ajal ri ak\'u\'x, taya\' 30 taq tz\'ub\'uxïk (100-120/ch\'uti ramaj, ka\'i\' pulgada runimirisaxik), k\'a te ri\' ka\'i\' uxla\'n. Tab\'ana\' jun chik ri 30:2.</string>
+    <string name="fred_response_default">Jun ütz k\'utunïk! Yin k\'o wawe\' richin yinto\'on awik\'in pa tijonik pa k\'aslemal, taq na\'oj richin natijon, chuqa\' rub\'eyik ri k\'oja\'. La yatikïr nab\'ij chwe achike nawajo\' nawetamaj? Yitikïr yinto\'on awik\'in pa taq ruwäch achi\'el ruch\'ajik q\'ab\', wa\'im, richajixik malaria, taq tz\'u\', CPR, ruk\'aslemal nan, chuqa\' ch\'aqa\' chik! \uD83D\uDCDA</string>
+    <string name="fred_error">Kojakuyu\', xink\'ül jun sachoj. Tab\'ana\' utzil, tatojtob\'ej jun chik.</string>
+
+    <string name="new_report">K\'ak\'a\' Rutzijol</string>
+    <string name="report_history">Runatab\'al</string>
+    <string name="no_reports_yet">Man k\'o ta taq rutzijol etaqon. Tataq ri anab\'ey rutzijol jujun q\'ij!</string>
+    <string name="fill_required_fields">Tab\'ana\' utzil, tatz\'aqatisaj ronojel ri k\'atzinel taq k\'ojlib\'äl</string>
+    <string name="report_submitted_success">Ütz xtaq ri rutzijol!</string>
+    <string name="your_activity_summary">Ri Rutzijoxkil Asamaj</string>
+    <string name="total_reports_count">Taq Rutzijol</string>
+    <string name="synced_status">Ximon \u2713</string>
+    <string name="pending_sync_status">Noyob\'en Riximonem</string>
+    <string name="your_reports">Ri Taq Atzijol</string>
+
+    <!-- Input Assist (Speech-to-Text / Handwriting) -->
+    <string name="speech_to_text">Ch\'ab\'äl chi tz\'ib\'anïk</string>
+    <string name="handwriting_input">Tz\'ib\'anïk rik\'in q\'ab\'</string>
+    <string name="draw_here">Katz\'ib\'aj wawe\'</string>
+    <string name="clear">Tiyuj</string>
+    <string name="recognizing">Nisamajïx\u2026</string>
+    <string name="speech_not_available">Man k\'o ta rutz\'etik ch\'ab\'äl</string>
+    <string name="downloading_model">Niqasäx ri kib\'onil tz\'ib\'anïk\u2026</string>
+    <string name="handwriting_model_ready">Ütz chik ri kib\'onil tz\'ib\'anïk</string>
+
+    <!-- Errors -->
+    <string name="error_network">Sachoj pa k\'amaya\'l. Tab\'ana\' utzil, tatojtob\'ej jun chik.</string>
+    <string name="error_generic">K\'o jun sachoj xk\'ulwachitäj. Tab\'ana\' utzil, tatojtob\'ej jun chik.</string>
+    <string name="error_login_failed">Man xtikirel ta ri tok. Tajikib\'a\' ri taq awetamab\'al.</string>
+</resources>

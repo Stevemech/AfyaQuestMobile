@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Afya Quest</string>
+
+    <!-- Common -->
+    <string name="ok">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete">Eliminar</string>
+    <string name="delete_report_title">Eliminar Reporte</string>
+    <string name="delete_report_confirm">¿Estás seguro de que deseas eliminar este reporte? Esta acción no se puede deshacer.</string>
+    <string name="save">Guardar</string>
+    <string name="submit">Enviar</string>
+    <string name="back">Atrás</string>
+    <string name="next">Siguiente</string>
+    <string name="done">Listo</string>
+    <string name="loading">Cargando…</string>
+    <string name="error">Error</string>
+
+    <!-- Authentication -->
+    <string name="login">Iniciar sesión</string>
+    <string name="register">Registrarse</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="confirm_password">Confirmar Contraseña</string>
+    <string name="full_name">Nombre Completo</string>
+    <string name="phone_number">Número de Teléfono</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="welcome_back">Bienvenido de Nuevo</string>
+    <string name="sign_in_subtitle">Inicia sesión para continuar tu camino de salud</string>
+    <string name="sign_in">Iniciar Sesión</string>
+    <string name="no_account">¿No tienes una cuenta?</string>
+    <string name="sign_up">Registrarse</string>
+    <string name="show_password">Mostrar contraseña</string>
+    <string name="hide_password">Ocultar contraseña</string>
+
+    <!-- Language names (for picker) -->
+    <string name="english">English</string>
+    <string name="espanol">Español</string>
+    <string name="kaqchikel">Kaqchikel</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard">Panel</string>
+    <string name="welcome">Bienvenido</string>
+    <string name="streak">Racha</string>
+    <string name="total_xp">XP Total</string>
+    <string name="lives">Vidas</string>
+    <string name="level">Nivel</string>
+    <string name="rank">Rango</string>
+    <string name="daily_todo">Tareas Diarias</string>
+    <string name="learning_center">Centro de Aprendizaje</string>
+    <string name="xp_value_format">%d XP</string>
+    <string name="level_value">Nivel %d</string>
+    <string name="xp_to_level_format">%1$d XP para Nivel %2$d</string>
+
+    <!-- Daily Tasks -->
+    <string name="daily_questions">Preguntas Diarias</string>
+    <string name="daily_questions_desc">¡Responde tus tres preguntas diarias para ganar tu XP!</string>
+    <string name="daily_itinerary">Itinerario Diario</string>
+    <string name="daily_itinerary_desc">¡Encuentra aquí tus ubicaciones y pacientes programados!</string>
+    <string name="daily_report">Reporte Diario</string>
+    <string name="daily_report_desc">Completa el reporte al final del día.</string>
+
+    <!-- Learning Center -->
+    <string name="video_modules">Módulos de Video</string>
+    <string name="video_modules_desc">¡Mira videos educativos y realiza los cuestionarios!</string>
+    <string name="interactive_lessons">Lecciones Interactivas</string>
+    <string name="interactive_lessons_desc">¡Lee lecciones y gana XP al completarlas!</string>
+    <string name="chat_with_steve">Chatea con Fred</string>
+    <string name="chat_with_steve_desc">¡Pregúntale a Fred, tu asistente de salud con IA, lo que quieras!</string>
+
+    <!-- Profile -->
+    <string name="profile">Perfil</string>
+    <string name="overview">Resumen</string>
+    <string name="achievements">Logros</string>
+    <string name="reports">Reportes</string>
+    <string name="settings">Configuración</string>
+    <string name="reflections">Reflexiones</string>
+
+    <!-- Achievements -->
+    <string name="achievements_unlocked">Logros Desbloqueados</string>
+    <string name="achievements_locked">Logros Bloqueados</string>
+    <string name="unlocked_on">Desbloqueado el</string>
+    <string name="progress">Progreso</string>
+
+    <!-- Weekly Reflections -->
+    <string name="weekly_reflection">Reflexión Semanal</string>
+    <string name="success_story">Historia de Éxito</string>
+    <string name="challenges_faced">Desafíos Enfrentados</string>
+    <string name="lessons_learned">Lecciones Aprendidas</string>
+    <string name="goals_next_week">Metas para la Próxima Semana</string>
+    <string name="overall_rating">Calificación General</string>
+
+    <!-- Settings -->
+    <string name="language">Idioma</string>
+    <string name="theme">Tema</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="account">Cuenta</string>
+    <string name="about">Acerca de</string>
+    <string name="privacy_policy">Política de Privacidad</string>
+    <string name="terms_of_service">Términos de Servicio</string>
+
+    <!-- Theme -->
+    <string name="light_theme">Tema Claro</string>
+    <string name="dark_theme">Tema Oscuro</string>
+    <string name="system_default">Predeterminado del Sistema</string>
+
+    <!-- Sync Status -->
+    <string name="offline">Sin conexión</string>
+    <string name="syncing">Sincronizando…</string>
+    <string name="all_synced">Todo sincronizado</string>
+    <string name="sync_now">Sincronizar Ahora</string>
+    <string name="items_pending">elementos pendientes</string>
+    <string name="changes_will_sync">Los cambios se sincronizarán cuando estés en línea</string>
+
+    <!-- Questions / Daily Questions -->
+    <string name="question">Pregunta</string>
+    <string name="correct">¡Correcto!</string>
+    <string name="incorrect">Incorrecto</string>
+    <string name="explanation">Explicación:</string>
+    <string name="continue_text">Continuar</string>
+    <string name="failed_to_load_questions">Error al cargar las preguntas</string>
+    <string name="unknown_error">Error desconocido</string>
+    <string name="go_back">Volver</string>
+    <string name="no_questions_available">No hay preguntas disponibles</string>
+    <string name="question_progress">Pregunta %1$d de %2$d</string>
+    <string name="next_question">Siguiente Pregunta →</string>
+    <string name="finish_quiz">Terminar Cuestionario</string>
+    <string name="points_label">%d puntos</string>
+    <string name="quiz_complete">🎉 ¡Cuestionario Completado!</string>
+    <string name="quiz_score_summary">¡Acertaste %1$d de %2$d preguntas!</string>
+    <string name="lives_gained">Vidas Ganadas</string>
+    <string name="lives_lost">Vidas Perdidas</string>
+    <string name="current_lives">Vidas Actuales</string>
+
+    <!-- XP and Gamification -->
+    <string name="xp_earned">XP Ganado</string>
+    <string name="points">Puntos</string>
+    <string name="level_up">¡Subiste de Nivel!</string>
+    <string name="congratulations">¡Felicidades!</string>
+
+    <!-- Map / Daily Itinerary -->
+    <string name="map">Mapa</string>
+    <string name="client_houses">Casas de Clientes</string>
+    <string name="client_stops">Paradas de Clientes</string>
+    <string name="health_facilities">Centros de Salud</string>
+    <string name="mark_as_visited">Marcar como Visitado</string>
+    <string name="visited">Visitado</string>
+    <string name="pending">Pendiente</string>
+    <string name="cancelled">Cancelado</string>
+    <string name="all">Todos</string>
+    <string name="to_visit">Por Visitar</string>
+    <string name="scheduled">Programado</string>
+    <string name="you_are_here">Estás aquí</string>
+    <string name="your_location">Tu ubicación</string>
+    <string name="your_stops_for_the_day">¡Tus paradas del día!</string>
+    <string name="no_stops_for_today">No hay paradas para hoy.</string>
+    <string name="map_location_disclaimer">Chimaltenango, Guatemala. Tu ubicación usa el GPS del dispositivo cuando se otorga permiso.</string>
+    <string name="close">Cerrar</string>
+    <string name="address">Dirección</string>
+    <string name="description">Descripción</string>
+    <string name="distance">Distancia</string>
+    <string name="last_visit">Última visita</string>
+    <string name="next_visit">Próxima visita</string>
+    <string name="services">Servicios</string>
+
+    <!-- Reports / Daily Report -->
+    <string name="patients_visited">Pacientes Visitados</string>
+    <string name="vaccines_administered">Vacunas Administradas</string>
+    <string name="health_education_sessions">Sesiones de Educación en Salud</string>
+    <string name="referrals">Referencias</string>
+    <string name="challenges">Desafíos</string>
+    <string name="notes">Notas</string>
+    <string name="daily_report_intro">¡Completa tu reporte diario para registrar tus actividades y ganar XP!</string>
+    <string name="patients_visited_label">Número de Pacientes Visitados *</string>
+    <string name="vaccinations_administered_label">Vacunas Administradas *</string>
+    <string name="health_education_topics_label">Temas de Educación en Salud Cubiertos *</string>
+    <string name="challenges_faced_label">Desafíos Enfrentados</string>
+    <string name="additional_notes">Notas Adicionales</string>
+    <string name="submit_report">Enviar Reporte</string>
+    <string name="required_fields_note">* Campos obligatorios</string>
+    <string name="report_submitted">¡Reporte enviado!</string>
+    <string name="submission_failed">Error al enviar</string>
+
+    <!-- Video Modules -->
+    <string name="categories">Categorías</string>
+    <string name="no_videos_available">No hay videos disponibles</string>
+    <string name="videos_watched">Videos Vistos</string>
+    <string name="quizzes_complete">Cuestionarios Completados</string>
+    <string name="watch_video">Ver Video</string>
+    <string name="watch_again">Ver de Nuevo</string>
+    <string name="take_quiz">Hacer Cuestionario</string>
+    <string name="retake_quiz">Repetir Cuestionario</string>
+    <string name="watched">✓ Visto</string>
+    <string name="quiz_check">Cuestionario ✓</string>
+
+    <!-- Video Modules (sample data / categories) -->
+    <string name="video_module_1_title">Módulo 1: Evaluaciones de Salud</string>
+    <string name="video_module_1_desc">Aprende a realizar evaluaciones integrales de salud usando el Manual del Detective Médico</string>
+    <string name="video_module_2_title">Módulo 2: Prácticas de Saneamiento del Agua</string>
+    <string name="video_module_2_desc">Comprensión del tratamiento del agua y almacenamiento seguro</string>
+    <string name="video_module_3_title">Módulo 3: Salud Materno-Infantil</string>
+    <string name="video_module_3_desc">Cuidados esenciales para madres y niños</string>
+    <string name="video_module_4_title">Módulo 4: Programas de Vacunación</string>
+    <string name="video_module_4_desc">Comprensión de los calendarios de vacunación y su importancia</string>
+    <string name="video_module_5_title">Módulo 5: Primeros Auxilios de Emergencia</string>
+    <string name="video_module_5_desc">Aprende técnicas esenciales de primeros auxilios para situaciones médicas comunes</string>
+    <string name="video_module_6_title">Módulo 6: Fundamentos de Nutrición</string>
+    <string name="video_module_6_desc">Comprensión de la nutrición balanceada y las necesidades dietéticas</string>
+    <string name="video_module_7_title">Módulo 7: Prevención de Enfermedades</string>
+    <string name="video_module_7_desc">Enfermedades comunes y estrategias de prevención</string>
+
+    <string name="video_category_basics">Evaluación de Salud</string>
+    <string name="video_category_sanitation">Saneamiento</string>
+    <string name="video_category_maternal">Salud Materna</string>
+    <string name="video_category_immunization">Inmunización</string>
+    <string name="video_category_emergency">Emergencia</string>
+    <string name="video_category_nutrition">Nutrición</string>
+    <string name="video_category_disease_prevention">Prevención de Enfermedades</string>
+
+    <!-- Interactive Lessons -->
+    <string name="lessons_completed">%1$d/%2$d Lecciones Completadas</string>
+    <string name="no_lessons_available">No hay lecciones disponibles</string>
+    <string name="lesson">Lección</string>
+
+    <!-- Map / Daily Itinerary (sample data) -->
+    <string name="facility_type_hospital">Hospital</string>
+    <string name="facility_type_clinic">Clínica</string>
+    <string name="facility_type_health_center">Centro de Salud</string>
+
+    <string name="service_emergency">Emergencia</string>
+    <string name="service_maternity">Maternidad</string>
+    <string name="service_pediatrics">Pediatría</string>
+    <string name="service_surgery">Cirugía</string>
+    <string name="service_outpatient">Consulta Externa</string>
+    <string name="service_laboratory">Laboratorio</string>
+    <string name="service_xray">Rayos X</string>
+    <string name="service_primary_care">Atención Primaria</string>
+    <string name="service_vaccination">Vacunación</string>
+    <string name="service_family_planning">Planificación Familiar</string>
+    <string name="service_pharmacy">Farmacia</string>
+
+    <string name="facility_hospital_nacional_chimaltenango_name">Hospital Nacional de Chimaltenango</string>
+    <string name="facility_centro_salud_chimaltenango_name">Centro de Salud Chimaltenango</string>
+    <string name="facility_hospital_san_juan_comalapa_name">Hospital San Juan Comalapa</string>
+    <string name="facility_puesto_salud_parramos_name">Puesto de Salud Parramos</string>
+
+    <string name="client_familia_hernandez_name">Familia Hernández</string>
+    <string name="client_casa_lopez_name">Casa López</string>
+    <string name="client_familia_garcia_name">Familia García</string>
+    <string name="client_casa_martinez_name">Casa Martínez</string>
+    <string name="client_familia_rodriguez_name">Familia Rodríguez</string>
+    <string name="client_familia_cumes_name">Familia Cumes</string>
+
+    <string name="address_calle_real_chimaltenango">Calle Real, Chimaltenango</string>
+    <string name="address_canton_san_jacinto">Cantón San Jacinto</string>
+    <string name="address_aldea_san_andres_itzapa">Aldea San Andrés Itzapa</string>
+    <string name="address_colonia_las_victorias">Colonia Las Victorias</string>
+    <string name="address_barrio_el_calvario">Barrio El Calvario</string>
+    <string name="address_km_54_ruta_interamericana">Km 54 Ruta Interamericana</string>
+    <string name="address_centro_chimaltenango">Centro, Chimaltenango</string>
+    <string name="address_salida_antigua_guatemala">Salida a Antigua Guatemala</string>
+
+    <string name="desc_maternal_health_checkup_needed">Se necesita revisión de salud materna</string>
+    <string name="desc_child_vaccination_due">Vacunación infantil pendiente</string>
+    <string name="desc_dropoff_pickup_supplies">Entrega / recogida de suministros</string>
+    <string name="desc_family_planning_consultation">Consulta de planificación familiar</string>
+    <string name="desc_hypertension_screening_needed">Se necesita examen de hipertensión</string>
+    <string name="desc_followup_completed">Seguimiento completado</string>
+    <string name="desc_prenatal_care_appointment">Cita de atención prenatal</string>
+
+    <string name="time_2_days_ago">Hace 2 días</string>
+    <string name="time_just_now">Ahora mismo</string>
+    <string name="time_tomorrow_10_am">Mañana 10:00 AM</string>
+    <string name="time_friday_2_pm">Viernes 2:00 PM</string>
+    <string name="mark_complete_xp">Marcar como Completado (+%d XP)</string>
+    <string name="lesson_completed">¡Lección completada!</string>
+    <string name="min_format">⏱️ %s min</string>
+    <string name="xp_format">💎 %d XP</string>
+    <string name="difficulty_easy">Fácil</string>
+    <string name="difficulty_medium">Medio</string>
+    <string name="difficulty_hard">Difícil</string>
+
+    <!-- Lesson categories -->
+    <string name="category_hygiene">Higiene</string>
+    <string name="category_nutrition">Nutrición</string>
+    <string name="category_maternal_health">Salud Materna</string>
+    <string name="category_child_care">Cuidado Infantil</string>
+    <string name="category_disease_prevention">Prevención de Enfermedades</string>
+    <string name="category_first_aid">Primeros Auxilios</string>
+    <string name="category_medication">Medicamentos</string>
+    <string name="category_health_education">Educación en Salud</string>
+
+    <!-- Lesson 1: Handwashing -->
+    <string name="lesson_1_title">Técnicas Correctas de Lavado de Manos</string>
+    <string name="lesson_1_description">Aprende los 7 pasos del lavado correcto de manos para prevenir la transmisión de enfermedades</string>
+    <string name="lesson_1_content"># Técnicas Correctas de Lavado de Manos\n\n## Por Qué es Importante Lavarse las Manos\nEl lavado de manos es una de las formas más efectivas de prevenir la propagación de enfermedades e infecciones.\n\n## Los 7 Pasos\n\n1. **Moja las manos** con agua limpia corriente\n2. **Aplica jabón** y haz espuma\n3. **Frota las palmas juntas**\n4. **Frota entre los dedos**\n5. **Limpia el dorso de las manos**\n6. **Limpia debajo de las uñas**\n7. **Enjuaga bien**\n\n## Cuándo Lavarse las Manos\n- Antes de preparar alimentos\n- Antes de comer\n- Después de usar el baño\n- Después de toser o estornudar\n- Después de tocar animales\n\n## Duración\n¡Lávate las manos durante al menos **20 segundos** — aproximadamente lo que dura cantar \"Cumpleaños Feliz\" dos veces!</string>
+
+    <!-- Lesson 2: Nutrition -->
+    <string name="lesson_2_title">Dieta Balanceada para Niños</string>
+    <string name="lesson_2_description">Comprender las necesidades nutricionales de los niños en crecimiento</string>
+    <string name="lesson_2_content"># Dieta Balanceada para Niños\n\n## Grupos de Alimentos Esenciales\n\n### 1. Proteínas\n- Frijoles, lentejas, huevos, pescado, carne\n- Construyen músculos fuertes y apoyan el crecimiento\n\n### 2. Carbohidratos\n- Tortillas, arroz, papas, pan\n- Proporcionan energía para las actividades diarias\n\n### 3. Frutas y Verduras\n- Verduras de hoja verde oscura, mangos, bananas, tomates\n- Ricas en vitaminas y minerales\n\n### 4. Lácteos\n- Leche, yogur (si está disponible)\n- Huesos y dientes fuertes\n\n## Consejos para Planificar Comidas\n- Ofrece variedad cada día\n- Incluye frutas y verduras de colores\n- Asegura porciones adecuadas\n- Proporciona agua limpia para beber</string>
+
+    <!-- Lesson 3: Prenatal -->
+    <string name="lesson_3_title">Fundamentos del Cuidado Prenatal</string>
+    <string name="lesson_3_description">Aspectos clave de la salud materna durante el embarazo</string>
+    <string name="lesson_3_content"># Fundamentos del Cuidado Prenatal\n\n## Revisiones Regulares\nVisita el centro de salud al menos 4 veces durante el embarazo:\n- Una vez en los primeros 3 meses\n- Una vez entre los 4-6 meses\n- Dos veces en los últimos 3 meses\n\n## Nutrición Durante el Embarazo\n- Aumenta la ingesta de alimentos\n- Toma suplementos de hierro y ácido fólico\n- Bebe abundante agua limpia\n\n## Señales de Alarma\nBusca ayuda inmediata si:\n- Dolor de cabeza severo\n- Visión borrosa\n- Sangrado vaginal\n- Dolor abdominal severo\n- Reducción del movimiento del bebé\n\n## Prevención de Malaria\n- Duerme bajo mosquitero tratado\n- Toma medicación preventiva según prescripción</string>
+
+    <!-- Lesson 4: Vaccination -->
+    <string name="lesson_4_title">Calendario de Vacunación Infantil</string>
+    <string name="lesson_4_description">Comprender cuándo y por qué los niños necesitan vacunas</string>
+    <string name="lesson_4_content"># Calendario de Vacunación Infantil\n\n## Al Nacer\n- BCG (tuberculosis)\n- Polio 0\n\n## 6 Semanas\n- Polio 1\n- Pentavalente 1\n- PCV 1\n\n## 10 Semanas\n- Polio 2\n- Pentavalente 2\n- PCV 2\n\n## 14 Semanas\n- Polio 3\n- Pentavalente 3\n- PCV 3\n\n## 9 Meses\n- Sarampión\n- Fiebre Amarilla\n\n## Por Qué las Vacunas son Importantes\nLas vacunas protegen a los niños de enfermedades graves y salvan vidas.</string>
+
+    <!-- Lesson 5: Malaria -->
+    <string name="lesson_5_title">Prevención de Malaria</string>
+    <string name="lesson_5_description">Estrategias para prevenir la malaria en tu comunidad</string>
+    <string name="lesson_5_content"># Prevención de Malaria\n\n## Uso de Mosquiteros\n- Duerme bajo mosquiteros tratados con insecticida\n- Repara los agujeros inmediatamente\n- Vuelve a tratar los mosquiteros cada 6-12 meses\n\n## Control Ambiental\n- Elimina el agua estancada\n- Mantén los alrededores limpios\n- Limpia la maleza alrededor de las casas\n\n## Detección Temprana\nBusca síntomas:\n- Fiebre\n- Escalofríos\n- Dolor de cabeza\n- Dolores corporales\n\n## Tratamiento\n- Busca ayuda médica inmediatamente\n- Completa todo el tratamiento\n- Descansa y bebe líquidos</string>
+
+    <!-- Lesson 6: CPR -->
+    <string name="lesson_6_title">Fundamentos de RCP</string>
+    <string name="lesson_6_description">Técnicas de RCP para salvar vidas de adultos y niños</string>
+    <string name="lesson_6_content"># Fundamentos de RCP\n\n## Cuándo Realizar RCP\n- La persona está inconsciente\n- No respira o jadea\n- No tiene pulso\n\n## Pasos para Adultos\n\n### 1. Pide Ayuda\nLlama a los servicios de emergencia inmediatamente\n\n### 2. Posición\nAcuesta a la persona sobre una superficie firme\n\n### 3. Colocación de Manos\nCentro del pecho, entre los pezones\n\n### 4. Compresiones\n- Presiona fuerte y rápido\n- Al menos 5 cm de profundidad\n- Ritmo: 100-120 por minuto\n- 30 compresiones\n\n### 5. Respiraciones de Rescate\n- Inclina la cabeza hacia atrás\n- Levanta la barbilla\n- Da 2 respiraciones\n\n### 6. Repite\nContinúa el ciclo: 30 compresiones, 2 respiraciones\n\n## Para Niños\n- Usa una mano para las compresiones\n- Menor profundidad: unos 5 cm\n- Misma proporción: 30:2</string>
+
+    <!-- Chat -->
+    <string name="chat">Chat</string>
+    <string name="type_message">Escribe tu mensaje…</string>
+    <string name="send">Enviar</string>
+    <string name="online">En línea</string>
+    <string name="fred_ai_assistant">Fred - Asistente de IA</string>
+    <string name="send_message">Enviar mensaje</string>
+
+    <!-- Fred\'s messages (localized) -->
+    <string name="fred_greeting">¡Hola! Soy Fred, tu asistente de salud con IA para Afya Quest. Estoy aquí para ayudarte con educación en salud, consejos de estudio y cualquier pregunta sobre la plataforma. ¿En qué puedo ayudarte hoy? 😊</string>
+    <string name="fred_response_hello">¡Hola! 😊 Soy Fred, tu asistente de salud con IA. Estoy aquí para ayudarte con educación en salud, consejos de estudio y cualquier pregunta sobre Afya Quest. ¿En qué puedo ayudarte hoy?</string>
+    <string name="fred_response_handwashing">¡Excelente pregunta sobre el lavado de manos! 🧼 Recuerda los 7 pasos: moja, aplica jabón, frota las palmas, entre los dedos, dorso de las manos, debajo de las uñas y enjuaga bien durante al menos 20 segundos. ¡Esta es una de las mejores formas de prevenir la transmisión de enfermedades!</string>
+    <string name="fred_response_malaria">¡La prevención de malaria es crucial! 🦟 Las estrategias clave son: dormir bajo mosquiteros tratados con insecticida, eliminar el agua estancada, mantener los alrededores limpios y buscar ayuda médica inmediata si aparecen síntomas (fiebre, escalofríos, dolor de cabeza). Siempre completa todo el tratamiento prescrito.</string>
+    <string name="fred_response_vaccination">¡Las vacunas son vitales para la salud infantil! 💉 Los niños deben recibir vacunas al nacer (BCG, Polio 0), a las 6, 10 y 14 semanas (Polio, Pentavalente, serie PCV), y a los 9 meses (Sarampión, Fiebre Amarilla). ¡Estas protegen contra enfermedades graves y salvan vidas!</string>
+    <string name="fred_response_nutrition">¡La nutrición balanceada es esencial! 🥗 Los niños necesitan proteínas (frijoles, huevos, pescado), carbohidratos (tortillas, arroz), frutas y verduras (hojas verdes, mangos), y lácteos cuando estén disponibles. Ofrece variedad, alimentos coloridos y abundante agua limpia diariamente.</string>
+    <string name="fred_response_xp">¿Quieres ganar más XP? 💎 Completa tus preguntas diarias (30 XP por respuesta correcta), envía reportes diarios (50 XP), termina lecciones interactivas (50-100 XP) y ¡mira los módulos de video! Mantén tu racha para XP extra. ¡Tú puedes!</string>
+    <string name="fred_response_streak">¡Las rachas son tu compromiso diario! 🔥 Inicia sesión y completa al menos una actividad cada día para mantener tu racha. Las rachas más largas te dan XP extra y demuestran tu dedicación al aprendizaje. ¡No rompas la cadena!</string>
+    <string name="fred_response_thanks">¡De nada! 😊 Siempre estoy aquí para ayudarte en tu camino de aprendizaje. Sigue con el excelente trabajo como Asistente de Salud Comunitaria: ¡estás haciendo una verdadera diferencia en tu comunidad! No dudes en preguntarme lo que quieras.</string>
+    <string name="fred_response_cpr">¡La RCP es una habilidad que salva vidas! 🚨 Recuerda: verifica si la persona está inconsciente y no respira, pide ayuda, colócala boca arriba, pon las manos en el centro del pecho, da 30 compresiones (100-120/min, 5 cm de profundidad), luego 2 respiraciones de rescate. Repite el ciclo 30:2.</string>
+    <string name="fred_response_default">¡Qué pregunta tan interesante! Estoy aquí para ayudarte con educación en salud, consejos de estudio y guía de la plataforma. ¿Puedes contarme más sobre lo que te gustaría aprender? Puedo ayudarte con temas como lavado de manos, nutrición, prevención de malaria, vacunas, RCP, salud materna y ¡más! 📚</string>
+    <string name="fred_error">Lo siento, ocurrió un error. Por favor, intenta de nuevo.</string>
+
+    <string name="new_report">Nuevo Reporte</string>
+    <string name="report_history">Historial</string>
+    <string name="no_reports_yet">Aún no hay reportes enviados. ¡Envía tu primer reporte diario!</string>
+    <string name="fill_required_fields">Por favor, completa todos los campos obligatorios</string>
+    <string name="report_submitted_success">¡Reporte enviado exitosamente!</string>
+    <string name="your_activity_summary">Resumen de tu Actividad</string>
+    <string name="total_reports_count">Reportes</string>
+    <string name="synced_status">Sincronizado ✓</string>
+    <string name="pending_sync_status">Sincronización Pendiente</string>
+    <string name="your_reports">Tus Reportes</string>
+
+    <!-- Input Assist (Speech-to-Text / Handwriting) -->
+    <string name="speech_to_text">Voz a texto</string>
+    <string name="handwriting_input">Escritura a mano</string>
+    <string name="draw_here">Escribe aquí</string>
+    <string name="clear">Borrar</string>
+    <string name="recognizing">Reconociendo…</string>
+    <string name="speech_not_available">Reconocimiento de voz no disponible</string>
+    <string name="downloading_model">Descargando modelo de escritura…</string>
+    <string name="handwriting_model_ready">Modelo de escritura listo</string>
+
+    <!-- Errors -->
+    <string name="error_network">Error de red. Por favor, intenta de nuevo.</string>
+    <string name="error_generic">Ocurrió un error. Por favor, intenta de nuevo.</string>
+    <string name="error_login_failed">Error al iniciar sesión. Verifica tus credenciales.</string>
+</resources>

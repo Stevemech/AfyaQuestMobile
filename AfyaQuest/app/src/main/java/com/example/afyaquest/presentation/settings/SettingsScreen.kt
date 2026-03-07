@@ -62,7 +62,8 @@ fun SettingsScreen(
                     icon = Icons.Default.Language,
                     title = "Language",
                     subtitle = when (currentLanguage) {
-                        LanguageManager.LANGUAGE_SWAHILI -> "Kiswahili"
+                        LanguageManager.LANGUAGE_SPANISH -> "Español"
+                        LanguageManager.LANGUAGE_KAQCHIKEL -> "Kaqchikel"
                         else -> "English"
                     },
                     onClick = { showLanguageDialog = true }
@@ -249,10 +250,19 @@ fun LanguageDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 LanguageOption(
-                    language = LanguageManager.LANGUAGE_SWAHILI,
-                    displayName = "Kiswahili",
-                    isSelected = currentLanguage == LanguageManager.LANGUAGE_SWAHILI,
-                    onClick = { onLanguageSelected(LanguageManager.LANGUAGE_SWAHILI) }
+                    language = LanguageManager.LANGUAGE_SPANISH,
+                    displayName = "Español",
+                    isSelected = currentLanguage == LanguageManager.LANGUAGE_SPANISH,
+                    onClick = { onLanguageSelected(LanguageManager.LANGUAGE_SPANISH) }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                LanguageOption(
+                    language = LanguageManager.LANGUAGE_KAQCHIKEL,
+                    displayName = "Kaqchikel",
+                    isSelected = currentLanguage == LanguageManager.LANGUAGE_KAQCHIKEL,
+                    onClick = { onLanguageSelected(LanguageManager.LANGUAGE_KAQCHIKEL) }
                 )
             }
         },

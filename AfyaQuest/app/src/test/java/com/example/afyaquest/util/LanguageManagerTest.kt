@@ -29,49 +29,55 @@ class LanguageManagerTest {
     @Test
     fun `getLanguageDisplayName returns correct display names`() {
         assertEquals("English", languageManager.getLanguageDisplayName(LanguageManager.LANGUAGE_ENGLISH))
-        assertEquals("Kiswahili", languageManager.getLanguageDisplayName(LanguageManager.LANGUAGE_SWAHILI))
+        assertEquals("Español", languageManager.getLanguageDisplayName(LanguageManager.LANGUAGE_SPANISH))
+        assertEquals("Kaqchikel", languageManager.getLanguageDisplayName(LanguageManager.LANGUAGE_KAQCHIKEL))
         assertEquals("English", languageManager.getLanguageDisplayName("unknown"))
     }
 
     @Test
-    fun `getAvailableLanguages returns both languages`() {
+    fun `getAvailableLanguages returns all languages`() {
         val languages = languageManager.getAvailableLanguages()
 
-        assertEquals(2, languages.size)
+        assertEquals(3, languages.size)
         assertTrue(languages.contains(LanguageManager.LANGUAGE_ENGLISH to "English"))
-        assertTrue(languages.contains(LanguageManager.LANGUAGE_SWAHILI to "Kiswahili"))
+        assertTrue(languages.contains(LanguageManager.LANGUAGE_SPANISH to "Español"))
+        assertTrue(languages.contains(LanguageManager.LANGUAGE_KAQCHIKEL to "Kaqchikel"))
     }
 
     @Test
     fun `setLanguage changes language preference`() = runBlocking {
-        languageManager.setLanguage(LanguageManager.LANGUAGE_SWAHILI)
-        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguageBlocking())
+        languageManager.setLanguage(LanguageManager.LANGUAGE_SPANISH)
+        assertEquals(LanguageManager.LANGUAGE_SPANISH, languageManager.getCurrentLanguageBlocking())
+
+        languageManager.setLanguage(LanguageManager.LANGUAGE_KAQCHIKEL)
+        assertEquals(LanguageManager.LANGUAGE_KAQCHIKEL, languageManager.getCurrentLanguageBlocking())
     }
 
     @Test
     fun `language constants are correct`() {
         assertEquals("en", LanguageManager.LANGUAGE_ENGLISH)
-        assertEquals("sw", LanguageManager.LANGUAGE_SWAHILI)
+        assertEquals("es", LanguageManager.LANGUAGE_SPANISH)
+        assertEquals("cak", LanguageManager.LANGUAGE_KAQCHIKEL)
     }
 
     @Test
     fun `per-user language is isolated`() = runBlocking {
-        // User A sets Swahili
+        // User A sets Kaqchikel
         languageManager.setCurrentUser("userA")
-        languageManager.setLanguage(LanguageManager.LANGUAGE_SWAHILI)
-        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguage())
+        languageManager.setLanguage(LanguageManager.LANGUAGE_KAQCHIKEL)
+        assertEquals(LanguageManager.LANGUAGE_KAQCHIKEL, languageManager.getCurrentLanguage())
 
-        // User B logs in – first time, inherits current language (Swahili from above)
+        // User B logs in – first time, inherits current language (Kaqchikel from above)
         languageManager.setCurrentUser("userB")
-        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguage())
+        assertEquals(LanguageManager.LANGUAGE_KAQCHIKEL, languageManager.getCurrentLanguage())
 
-        // User B switches to English
-        languageManager.setLanguage(LanguageManager.LANGUAGE_ENGLISH)
-        assertEquals(LanguageManager.LANGUAGE_ENGLISH, languageManager.getCurrentLanguage())
+        // User B switches to Spanish
+        languageManager.setLanguage(LanguageManager.LANGUAGE_SPANISH)
+        assertEquals(LanguageManager.LANGUAGE_SPANISH, languageManager.getCurrentLanguage())
 
-        // Switch back to User A – should still be Swahili
+        // Switch back to User A – should still be Kaqchikel
         languageManager.setCurrentUser("userA")
-        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguage())
+        assertEquals(LanguageManager.LANGUAGE_KAQCHIKEL, languageManager.getCurrentLanguage())
     }
 
     @Test
@@ -79,14 +85,14 @@ class LanguageManagerTest {
         // Set global to English
         languageManager.setLanguage(LanguageManager.LANGUAGE_ENGLISH)
 
-        // User logs in and sets Swahili
+        // User logs in and sets Spanish
         languageManager.setCurrentUser("user1")
-        languageManager.setLanguage(LanguageManager.LANGUAGE_SWAHILI)
+        languageManager.setLanguage(LanguageManager.LANGUAGE_SPANISH)
 
         // Logout
         languageManager.setCurrentUser(null)
 
-        // Global key should still reflect last active language (Swahili)
-        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguage())
+        // Global key should still reflect last active language (Spanish)
+        assertEquals(LanguageManager.LANGUAGE_SPANISH, languageManager.getCurrentLanguage())
     }
 }
