@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthContext';
+import LanguageSwitcher from '../components/common/LanguageSwitcher';
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -24,6 +27,11 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-body-bg flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {/* Language switcher */}
+        <div className="flex justify-end mb-4">
+          <LanguageSwitcher />
+        </div>
+
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2">
@@ -33,12 +41,12 @@ export default function LoginPage() {
             </svg>
             <span className="text-2xl font-bold text-text-primary">AfyaQuest</span>
           </div>
-          <p className="text-text-secondary mt-2">Admin Portal</p>
+          <p className="text-text-secondary mt-2">{t('login.adminPortal')}</p>
         </div>
 
         {/* Login form */}
         <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-border p-8">
-          <h2 className="text-xl font-semibold text-text-primary mb-6">Sign in</h2>
+          <h2 className="text-xl font-semibold text-text-primary mb-6">{t('login.signIn')}</h2>
 
           {error && (
             <div className="mb-4 p-3 bg-danger-light text-danger text-sm rounded-lg">{error}</div>
@@ -46,24 +54,24 @@ export default function LoginPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-1.5">Email</label>
+              <label className="block text-sm font-medium text-text-primary mb-1.5">{t('login.email')}</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 className="w-full px-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:border-primary transition-colors"
-                placeholder="admin@afyaquest.org"
+                placeholder={t('login.emailPlaceholder')}
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-text-primary mb-1.5">{t('login.password')}</label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="w-full px-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:border-primary transition-colors"
-                placeholder="Enter your password"
+                placeholder={t('login.passwordPlaceholder')}
                 required
               />
             </div>
@@ -74,7 +82,7 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full mt-6 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors disabled:opacity-50"
           >
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? t('login.signingIn') : t('login.signIn')}
           </button>
         </form>
       </div>

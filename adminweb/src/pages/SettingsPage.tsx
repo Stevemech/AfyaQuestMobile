@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Save, Plus, Trash2, Send, MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../api/api';
 import { useAuth } from '../auth/AuthContext';
 
 export default function SettingsPage() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const organization = user?.organization || localStorage.getItem('adminOrg') || '';
 
   const [modules, setModules] = useState([
@@ -31,11 +33,11 @@ export default function SettingsPage() {
     setAssignLoading(true);
     try {
       await api.assignModule(assignChvId, assignModuleId);
-      alert('Module assigned successfully');
+      alert(t('settings.moduleAssigned'));
       setAssignChvId('');
       setAssignModuleId('');
     } catch (err) {
-      alert(`Failed to assign module: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      alert(`${t('settings.failedAssign')} ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setAssignLoading(false);
     }
@@ -47,12 +49,12 @@ export default function SettingsPage() {
     try {
       const stops = itStops ? JSON.parse(itStops) : [];
       await api.createItinerary(itChvId, itDate, stops);
-      alert('Itinerary created successfully');
+      alert(t('settings.itineraryCreated'));
       setItChvId('');
       setItDate('');
       setItStops('');
     } catch (err) {
-      alert(`Failed to create itinerary: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      alert(`${t('settings.failedItinerary')} ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setItLoading(false);
     }
@@ -60,14 +62,14 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-3xl">
-      <h1 className="text-xl font-semibold text-text-primary mb-6">Settings</h1>
+      <h1 className="text-xl font-semibold text-text-primary mb-6">{t('settings.title')}</h1>
 
       {/* Organization Info */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6 mb-6">
-        <h2 className="text-lg font-semibold text-text-primary mb-4">Organization</h2>
+        <h2 className="text-lg font-semibold text-text-primary mb-4">{t('settings.organization')}</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">Organization</label>
+            <label className="block text-sm font-medium text-text-primary mb-1.5">{t('settings.organization')}</label>
             <input
               type="text"
               value={organization}
@@ -76,7 +78,7 @@ export default function SettingsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">Admin</label>
+            <label className="block text-sm font-medium text-text-primary mb-1.5">{t('admin')}</label>
             <input
               type="text"
               value={user?.name || ''}
@@ -89,10 +91,10 @@ export default function SettingsPage() {
 
       {/* Assign Module to CHV */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6 mb-6">
-        <h2 className="text-lg font-semibold text-text-primary mb-4">Assign Module to CHV</h2>
+        <h2 className="text-lg font-semibold text-text-primary mb-4">{t('settings.assignModuleToCHV')}</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">CHV ID</label>
+            <label className="block text-sm font-medium text-text-primary mb-1.5">{t('settings.chvId')}</label>
             <input
               type="text"
               value={assignChvId}
@@ -102,7 +104,7 @@ export default function SettingsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">Module ID</label>
+            <label className="block text-sm font-medium text-text-primary mb-1.5">{t('settings.moduleId')}</label>
             <input
               type="text"
               value={assignModuleId}
@@ -117,16 +119,16 @@ export default function SettingsPage() {
           disabled={assignLoading || !assignChvId || !assignModuleId}
           className="mt-4 flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark disabled:opacity-50"
         >
-          <Send size={14} /> {assignLoading ? 'Assigning...' : 'Assign Module'}
+          <Send size={14} /> {assignLoading ? t('settings.assigning') : t('settings.assignModule')}
         </button>
       </div>
 
       {/* Create Itinerary */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6 mb-6">
-        <h2 className="text-lg font-semibold text-text-primary mb-4">Create Itinerary</h2>
+        <h2 className="text-lg font-semibold text-text-primary mb-4">{t('settings.createItinerary')}</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">CHV ID</label>
+            <label className="block text-sm font-medium text-text-primary mb-1.5">{t('settings.chvId')}</label>
             <input
               type="text"
               value={itChvId}
@@ -136,7 +138,7 @@ export default function SettingsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">Date</label>
+            <label className="block text-sm font-medium text-text-primary mb-1.5">{t('date')}</label>
             <input
               type="date"
               value={itDate}
@@ -146,7 +148,7 @@ export default function SettingsPage() {
           </div>
         </div>
         <div className="mt-4">
-          <label className="block text-sm font-medium text-text-primary mb-1.5">Stops (JSON array)</label>
+          <label className="block text-sm font-medium text-text-primary mb-1.5">{t('settings.stopsJson')}</label>
           <textarea
             value={itStops}
             onChange={e => setItStops(e.target.value)}
@@ -160,16 +162,16 @@ export default function SettingsPage() {
           disabled={itLoading || !itChvId || !itDate}
           className="mt-4 flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark disabled:opacity-50"
         >
-          <MapPin size={14} /> {itLoading ? 'Creating...' : 'Create Itinerary'}
+          <MapPin size={14} /> {itLoading ? t('settings.creating') : t('settings.createItinerary')}
         </button>
       </div>
 
       {/* Module Management */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-text-primary">Module Management</h2>
+          <h2 className="text-lg font-semibold text-text-primary">{t('settings.moduleManagement')}</h2>
           <button className="flex items-center gap-1.5 px-3 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark">
-            <Plus size={14} /> Add Module
+            <Plus size={14} /> {t('settings.addModule')}
           </button>
         </div>
         <div className="space-y-3">
@@ -189,7 +191,7 @@ export default function SettingsPage() {
                     }}
                     className="rounded border-border text-primary focus:ring-primary"
                   />
-                  Mandatory
+                  {t('settings.mandatory')}
                 </label>
                 <button className="p-1.5 rounded hover:bg-danger-light text-text-secondary hover:text-danger">
                   <Trash2 size={14} />
@@ -202,24 +204,24 @@ export default function SettingsPage() {
 
       {/* Report Settings */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6 mb-6">
-        <h2 className="text-lg font-semibold text-text-primary mb-4">Report Settings</h2>
+        <h2 className="text-lg font-semibold text-text-primary mb-4">{t('settings.reportSettings')}</h2>
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1.5">Report Schedule</label>
+          <label className="block text-sm font-medium text-text-primary mb-1.5">{t('settings.reportSchedule')}</label>
           <select
             value={reportSchedule}
             onChange={e => setReportSchedule(e.target.value)}
             className="px-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
           >
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="biweekly">Bi-Weekly</option>
+            <option value="daily">{t('settings.daily')}</option>
+            <option value="weekly">{t('settings.weekly')}</option>
+            <option value="biweekly">{t('settings.biWeekly')}</option>
           </select>
         </div>
       </div>
 
       {/* Save */}
       <button className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark">
-        <Save size={16} /> Save Settings
+        <Save size={16} /> {t('settings.saveSettings')}
       </button>
     </div>
   );

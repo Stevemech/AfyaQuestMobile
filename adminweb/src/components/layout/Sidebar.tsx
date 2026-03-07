@@ -1,16 +1,18 @@
 import { NavLink } from 'react-router-dom';
 import { Home, BarChart3, FileText, Settings, ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthContext';
-
-const navItems = [
-  { to: '/settings', label: 'Settings', icon: Settings },
-  { to: '/operations', label: 'Operations', icon: Home },
-  { to: '/analytics', label: 'CHV Analytics', icon: BarChart3 },
-  { to: '/reports', label: 'Reports Archive', icon: FileText },
-];
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { to: '/settings', label: t('nav.settings'), icon: Settings },
+    { to: '/operations', label: t('nav.operations'), icon: Home },
+    { to: '/analytics', label: t('nav.chvAnalytics'), icon: BarChart3 },
+    { to: '/reports', label: t('nav.reportsArchive'), icon: FileText },
+  ];
 
   return (
     <aside className="w-60 bg-white border-r border-border flex flex-col h-screen sticky top-0">
@@ -56,7 +58,7 @@ export default function Sidebar() {
           }
         >
           <Settings size={18} />
-          Settings
+          {t('nav.settings')}
         </NavLink>
       </div>
 
@@ -67,7 +69,7 @@ export default function Sidebar() {
             {user?.name?.charAt(0) || 'A'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-text-primary truncate">Admin</p>
+            <p className="text-sm font-medium text-text-primary truncate">{t('admin')}</p>
             <p className="text-xs text-text-secondary truncate">{user?.name || 'Admin User'}</p>
           </div>
           <ChevronDown size={16} className="text-text-secondary" />

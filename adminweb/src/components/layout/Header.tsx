@@ -1,5 +1,7 @@
 import { Search, Bell, Building2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthContext';
+import LanguageSwitcher from '../common/LanguageSwitcher';
 
 interface HeaderProps {
   organization: string;
@@ -9,6 +11,7 @@ interface HeaderProps {
 
 export default function Header({ organization, searchQuery, onSearchChange }: HeaderProps) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const initial = user?.name?.charAt(0)?.toUpperCase() || 'A';
 
   return (
@@ -16,7 +19,7 @@ export default function Header({ organization, searchQuery, onSearchChange }: He
       {/* Organization display */}
       <div className="flex items-center gap-2 px-4 py-2 border border-border rounded-full">
         <Building2 size={16} className="text-primary" />
-        <span className="text-sm font-medium">{organization || 'No Organization'}</span>
+        <span className="text-sm font-medium">{organization || t('header.noOrganization')}</span>
       </div>
 
       {/* Right section */}
@@ -26,12 +29,15 @@ export default function Header({ organization, searchQuery, onSearchChange }: He
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
           <input
             type="text"
-            placeholder="Search CHV..."
+            placeholder={t('header.searchCHV')}
             value={searchQuery}
             onChange={e => onSearchChange(e.target.value)}
             className="pl-9 pr-4 py-2 border border-border rounded-lg text-sm w-48 focus:outline-none focus:border-primary transition-colors"
           />
         </div>
+
+        {/* Language Switcher */}
+        <LanguageSwitcher />
 
         {/* Notifications */}
         <button className="relative p-2 rounded-lg hover:bg-gray-50 transition-colors">

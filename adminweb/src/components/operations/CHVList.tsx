@@ -1,4 +1,5 @@
 import { Search, ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { CHV } from '../../types';
 import StatusBadge from '../common/StatusBadge';
 
@@ -11,6 +12,7 @@ interface CHVListProps {
 }
 
 export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, onSearchChange }: CHVListProps) {
+  const { t } = useTranslation();
   const filtered = chvs.filter(c =>
     c.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -19,9 +21,9 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
     <div className="bg-white rounded-xl border border-border shadow-sm overflow-hidden">
       {/* Header */}
       <div className="p-5 border-b border-border">
-        <h2 className="text-lg font-semibold text-text-primary">Community Health Volunteers</h2>
+        <h2 className="text-lg font-semibold text-text-primary">{t('chvList.title')}</h2>
         <p className="text-sm text-text-secondary mt-0.5">
-          {chvs[0]?.organization || chvs[0]?.clinic || 'Organization'} &middot; {chvs.length}
+          {chvs[0]?.organization || chvs[0]?.clinic || t('chvList.organization')} &middot; {chvs.length}
         </p>
 
         {/* Search */}
@@ -29,7 +31,7 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
           <input
             type="text"
-            placeholder="Search CHV..."
+            placeholder={t('chvList.searchCHV')}
             value={searchQuery}
             onChange={e => onSearchChange(e.target.value)}
             className="w-full pl-9 pr-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
@@ -38,21 +40,21 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
 
         {/* Filters */}
         <div className="flex gap-2 mt-3 text-xs">
-          <span className="text-text-secondary">Status:</span>
+          <span className="text-text-secondary">{t('chvList.status')}</span>
           <button className="flex items-center gap-1 px-2 py-1 border border-border rounded text-text-secondary hover:border-primary">
-            Active <ChevronDown size={12} />
+            {t('chvList.active')} <ChevronDown size={12} />
           </button>
           <button className="flex items-center gap-1 px-2 py-1 border border-border rounded text-text-secondary hover:border-primary">
-            Low Activity <ChevronDown size={12} />
+            {t('chvList.lowActivity')} <ChevronDown size={12} />
           </button>
         </div>
         <div className="flex gap-2 mt-2 text-xs">
-          <span className="text-text-secondary">Filter:</span>
+          <span className="text-text-secondary">{t('chvList.filter')}</span>
           <button className="flex items-center gap-1 px-2 py-1 border border-border rounded text-text-secondary hover:border-primary">
-            Distance: Distance <ChevronDown size={12} />
+            {t('chvList.distance')}: {t('chvList.distance')} <ChevronDown size={12} />
           </button>
           <button className="flex items-center gap-1 px-2 py-1 border border-border rounded text-text-secondary hover:border-primary">
-            dating <ChevronDown size={12} />
+            {t('chvList.dating')} <ChevronDown size={12} />
           </button>
         </div>
       </div>
@@ -93,7 +95,7 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
                 <p className="text-xs text-text-secondary mt-0.5">{chv.clinic}</p>
                 <div className="flex items-center justify-between mt-1">
                   <div className="text-xs text-text-secondary">
-                    {chv.level != null ? `Level ${chv.level}` : 'Progress'}
+                    {chv.level != null ? `${t('chvList.level')} ${chv.level}` : 'Progress'}
                     <span className="ml-1">
                       <span className="inline-block w-12 h-1.5 rounded bg-gray-200 relative overflow-hidden">
                         <span
@@ -108,7 +110,7 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
                   </span>
                 </div>
                 <p className="text-xs text-text-secondary mt-0.5">
-                  Last Active: {chv.lastActive}
+                  {t('chvList.lastActive')} {chv.lastActive}
                 </p>
               </div>
             </div>

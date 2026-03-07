@@ -1,4 +1,5 @@
 import { Check, X, AlertTriangle, ChevronDown, Menu } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { ModuleProgress } from '../../types';
 import StatusBadge from '../common/StatusBadge';
 
@@ -8,22 +9,24 @@ interface CHVProgressProps {
 }
 
 export default function CHVProgress({ progress, onAssign }: CHVProgressProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-white rounded-xl border border-border shadow-sm p-5">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-text-primary">CHV Progress</h3>
+        <h3 className="text-lg font-semibold text-text-primary">{t('chvProgress.title')}</h3>
         <button className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-lg text-sm text-text-secondary hover:border-primary">
-          <Menu size={14} /> Expand <ChevronDown size={14} />
+          <Menu size={14} /> {t('chvProgress.expand')} <ChevronDown size={14} />
         </button>
       </div>
 
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border">
-            <th className="text-left py-2 px-3 text-text-secondary font-semibold">CHV</th>
-            <th className="text-left py-2 px-3 text-text-secondary font-semibold">Module 1</th>
-            <th className="text-left py-2 px-3 text-text-secondary font-semibold">Module 2</th>
-            <th className="text-left py-2 px-3 text-text-secondary font-semibold">Prisk Fleg</th>
+            <th className="text-left py-2 px-3 text-text-secondary font-semibold">{t('chvProgress.chv')}</th>
+            <th className="text-left py-2 px-3 text-text-secondary font-semibold">{t('chvProgress.module1')}</th>
+            <th className="text-left py-2 px-3 text-text-secondary font-semibold">{t('chvProgress.module2')}</th>
+            <th className="text-left py-2 px-3 text-text-secondary font-semibold">{t('chvProgress.riskFlag')}</th>
           </tr>
         </thead>
         <tbody>
@@ -67,7 +70,7 @@ export default function CHVProgress({ progress, onAssign }: CHVProgressProps) {
                         <span className="text-text-secondary">{p.modules[1].score ?? 0}%</span>
                       </>
                     ) : (
-                      <span className="text-text-secondary">Not started</span>
+                      <span className="text-text-secondary">{t('chvProgress.notStarted')}</span>
                     )}
                   </div>
                 ) : '-'}
@@ -83,7 +86,7 @@ export default function CHVProgress({ progress, onAssign }: CHVProgressProps) {
                     onClick={() => onAssign(p.chvId)}
                     className="px-4 py-1.5 bg-primary text-white rounded-lg text-xs font-medium hover:bg-primary-dark transition-colors"
                   >
-                    Assign
+                    {t('chvProgress.assign')}
                   </button>
                 )}
               </td>

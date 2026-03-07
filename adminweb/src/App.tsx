@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { AuthProvider, useAuth } from './auth/AuthContext';
 import Layout from './components/layout/Layout';
 import LoginPage from './pages/LoginPage';
@@ -9,11 +10,12 @@ import SettingsPage from './pages/SettingsPage';
 
 function AppRoutes() {
   const { isAuthenticated, isLoading } = useAuth();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f3f4f6' }}>
-        <p style={{ color: '#6b7280' }}>Loading...</p>
+        <p style={{ color: '#6b7280' }}>{t('loading')}</p>
       </div>
     );
   }

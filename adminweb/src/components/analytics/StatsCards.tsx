@@ -1,54 +1,57 @@
 import { Play, AlertTriangle, BookOpen, FileCheck, TrendingUp } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { AnalyticsStats } from '../../types';
 
 interface StatsCardsProps {
   stats: AnalyticsStats;
 }
 
-const cards = [
-  {
-    key: 'avgVideoCompletion' as const,
-    label: 'Avg Video Completion',
-    icon: Play,
-    bg: 'bg-orange-50',
-    iconBg: 'bg-orange-100',
-    iconColor: 'text-orange-500',
-    suffix: '%',
-    trendIcon: TrendingUp,
-  },
-  {
-    key: 'atRiskCHVs' as const,
-    label: 'At-Risk CHVs',
-    icon: AlertTriangle,
-    bg: 'bg-blue-50',
-    iconBg: 'bg-blue-100',
-    iconColor: 'text-blue-500',
-    suffix: '',
-    trendIcon: TrendingUp,
-  },
-  {
-    key: 'modulesAssigned' as const,
-    label: 'Modules Assigned',
-    icon: BookOpen,
-    bg: 'bg-pink-50',
-    iconBg: 'bg-pink-100',
-    iconColor: 'text-pink-500',
-    suffix: '',
-    trendIcon: null,
-  },
-  {
-    key: 'reportsSubmitted' as const,
-    label: 'Reports Submitted',
-    icon: FileCheck,
-    bg: 'bg-teal-50',
-    iconBg: 'bg-teal-100',
-    iconColor: 'text-teal-600',
-    suffix: '%',
-    trendIcon: null,
-  },
-];
-
 export default function StatsCards({ stats }: StatsCardsProps) {
+  const { t } = useTranslation();
+
+  const cards = [
+    {
+      key: 'avgVideoCompletion' as const,
+      label: t('analytics.avgVideoCompletion'),
+      icon: Play,
+      bg: 'bg-orange-50',
+      iconBg: 'bg-orange-100',
+      iconColor: 'text-orange-500',
+      suffix: '%',
+      trendIcon: TrendingUp,
+    },
+    {
+      key: 'atRiskCHVs' as const,
+      label: t('analytics.atRiskCHVs'),
+      icon: AlertTriangle,
+      bg: 'bg-blue-50',
+      iconBg: 'bg-blue-100',
+      iconColor: 'text-blue-500',
+      suffix: '',
+      trendIcon: TrendingUp,
+    },
+    {
+      key: 'modulesAssigned' as const,
+      label: t('analytics.modulesAssigned'),
+      icon: BookOpen,
+      bg: 'bg-pink-50',
+      iconBg: 'bg-pink-100',
+      iconColor: 'text-pink-500',
+      suffix: '',
+      trendIcon: null,
+    },
+    {
+      key: 'reportsSubmitted' as const,
+      label: t('analytics.reportsSubmitted'),
+      icon: FileCheck,
+      bg: 'bg-teal-50',
+      iconBg: 'bg-teal-100',
+      iconColor: 'text-teal-600',
+      suffix: '%',
+      trendIcon: null,
+    },
+  ];
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map(card => {
