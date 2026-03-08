@@ -2,12 +2,15 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronDown, ArrowUpDown, RotateCcw, Send, MapPin, Plus, Trash2, X, ChevronRight, CheckCircle, Navigation } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api, ALL_MODULES } from '../../api/api';
-import type { CHV, House } from '../../types';
+import type { CHV, House, Itinerary, CHVAssignment } from '../../types';
 import StatusBadge from '../common/StatusBadge';
 
 interface CHVDetailProps {
   chv: CHV;
   houses: House[];
+  itineraries?: Itinerary[];
+  assignments?: CHVAssignment[];
+  onDataChanged?: () => void;
 }
 
 interface StopEntry {
@@ -233,7 +236,7 @@ function HousesMap({ houses }: { houses: House[] }) {
 }
 
 // --------------- Main component ---------------
-export default function CHVDetail({ chv, houses }: CHVDetailProps) {
+export default function CHVDetail({ chv, houses, itineraries = [], assignments = [], onDataChanged }: CHVDetailProps) {
   const { t } = useTranslation();
   const [sortField, setSortField] = useState<'distance' | 'priority'>('distance');
   const [sortAsc, setSortAsc] = useState(true);
@@ -319,6 +322,7 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
       showToast(t('settings.moduleAssigned'));
       setShowAssignModal(false);
       setAssignModuleId('');
+      onDataChanged?.();
     } catch (err) {
       setAssignError(err instanceof Error ? err.message : 'Failed');
     } finally {
@@ -353,6 +357,7 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
       await api.createItinerary(chv.id, itDate, stops);
       showToast(t('settings.itineraryCreated'));
       setShowItineraryModal(false);
+      onDataChanged?.();
       setItDate('');
       setItStops([emptyStop()]);
       setItRawJson('');
@@ -630,6 +635,92 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
           </tbody>
         </table>
       </div>
+
+      {/* === Assigned Modules & Lessons === */}
+      {assignments.length > 0 && (
+        <div className="bg-white rounded-xl border border-border shadow-sm p-5">
+          <h3 className="font-semibold text-text-primary mb-4">{t('chvDetail.assignedModules')} ({assignments.length})</h3>
+          <div className="space-y-2">
+            {assignments.map((a, i) => {
+              const mod = ALL_MODULES.find(m => m.id === a.moduleId || m.id === a.lessonId);
+              return (
+                <div key={i} className="flex items-center justify-between p-3 border border-border rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium text-text-primary">
+                      {mod?.name || a.moduleId || a.lessonId || 'Unknown'}
+                    </p>
+                    <p className="text-xs text-text-secondary">
+                      {a.type === 'module' ? 'Video Module' : a.type === 'lesson' ? 'Interactive Lesson' : a.type}
+                      {a.assignedAt && <span className="ml-2">{new Date(a.assignedAt).toLocaleDateString()}</span>}
+                    </p>
+                  </div>
+                  <StatusBadge
+                    type={a.status === 'completed' ? 'success' : 'warning'}
+                    label={a.status}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* === Itineraries === */}
+      {itineraries.length > 0 && (
+        <div className="bg-white rounded-xl border border-border shadow-sm p-5">
+          <h3 className="font-semibold text-text-primary mb-4">{t('chvDetail.itineraries')} ({itineraries.length})</h3>
+          <div className="space-y-4">
+            {itineraries.map((it, i) => (
+              <div key={i} className="border border-border rounded-lg overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-border">
+                  <div className="flex items-center gap-3">
+                    <MapPin size={16} className="text-primary" />
+                    <div>
+                      <p className="text-sm font-semibold text-text-primary">{it.date}</p>
+                      <p className="text-xs text-text-secondary">{it.stops.length} {t('itinerary.stops').toLowerCase()}</p>
+                    </div>
+                  </div>
+                  <StatusBadge type={it.status === 'active' ? 'success' : 'warning'} label={it.status || 'active'} />
+                </div>
+                <div className="divide-y divide-border">
+                  {it.stops.map((stop, j) => (
+                    <div key={j} className="px-4 py-2.5 flex items-start gap-3">
+                      <span className="w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-semibold shrink-0 mt-0.5">
+                        {stop.order || j + 1}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-text-primary">{stop.label}</p>
+                        {stop.address && <p className="text-xs text-text-secondary truncate">{stop.address}</p>}
+                        {stop.description && <p className="text-xs text-text-secondary">{stop.description}</p>}
+                      </div>
+                      <div className="text-right shrink-0">
+                        {stop.latitude && stop.longitude ? (
+                          <a
+                            href={`https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:text-primary-dark"
+                            title={t('itinerary.viewOnMap')}
+                          >
+                            <Navigation size={14} />
+                          </a>
+                        ) : (
+                          <span className="text-xs text-text-secondary">{t('chvDetail.noCoords')}</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {it.createdAt && (
+                  <div className="px-4 py-2 bg-gray-50 border-t border-border text-xs text-text-secondary">
+                    {t('chvDetail.createdOn')} {new Date(it.createdAt).toLocaleString()}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* === Assign Module Modal === */}
       {showAssignModal && (

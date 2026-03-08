@@ -93,10 +93,24 @@ export interface Clinic {
 }
 
 export interface Itinerary {
-  id: string;
-  chvId: string;
+  id?: string;
+  chvId?: string;
   date: string;
   stops: ItineraryStop[];
+  status?: string;
+  createdAt?: string;
+  createdBy?: string;
+}
+
+export interface CHVAssignment {
+  type: 'module' | 'lesson' | 'report';
+  moduleId?: string | null;
+  lessonId?: string | null;
+  status: string;
+  mandatory?: boolean;
+  dueDate?: string | null;
+  assignedAt?: string;
+  assignedBy?: string;
 }
 
 export interface ItineraryStop {

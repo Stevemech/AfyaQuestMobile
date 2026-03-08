@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CHVList from '../components/operations/CHVList';
 import CHVDetail from '../components/operations/CHVDetail';
 import { api } from '../api/api';
-import type { CHV, House } from '../types';
+import type { CHV, House, Itinerary, CHVAssignment } from '../types';
 
 export default function OperationsPage() {
   const { t } = useTranslation();
@@ -12,6 +12,8 @@ export default function OperationsPage() {
   const [chvs, setChvs] = useState<CHV[]>([]);
   const [selectedCHV, setSelectedCHV] = useState<CHV | null>(null);
   const [houses, setHouses] = useState<House[]>([]);
+  const [itineraries, setItineraries] = useState<Itinerary[]>([]);
+  const [assignments, setAssignments] = useState<CHVAssignment[]>([]);
   const [localSearch, setLocalSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -31,15 +33,38 @@ export default function OperationsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Fetch houses when selected CHV changes
-  useEffect(() => {
-    if (!selectedCHV) { setHouses([]); return; }
-    api.getCHVDetail(selectedCHV.id)
-      .then(res => setHouses(res.houses || []))
-      .catch(() => setHouses([]));
-  }, [selectedCHV?.id]);
+  // Fetch detail when selected CHV changes
+  const fetchDetail = useCallback((chvId: string) => {
+    api.getCHVDetail(chvId)
+      .then(res => {
+        setHouses(res.houses || []);
+        setItineraries(res.itineraries || []);
+        setAssignments(res.assignments || []);
+      })
+      .catch(() => {
+        setHouses([]);
+        setItineraries([]);
+        setAssignments([]);
+      });
+  }, []);
 
-  // Only use local search, ignore global header search for operations
+  useEffect(() => {
+    if (!selectedCHV) {
+      setHouses([]);
+      setItineraries([]);
+      setAssignments([]);
+      return;
+    }
+    fetchDetail(selectedCHV.id);
+  }, [selectedCHV?.id, fetchDetail]);
+
+  // Callback for CHVDetail to trigger re-fetch after creating itinerary/assignment
+  const handleDataChanged = useCallback(() => {
+    if (selectedCHV) {
+      fetchDetail(selectedCHV.id);
+    }
+  }, [selectedCHV, fetchDetail]);
+
   const search = localSearch;
 
   if (loading) {
@@ -85,7 +110,6 @@ export default function OperationsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6">
-        {/* Left panel - CHV List */}
         <CHVList
           chvs={chvs}
           selectedCHV={selectedCHV}
@@ -94,10 +118,15 @@ export default function OperationsPage() {
           onSearchChange={setLocalSearch}
         />
 
-        {/* Right panel - CHV Detail */}
         <div>
           {selectedCHV ? (
-            <CHVDetail chv={selectedCHV} houses={houses} />
+            <CHVDetail
+              chv={selectedCHV}
+              houses={houses}
+              itineraries={itineraries}
+              assignments={assignments}
+              onDataChanged={handleDataChanged}
+            />
           ) : (
             <div className="bg-white rounded-xl border border-border shadow-sm p-12 text-center text-text-secondary">
               {t('operations.selectCHV')}

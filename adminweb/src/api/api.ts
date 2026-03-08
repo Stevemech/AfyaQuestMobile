@@ -100,7 +100,12 @@ export const api = {
     request<{ chvs: import('../types').CHV[] }>(`/admin/chvs${orgParams()}`),
 
   getCHVDetail: (chvId: string) =>
-    request<{ chv: import('../types').CHV; houses: import('../types').House[] }>(`/admin/chvs/${chvId}`),
+    request<{
+      chv: import('../types').CHV;
+      houses: import('../types').House[];
+      itineraries?: import('../types').Itinerary[];
+      assignments?: import('../types').CHVAssignment[];
+    }>(`/admin/chvs/${chvId}`),
 
   getAnalytics: () =>
     request<{ stats: import('../types').AnalyticsStats; progress: import('../types').ModuleProgress[]; reports: import('../types').WeeklyReport[] }>(
