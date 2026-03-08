@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Save, Plus, Trash2, CheckCircle, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthContext';
+import { ALL_MODULES } from '../api/api';
 
 interface ToastState {
   message: string;
@@ -13,12 +14,14 @@ export default function SettingsPage() {
   const { t } = useTranslation();
   const organization = user?.organization || localStorage.getItem('adminOrg') || '';
 
-  const [modules, setModules] = useState([
-    { id: 'mod-1', name: 'Basic Health Training', category: 'BASICS', mandatory: true },
-    { id: 'mod-2', name: 'Sanitation & Hygiene', category: 'SANITATION', mandatory: true },
-    { id: 'mod-3', name: 'Maternal Health', category: 'MATERNAL', mandatory: false },
-    { id: 'mod-4', name: 'Immunization Protocols', category: 'IMMUNIZATION', mandatory: false },
-  ]);
+  const [modules, setModules] = useState(
+    ALL_MODULES.map(m => ({
+      id: m.id,
+      name: m.name,
+      category: m.type === 'video' ? 'VIDEO' : 'LESSON',
+      mandatory: ['video-1', 'video-2', 'video-3', 'video-4'].includes(m.id),
+    }))
+  );
   const [reportSchedule, setReportSchedule] = useState('daily');
   const [toast, setToast] = useState<ToastState | null>(null);
 
@@ -148,7 +151,7 @@ export default function SettingsPage() {
             <div key={mod.id} className="flex items-center justify-between p-3 border border-border rounded-lg">
               <div>
                 <p className="text-sm font-medium text-text-primary">{mod.name}</p>
-                <p className="text-xs text-text-secondary">{mod.category}</p>
+                <p className="text-xs text-text-secondary">{mod.category} &middot; {mod.id}</p>
               </div>
               <div className="flex items-center gap-3">
                 <label className="flex items-center gap-2 text-sm">

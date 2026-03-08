@@ -105,6 +105,7 @@ export interface ItineraryStop {
   label: string;
   address: string;
   description?: string;
+  notes?: string;
   latitude: number;
   longitude: number;
 }
@@ -120,6 +121,7 @@ export interface DailyReport {
   challenges: string;
   notes: string;
   isSynced: boolean;
+  createdAt?: string;
 }
 
 export interface AssignmentRequest {

@@ -63,7 +63,7 @@ export default function ReportsPage() {
 
   const handleExportCSV = () => {
     if (filtered.length === 0) return;
-    const headers = ['CHV', 'Date', 'Patients Visited', 'Vaccinations Given', 'Health Education', 'Challenges', 'Synced'];
+    const headers = ['CHV', 'Date', 'Patients Visited', 'Vaccinations Given', 'Health Education', 'Challenges', 'Notes', 'Created At', 'Synced'];
     const rows = filtered.map(r => [
       r.userName,
       r.date,
@@ -71,6 +71,8 @@ export default function ReportsPage() {
       r.vaccinationsGiven,
       r.healthEducation,
       `"${(r.challenges || '').replace(/"/g, '""')}"`,
+      `"${(r.notes || '').replace(/"/g, '""')}"`,
+      r.createdAt || '',
       r.isSynced ? 'Yes' : 'No',
     ]);
     const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -122,6 +124,7 @@ export default function ReportsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-text-primary">{t('reportsPage.title')}</h1>
+        <span className="text-sm text-text-secondary">{filtered.length} {t('reportsPage.reportsFound')}</span>
       </div>
 
       {/* Filters */}
@@ -178,6 +181,8 @@ export default function ReportsPage() {
               <SortHeader field="vaccinationsGiven" label={t('reportsPage.vaccinations')} />
               <th className="text-left py-3 px-4 text-text-secondary font-medium">{t('reportsPage.healthEd')}</th>
               <th className="text-left py-3 px-4 text-text-secondary font-medium">{t('reportsPage.challenges')}</th>
+              <th className="text-left py-3 px-4 text-text-secondary font-medium">{t('reportsPage.notes')}</th>
+              <th className="text-left py-3 px-4 text-text-secondary font-medium">{t('reportsPage.createdAt')}</th>
               <th className="text-left py-3 px-4 text-text-secondary font-medium">{t('reportsPage.synced')}</th>
               <th className="text-left py-3 px-4 text-text-secondary font-medium"></th>
             </tr>
@@ -190,7 +195,11 @@ export default function ReportsPage() {
                 <td className="py-3 px-4">{r.patientsVisited}</td>
                 <td className="py-3 px-4">{r.vaccinationsGiven}</td>
                 <td className="py-3 px-4">{r.healthEducation}</td>
-                <td className="py-3 px-4 text-text-secondary max-w-[200px] truncate">{r.challenges || '-'}</td>
+                <td className="py-3 px-4 text-text-secondary max-w-[150px] truncate">{r.challenges || '-'}</td>
+                <td className="py-3 px-4 text-text-secondary max-w-[150px] truncate">{r.notes || '-'}</td>
+                <td className="py-3 px-4 text-text-secondary text-xs">
+                  {r.createdAt ? new Date(r.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}
+                </td>
                 <td className="py-3 px-4">
                   <span title={r.isSynced ? t('reportsPage.syncedStatus') : t('reportsPage.notSyncedStatus')}>
                     <StatusBadge type={r.isSynced ? 'success' : 'warning'} />
@@ -209,7 +218,7 @@ export default function ReportsPage() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={8} className="py-8 text-center text-text-secondary">{t('reportsPage.noReportsFound')}</td>
+                <td colSpan={10} className="py-8 text-center text-text-secondary">{t('reportsPage.noReportsFound')}</td>
               </tr>
             )}
           </tbody>
@@ -230,12 +239,20 @@ export default function ReportsPage() {
                 </button>
               </div>
               <div className="space-y-3 text-sm">
+                <div className="flex justify-between"><span className="text-text-secondary">{t('reportsPage.chv')}</span><span className="font-medium">{r.userName}</span></div>
                 <div className="flex justify-between"><span className="text-text-secondary">{t('date')}</span><span>{r.date}</span></div>
                 <div className="flex justify-between"><span className="text-text-secondary">{t('reportsPage.patientsVisited')}</span><span>{r.patientsVisited}</span></div>
                 <div className="flex justify-between"><span className="text-text-secondary">{t('reportsPage.vaccinationsGiven')}</span><span>{r.vaccinationsGiven}</span></div>
                 <div className="flex justify-between"><span className="text-text-secondary">{t('reportsPage.healthEducation')}</span><span>{r.healthEducation}</span></div>
-                <div><span className="text-text-secondary block mb-1">{t('reportsPage.challenges')}</span><p>{r.challenges || t('none')}</p></div>
-                <div><span className="text-text-secondary block mb-1">{t('reportsPage.notes')}</span><p>{r.notes || t('none')}</p></div>
+                <div><span className="text-text-secondary block mb-1">{t('reportsPage.challenges')}</span><p className="bg-gray-50 rounded p-2">{r.challenges || t('none')}</p></div>
+                <div><span className="text-text-secondary block mb-1">{t('reportsPage.notes')}</span><p className="bg-gray-50 rounded p-2">{r.notes || t('none')}</p></div>
+                {r.createdAt && (
+                  <div className="flex justify-between"><span className="text-text-secondary">{t('reportsPage.createdAt')}</span><span>{new Date(r.createdAt).toLocaleString()}</span></div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">{t('reportsPage.synced')}</span>
+                  <StatusBadge type={r.isSynced ? 'success' : 'warning'} label={r.isSynced ? t('reportsPage.syncedStatus') : t('reportsPage.notSyncedStatus')} />
+                </div>
               </div>
               <button onClick={() => setSelectedReport(null)} className="mt-6 w-full py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark">
                 {t('close')}

@@ -46,6 +46,32 @@ function orgParams(extra?: Record<string, string>): string {
   return qs ? `?${qs}` : '';
 }
 
+// Video modules matching the mobile app (IDs 1-10)
+const VIDEO_MODULES = [
+  { id: 'video-1', name: 'Evaluaciones de Salud / Health Assessments', nameEs: 'Evaluaciones de Salud', nameEn: 'Health Assessments', type: 'video' as const },
+  { id: 'video-2', name: 'Saneamiento del Agua / Water Sanitation', nameEs: 'Prácticas de Saneamiento del Agua', nameEn: 'Water Sanitation Practices', type: 'video' as const },
+  { id: 'video-3', name: 'Salud Materno-Infantil / Maternal & Child Health', nameEs: 'Salud Materno-Infantil', nameEn: 'Maternal and Child Health', type: 'video' as const },
+  { id: 'video-4', name: 'Vacunación / Vaccination Programs', nameEs: 'Programas de Vacunación', nameEn: 'Vaccination Programs', type: 'video' as const },
+  { id: 'video-5', name: 'Primeros Auxilios / Emergency First Aid', nameEs: 'Primeros Auxilios de Emergencia', nameEn: 'Emergency First Aid', type: 'video' as const },
+  { id: 'video-6', name: 'Nutrición / Nutrition Basics', nameEs: 'Fundamentos de Nutrición', nameEn: 'Nutrition Basics', type: 'video' as const },
+  { id: 'video-7', name: 'Prevención de Enfermedades / Disease Prevention', nameEs: 'Prevención de Enfermedades', nameEn: 'Disease Prevention', type: 'video' as const },
+  { id: 'video-8', name: 'Sistema Reproductor Masculino / Male Reproductive System', nameEs: 'Sistema Reproductor Masculino', nameEn: 'Male Reproductive System', type: 'video' as const },
+  { id: 'video-9', name: 'Sistema Reproductor Femenino / Female Reproductive System', nameEs: 'Sistema Reproductor Femenino', nameEn: 'Female Reproductive System', type: 'video' as const },
+  { id: 'video-10', name: 'Sistema Urinario / Urinary System', nameEs: 'Sistema Urinario', nameEn: 'Urinary System', type: 'video' as const },
+];
+
+// Interactive lessons matching the mobile app (IDs 1-6)
+const INTERACTIVE_LESSONS = [
+  { id: 'lesson-1', name: 'Técnicas de Lavado de Manos / Handwashing Techniques', nameEs: 'Técnicas de Lavado de Manos', nameEn: 'Proper Handwashing Techniques', type: 'lesson' as const },
+  { id: 'lesson-2', name: 'Dieta Balanceada para Niños / Balanced Diet for Children', nameEs: 'Dieta Balanceada para Niños', nameEn: 'Balanced Diet for Children', type: 'lesson' as const },
+  { id: 'lesson-3', name: 'Cuidados Prenatales / Prenatal Care Essentials', nameEs: 'Cuidados Prenatales Esenciales', nameEn: 'Prenatal Care Essentials', type: 'lesson' as const },
+  { id: 'lesson-4', name: 'Calendario de Vacunación / Child Vaccination Schedule', nameEs: 'Calendario de Vacunación Infantil', nameEn: 'Child Vaccination Schedule', type: 'lesson' as const },
+  { id: 'lesson-5', name: 'Prevención de Malaria / Malaria Prevention', nameEs: 'Prevención de Malaria', nameEn: 'Malaria Prevention', type: 'lesson' as const },
+  { id: 'lesson-6', name: 'RCP Básico / CPR Basics', nameEs: 'RCP Básico', nameEn: 'CPR Basics', type: 'lesson' as const },
+];
+
+export const ALL_MODULES = [...VIDEO_MODULES, ...INTERACTIVE_LESSONS];
+
 export const api = {
   // Auth
   login: (email: string, password: string) =>
@@ -84,12 +110,23 @@ export const api = {
   getReports: (params?: { week?: string; chvId?: string }) =>
     request<{ reports: import('../types').DailyReport[] }>(
       `/admin/reports${orgParams(params as Record<string, string>)}`
-    ),
+    ).then(res => ({
+      reports: (res.reports || []).map(r => ({
+        ...r,
+        isSynced: r.isSynced !== undefined ? r.isSynced : true, // reports in DynamoDB are synced
+      })),
+    })),
 
   assignModule: (chvId: string, moduleId: string) =>
     request('/admin/assign', {
       method: 'POST',
       body: JSON.stringify({ chvId, type: 'module', data: { moduleId } }),
+    }),
+
+  assignLesson: (chvId: string, lessonId: string, dueDate?: string) =>
+    request('/admin/assign', {
+      method: 'POST',
+      body: JSON.stringify({ chvId, type: 'lesson', data: { lessonId, dueDate: dueDate || null } }),
     }),
 
   createItinerary: (chvId: string, date: string, stops: import('../types').ItineraryStop[]) =>
@@ -108,5 +145,5 @@ export const api = {
     request<{ clinics: import('../types').Clinic[] }>('/admin/clinics'),
 
   getOrganizations: () =>
-    request<{ organizations: { id: string; name: string }[] }>('/organizations'),
+    request<{ organizations: { id: string; name: string; location?: string }[] }>('/organizations'),
 };
