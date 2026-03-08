@@ -236,6 +236,35 @@ const cak = {
       dateRequired: 'Ticha\' jun q\'ij',
     },
 
+    // Itinerary & Assign (Operations)
+    itinerary: {
+      assignModule: 'Tiyo\'x Tijonik',
+      assignModuleTo: 'Tiyo\'x Tijonik chi re {{name}}',
+      module: 'Tijonik',
+      selectModuleError: 'Ticha\' jun tijonik',
+      createItinerary: 'Tinuk\' jun B\'ey',
+      createFor: 'Tinuk\' jun B\'ey richin {{name}}',
+      visitDate: 'Ruq\'ij Tz\'etonisaxik',
+      stops: 'Taq K\'olib\'al',
+      addStop: 'Titz\'aqatisax k\'olib\'al',
+      addAnotherStop: 'Titz\'aqatisax jun chik k\'olib\'al',
+      stopNumber: 'K\'olib\'al #{{n}}',
+      houseName: 'Rub\'i\' Ja / K\'olib\'al',
+      houseNamePlaceholder: 'ach\'el Rachoch Wanjiku',
+      address: 'Rochochil',
+      addressPlaceholder: 'ach\'el 123 B\'ey Kibera',
+      description: 'Rub\'anikil',
+      descriptionPlaceholder: 'ach\'el Rutzeqelibexik aq\'omaxik ak\'wal',
+      notesToCHV: 'Taq tz\'ib\' richin CHV',
+      notesPlaceholder: 'Taq b\'eyal richin ri to\'onel...',
+      latitude: 'Latitud',
+      longitude: 'Longitud',
+      advancedJson: 'Q\'axom: JSON',
+      rawJsonLabel: 'Taq K\'olib\'al JSON',
+      rawJsonHint: 'We niya\' re, nujalwachij ri ch\'utitzij.',
+      addAtLeastOneStop: 'Titz\'aqatisax jun k\'olib\'al rik\'in rub\'i\'',
+    },
+
     // Language
     language: {
       en: 'English',

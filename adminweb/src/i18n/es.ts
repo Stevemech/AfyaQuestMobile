@@ -236,6 +236,35 @@ const es = {
       dateRequired: 'Por favor seleccione una fecha',
     },
 
+    // Itinerary & Assign (Operations)
+    itinerary: {
+      assignModule: 'Asignar Modulo',
+      assignModuleTo: 'Asignar Modulo a {{name}}',
+      module: 'Modulo',
+      selectModuleError: 'Por favor seleccione un modulo',
+      createItinerary: 'Crear Itinerario',
+      createFor: 'Crear Itinerario para {{name}}',
+      visitDate: 'Fecha de Visita',
+      stops: 'Paradas',
+      addStop: 'Agregar parada',
+      addAnotherStop: 'Agregar otra parada',
+      stopNumber: 'Parada #{{n}}',
+      houseName: 'Nombre de Casa / Ubicacion',
+      houseNamePlaceholder: 'ej. Hogar Wanjiku',
+      address: 'Direccion',
+      addressPlaceholder: 'ej. Calle Kibera 123 o enlace de Google Maps',
+      description: 'Descripcion',
+      descriptionPlaceholder: 'ej. Seguimiento de vacunacion infantil',
+      notesToCHV: 'Notas para el CHV',
+      notesPlaceholder: 'Instrucciones especiales para el voluntario...',
+      latitude: 'Latitud',
+      longitude: 'Longitud',
+      advancedJson: 'Avanzado: Entrada JSON directa',
+      rawJsonLabel: 'Arreglo JSON de paradas',
+      rawJsonHint: 'Cuando se proporciona, esto reemplaza los campos del formulario.',
+      addAtLeastOneStop: 'Agregue al menos una parada con nombre',
+    },
+
     // Language
     language: {
       en: 'English',

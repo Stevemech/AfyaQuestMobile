@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Download, Eye, Plus, X, ArrowUpDown } from 'lucide-react';
+import { Download, Eye, X, ArrowUpDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../api/api';
 import StatusBadge from '../components/common/StatusBadge';
@@ -18,11 +18,6 @@ export default function ReportsPage() {
   const [selectedReport, setSelectedReport] = useState<string | null>(null);
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
-  const [itineraryModal, setItineraryModal] = useState(false);
-  const [itChvId, setItChvId] = useState('');
-  const [itDate, setItDate] = useState('');
-  const [itStops, setItStops] = useState('');
-  const [itSubmitting, setItSubmitting] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -88,24 +83,6 @@ export default function ReportsPage() {
     URL.revokeObjectURL(url);
   };
 
-  const handleCreateItinerary = async () => {
-    if (!itChvId || !itDate) return;
-    setItSubmitting(true);
-    try {
-      const stops = itStops ? JSON.parse(itStops) : [];
-      await api.createItinerary(itChvId, itDate, stops);
-      alert(t('settings.itineraryCreated'));
-      setItineraryModal(false);
-      setItChvId('');
-      setItDate('');
-      setItStops('');
-    } catch (err) {
-      alert(`${t('settings.failedItinerary')} ${err instanceof Error ? err.message : 'Unknown error'}`);
-    } finally {
-      setItSubmitting(false);
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -145,12 +122,6 @@ export default function ReportsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-text-primary">{t('reportsPage.title')}</h1>
-        <button
-          onClick={() => setItineraryModal(true)}
-          className="flex items-center gap-1.5 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark"
-        >
-          <Plus size={14} /> {t('reportsPage.createItinerary')}
-        </button>
       </div>
 
       {/* Filters */}
@@ -274,57 +245,6 @@ export default function ReportsPage() {
         );
       })()}
 
-      {/* Create Itinerary modal */}
-      {itineraryModal && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50" onClick={() => setItineraryModal(false)}>
-          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full mx-4 p-6" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">{t('reportsPage.createItinerary')}</h3>
-              <button onClick={() => setItineraryModal(false)} className="p-1 rounded hover:bg-gray-100">
-                <X size={20} className="text-text-secondary" />
-              </button>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-text-primary mb-1.5">{t('reportsPage.chvId')}</label>
-                <input
-                  type="text"
-                  value={itChvId}
-                  onChange={e => setItChvId(e.target.value)}
-                  placeholder="e.g. chv-1"
-                  className="w-full px-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text-primary mb-1.5">{t('date')}</label>
-                <input
-                  type="date"
-                  value={itDate}
-                  onChange={e => setItDate(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text-primary mb-1.5">{t('reportsPage.stopsJson')}</label>
-                <textarea
-                  value={itStops}
-                  onChange={e => setItStops(e.target.value)}
-                  placeholder='[{"order":1,"houseId":"H-1023","label":"House 1","address":"123 St","latitude":-1.31,"longitude":36.78}]'
-                  rows={4}
-                  className="w-full px-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:border-primary font-mono"
-                />
-              </div>
-            </div>
-            <button
-              onClick={handleCreateItinerary}
-              disabled={itSubmitting || !itChvId || !itDate}
-              className="mt-6 w-full py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark disabled:opacity-50"
-            >
-              {itSubmitting ? t('reportsPage.creating') : t('reportsPage.createItinerary')}
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

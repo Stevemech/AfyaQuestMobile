@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { ChevronDown, ArrowUpDown, RotateCcw } from 'lucide-react';
+import { ChevronDown, ArrowUpDown, RotateCcw, Send, MapPin, Plus, Trash2, X, ChevronRight, CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { api } from '../../api/api';
 import type { CHV, House } from '../../types';
 import StatusBadge from '../common/StatusBadge';
 
@@ -9,6 +10,24 @@ interface CHVDetailProps {
   houses: House[];
 }
 
+interface StopEntry {
+  label: string;
+  address: string;
+  description: string;
+  notes: string;
+  latitude: string;
+  longitude: string;
+}
+
+const emptyStop = (): StopEntry => ({ label: '', address: '', description: '', notes: '', latitude: '', longitude: '' });
+
+const MODULES = [
+  { id: 'mod-1', name: 'Basic Health Training' },
+  { id: 'mod-2', name: 'Sanitation & Hygiene' },
+  { id: 'mod-3', name: 'Maternal Health' },
+  { id: 'mod-4', name: 'Immunization Protocols' },
+];
+
 export default function CHVDetail({ chv, houses }: CHVDetailProps) {
   const { t } = useTranslation();
   const [sortField, setSortField] = useState<'distance' | 'priority'>('distance');
@@ -16,6 +35,28 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
   const [pendingFilter, setPendingFilter] = useState<'all' | 'overdue' | 'high'>('all');
   const [showOptimizeMsg, setShowOptimizeMsg] = useState(false);
   const [showReassignMsg, setShowReassignMsg] = useState(false);
+
+  // Assign module modal
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [assignModuleId, setAssignModuleId] = useState('');
+  const [assignLoading, setAssignLoading] = useState(false);
+  const [assignError, setAssignError] = useState('');
+
+  // Create itinerary modal
+  const [showItineraryModal, setShowItineraryModal] = useState(false);
+  const [itDate, setItDate] = useState('');
+  const [itStops, setItStops] = useState<StopEntry[]>([emptyStop()]);
+  const [itShowAdvanced, setItShowAdvanced] = useState(false);
+  const [itRawJson, setItRawJson] = useState('');
+  const [itLoading, setItLoading] = useState(false);
+  const [itError, setItError] = useState('');
+
+  // Toast
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const pending = houses.filter(h => h.visitStatus === 'pending');
   const completed = houses.filter(h => h.visitStatus === 'completed');
@@ -42,12 +83,8 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
   });
 
   const handleSort = (field: 'distance' | 'priority') => {
-    if (sortField === field) {
-      setSortAsc(!sortAsc);
-    } else {
-      setSortField(field);
-      setSortAsc(true);
-    }
+    if (sortField === field) setSortAsc(!sortAsc);
+    else { setSortField(field); setSortAsc(true); }
   };
 
   const handleAutoOptimize = () => {
@@ -62,8 +99,83 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
     setTimeout(() => setShowReassignMsg(false), 2000);
   };
 
+  // Assign module
+  const handleAssignModule = async () => {
+    setAssignError('');
+    if (!assignModuleId) { setAssignError(t('itinerary.selectModuleError')); return; }
+    setAssignLoading(true);
+    try {
+      await api.assignModule(chv.id, assignModuleId);
+      showToast(t('settings.moduleAssigned'));
+      setShowAssignModal(false);
+      setAssignModuleId('');
+    } catch (err) {
+      setAssignError(err instanceof Error ? err.message : 'Failed');
+    } finally {
+      setAssignLoading(false);
+    }
+  };
+
+  // Create itinerary
+  const handleCreateItinerary = async () => {
+    setItError('');
+    if (!itDate) { setItError(t('settings.dateRequired')); return; }
+
+    setItLoading(true);
+    try {
+      let stops;
+      if (itShowAdvanced && itRawJson.trim()) {
+        stops = JSON.parse(itRawJson);
+      } else {
+        const validStops = itStops.filter(s => s.label.trim());
+        if (validStops.length === 0) { setItError(t('itinerary.addAtLeastOneStop')); setItLoading(false); return; }
+        stops = validStops.map((s, i) => ({
+          order: i + 1,
+          houseId: `H-${Date.now()}-${i}`,
+          label: s.label.trim(),
+          address: s.address.trim(),
+          description: s.description.trim() || undefined,
+          notes: s.notes.trim() || undefined,
+          latitude: s.latitude ? parseFloat(s.latitude) : 0,
+          longitude: s.longitude ? parseFloat(s.longitude) : 0,
+        }));
+      }
+      await api.createItinerary(chv.id, itDate, stops);
+      showToast(t('settings.itineraryCreated'));
+      setShowItineraryModal(false);
+      setItDate('');
+      setItStops([emptyStop()]);
+      setItRawJson('');
+      setItShowAdvanced(false);
+    } catch (err) {
+      setItError(err instanceof Error ? err.message : 'Failed');
+    } finally {
+      setItLoading(false);
+    }
+  };
+
+  const updateStop = (index: number, field: keyof StopEntry, value: string) => {
+    setItStops(itStops.map((s, i) => i === index ? { ...s, [field]: value } : s));
+  };
+
+  const addStop = () => setItStops([...itStops, emptyStop()]);
+  const removeStop = (index: number) => {
+    if (itStops.length <= 1) return;
+    setItStops(itStops.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="space-y-5">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg text-sm font-medium ${
+          toast.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'
+        }`}>
+          {toast.type === 'success' ? <CheckCircle size={16} /> : <X size={16} />}
+          {toast.message}
+        </div>
+      )}
+
       {/* CHV Profile Header */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-5">
         <div className="flex items-center justify-between mb-4">
@@ -79,6 +191,20 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
                 {chv.totalPoints != null && <span className="ml-2">{chv.totalPoints} {t('chvList.points')}</span>}
               </p>
             </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => { setShowAssignModal(true); setAssignModuleId(''); setAssignError(''); }}
+              className="flex items-center gap-1.5 px-3 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark"
+            >
+              <Send size={14} /> {t('itinerary.assignModule')}
+            </button>
+            <button
+              onClick={() => { setShowItineraryModal(true); setItDate(''); setItStops([emptyStop()]); setItRawJson(''); setItShowAdvanced(false); setItError(''); }}
+              className="flex items-center gap-1.5 px-3 py-2 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary-light"
+            >
+              <MapPin size={14} /> {t('itinerary.createItinerary')}
+            </button>
           </div>
         </div>
 
@@ -144,17 +270,11 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
             <thead>
               <tr className="border-b border-border">
                 <th className="text-left py-2 px-3 text-text-secondary font-medium">{t('chvDetail.houseId')}</th>
-                <th
-                  className="text-left py-2 px-3 text-text-secondary font-medium cursor-pointer hover:text-primary"
-                  onClick={() => handleSort('distance')}
-                >
+                <th className="text-left py-2 px-3 text-text-secondary font-medium cursor-pointer hover:text-primary" onClick={() => handleSort('distance')}>
                   {t('chvDetail.distanceKm')} {sortField === 'distance' && (sortAsc ? '↑' : '↓')}
                 </th>
                 <th className="text-left py-2 px-3 text-text-secondary font-medium">{t('chvDetail.visitStatus')}</th>
-                <th
-                  className="text-left py-2 px-3 text-text-secondary font-medium cursor-pointer hover:text-primary"
-                  onClick={() => handleSort('priority')}
-                >
+                <th className="text-left py-2 px-3 text-text-secondary font-medium cursor-pointer hover:text-primary" onClick={() => handleSort('priority')}>
                   {t('chvDetail.priority')} {sortField === 'priority' && (sortAsc ? '↑' : '↓')}
                 </th>
               </tr>
@@ -171,9 +291,7 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
                   </td>
                   <td className="py-2.5 px-3">
                     <div className="flex items-center gap-2">
-                      <StatusBadge
-                        type={h.priority === 'high' ? 'danger' : h.priority === 'medium' ? 'warning' : 'success'}
-                      />
+                      <StatusBadge type={h.priority === 'high' ? 'danger' : h.priority === 'medium' ? 'warning' : 'success'} />
                       <span className="capitalize">{t(`chvDetail.priority_${h.priority}`)}</span>
                     </div>
                   </td>
@@ -183,26 +301,14 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
           </table>
         )}
 
-        {/* Action buttons */}
         <div className="flex gap-2 mt-4 pt-4 border-t border-border">
-          <button
-            onClick={() => handleSort('distance')}
-            className={`flex items-center gap-1.5 px-3 py-2 border border-border rounded-lg text-sm hover:border-primary ${
-              sortField === 'distance' ? 'text-primary border-primary' : 'text-text-secondary'
-            }`}
-          >
+          <button onClick={() => handleSort('distance')} className={`flex items-center gap-1.5 px-3 py-2 border border-border rounded-lg text-sm hover:border-primary ${sortField === 'distance' ? 'text-primary border-primary' : 'text-text-secondary'}`}>
             <ArrowUpDown size={14} /> {t('chvDetail.sortByDistance')}
           </button>
-          <button
-            onClick={handleAutoOptimize}
-            className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-lg text-sm text-primary hover:bg-primary-light"
-          >
+          <button onClick={handleAutoOptimize} className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-lg text-sm text-primary hover:bg-primary-light">
             {t('chvDetail.autoOptimize')}
           </button>
-          <button
-            onClick={handleReassign}
-            className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-lg text-sm text-text-secondary hover:border-primary ml-auto"
-          >
+          <button onClick={handleReassign} className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-lg text-sm text-text-secondary hover:border-primary ml-auto">
             <RotateCcw size={14} /> {t('chvDetail.reassignHouse')}
           </button>
         </div>
@@ -216,27 +322,15 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-text-primary">{t('chvDetail.pendingHousesCHV')}</h3>
           <div className="flex items-center gap-2 text-xs">
-            <button
-              onClick={() => setPendingFilter(pendingFilter === 'overdue' ? 'all' : 'overdue')}
-              className={`px-2 py-1 border rounded hover:border-primary ${
-                pendingFilter === 'overdue' ? 'border-primary text-primary bg-primary-light' : 'border-border text-text-secondary'
-              }`}
-            >
+            <button onClick={() => setPendingFilter(pendingFilter === 'overdue' ? 'all' : 'overdue')} className={`px-2 py-1 border rounded hover:border-primary ${pendingFilter === 'overdue' ? 'border-primary text-primary bg-primary-light' : 'border-border text-text-secondary'}`}>
               {t('chvDetail.overdue')}
             </button>
-            <button
-              onClick={() => setPendingFilter(pendingFilter === 'high' ? 'all' : 'high')}
-              className={`px-2 py-1 border rounded hover:border-primary ${
-                pendingFilter === 'high' ? 'border-primary text-primary bg-primary-light' : 'border-border text-text-secondary'
-              }`}
-            >
+            <button onClick={() => setPendingFilter(pendingFilter === 'high' ? 'all' : 'high')} className={`px-2 py-1 border rounded hover:border-primary ${pendingFilter === 'high' ? 'border-primary text-primary bg-primary-light' : 'border-border text-text-secondary'}`}>
               {t('chvDetail.highPriority')}
             </button>
           </div>
         </div>
-
         <div className="grid grid-cols-2 gap-4">
-          {/* Table */}
           <table className="text-sm">
             <thead>
               <tr className="border-b border-border">
@@ -264,8 +358,6 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
               ))}
             </tbody>
           </table>
-
-          {/* Map placeholder */}
           <div className="bg-gray-100 rounded-lg flex items-center justify-center min-h-[200px] border border-border">
             <div className="text-center text-text-secondary">
               <div className="text-3xl mb-2">&#x1F5FA;</div>
@@ -277,22 +369,16 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
         </div>
       </div>
 
-      {/* Extended pending houses table - All CHVs */}
+      {/* Extended pending houses table */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-text-primary">{t('chvDetail.pendingHousesAllCHVs')}</h3>
           <div className="flex items-center gap-2 text-xs">
-            <button
-              onClick={() => setPendingFilter(pendingFilter === 'overdue' ? 'all' : 'overdue')}
-              className={`px-2 py-1 border rounded hover:border-primary ${
-                pendingFilter === 'overdue' ? 'border-primary text-primary bg-primary-light' : 'border-border text-text-secondary'
-              }`}
-            >
+            <button onClick={() => setPendingFilter(pendingFilter === 'overdue' ? 'all' : 'overdue')} className={`px-2 py-1 border rounded hover:border-primary ${pendingFilter === 'overdue' ? 'border-primary text-primary bg-primary-light' : 'border-border text-text-secondary'}`}>
               {t('chvDetail.overdueCHVs')}
             </button>
           </div>
         </div>
-
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border">
@@ -317,13 +403,169 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
                 </td>
               </tr>
             )) : (
-              <tr>
-                <td colSpan={4} className="py-6 text-center text-text-secondary text-sm">{t('chvDetail.noPendingHouses')}</td>
-              </tr>
+              <tr><td colSpan={4} className="py-6 text-center text-text-secondary text-sm">{t('chvDetail.noPendingHouses')}</td></tr>
             )}
           </tbody>
         </table>
       </div>
+
+      {/* === Assign Module Modal === */}
+      {showAssignModal && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50" onClick={() => setShowAssignModal(false)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">{t('itinerary.assignModuleTo', { name: chv.name })}</h3>
+              <button onClick={() => setShowAssignModal(false)} className="p-1 rounded hover:bg-gray-100"><X size={20} className="text-text-secondary" /></button>
+            </div>
+            {assignError && <div className="mb-3 p-2 bg-danger-light text-danger text-sm rounded-lg">{assignError}</div>}
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-1.5">{t('itinerary.module')}</label>
+              <select
+                value={assignModuleId}
+                onChange={e => { setAssignModuleId(e.target.value); setAssignError(''); }}
+                className="w-full px-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
+              >
+                <option value="">{t('settings.selectModule')}</option>
+                {MODULES.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+              </select>
+            </div>
+            <button
+              onClick={handleAssignModule}
+              disabled={assignLoading || !assignModuleId}
+              className="mt-6 w-full py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              <Send size={14} /> {assignLoading ? t('settings.assigning') : t('itinerary.assignModule')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* === Create Itinerary Modal === */}
+      {showItineraryModal && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50" onClick={() => setShowItineraryModal(false)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">{t('itinerary.createFor', { name: chv.name })}</h3>
+              <button onClick={() => setShowItineraryModal(false)} className="p-1 rounded hover:bg-gray-100"><X size={20} className="text-text-secondary" /></button>
+            </div>
+
+            {itError && <div className="mb-3 p-2 bg-danger-light text-danger text-sm rounded-lg">{itError}</div>}
+
+            {/* Date */}
+            <div className="mb-5">
+              <label className="block text-sm font-medium text-text-primary mb-1.5">{t('itinerary.visitDate')}</label>
+              <input
+                type="date"
+                value={itDate}
+                onChange={e => { setItDate(e.target.value); setItError(''); }}
+                className="w-full px-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
+              />
+            </div>
+
+            {/* Stops */}
+            {!itShowAdvanced && (
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-sm font-medium text-text-primary">{t('itinerary.stops')}</label>
+                  <button onClick={addStop} className="flex items-center gap-1 text-xs text-primary hover:underline">
+                    <Plus size={12} /> {t('itinerary.addStop')}
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {itStops.map((stop, i) => (
+                    <div key={i} className="border border-border rounded-lg p-4 relative">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-semibold text-text-secondary uppercase">{t('itinerary.stopNumber', { n: i + 1 })}</span>
+                        {itStops.length > 1 && (
+                          <button onClick={() => removeStop(i)} className="p-1 rounded hover:bg-danger-light text-text-secondary hover:text-danger">
+                            <Trash2 size={14} />
+                          </button>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="col-span-2">
+                          <label className="block text-xs text-text-secondary mb-1">{t('itinerary.houseName')}</label>
+                          <input type="text" value={stop.label} onChange={e => updateStop(i, 'label', e.target.value)}
+                            placeholder={t('itinerary.houseNamePlaceholder')}
+                            className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary" />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-xs text-text-secondary mb-1">{t('itinerary.address')}</label>
+                          <input type="text" value={stop.address} onChange={e => updateStop(i, 'address', e.target.value)}
+                            placeholder={t('itinerary.addressPlaceholder')}
+                            className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary" />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-xs text-text-secondary mb-1">{t('itinerary.description')}</label>
+                          <input type="text" value={stop.description} onChange={e => updateStop(i, 'description', e.target.value)}
+                            placeholder={t('itinerary.descriptionPlaceholder')}
+                            className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary" />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-xs text-text-secondary mb-1">{t('itinerary.notesToCHV')}</label>
+                          <textarea value={stop.notes} onChange={e => updateStop(i, 'notes', e.target.value)}
+                            placeholder={t('itinerary.notesPlaceholder')}
+                            rows={2}
+                            className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary" />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-text-secondary mb-1">{t('itinerary.latitude')}</label>
+                          <input type="text" value={stop.latitude} onChange={e => updateStop(i, 'latitude', e.target.value)}
+                            placeholder="-1.3133"
+                            className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary font-mono" />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-text-secondary mb-1">{t('itinerary.longitude')}</label>
+                          <input type="text" value={stop.longitude} onChange={e => updateStop(i, 'longitude', e.target.value)}
+                            placeholder="36.7876"
+                            className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary font-mono" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <button onClick={addStop} className="mt-3 w-full py-2 border border-dashed border-border rounded-lg text-sm text-text-secondary hover:border-primary hover:text-primary flex items-center justify-center gap-1.5">
+                  <Plus size={14} /> {t('itinerary.addAnotherStop')}
+                </button>
+              </div>
+            )}
+
+            {/* Advanced JSON toggle */}
+            <div className="mt-4 border-t border-border pt-4">
+              <button
+                onClick={() => setItShowAdvanced(!itShowAdvanced)}
+                className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-text-primary"
+              >
+                <ChevronRight size={14} className={`transition-transform ${itShowAdvanced ? 'rotate-90' : ''}`} />
+                {t('itinerary.advancedJson')}
+              </button>
+              {itShowAdvanced && (
+                <div className="mt-3">
+                  <label className="block text-xs text-text-secondary mb-1">{t('itinerary.rawJsonLabel')}</label>
+                  <textarea
+                    value={itRawJson}
+                    onChange={e => setItRawJson(e.target.value)}
+                    placeholder='[{"order":1,"houseId":"H-1023","label":"House 1","address":"123 St","latitude":-1.31,"longitude":36.78}]'
+                    rows={5}
+                    className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary font-mono"
+                  />
+                  <p className="text-xs text-text-secondary mt-1">{t('itinerary.rawJsonHint')}</p>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={handleCreateItinerary}
+              disabled={itLoading || !itDate}
+              className="mt-6 w-full py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              <MapPin size={14} /> {itLoading ? t('settings.creating') : t('itinerary.createItinerary')}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

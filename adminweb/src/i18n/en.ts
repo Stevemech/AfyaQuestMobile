@@ -239,6 +239,35 @@ const en = {
       dateRequired: 'Please select a date',
     },
 
+    // Itinerary & Assign (Operations)
+    itinerary: {
+      assignModule: 'Assign Module',
+      assignModuleTo: 'Assign Module to {{name}}',
+      module: 'Module',
+      selectModuleError: 'Please select a module',
+      createItinerary: 'Create Itinerary',
+      createFor: 'Create Itinerary for {{name}}',
+      visitDate: 'Visit Date',
+      stops: 'Stops',
+      addStop: 'Add stop',
+      addAnotherStop: 'Add another stop',
+      stopNumber: 'Stop #{{n}}',
+      houseName: 'House / Location Name',
+      houseNamePlaceholder: 'e.g. Wanjiku Household',
+      address: 'Address',
+      addressPlaceholder: 'e.g. 123 Kibera Drive or Google Maps link',
+      description: 'Description',
+      descriptionPlaceholder: 'e.g. Follow-up on child vaccination',
+      notesToCHV: 'Notes to CHV',
+      notesPlaceholder: 'Any special instructions for the volunteer...',
+      latitude: 'Latitude',
+      longitude: 'Longitude',
+      advancedJson: 'Advanced: Raw JSON input',
+      rawJsonLabel: 'Stops JSON array',
+      rawJsonHint: 'When provided, this overrides the form fields above.',
+      addAtLeastOneStop: 'Please add at least one stop with a name',
+    },
+
     // Language
     language: {
       en: 'English',
