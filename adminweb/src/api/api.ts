@@ -140,6 +140,12 @@ export const api = {
       body: JSON.stringify({ chvId, date, stops }),
     }),
 
+  deleteItinerary: (chvId: string, date: string) =>
+    request('/admin/itineraries', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'delete', chvId, date }),
+    }),
+
   mandateLesson: (chvId: string, lessonId: string, dueDate: string) =>
     request('/admin/assign', {
       method: 'POST',

@@ -121,84 +121,78 @@ function AddressInput({ stopIndex, stop, onUpdate }: {
   );
 }
 
-// --------------- Google Map for houses ---------------
-function HousesMap({ houses }: { houses: House[] }) {
+// --------------- Google Map showing itinerary stops + houses ---------------
+function LocationMap({ houses, itineraries }: { houses: House[]; itineraries: Itinerary[] }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const { t } = useTranslation();
   const [mapReady, setMapReady] = useState(false);
 
-  const housesWithCoords = houses.filter(h => h.latitude && h.longitude);
+  // Collect all points: houses + itinerary stops
+  const allPoints: { lat: number; lng: number; label: string; color: string; info: string }[] = [];
+
+  houses.filter(h => h.latitude && h.longitude).forEach(h => {
+    const color = h.visitStatus === 'completed' ? '#22c55e' : h.visitStatus === 'overdue' ? '#ef4444' : '#f59e0b';
+    allPoints.push({
+      lat: h.latitude, lng: h.longitude,
+      label: h.id, color,
+      info: `<strong>${h.id}</strong><br/><span style="color:${color};text-transform:capitalize">${h.visitStatus}</span><br/>${h.distance} km`,
+    });
+  });
+
+  itineraries.forEach(it => {
+    (it.stops || []).filter(s => s.latitude && s.longitude).forEach(s => {
+      allPoints.push({
+        lat: s.latitude, lng: s.longitude,
+        label: s.label || `Stop ${s.order}`, color: '#6366f1',
+        info: `<strong>${s.label || 'Stop ' + s.order}</strong><br/>${it.date}<br/>${s.address || ''}`,
+      });
+    });
+  });
 
   useEffect(() => {
     if (!MAPS_KEY || !mapRef.current || mapInstanceRef.current) return;
     let cancelled = false;
     loadGoogleMaps().then(() => {
       if (cancelled || !mapRef.current) return;
-      // Calculate center from houses, or default
-      let center = { lat: 14.6349, lng: -90.5069 }; // Guatemala default
-      if (housesWithCoords.length > 0) {
-        const avgLat = housesWithCoords.reduce((s, h) => s + h.latitude, 0) / housesWithCoords.length;
-        const avgLng = housesWithCoords.reduce((s, h) => s + h.longitude, 0) / housesWithCoords.length;
-        center = { lat: avgLat, lng: avgLng };
+      let center = { lat: 14.6349, lng: -90.5069 };
+      if (allPoints.length > 0) {
+        center = {
+          lat: allPoints.reduce((s, p) => s + p.lat, 0) / allPoints.length,
+          lng: allPoints.reduce((s, p) => s + p.lng, 0) / allPoints.length,
+        };
       }
 
       const map = new google.maps.Map(mapRef.current, {
         center,
-        zoom: housesWithCoords.length > 0 ? 14 : 12,
+        zoom: allPoints.length > 0 ? 14 : 12,
         mapTypeControl: false,
         streetViewControl: false,
         fullscreenControl: true,
         zoomControl: true,
-        styles: [
-          { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-        ],
+        styles: [{ featureType: 'poi', stylers: [{ visibility: 'off' }] }],
       });
       mapInstanceRef.current = map;
 
-      // Add markers for each house
       const bounds = new google.maps.LatLngBounds();
-      housesWithCoords.forEach(h => {
-        const pos = { lat: h.latitude, lng: h.longitude };
+      allPoints.forEach(p => {
+        const pos = { lat: p.lat, lng: p.lng };
         bounds.extend(pos);
-        const color = h.visitStatus === 'completed' ? '#22c55e'
-          : h.visitStatus === 'overdue' ? '#ef4444' : '#f59e0b';
         const marker = new google.maps.Marker({
-          position: pos,
-          map,
-          title: `${h.id} (${h.visitStatus})`,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 8,
-            fillColor: color,
-            fillOpacity: 1,
-            strokeColor: '#fff',
-            strokeWeight: 2,
-          },
+          position: pos, map, title: p.label,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: p.color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
         });
         const info = new google.maps.InfoWindow({
-          content: `<div style="font-size:13px;font-family:Inter,sans-serif;padding:2px 0">
-            <strong>${h.id}</strong><br/>
-            <span style="color:${color};text-transform:capitalize">${h.visitStatus}</span><br/>
-            ${t('chvDetail.distance')}: ${h.distance} km<br/>
-            ${t('chvDetail.priority')}: ${h.priority}
-            ${h.daysPending ? `<br/>${t('chvDetail.daysPending')}: ${h.daysPending}` : ''}
-          </div>`,
+          content: `<div style="font-size:13px;font-family:Inter,sans-serif;padding:2px 0">${p.info}</div>`,
         });
         marker.addListener('click', () => info.open(map, marker));
       });
 
-      if (housesWithCoords.length > 1) {
-        map.fitBounds(bounds, 40);
-      }
-
+      if (allPoints.length > 1) map.fitBounds(bounds, 40);
       setMapReady(true);
-    }).catch(() => { /* no key */ });
+    }).catch(() => {});
     return () => { cancelled = true; };
-  }, [houses.length]);
-
-  // Update markers when houses change (re-render doesn't re-run the full effect)
-  // For simplicity, the map is created once per CHV; switching CHV remounts via key
+  }, [houses.length, itineraries.length]);
 
   if (!MAPS_KEY) {
     return (
@@ -220,16 +214,15 @@ function HousesMap({ houses }: { houses: House[] }) {
           <p className="text-sm text-text-secondary">{t('loading')}</p>
         </div>
       )}
-      {housesWithCoords.length === 0 && mapReady && (
+      {allPoints.length === 0 && mapReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/10 rounded-lg">
-          <p className="text-sm text-text-secondary bg-white px-3 py-1.5 rounded-lg shadow">{t('chvDetail.noHouseCoordinates')}</p>
+          <p className="text-sm text-text-secondary bg-white px-3 py-1.5 rounded-lg shadow">{t('chvDetail.noLocations')}</p>
         </div>
       )}
-      {/* Legend */}
       <div className="absolute bottom-2 left-2 bg-white/90 rounded-lg px-2.5 py-1.5 text-[10px] flex items-center gap-3 shadow">
+        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-[#6366f1] inline-block" /> {t('chvDetail.itineraryStops')}</span>
         <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block" /> {t('chvDetail.visitStatus_pending')}</span>
         <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-[#22c55e] inline-block" /> {t('chvDetail.visitStatus_completed')}</span>
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-[#ef4444] inline-block" /> {t('chvDetail.visitStatus_overdue')}</span>
       </div>
     </div>
   );
@@ -592,7 +585,7 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
             </tbody>
           </table>
           {/* Interactive Google Map */}
-          <HousesMap key={chv.id} houses={houses} />
+          <LocationMap key={chv.id} houses={houses} itineraries={itineraries} />
         </div>
       </div>
 
@@ -680,7 +673,25 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
                       <p className="text-xs text-text-secondary">{it.stops.length} {t('itinerary.stops').toLowerCase()}</p>
                     </div>
                   </div>
-                  <StatusBadge type={it.status === 'active' ? 'success' : 'warning'} label={it.status || 'active'} />
+                  <div className="flex items-center gap-2">
+                    <StatusBadge type={it.status === 'active' ? 'success' : 'warning'} label={it.status || 'active'} />
+                    <button
+                      onClick={async () => {
+                        if (!confirm(t('chvDetail.confirmDeleteItinerary', { date: it.date }))) return;
+                        try {
+                          await api.deleteItinerary(chv.id, it.date);
+                          showToast(t('chvDetail.itineraryDeleted'));
+                          onDataChanged?.();
+                        } catch (err) {
+                          showToast(err instanceof Error ? err.message : 'Failed', 'error');
+                        }
+                      }}
+                      className="p-1.5 rounded hover:bg-danger-light text-text-secondary hover:text-danger"
+                      title={t('chvDetail.deleteItinerary')}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
                 </div>
                 <div className="divide-y divide-border">
                   {it.stops.map((stop, j) => (

@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, PutCommand, GetCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, PutCommand, DeleteCommand, GetCommand } = require('@aws-sdk/lib-dynamodb');
 
 const client = new DynamoDBClient({ region: 'af-south-1' });
 const ddb = DynamoDBDocumentClient.from(client);
@@ -14,6 +14,21 @@ exports.handler = async (event) => {
 
   try {
     const body = JSON.parse(event.body || '{}');
+
+    // Handle deletion
+    if (body.action === 'delete') {
+      const { chvId, date } = body;
+      if (!chvId || !date) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing chvId or date' }) };
+      }
+      await ddb.send(new DeleteCommand({
+        TableName: TABLE,
+        Key: { PK: `USER#${chvId}`, SK: `ITINERARY#${date}` },
+      }));
+      return { statusCode: 200, headers, body: JSON.stringify({ message: `Itinerary ${date} deleted`, chvId, date }) };
+    }
+
+    // Handle creation
     const { chvId, date, stops } = body;
 
     if (!chvId || !date || !stops || !Array.isArray(stops)) {
@@ -32,7 +47,6 @@ exports.handler = async (event) => {
 
     const timestamp = new Date().toISOString();
 
-    // Store itinerary
     await ddb.send(new PutCommand({
       TableName: TABLE,
       Item: {
@@ -45,6 +59,7 @@ exports.handler = async (event) => {
           label: s.label || `Stop ${i + 1}`,
           address: s.address || '',
           description: s.description || '',
+          notes: s.notes || '',
           latitude: s.latitude || 0,
           longitude: s.longitude || 0,
         })),
@@ -60,7 +75,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: `Itinerary created for ${date}`, chvId, date }),
     };
   } catch (err) {
-    console.error('Error creating itinerary:', err);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to create itinerary' }) };
+    console.error('Error with itinerary:', err);
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to process itinerary request' }) };
   }
 };
