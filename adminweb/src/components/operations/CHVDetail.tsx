@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronDown, ArrowUpDown, RotateCcw, Send, MapPin, Plus, Trash2, X, ChevronRight, CheckCircle } from 'lucide-react';
+import { ChevronDown, ArrowUpDown, RotateCcw, Send, MapPin, Plus, Trash2, X, ChevronRight, CheckCircle, Navigation } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api, ALL_MODULES } from '../../api/api';
 import type { CHV, House } from '../../types';
@@ -21,82 +21,218 @@ interface StopEntry {
 
 const emptyStop = (): StopEntry => ({ label: '', address: '', description: '', notes: '', latitude: '', longitude: '' });
 
-// Google Maps Places Autocomplete hook
-function useGooglePlaces() {
-  const [loaded, setLoaded] = useState(false);
+const MAPS_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
-  useEffect(() => {
-    if ((window as any).google?.maps?.places) {
-      setLoaded(true);
+// --------------- Google Maps script loader ---------------
+let mapsLoadPromise: Promise<void> | null = null;
+function loadGoogleMaps(): Promise<void> {
+  if ((window as any).google?.maps?.places) return Promise.resolve();
+  if (mapsLoadPromise) return mapsLoadPromise;
+  if (!MAPS_KEY) return Promise.reject(new Error('No API key'));
+  mapsLoadPromise = new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
+    if (existing) {
+      const check = setInterval(() => {
+        if ((window as any).google?.maps?.places) { clearInterval(check); resolve(); }
+      }, 100);
       return;
     }
-    // Check if script is already loading
-    if (document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]')) {
+    const s = document.createElement('script');
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_KEY}&libraries=places`;
+    s.async = true;
+    s.onload = () => {
       const check = setInterval(() => {
-        if ((window as any).google?.maps?.places) {
-          setLoaded(true);
-          clearInterval(check);
-        }
-      }, 200);
-      return () => clearInterval(check);
-    }
-    // Load Google Maps script - uses env variable
-    const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    if (!key) return;
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`;
-    script.async = true;
-    script.onload = () => setLoaded(true);
-    document.head.appendChild(script);
-  }, []);
-
-  return loaded;
+        if ((window as any).google?.maps?.places) { clearInterval(check); resolve(); }
+      }, 50);
+    };
+    s.onerror = () => reject(new Error('Failed to load Google Maps'));
+    document.head.appendChild(s);
+  });
+  return mapsLoadPromise;
 }
 
-function AddressAutocomplete({ value, onChange, onPlaceSelect, placeholder, className }: {
-  value: string;
-  onChange: (val: string) => void;
-  onPlaceSelect: (address: string, lat: number, lng: number) => void;
-  placeholder: string;
-  className: string;
+// --------------- Address Autocomplete input ---------------
+function AddressInput({ stopIndex, stop, onUpdate }: {
+  stopIndex: number;
+  stop: StopEntry;
+  onUpdate: (index: number, fields: Partial<StopEntry>) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-  const placesLoaded = useGooglePlaces();
+  const acRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
-    if (!placesLoaded || !inputRef.current || autocompleteRef.current) return;
-    try {
+    if (!MAPS_KEY || acRef.current) return;
+    let cancelled = false;
+    loadGoogleMaps().then(() => {
+      if (cancelled || !inputRef.current || acRef.current) return;
       const ac = new google.maps.places.Autocomplete(inputRef.current, {
-        types: ['address'],
-        fields: ['formatted_address', 'geometry'],
+        fields: ['formatted_address', 'geometry', 'name'],
       });
       ac.addListener('place_changed', () => {
         const place = ac.getPlace();
         if (place.geometry?.location) {
           const lat = place.geometry.location.lat();
           const lng = place.geometry.location.lng();
-          onPlaceSelect(place.formatted_address || '', lat, lng);
+          const addr = place.formatted_address || inputRef.current?.value || '';
+          onUpdate(stopIndex, {
+            address: addr,
+            latitude: lat.toFixed(6),
+            longitude: lng.toFixed(6),
+          });
         }
       });
-      autocompleteRef.current = ac;
-    } catch {
-      // Google Maps not available, fall back to plain input
+      acRef.current = ac;
+    }).catch(() => { /* no maps key or failed to load - plain input is fine */ });
+    return () => { cancelled = true; };
+  }, [stopIndex, onUpdate]);
+
+  // Sync the input value from React state when it changes externally
+  // (e.g., after place selection updates the state)
+  useEffect(() => {
+    if (inputRef.current && document.activeElement !== inputRef.current) {
+      inputRef.current.value = stop.address;
     }
-  }, [placesLoaded, onPlaceSelect]);
+  }, [stop.address]);
 
   return (
-    <input
-      ref={inputRef}
-      type="text"
-      value={value}
-      onChange={e => onChange(e.target.value)}
-      placeholder={placeholder}
-      className={className}
-    />
+    <div>
+      <label className="block text-xs text-text-secondary mb-1">
+        {t('itinerary.address')}
+        {MAPS_KEY && <span className="ml-1 text-primary text-[10px]">Google Maps</span>}
+      </label>
+      <input
+        ref={inputRef}
+        type="text"
+        defaultValue={stop.address}
+        onBlur={e => {
+          // Sync manual typing back to state on blur
+          if (e.target.value !== stop.address) {
+            onUpdate(stopIndex, { address: e.target.value });
+          }
+        }}
+        placeholder={MAPS_KEY ? t('itinerary.addressPlaceholder') : t('itinerary.addressPlaceholderManual')}
+        className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
+      />
+    </div>
   );
 }
 
+// --------------- Google Map for houses ---------------
+function HousesMap({ houses }: { houses: House[] }) {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<google.maps.Map | null>(null);
+  const { t } = useTranslation();
+  const [mapReady, setMapReady] = useState(false);
+
+  const housesWithCoords = houses.filter(h => h.latitude && h.longitude);
+
+  useEffect(() => {
+    if (!MAPS_KEY || !mapRef.current || mapInstanceRef.current) return;
+    let cancelled = false;
+    loadGoogleMaps().then(() => {
+      if (cancelled || !mapRef.current) return;
+      // Calculate center from houses, or default
+      let center = { lat: 14.6349, lng: -90.5069 }; // Guatemala default
+      if (housesWithCoords.length > 0) {
+        const avgLat = housesWithCoords.reduce((s, h) => s + h.latitude, 0) / housesWithCoords.length;
+        const avgLng = housesWithCoords.reduce((s, h) => s + h.longitude, 0) / housesWithCoords.length;
+        center = { lat: avgLat, lng: avgLng };
+      }
+
+      const map = new google.maps.Map(mapRef.current, {
+        center,
+        zoom: housesWithCoords.length > 0 ? 14 : 12,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: true,
+        zoomControl: true,
+        styles: [
+          { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+        ],
+      });
+      mapInstanceRef.current = map;
+
+      // Add markers for each house
+      const bounds = new google.maps.LatLngBounds();
+      housesWithCoords.forEach(h => {
+        const pos = { lat: h.latitude, lng: h.longitude };
+        bounds.extend(pos);
+        const color = h.visitStatus === 'completed' ? '#22c55e'
+          : h.visitStatus === 'overdue' ? '#ef4444' : '#f59e0b';
+        const marker = new google.maps.Marker({
+          position: pos,
+          map,
+          title: `${h.id} (${h.visitStatus})`,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: color,
+            fillOpacity: 1,
+            strokeColor: '#fff',
+            strokeWeight: 2,
+          },
+        });
+        const info = new google.maps.InfoWindow({
+          content: `<div style="font-size:13px;font-family:Inter,sans-serif;padding:2px 0">
+            <strong>${h.id}</strong><br/>
+            <span style="color:${color};text-transform:capitalize">${h.visitStatus}</span><br/>
+            ${t('chvDetail.distance')}: ${h.distance} km<br/>
+            ${t('chvDetail.priority')}: ${h.priority}
+            ${h.daysPending ? `<br/>${t('chvDetail.daysPending')}: ${h.daysPending}` : ''}
+          </div>`,
+        });
+        marker.addListener('click', () => info.open(map, marker));
+      });
+
+      if (housesWithCoords.length > 1) {
+        map.fitBounds(bounds, 40);
+      }
+
+      setMapReady(true);
+    }).catch(() => { /* no key */ });
+    return () => { cancelled = true; };
+  }, [houses.length]);
+
+  // Update markers when houses change (re-render doesn't re-run the full effect)
+  // For simplicity, the map is created once per CHV; switching CHV remounts via key
+
+  if (!MAPS_KEY) {
+    return (
+      <div className="bg-gray-100 rounded-lg flex items-center justify-center min-h-[280px] border border-border">
+        <div className="text-center text-text-secondary p-4">
+          <MapPin size={28} className="mx-auto mb-2 text-text-secondary" />
+          <p className="text-sm font-medium">{t('chvDetail.mapView')}</p>
+          <p className="text-xs mt-1">{t('chvDetail.mapNoKey')}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative">
+      <div ref={mapRef} className="rounded-lg border border-border min-h-[280px] w-full" />
+      {!mapReady && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
+          <p className="text-sm text-text-secondary">{t('loading')}</p>
+        </div>
+      )}
+      {housesWithCoords.length === 0 && mapReady && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/10 rounded-lg">
+          <p className="text-sm text-text-secondary bg-white px-3 py-1.5 rounded-lg shadow">{t('chvDetail.noHouseCoordinates')}</p>
+        </div>
+      )}
+      {/* Legend */}
+      <div className="absolute bottom-2 left-2 bg-white/90 rounded-lg px-2.5 py-1.5 text-[10px] flex items-center gap-3 shadow">
+        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block" /> {t('chvDetail.visitStatus_pending')}</span>
+        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-[#22c55e] inline-block" /> {t('chvDetail.visitStatus_completed')}</span>
+        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-[#ef4444] inline-block" /> {t('chvDetail.visitStatus_overdue')}</span>
+      </div>
+    </div>
+  );
+}
+
+// --------------- Main component ---------------
 export default function CHVDetail({ chv, houses }: CHVDetailProps) {
   const { t } = useTranslation();
   const [sortField, setSortField] = useState<'distance' | 'priority'>('distance');
@@ -228,21 +364,19 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
     }
   };
 
-  const updateStop = (index: number, field: keyof StopEntry, value: string) => {
-    setItStops(itStops.map((s, i) => i === index ? { ...s, [field]: value } : s));
-  };
-
-  const handlePlaceSelect = useCallback((index: number, address: string, lat: number, lng: number) => {
-    setItStops(prev => prev.map((s, i) => i === index ? { ...s, address, latitude: lat.toString(), longitude: lng.toString() } : s));
+  const updateStopFields = useCallback((index: number, fields: Partial<StopEntry>) => {
+    setItStops(prev => prev.map((s, i) => i === index ? { ...s, ...fields } : s));
   }, []);
+
+  const updateStop = (index: number, field: keyof StopEntry, value: string) => {
+    updateStopFields(index, { [field]: value });
+  };
 
   const addStop = () => setItStops([...itStops, emptyStop()]);
   const removeStop = (index: number) => {
     if (itStops.length <= 1) return;
     setItStops(itStops.filter((_, i) => i !== index));
   };
-
-  const hasGoogleMapsKey = !!import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   return (
     <div className="space-y-5">
@@ -357,6 +491,7 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
                 <th className="text-left py-2 px-3 text-text-secondary font-medium cursor-pointer hover:text-primary" onClick={() => handleSort('priority')}>
                   {t('chvDetail.priority')} {sortField === 'priority' && (sortAsc ? '\u2191' : '\u2193')}
                 </th>
+                <th className="text-left py-2 px-3 text-text-secondary font-medium"></th>
               </tr>
             </thead>
             <tbody>
@@ -374,6 +509,19 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
                       <StatusBadge type={h.priority === 'high' ? 'danger' : h.priority === 'medium' ? 'warning' : 'success'} />
                       <span className="capitalize">{t(`chvDetail.priority_${h.priority}`)}</span>
                     </div>
+                  </td>
+                  <td className="py-2.5 px-3">
+                    {h.latitude && h.longitude ? (
+                      <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${h.latitude},${h.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:text-primary-dark"
+                        title={t('itinerary.viewOnMap')}
+                      >
+                        <Navigation size={14} />
+                      </a>
+                    ) : null}
                   </td>
                 </tr>
               ))}
@@ -397,7 +545,7 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
         )}
       </div>
 
-      {/* Pending Houses - CHV specific */}
+      {/* Pending Houses with Map */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-text-primary">{t('chvDetail.pendingHousesCHV')}</h3>
@@ -438,14 +586,8 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
               ))}
             </tbody>
           </table>
-          <div className="bg-gray-100 rounded-lg flex items-center justify-center min-h-[200px] border border-border">
-            <div className="text-center text-text-secondary">
-              <div className="text-3xl mb-2">&#x1F5FA;</div>
-              <p className="text-sm">{t('chvDetail.mapView')}</p>
-              <p className="text-xs mt-1">{chv.organization || chv.clinic || ''}</p>
-              <p className="text-xs mt-2 text-text-secondary italic">{t('chvDetail.mapComingSoon')}</p>
-            </div>
-          </div>
+          {/* Interactive Google Map */}
+          <HousesMap key={chv.id} houses={houses} />
         </div>
       </div>
 
@@ -580,17 +722,7 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
                             className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary" />
                         </div>
                         <div className="col-span-2">
-                          <label className="block text-xs text-text-secondary mb-1">
-                            {t('itinerary.address')}
-                            {hasGoogleMapsKey && <span className="ml-1 text-primary">({t('itinerary.autocompleteEnabled')})</span>}
-                          </label>
-                          <AddressAutocomplete
-                            value={stop.address}
-                            onChange={val => updateStop(i, 'address', val)}
-                            onPlaceSelect={(address, lat, lng) => handlePlaceSelect(i, address, lat, lng)}
-                            placeholder={t('itinerary.addressPlaceholder')}
-                            className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
-                          />
+                          <AddressInput stopIndex={i} stop={stop} onUpdate={updateStopFields} />
                         </div>
                         <div className="col-span-2">
                           <label className="block text-xs text-text-secondary mb-1">{t('itinerary.description')}</label>
@@ -606,28 +738,35 @@ export default function CHVDetail({ chv, houses }: CHVDetailProps) {
                             className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary" />
                         </div>
                         <div>
-                          <label className="block text-xs text-text-secondary mb-1">{t('itinerary.latitude')}</label>
+                          <label className="block text-xs text-text-secondary mb-1">
+                            {t('itinerary.latitude')}
+                            {stop.latitude && <span className="ml-1 text-success text-[10px]">{t('itinerary.filled')}</span>}
+                          </label>
                           <input type="text" value={stop.latitude} onChange={e => updateStop(i, 'latitude', e.target.value)}
                             placeholder="14.6349"
-                            className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary font-mono" />
+                            className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-primary font-mono ${stop.latitude ? 'border-success/50 bg-success/5' : 'border-border'}`} />
                         </div>
                         <div>
-                          <label className="block text-xs text-text-secondary mb-1">{t('itinerary.longitude')}</label>
+                          <label className="block text-xs text-text-secondary mb-1">
+                            {t('itinerary.longitude')}
+                            {stop.longitude && <span className="ml-1 text-success text-[10px]">{t('itinerary.filled')}</span>}
+                          </label>
                           <input type="text" value={stop.longitude} onChange={e => updateStop(i, 'longitude', e.target.value)}
                             placeholder="-90.5069"
-                            className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:border-primary font-mono" />
+                            className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-primary font-mono ${stop.longitude ? 'border-success/50 bg-success/5' : 'border-border'}`} />
                         </div>
                       </div>
                       {stop.latitude && stop.longitude && (
-                        <div className="mt-2 text-xs text-text-secondary">
+                        <div className="mt-2 pt-2 border-t border-border/50 flex items-center justify-between">
                           <a
                             href={`https://www.google.com/maps?q=${stop.latitude},${stop.longitude}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary hover:underline inline-flex items-center gap-1"
+                            className="text-primary hover:underline text-xs inline-flex items-center gap-1"
                           >
                             <MapPin size={10} /> {t('itinerary.viewOnMap')}
                           </a>
+                          <span className="text-[10px] text-text-secondary font-mono">{stop.latitude}, {stop.longitude}</span>
                         </div>
                       )}
                     </div>

@@ -1,2 +1,7 @@
 .idea/caches/deviceStreaming.xml
 .idea/misc.xml
+
+# Environment files with secrets
+adminweb/.env
+.env
+*.env.local
