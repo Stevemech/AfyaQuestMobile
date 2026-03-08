@@ -21,7 +21,7 @@ interface StopEntry {
 
 const emptyStop = (): StopEntry => ({ label: '', address: '', description: '', notes: '', latitude: '', longitude: '' });
 
-const MAPS_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
+const MAPS_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyDe3Xcf1pyQwTBvqis4HJuldLrrJJTz-Ig';
 
 // --------------- Google Maps script loader ---------------
 let mapsLoadPromise: Promise<void> | null = null;
