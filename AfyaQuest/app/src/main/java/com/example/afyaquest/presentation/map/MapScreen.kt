@@ -142,7 +142,8 @@ fun MapScreen(
                     liveLocationLng = liveLocationLng,
                     defaultLat = viewModel.defaultLatitude,
                     defaultLng = viewModel.defaultLongitude,
-                    defaultZoom = viewModel.defaultZoom
+                    defaultZoom = viewModel.defaultZoom,
+                    onMarkStopVisited = { stopId -> viewModel.markStopCompleted(stopId) }
                 )
                 1 -> {
                     Column(modifier = Modifier.fillMaxSize()) {
@@ -209,7 +210,8 @@ private fun MapAndItineraryTab(
     liveLocationLng: Double,
     defaultLat: Double,
     defaultLng: Double,
-    defaultZoom: Float
+    defaultZoom: Float,
+    onMarkStopVisited: (String) -> Unit = {}
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(defaultLat, defaultLng), defaultZoom)
@@ -293,7 +295,7 @@ private fun MapAndItineraryTab(
                         items(dailyStops) { stop ->
                             ItineraryStopRow(
                                 stop = stop,
-                                onMarkVisited = { viewModel.markStopCompleted(stop.id) }
+                                onMarkVisited = { onMarkStopVisited(stop.id) }
                             )
                         }
                     }
