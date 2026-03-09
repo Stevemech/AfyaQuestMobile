@@ -4,7 +4,7 @@
  */
 
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, GetCommand, QueryCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 const { randomUUID } = require("crypto");
 
 const dynamoClient = new DynamoDBClient({});
@@ -63,6 +63,37 @@ exports.handler = async (event) => {
             TableName: process.env.DYNAMODB_TABLE,
             Item: reportItem
         }));
+
+        // Mark any pending report assignments as completed
+        try {
+            const assignResult = await docClient.send(new QueryCommand({
+                TableName: process.env.DYNAMODB_TABLE,
+                KeyConditionExpression: 'PK = :pk AND begins_with(SK, :sk)',
+                ExpressionAttributeValues: {
+                    ':pk': `USER#${userId}`,
+                    ':sk': 'ASSIGNMENT#REPORT#',
+                },
+            }));
+
+            const pendingReports = (assignResult.Items || []).filter(
+                item => item.status !== 'completed'
+            );
+
+            for (const item of pendingReports) {
+                await docClient.send(new UpdateCommand({
+                    TableName: process.env.DYNAMODB_TABLE,
+                    Key: { PK: item.PK, SK: item.SK },
+                    UpdateExpression: 'SET #status = :status, completedAt = :ts, updatedAt = :ts',
+                    ExpressionAttributeNames: { '#status': 'status' },
+                    ExpressionAttributeValues: {
+                        ':status': 'completed',
+                        ':ts': timestamp,
+                    },
+                }));
+            }
+        } catch (assignErr) {
+            console.warn('Non-critical: failed to update report assignments:', assignErr);
+        }
 
         return {
             statusCode: 200,
