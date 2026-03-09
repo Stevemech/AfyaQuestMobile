@@ -52,6 +52,11 @@ fun DashboardScreen(
     val xpData by dashboardViewModel.xpData.collectAsState()
     val assignmentsState by assignmentsViewModel.assignmentsState.collectAsState()
     val scrollState = rememberScrollState()
+
+    // Re-fetch assignments every time the dashboard is shown
+    LaunchedEffect(Unit) {
+        assignmentsViewModel.loadAssignments()
+    }
     val isConnected by dashboardViewModel.isConnected.collectAsState()
     val unsyncedCount by dashboardViewModel.unsyncedCount.collectAsState()
     val isSyncing by dashboardViewModel.isSyncing.collectAsState()
@@ -172,6 +177,7 @@ fun DashboardScreen(
             // Assigned to You Section
             AssignedToYouSection(
                 assignmentsState = assignmentsState,
+                assignmentsViewModel = assignmentsViewModel,
                 navController = navController
             )
 
@@ -445,11 +451,16 @@ fun LearningCenterSection(navController: NavController) {
 @Composable
 fun AssignedToYouSection(
     assignmentsState: Resource<List<AssignmentDto>>?,
+    assignmentsViewModel: AssignmentsViewModel,
     navController: NavController
 ) {
-    // Only show if there are pending assignments
-    val assignments = (assignmentsState as? Resource.Success)?.data ?: emptyList()
-    val pending = assignments.filter { it.status != "completed" }
+    // Use merged assignments (local completion + API status)
+    val allMerged = if (assignmentsState is Resource.Success) {
+        assignmentsViewModel.getFilteredAssignments()
+    } else {
+        emptyList()
+    }
+    val pending = allMerged.filter { it.status != "completed" }
     if (pending.isEmpty() && assignmentsState !is Resource.Loading) return
 
     Column(

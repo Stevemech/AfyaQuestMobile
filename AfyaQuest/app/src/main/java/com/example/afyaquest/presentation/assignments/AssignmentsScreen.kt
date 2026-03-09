@@ -35,6 +35,11 @@ fun AssignmentsScreen(
     val assignmentsState by viewModel.assignmentsState.collectAsState()
     val selectedFilter by viewModel.selectedFilter.collectAsState()
 
+    // Re-fetch every time the screen appears
+    LaunchedEffect(Unit) {
+        viewModel.loadAssignments()
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -294,11 +299,11 @@ fun AssignmentCard(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        // Show module/lesson ID
+                        // Show module/lesson name
                         val itemId = assignment.moduleId ?: assignment.lessonId
                         if (itemId != null) {
                             Text(
-                                text = itemId,
+                                text = getModuleDisplayName(itemId),
                                 fontSize = 13.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -403,4 +408,26 @@ private fun formatDate(isoDate: String): String {
     } catch (e: Exception) {
         isoDate.take(10)
     }
+}
+
+private fun getModuleDisplayName(id: String): String {
+    val names = mapOf(
+        "video-1" to "Health Assessments",
+        "video-2" to "Water Sanitation",
+        "video-3" to "Maternal & Child Health",
+        "video-4" to "Vaccination Programs",
+        "video-5" to "Emergency First Aid",
+        "video-6" to "Nutrition Basics",
+        "video-7" to "Disease Prevention",
+        "video-8" to "Male Reproductive System",
+        "video-9" to "Female Reproductive System",
+        "video-10" to "Urinary System",
+        "lesson-1" to "Handwashing Techniques",
+        "lesson-2" to "Balanced Diet for Children",
+        "lesson-3" to "Prenatal Care Essentials",
+        "lesson-4" to "Child Vaccination Schedule",
+        "lesson-5" to "Malaria Prevention",
+        "lesson-6" to "CPR Basics"
+    )
+    return names[id] ?: id.replace("-", " ").replaceFirstChar { it.uppercase() }
 }

@@ -146,6 +146,12 @@ export const api = {
       body: JSON.stringify({ action: 'delete', chvId, date }),
     }),
 
+  deleteAssignment: (chvId: string, type: 'module' | 'lesson', itemId: string) =>
+    request('/admin/assign', {
+      method: 'POST',
+      body: JSON.stringify({ chvId, type, action: 'delete', data: type === 'module' ? { moduleId: itemId } : { lessonId: itemId } }),
+    }),
+
   mandateLesson: (chvId: string, lessonId: string, dueDate: string) =>
     request('/admin/assign', {
       method: 'POST',

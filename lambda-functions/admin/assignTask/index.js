@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, PutCommand, GetCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 
 const client = new DynamoDBClient({ region: 'af-south-1' });
 const ddb = DynamoDBDocumentClient.from(client);
@@ -14,10 +14,35 @@ exports.handler = async (event) => {
 
   try {
     const body = JSON.parse(event.body || '{}');
-    const { chvId, type, data } = body;
+    const { chvId, type, data, action } = body;
 
     if (!chvId || !type) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing chvId or type' }) };
+    }
+
+    // Handle delete action
+    if (action === 'delete') {
+      const itemId = data?.moduleId || data?.lessonId;
+      if (!itemId) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing moduleId or lessonId in data' }) };
+      }
+      const sk = type === 'module'
+        ? `ASSIGNMENT#MODULE#${itemId}`
+        : type === 'lesson'
+          ? `ASSIGNMENT#LESSON#${itemId}`
+          : null;
+      if (!sk) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: 'Cannot delete this assignment type' }) };
+      }
+      await ddb.send(new DeleteCommand({
+        TableName: TABLE,
+        Key: { PK: `USER#${chvId}`, SK: sk },
+      }));
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ message: `${type} assignment removed from CHV ${chvId}` }),
+      };
     }
 
     // Verify the CHV exists
