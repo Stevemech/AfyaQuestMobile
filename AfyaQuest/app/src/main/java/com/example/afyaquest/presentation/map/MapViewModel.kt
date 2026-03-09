@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.afyaquest.data.local.entity.PendingClientVisitEntity
 import com.example.afyaquest.data.remote.ApiService
 import com.example.afyaquest.domain.model.ClientHouse
+import com.example.afyaquest.domain.model.FacilityType
 import com.example.afyaquest.domain.model.HealthFacility
 import com.example.afyaquest.domain.model.ItineraryStop
 import com.example.afyaquest.domain.model.VisitStatus
@@ -49,13 +50,13 @@ class MapViewModel @Inject constructor(
     private val syncManager: SyncManager
 ) : ViewModel() {
 
-    // Default map camera — Nairobi, Kenya (AfyaQuest operational area)
-    val defaultLatitude = -1.2921
-    val defaultLongitude = 36.8219
+    // Default map camera — Chimaltenango, Guatemala (AfyaQuest operational area)
+    val defaultLatitude = 14.6392
+    val defaultLongitude = -90.8208
     val defaultZoom = 13f
 
-    private val defaultLiveLatitude = -1.2921
-    private val defaultLiveLongitude = 36.8219
+    private val defaultLiveLatitude = 14.6392
+    private val defaultLiveLongitude = -90.8208
 
     private val _liveLocationLatitude = MutableStateFlow(defaultLiveLatitude)
     val liveLocationLatitude: StateFlow<Double> = _liveLocationLatitude.asStateFlow()
@@ -96,8 +97,89 @@ class MapViewModel @Inject constructor(
     val statusFilter: StateFlow<VisitStatus?> = _statusFilter.asStateFlow()
 
     init {
+        loadHealthFacilities()
         fetchItinerariesFromApi()
         loadCompletedStops()
+    }
+
+    /**
+     * Load real health facilities in the Chimaltenango/Guatemala area.
+     */
+    private fun loadHealthFacilities() {
+        _healthFacilities.value = listOf(
+            HealthFacility(
+                id = "hf1",
+                name = "Hospital Nacional de Chimaltenango",
+                type = FacilityType.HOSPITAL,
+                latitude = 14.6614,
+                longitude = -90.8194,
+                servicesAvailable = listOf("Emergency", "Maternity", "Pediatrics", "Surgery", "Outpatient", "Laboratory"),
+                distance = 0.8
+            ),
+            HealthFacility(
+                id = "hf2",
+                name = "Centro de Salud Chimaltenango",
+                type = FacilityType.CLINIC,
+                latitude = 14.6380,
+                longitude = -90.8215,
+                servicesAvailable = listOf("Primary Care", "Vaccination", "Family Planning", "Pharmacy"),
+                distance = 0.3
+            ),
+            HealthFacility(
+                id = "hf3",
+                name = "Hospital Nacional San Juan Comalapa",
+                type = FacilityType.HOSPITAL,
+                latitude = 14.7414,
+                longitude = -90.8886,
+                servicesAvailable = listOf("Emergency", "Maternity", "Outpatient", "X-Ray"),
+                distance = 12.5
+            ),
+            HealthFacility(
+                id = "hf4",
+                name = "Puesto de Salud Parramos",
+                type = FacilityType.CLINIC,
+                latitude = 14.6128,
+                longitude = -90.8042,
+                servicesAvailable = listOf("Primary Care", "Vaccination", "Pharmacy"),
+                distance = 3.2
+            ),
+            HealthFacility(
+                id = "hf5",
+                name = "Centro de Salud San Andres Itzapa",
+                type = FacilityType.HEALTH_CENTER,
+                latitude = 14.6195,
+                longitude = -90.8439,
+                servicesAvailable = listOf("Primary Care", "Vaccination", "Maternal Health", "Nutrition"),
+                distance = 4.1
+            ),
+            HealthFacility(
+                id = "hf6",
+                name = "Hospital Antiguo de Antigua Guatemala",
+                type = FacilityType.HOSPITAL,
+                latitude = 14.5586,
+                longitude = -90.7345,
+                servicesAvailable = listOf("Emergency", "Surgery", "Maternity", "Pediatrics", "Laboratory", "X-Ray"),
+                distance = 15.0
+            ),
+            HealthFacility(
+                id = "hf7",
+                name = "Puesto de Salud Zaragoza",
+                type = FacilityType.CLINIC,
+                latitude = 14.6492,
+                longitude = -90.8893,
+                servicesAvailable = listOf("Primary Care", "Vaccination", "Pharmacy"),
+                distance = 6.3
+            ),
+            HealthFacility(
+                id = "hf8",
+                name = "Centro de Salud Patzicia",
+                type = FacilityType.HEALTH_CENTER,
+                latitude = 14.6312,
+                longitude = -90.9270,
+                servicesAvailable = listOf("Primary Care", "Maternal Health", "Vaccination", "Family Planning"),
+                distance = 9.8
+            )
+        )
     }
 
     /**

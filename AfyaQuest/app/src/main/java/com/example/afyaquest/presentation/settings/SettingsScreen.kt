@@ -168,85 +168,113 @@ fun SettingsScreen(
         )
     }
 
-    // Change password dialog
+    // Change password dialog — uses email verification code flow
     if (showPasswordDialog) {
-        var currentPassword by remember { mutableStateOf("") }
+        var step by remember { mutableStateOf(1) } // 1=send code, 2=enter code+password
+        var verificationCode by remember { mutableStateOf("") }
         var newPassword by remember { mutableStateOf("") }
         var confirmPassword by remember { mutableStateOf("") }
         var errorMessage by remember { mutableStateOf<String?>(null) }
         var isLoading by remember { mutableStateOf(false) }
         var success by remember { mutableStateOf(false) }
+        val userEmail = userProfile?.email ?: ""
 
         AlertDialog(
             onDismissRequest = { if (!isLoading) showPasswordDialog = false },
-            title = { Text("Change Password") },
+            title = { Text(if (success) "Password Changed" else if (step == 1) "Reset Password" else "Enter Code") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    if (success) {
-                        Text("Password changed successfully!", color = MaterialTheme.colorScheme.primary)
-                    } else {
-                        OutlinedTextField(
-                            value = currentPassword,
-                            onValueChange = { currentPassword = it; errorMessage = null },
-                            label = { Text("Current Password") },
-                            visualTransformation = PasswordVisualTransformation(),
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true
-                        )
-                        OutlinedTextField(
-                            value = newPassword,
-                            onValueChange = { newPassword = it; errorMessage = null },
-                            label = { Text("New Password") },
-                            visualTransformation = PasswordVisualTransformation(),
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true
-                        )
-                        OutlinedTextField(
-                            value = confirmPassword,
-                            onValueChange = { confirmPassword = it; errorMessage = null },
-                            label = { Text("Confirm New Password") },
-                            visualTransformation = PasswordVisualTransformation(),
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true
-                        )
-                        errorMessage?.let {
-                            Text(it, color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
+                    when {
+                        success -> {
+                            Text("Your password has been changed successfully!",
+                                color = MaterialTheme.colorScheme.primary)
                         }
+                        step == 1 -> {
+                            Text("We'll send a verification code to your email:",
+                                fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(userEmail, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                        }
+                        step == 2 -> {
+                            Text("Enter the verification code sent to $userEmail and your new password.",
+                                fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            OutlinedTextField(
+                                value = verificationCode,
+                                onValueChange = { verificationCode = it; errorMessage = null },
+                                label = { Text("Verification Code") },
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = newPassword,
+                                onValueChange = { newPassword = it; errorMessage = null },
+                                label = { Text("New Password") },
+                                visualTransformation = PasswordVisualTransformation(),
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = confirmPassword,
+                                onValueChange = { confirmPassword = it; errorMessage = null },
+                                label = { Text("Confirm New Password") },
+                                visualTransformation = PasswordVisualTransformation(),
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+                    errorMessage?.let {
+                        Text(it, color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
                     }
                 }
             },
             confirmButton = {
-                if (success) {
-                    TextButton(onClick = { showPasswordDialog = false }) {
-                        Text("Done")
+                when {
+                    success -> {
+                        TextButton(onClick = { showPasswordDialog = false }) { Text("Done") }
                     }
-                } else {
-                    TextButton(
-                        onClick = {
-                            when {
-                                currentPassword.isBlank() -> errorMessage = "Enter your current password"
-                                newPassword.length < 8 -> errorMessage = "New password must be at least 8 characters"
-                                newPassword != confirmPassword -> errorMessage = "Passwords don't match"
-                                else -> {
+                    step == 1 -> {
+                        TextButton(
+                            onClick = {
+                                if (userEmail.isBlank()) {
+                                    errorMessage = "No email found for your account"
+                                } else {
                                     isLoading = true
                                     scope.launch {
-                                        val result = viewModel.changePassword(currentPassword, newPassword)
+                                        val result = authViewModel.forgotPassword(userEmail)
                                         isLoading = false
-                                        if (result == null) {
-                                            success = true
-                                        } else {
-                                            errorMessage = result
+                                        if (result == null) step = 2
+                                        else errorMessage = result
+                                    }
+                                }
+                            },
+                            enabled = !isLoading
+                        ) {
+                            if (isLoading) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
+                            else Text("Send Code")
+                        }
+                    }
+                    step == 2 -> {
+                        TextButton(
+                            onClick = {
+                                when {
+                                    verificationCode.isBlank() -> errorMessage = "Enter the verification code"
+                                    newPassword.length < 8 -> errorMessage = "Password must be at least 8 characters"
+                                    newPassword != confirmPassword -> errorMessage = "Passwords don't match"
+                                    else -> {
+                                        isLoading = true
+                                        scope.launch {
+                                            val result = authViewModel.confirmForgotPassword(userEmail, verificationCode, newPassword)
+                                            isLoading = false
+                                            if (result == null) success = true
+                                            else errorMessage = result
                                         }
                                     }
                                 }
-                            }
-                        },
-                        enabled = !isLoading
-                    ) {
-                        if (isLoading) {
-                            CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
-                        } else {
-                            Text("Update")
+                            },
+                            enabled = !isLoading
+                        ) {
+                            if (isLoading) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
+                            else Text("Reset Password")
                         }
                     }
                 }

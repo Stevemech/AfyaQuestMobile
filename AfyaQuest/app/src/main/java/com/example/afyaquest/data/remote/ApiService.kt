@@ -35,6 +35,16 @@ interface ApiService {
         @Body request: Map<String, String>
     ): Response<Map<String, String>>
 
+    @POST("auth/forgot-password")
+    suspend fun forgotPassword(
+        @Body request: Map<String, String>
+    ): Response<Map<String, String>>
+
+    @POST("auth/confirm-forgot-password")
+    suspend fun confirmForgotPassword(
+        @Body request: Map<String, String>
+    ): Response<Map<String, String>>
+
     // ==================== Questions ====================
 
     @GET("questions/daily")

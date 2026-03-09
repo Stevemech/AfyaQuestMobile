@@ -2,32 +2,29 @@ package com.example.afyaquest.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Primary colors
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// AfyaQuest brand colors — teal green + golden amber from logo
+val AfyaPrimary = Color(0xFF2D6E6A)         // Dark teal (logo background)
+val AfyaPrimaryLight = Color(0xFF6BA8A4)    // Lighter teal (pin color from brand image)
+val AfyaSecondary = Color(0xFFE8B84B)       // Golden amber (accent from brand image)
+val AfyaTertiary = Color(0xFF3D8B87)        // Mid teal
+val AfyaError = Color(0xFFE53935)
+val AfyaSuccess = Color(0xFF2D6E6A)
+val AfyaWarning = Color(0xFFE8B84B)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
-// Afya Quest brand colors
-val AfyaPrimary = Color(0xFF4CAF50)  // Green - represents health and growth
-val AfyaSecondary = Color(0xFF2196F3)  // Blue - trust and learning
-val AfyaTertiary = Color(0xFFFFC107)  // Amber - energy and achievement
-val AfyaError = Color(0xFFE53935)  // Red - errors and warnings
-val AfyaSuccess = Color(0xFF43A047)  // Dark green - success states
-val AfyaWarning = Color(0xFFFF9800)  // Orange - warnings
+// Containers
+val AfyaPrimaryContainer = Color(0xFFD4EFED)    // Very light teal
+val AfyaSecondaryContainer = Color(0xFFFFF0D0)  // Light golden
+val AfyaTertiaryContainer = Color(0xFFE0F2F1)   // Pale teal
 
 // XP and gamification colors
-val XPGold = Color(0xFFFFD700)
+val XPGold = Color(0xFFE8B84B)
 val LevelBronze = Color(0xFFCD7F32)
 val LevelSilver = Color(0xFFC0C0C0)
-val LevelGold = Color(0xFFFFD700)
+val LevelGold = Color(0xFFE8B84B)
 val LevelPlatinum = Color(0xFFE5E4E2)
 
 // Background and surface colors
-val BackgroundLight = Color(0xFFFAFAFA)
-val BackgroundDark = Color(0xFF121212)
+val BackgroundLight = Color(0xFFF5FAF9)
+val BackgroundDark = Color(0xFF0F1E1D)
 val SurfaceLight = Color(0xFFFFFFFF)
-val SurfaceDark = Color(0xFF1E1E1E)
+val SurfaceDark = Color(0xFF1A2E2D)

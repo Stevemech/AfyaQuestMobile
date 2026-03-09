@@ -47,6 +47,7 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var showForgotPassword by remember { mutableStateOf(false) }
 
     val loginState by viewModel.loginState.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -200,7 +201,14 @@ fun LoginScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Forgot password link
+                TextButton(onClick = { showForgotPassword = true }) {
+                    Text(stringResource(R.string.forgot_password), fontSize = 14.sp)
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 // Register link
                 Row(
@@ -223,6 +231,154 @@ fun LoginScreen(
             }
         }
     }
+
+    // Forgot Password flow
+    if (showForgotPassword) {
+        ForgotPasswordDialog(
+            initialEmail = email,
+            viewModel = viewModel,
+            onDismiss = { showForgotPassword = false }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ForgotPasswordDialog(
+    initialEmail: String,
+    viewModel: AuthViewModel,
+    onDismiss: () -> Unit
+) {
+    var step by remember { mutableStateOf(1) } // 1=enter email, 2=enter code+password
+    var forgotEmail by remember { mutableStateOf(initialEmail) }
+    var verificationCode by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
+    var success by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    AlertDialog(
+        onDismissRequest = { if (!isLoading) onDismiss() },
+        title = { Text(if (success) "Password Reset" else if (step == 1) "Forgot Password" else "Reset Password") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                when {
+                    success -> {
+                        Text("Your password has been reset successfully. You can now log in with your new password.",
+                            color = MaterialTheme.colorScheme.primary)
+                    }
+                    step == 1 -> {
+                        Text("Enter your email address and we'll send you a verification code.",
+                            fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        OutlinedTextField(
+                            value = forgotEmail,
+                            onValueChange = { forgotEmail = it; errorMessage = null },
+                            label = { Text("Email") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                        )
+                    }
+                    step == 2 -> {
+                        Text("Enter the verification code sent to $forgotEmail and your new password.",
+                            fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        OutlinedTextField(
+                            value = verificationCode,
+                            onValueChange = { verificationCode = it; errorMessage = null },
+                            label = { Text("Verification Code") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                        OutlinedTextField(
+                            value = newPassword,
+                            onValueChange = { newPassword = it; errorMessage = null },
+                            label = { Text("New Password") },
+                            visualTransformation = PasswordVisualTransformation(),
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        OutlinedTextField(
+                            value = confirmPassword,
+                            onValueChange = { confirmPassword = it; errorMessage = null },
+                            label = { Text("Confirm Password") },
+                            visualTransformation = PasswordVisualTransformation(),
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+                errorMessage?.let {
+                    Text(it, color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
+                }
+            }
+        },
+        confirmButton = {
+            when {
+                success -> {
+                    TextButton(onClick = onDismiss) { Text("Done") }
+                }
+                step == 1 -> {
+                    TextButton(
+                        onClick = {
+                            if (forgotEmail.isBlank()) {
+                                errorMessage = "Enter your email"
+                            } else {
+                                isLoading = true
+                                scope.launch {
+                                    val result = viewModel.forgotPassword(forgotEmail)
+                                    isLoading = false
+                                    if (result == null) {
+                                        step = 2
+                                    } else {
+                                        errorMessage = result
+                                    }
+                                }
+                            }
+                        },
+                        enabled = !isLoading
+                    ) {
+                        if (isLoading) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
+                        else Text("Send Code")
+                    }
+                }
+                step == 2 -> {
+                    TextButton(
+                        onClick = {
+                            when {
+                                verificationCode.isBlank() -> errorMessage = "Enter the verification code"
+                                newPassword.length < 8 -> errorMessage = "Password must be at least 8 characters"
+                                newPassword != confirmPassword -> errorMessage = "Passwords don't match"
+                                else -> {
+                                    isLoading = true
+                                    scope.launch {
+                                        val result = viewModel.confirmForgotPassword(forgotEmail, verificationCode, newPassword)
+                                        isLoading = false
+                                        if (result == null) {
+                                            success = true
+                                        } else {
+                                            errorMessage = result
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        enabled = !isLoading
+                    ) {
+                        if (isLoading) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
+                        else Text("Reset Password")
+                    }
+                }
+            }
+        },
+        dismissButton = {
+            if (!success) {
+                TextButton(onClick = onDismiss, enabled = !isLoading) { Text("Cancel") }
+            }
+        }
+    )
 }
 
 @Composable

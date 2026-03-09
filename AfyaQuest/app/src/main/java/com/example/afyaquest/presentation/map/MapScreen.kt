@@ -1,7 +1,9 @@
 package com.example.afyaquest.presentation.map
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -29,10 +31,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.afyaquest.domain.model.ClientHouse
 import com.example.afyaquest.domain.model.HealthFacility
 import com.example.afyaquest.domain.model.ItineraryStop
-import com.example.afyaquest.domain.model.VisitStatus
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -42,6 +43,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.launch
 
 /**
  * Map/Itinerary screen
@@ -54,12 +56,6 @@ fun MapScreen(
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val healthFacilities by viewModel.healthFacilities.collectAsState()
-    val clientHouses by viewModel.clientHouses.collectAsState()
-    val statusFilter by viewModel.statusFilter.collectAsState()
-    val filteredClients = remember(clientHouses, statusFilter) {
-        if (statusFilter == null) clientHouses
-        else clientHouses.filter { it.status == statusFilter }
-    }
     val dailyStops by viewModel.dailyItineraryStops.collectAsState()
     // Collect real-time device location so route and "You are here" marker update when GPS changes.
     val liveLocationLat by viewModel.liveLocationLatitude.collectAsState()
@@ -82,19 +78,7 @@ fun MapScreen(
         }
     }
 
-    var showClientDetails by remember { mutableStateOf<ClientHouse?>(null) }
     var selectedTab by remember { mutableStateOf(0) }
-
-    showClientDetails?.let { client ->
-        ClientDetailsDialog(
-            client = client,
-            onDismiss = { showClientDetails = null },
-            onMarkVisited = {
-                viewModel.markClientAsVisited(client.id)
-                showClientDetails = null
-            }
-        )
-    }
 
     Scaffold(
         topBar = {
@@ -123,12 +107,6 @@ fun MapScreen(
                 Tab(
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 },
-                    text = { Text(stringResource(R.string.client_stops)) },
-                    icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) }
-                )
-                Tab(
-                    selected = selectedTab == 2,
-                    onClick = { selectedTab = 2 },
                     text = { Text(stringResource(R.string.health_facilities)) },
                     icon = { Icon(Icons.Default.LocalHospital, contentDescription = null) }
                 )
@@ -137,6 +115,7 @@ fun MapScreen(
             when (selectedTab) {
                 0 -> MapAndItineraryTab(
                     dailyStops = dailyStops,
+                    healthFacilities = healthFacilities,
                     fullRoutePoints = fullRoutePoints,
                     liveLocationLat = liveLocationLat,
                     liveLocationLng = liveLocationLng,
@@ -145,50 +124,7 @@ fun MapScreen(
                     defaultZoom = viewModel.defaultZoom,
                     onMarkStopVisited = { stopId -> viewModel.markStopCompleted(stopId) }
                 )
-                1 -> {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            FilterChip(
-                                selected = statusFilter == null,
-                                onClick = { viewModel.setStatusFilter(null) },
-                                label = { Text(stringResource(R.string.all)) }
-                            )
-                            FilterChip(
-                                selected = statusFilter == VisitStatus.TO_VISIT,
-                                onClick = { viewModel.setStatusFilter(VisitStatus.TO_VISIT) },
-                                label = { Text(stringResource(R.string.to_visit)) }
-                            )
-                            FilterChip(
-                                selected = statusFilter == VisitStatus.VISITED,
-                                onClick = { viewModel.setStatusFilter(VisitStatus.VISITED) },
-                                label = { Text(stringResource(R.string.visited)) }
-                            )
-                            FilterChip(
-                                selected = statusFilter == VisitStatus.SCHEDULED,
-                                onClick = { viewModel.setStatusFilter(VisitStatus.SCHEDULED) },
-                                label = { Text(stringResource(R.string.scheduled)) }
-                            )
-                        }
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(filteredClients) { client ->
-                                ClientHouseCard(
-                                    client = client,
-                                    onClick = { showClientDetails = client }
-                                )
-                            }
-                        }
-                    }
-                }
-                2 -> LazyColumn(
+                1 -> LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -205,6 +141,7 @@ fun MapScreen(
 @Composable
 private fun MapAndItineraryTab(
     dailyStops: List<ItineraryStop>,
+    healthFacilities: List<HealthFacility>,
     fullRoutePoints: List<Pair<Double, Double>>,
     liveLocationLat: Double,
     liveLocationLng: Double,
@@ -213,57 +150,89 @@ private fun MapAndItineraryTab(
     defaultZoom: Float,
     onMarkStopVisited: (String) -> Unit = {}
 ) {
+    // Use live location as initial camera position if available, otherwise default
+    val initialLat = if (liveLocationLat != 0.0) liveLocationLat else defaultLat
+    val initialLng = if (liveLocationLng != 0.0) liveLocationLng else defaultLng
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(defaultLat, defaultLng), defaultZoom)
+        position = CameraPosition.fromLatLngZoom(LatLng(initialLat, initialLng), 14f)
     }
     val routeLatLngs = fullRoutePoints.map { LatLng(it.first, it.second) }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val hasLocationPermission = remember {
+        ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
+
+    // Snap to live location when it first arrives
+    var hasSnappedToLocation by remember { mutableStateOf(false) }
+    LaunchedEffect(liveLocationLat, liveLocationLng) {
+        if (!hasSnappedToLocation && liveLocationLat != defaultLat) {
+            cameraPositionState.animate(
+                CameraUpdateFactory.newLatLngZoom(LatLng(liveLocationLat, liveLocationLng), 14f)
+            )
+            hasSnappedToLocation = true
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Map preview (in-app) with live location and route
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(280.dp)
+                .height(300.dp)
         ) {
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
-                properties = remember { MapProperties() },
-                uiSettings = remember { MapUiSettings(zoomControlsEnabled = true) }
+                properties = remember(hasLocationPermission) {
+                    MapProperties(isMyLocationEnabled = hasLocationPermission)
+                },
+                uiSettings = remember {
+                    MapUiSettings(
+                        zoomControlsEnabled = true,
+                        myLocationButtonEnabled = true
+                    )
+                }
             ) {
-                // Route: live location → stop 1 → stop 2 → …
+                // Route polyline
                 routeLatLngs.takeIf { it.size >= 2 }?.let { points ->
                     Polyline(
                         points = points,
-                        color = MaterialTheme.colorScheme.primary,
-                        width = 12f,
+                        color = Color(0xFF2D6E6A),
+                        width = 10f,
                         geodesic = true
                     )
                 }
-                // Live location marker: real device GPS (Fused Location Provider) or default until first fix
-                Marker(
-                    state = MarkerState(position = LatLng(liveLocationLat, liveLocationLng)),
-                    title = stringResource(R.string.you_are_here),
-                    snippet = stringResource(R.string.your_location),
-                    icon = com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(
-                        com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_CYAN
-                    )
-                )
+                // Stop markers with color based on completion
                 dailyStops.forEach { stop ->
                     Marker(
                         state = MarkerState(position = LatLng(stop.latitude, stop.longitude)),
                         title = "${stop.order}. ${stop.label}",
-                        snippet = stop.address
+                        snippet = if (stop.completed) "Visited" else stop.address,
+                        icon = com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(
+                            if (stop.completed)
+                                com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_GREEN
+                            else
+                                com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED
+                        )
+                    )
+                }
+                // Health facility markers (blue/violet for hospitals)
+                healthFacilities.forEach { facility ->
+                    Marker(
+                        state = MarkerState(position = LatLng(facility.latitude, facility.longitude)),
+                        title = facility.name,
+                        snippet = facility.servicesAvailable.take(3).joinToString(", "),
+                        icon = com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(
+                            com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_VIOLET
+                        )
                     )
                 }
             }
         }
 
-        // "These are your stops for the day, do them in this order"
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                // Take remaining space so the list can scroll instead of being cut off.
                 .weight(1f),
             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         ) {
@@ -295,180 +264,133 @@ private fun MapAndItineraryTab(
                         items(dailyStops) { stop ->
                             ItineraryStopRow(
                                 stop = stop,
-                                onMarkVisited = { onMarkStopVisited(stop.id) }
+                                onMarkVisited = { onMarkStopVisited(stop.id) },
+                                onTap = {
+                                    // Snap map camera to this stop
+                                    scope.launch {
+                                        cameraPositionState.animate(
+                                            CameraUpdateFactory.newLatLngZoom(
+                                                LatLng(stop.latitude, stop.longitude),
+                                                16f
+                                            ),
+                                            durationMs = 600
+                                        )
+                                    }
+                                }
                             )
                         }
                     }
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = stringResource(R.string.map_location_disclaimer),
-            fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }
 
 @Composable
 private fun ItineraryStopRow(
     stop: ItineraryStop,
-    onMarkVisited: () -> Unit
+    onMarkVisited: () -> Unit,
+    onTap: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     val bgColor = if (stop.completed) {
         Color(0xFF4CAF50).copy(alpha = 0.08f)
     } else {
         MaterialTheme.colorScheme.surface
     }
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onTap)
             .background(bgColor, RoundedCornerShape(8.dp))
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(12.dp)
     ) {
-        // Order number / checkmark
-        Surface(
-            shape = RoundedCornerShape(8.dp),
-            color = if (stop.completed) Color(0xFF4CAF50) else MaterialTheme.colorScheme.primary
-        ) {
-            Text(
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                text = if (stop.completed) "✓" else "${stop.order}",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-        }
-        Spacer(modifier = Modifier.width(12.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = stop.label,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Medium,
-                color = if (stop.completed) Color(0xFF388E3C) else MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = stop.address,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            stop.description?.let { desc ->
-                Text(
-                    text = desc,
-                    fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.9f)
-                )
-            }
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        if (stop.completed) {
-            Badge(containerColor = Color(0xFF4CAF50)) {
-                Text(
-                    text = "Visited",
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                    fontSize = 11.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        } else {
-            FilledTonalButton(
-                onClick = onMarkVisited,
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                modifier = Modifier.height(32.dp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            // Order number / checkmark
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = if (stop.completed) Color(0xFF4CAF50) else MaterialTheme.colorScheme.primary
             ) {
-                Text("Mark Visited", fontSize = 11.sp)
+                Text(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                    text = if (stop.completed) "✓" else "${stop.order}",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
             }
-        }
-    }
-}
-
-@Composable
-fun ClientHouseCard(
-    client: ClientHouse,
-    onClick: () -> Unit
-) {
-    val statusColor = when (client.status) {
-        VisitStatus.TO_VISIT -> Color(0xFFFF9800)
-        VisitStatus.VISITED -> Color(0xFF4CAF50)
-        VisitStatus.SCHEDULED -> Color(0xFF2196F3)
-    }
-
-    val statusText = when (client.status) {
-        VisitStatus.TO_VISIT -> stringResource(R.string.to_visit)
-        VisitStatus.VISITED -> stringResource(R.string.visited)
-        VisitStatus.SCHEDULED -> stringResource(R.string.scheduled)
-    }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+            Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = client.clientName,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    text = stop.label,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = if (stop.completed) Color(0xFF388E3C) else MaterialTheme.colorScheme.onSurface
                 )
-                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = client.address,
-                    fontSize = 14.sp,
+                    text = stop.address,
+                    fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                client.description?.let {
+                stop.description?.let { desc ->
                     Text(
-                        text = it,
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = desc,
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.9f)
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            if (stop.completed) {
+                Badge(containerColor = Color(0xFF4CAF50)) {
+                    Text(
+                        text = "Visited",
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                        fontSize = 11.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
 
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    // Status badge
-                    Badge(
-                        containerColor = statusColor,
-                        modifier = Modifier.padding(0.dp)
-                    ) {
-                        Text(
-                            text = statusText,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                            fontSize = 11.sp,
-                            color = Color.White
-                        )
+        // Action buttons row
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Directions button — opens Google Maps navigation
+            OutlinedButton(
+                onClick = {
+                    val uri = Uri.parse("google.navigation:q=${stop.latitude},${stop.longitude}&mode=d")
+                    val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+                        setPackage("com.google.android.apps.maps")
                     }
+                    if (intent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(intent)
+                    } else {
+                        // Fallback to browser if Google Maps not installed
+                        val webUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}&travelmode=driving")
+                        context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
+                    }
+                },
+                modifier = Modifier.weight(1f).height(34.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+            ) {
+                Icon(Icons.Default.Map, contentDescription = null, modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Directions", fontSize = 12.sp)
+            }
 
-                    // Distance badge
-                    client.distance?.let { distance ->
-                        Badge(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            modifier = Modifier.padding(0.dp)
-                        ) {
-                            Text(
-                                text = "📍 ${distance}km",
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                fontSize = 11.sp,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
-                            )
-                        }
-                    }
+            if (!stop.completed) {
+                FilledTonalButton(
+                    onClick = onMarkVisited,
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                    modifier = Modifier.weight(1f).height(34.dp)
+                ) {
+                    Text("Mark Visited", fontSize = 12.sp)
                 }
             }
         }
@@ -477,6 +399,7 @@ fun ClientHouseCard(
 
 @Composable
 fun HealthFacilityCard(facility: HealthFacility) {
+    val context = LocalContext.current
     val facilityTypeLabel = when (facility.type) {
         com.example.afyaquest.domain.model.FacilityType.HOSPITAL -> stringResource(R.string.facility_type_hospital)
         com.example.afyaquest.domain.model.FacilityType.CLINIC -> stringResource(R.string.facility_type_clinic)
@@ -535,60 +458,30 @@ fun HealthFacilityCard(facility: HealthFacility) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 16.sp
             )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedButton(
+                onClick = {
+                    val uri = Uri.parse("google.navigation:q=${facility.latitude},${facility.longitude}&mode=d")
+                    val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+                        setPackage("com.google.android.apps.maps")
+                    }
+                    if (intent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(intent)
+                    } else {
+                        val webUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=${facility.latitude},${facility.longitude}&travelmode=driving")
+                        context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().height(36.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+            ) {
+                Icon(Icons.Default.Map, contentDescription = null, modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("Get Directions", fontSize = 13.sp)
+            }
         }
     }
 }
 
-@Composable
-fun ClientDetailsDialog(
-    client: ClientHouse,
-    onDismiss: () -> Unit,
-    onMarkVisited: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(client.clientName) },
-        text = {
-            Column {
-                Text("${stringResource(R.string.address)}: ${client.address}")
-                Spacer(modifier = Modifier.height(8.dp))
-
-                client.description?.let {
-                    Text("${stringResource(R.string.description)}: $it")
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-
-                client.distance?.let {
-                    Text("${stringResource(R.string.distance)}: ${it}km")
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-
-                when (client.status) {
-                    VisitStatus.VISITED -> {
-                        client.lastVisit?.let {
-                            Text("${stringResource(R.string.last_visit)}: $it")
-                        }
-                    }
-                    VisitStatus.SCHEDULED -> {
-                        client.nextVisit?.let {
-                            Text("${stringResource(R.string.next_visit)}: $it")
-                        }
-                    }
-                    else -> {}
-                }
-            }
-        },
-        confirmButton = {
-            if (client.status != VisitStatus.VISITED) {
-                Button(onClick = onMarkVisited) {
-                    Text(stringResource(R.string.mark_as_visited))
-                }
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.close))
-            }
-        }
-    )
-}

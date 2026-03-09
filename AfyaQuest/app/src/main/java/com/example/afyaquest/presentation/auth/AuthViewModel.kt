@@ -138,4 +138,40 @@ class AuthViewModel @Inject constructor(
     fun resetRegisterState() {
         _registerState.value = null
     }
+
+    /**
+     * Request forgot password verification code.
+     * Returns null on success, error message on failure.
+     */
+    suspend fun forgotPassword(email: String): String? {
+        return try {
+            val response = apiService.forgotPassword(mapOf("email" to email.trim()))
+            if (response.isSuccessful) null
+            else {
+                val err = response.errorBody()?.string()
+                err ?: "Failed to send verification code"
+            }
+        } catch (e: Exception) {
+            e.localizedMessage ?: "Network error"
+        }
+    }
+
+    /**
+     * Confirm forgot password with verification code and new password.
+     * Returns null on success, error message on failure.
+     */
+    suspend fun confirmForgotPassword(email: String, code: String, newPassword: String): String? {
+        return try {
+            val response = apiService.confirmForgotPassword(
+                mapOf("email" to email.trim(), "code" to code.trim(), "newPassword" to newPassword)
+            )
+            if (response.isSuccessful) null
+            else {
+                val err = response.errorBody()?.string()
+                err ?: "Failed to reset password"
+            }
+        } catch (e: Exception) {
+            e.localizedMessage ?: "Network error"
+        }
+    }
 }

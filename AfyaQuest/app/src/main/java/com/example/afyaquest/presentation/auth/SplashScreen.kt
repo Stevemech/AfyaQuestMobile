@@ -2,6 +2,8 @@ package com.example.afyaquest.presentation.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -54,12 +56,13 @@ fun SplashScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // App icon/logo (placeholder)
-                Icon(
-                    painter = painterResource(id = android.R.drawable.ic_dialog_info),
+                // App logo
+                Image(
+                    painter = painterResource(id = R.drawable.afyaquest_logo),
                     contentDescription = "AfyaQuest Logo",
-                    modifier = Modifier.size(120.dp),
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    modifier = Modifier
+                        .size(160.dp)
+                        .clip(CircleShape)
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
