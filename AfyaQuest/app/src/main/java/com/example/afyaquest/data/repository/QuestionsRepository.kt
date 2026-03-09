@@ -57,7 +57,7 @@ class QuestionsRepository @Inject constructor(
         emit(Resource.Loading())
 
         try {
-            val token = tokenManager.getAccessToken()
+            val token = tokenManager.getIdToken()
             if (token == null) {
                 emit(Resource.Error("Not authenticated"))
                 return@flow

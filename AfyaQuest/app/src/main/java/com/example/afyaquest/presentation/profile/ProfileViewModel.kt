@@ -2,10 +2,12 @@ package com.example.afyaquest.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.afyaquest.data.remote.ApiService
 import com.example.afyaquest.domain.model.Achievement
-import com.example.afyaquest.domain.model.AchievementCategory
 import com.example.afyaquest.domain.model.WeeklyReflection
 import com.example.afyaquest.util.LanguageManager
+import com.example.afyaquest.util.ProgressDataStore
+import com.example.afyaquest.util.TokenManager
 import com.example.afyaquest.util.XpData
 import com.example.afyaquest.util.XpManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +25,9 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
+    private val progressDataStore: ProgressDataStore,
+    private val apiService: ApiService,
+    private val tokenManager: TokenManager,
     private val xpManager: XpManager,
     private val languageManager: LanguageManager
 ) : ViewModel() {
@@ -42,11 +48,29 @@ class ProfileViewModel @Inject constructor(
             initialValue = LanguageManager.LANGUAGE_ENGLISH
         )
 
+    // Quick stats computed from local progress data
+    val quickStats: StateFlow<QuickStats> = combine(
+        progressDataStore.getWatchedVideos(),
+        progressDataStore.getCompletedLessons(),
+        progressDataStore.getCompletedQuizzes()
+    ) { videos, lessons, quizzes ->
+        QuickStats(
+            lessonsCompleted = lessons.size,
+            videosWatched = videos.size,
+            quizzesCompleted = quizzes.size,
+            reportsSubmitted = 0
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = QuickStats()
+    )
+
     // Achievements
     private val _achievements = MutableStateFlow<List<Achievement>>(emptyList())
     val achievements: StateFlow<List<Achievement>> = _achievements.asStateFlow()
 
-    // Weekly reflections
+    // Weekly reflections (empty - no sample data)
     private val _weeklyReflections = MutableStateFlow<List<WeeklyReflection>>(emptyList())
     val weeklyReflections: StateFlow<List<WeeklyReflection>> = _weeklyReflections.asStateFlow()
 
@@ -54,25 +78,55 @@ class ProfileViewModel @Inject constructor(
     private val _selectedTab = MutableStateFlow(0)
     val selectedTab: StateFlow<Int> = _selectedTab.asStateFlow()
 
+    // User status based on local tracking
+    private val _userStatus = MutableStateFlow("active")
+    val userStatus: StateFlow<String> = _userStatus.asStateFlow()
+
     init {
         loadAchievements()
-        loadWeeklyReflections()
     }
 
     /**
-     * Load achievements
+     * Load achievements from API if online, otherwise empty list
      */
     private fun loadAchievements() {
-        // TODO: Fetch from API
-        _achievements.value = getSampleAchievements()
-    }
-
-    /**
-     * Load weekly reflections
-     */
-    private fun loadWeeklyReflections() {
-        // TODO: Fetch from API
-        _weeklyReflections.value = getSampleReflections()
+        viewModelScope.launch {
+            try {
+                val token = tokenManager.getIdToken() ?: return@launch
+                val response = apiService.getUserProgress("Bearer $token")
+                if (response.isSuccessful) {
+                    val body = response.body() ?: return@launch
+                    @Suppress("UNCHECKED_CAST")
+                    val achievementsList = body["achievements"] as? List<Map<String, Any>>
+                    if (achievementsList != null) {
+                        _achievements.value = achievementsList.mapNotNull { map ->
+                            try {
+                                Achievement(
+                                    id = map["id"]?.toString() ?: return@mapNotNull null,
+                                    title = map["title"]?.toString() ?: "",
+                                    description = map["description"]?.toString() ?: "",
+                                    icon = map["icon"]?.toString() ?: "",
+                                    category = try {
+                                        val catStr = map["category"]?.toString()?.uppercase() ?: "LEARNING"
+                                        com.example.afyaquest.domain.model.AchievementCategory.valueOf(catStr)
+                                    } catch (e: Exception) {
+                                        com.example.afyaquest.domain.model.AchievementCategory.LEARNING
+                                    },
+                                    unlocked = map["unlocked"] as? Boolean ?: false,
+                                    unlockedDate = map["unlockedDate"]?.toString(),
+                                    progress = (map["progress"] as? Number)?.toInt() ?: 0,
+                                    target = (map["target"] as? Number)?.toInt() ?: 0
+                                )
+                            } catch (e: Exception) {
+                                null
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                // Offline or error - achievements remain empty
+            }
+        }
     }
 
     /**
@@ -98,120 +152,11 @@ class ProfileViewModel @Inject constructor(
     suspend fun changeLanguage(languageCode: String) {
         languageManager.setLanguage(languageCode)
     }
-
-    /**
-     * Get sample achievements
-     */
-    private fun getSampleAchievements(): List<Achievement> {
-        return listOf(
-            Achievement(
-                id = "1",
-                title = "First Steps",
-                description = "Complete your first daily question",
-                icon = "🎯",
-                category = AchievementCategory.LEARNING,
-                unlocked = true,
-                unlockedDate = "2024-01-15"
-            ),
-            Achievement(
-                id = "2",
-                title = "Week Warrior",
-                description = "Maintain a 7-day streak",
-                icon = "🔥",
-                category = AchievementCategory.CONSISTENCY,
-                unlocked = true,
-                unlockedDate = "2024-01-20"
-            ),
-            Achievement(
-                id = "3",
-                title = "Community Champion",
-                description = "Submit 10 daily reports",
-                icon = "🏆",
-                category = AchievementCategory.COMMUNITY,
-                unlocked = true,
-                unlockedDate = "2024-01-25",
-                progress = 10,
-                target = 10
-            ),
-            Achievement(
-                id = "4",
-                title = "Knowledge Seeker",
-                description = "Complete 5 interactive lessons",
-                icon = "📚",
-                category = AchievementCategory.LEARNING,
-                unlocked = false,
-                progress = 3,
-                target = 5
-            ),
-            Achievement(
-                id = "5",
-                title = "Video Expert",
-                description = "Watch 10 video modules",
-                icon = "🎬",
-                category = AchievementCategory.LEARNING,
-                unlocked = false,
-                progress = 5,
-                target = 10
-            ),
-            Achievement(
-                id = "6",
-                title = "Perfect Score",
-                description = "Get 3/3 correct on daily questions",
-                icon = "⭐",
-                category = AchievementCategory.EXPERTISE,
-                unlocked = true,
-                unlockedDate = "2024-01-18"
-            ),
-            Achievement(
-                id = "7",
-                title = "Level 5",
-                description = "Reach level 5",
-                icon = "🎓",
-                category = AchievementCategory.MILESTONES,
-                unlocked = false,
-                progress = 3,
-                target = 5
-            ),
-            Achievement(
-                id = "8",
-                title = "Helpful Assistant",
-                description = "Chat with Fred 20 times",
-                icon = "💬",
-                category = AchievementCategory.LEARNING,
-                unlocked = false,
-                progress = 8,
-                target = 20
-            )
-        )
-    }
-
-    /**
-     * Get sample weekly reflections
-     */
-    private fun getSampleReflections(): List<WeeklyReflection> {
-        return listOf(
-            WeeklyReflection(
-                id = "1",
-                weekStartDate = "2024-01-15",
-                weekEndDate = "2024-01-21",
-                successStory = "Successfully vaccinated 15 children and conducted 3 health education sessions on malaria prevention.",
-                challengesFaced = "Some families were hesitant about vaccinations. Transportation to remote areas was difficult.",
-                lessonsLearned = "Building trust with families takes time. Better planning for transportation is needed.",
-                goalsNextWeek = "Reach 20 families for vaccinations and improve record-keeping.",
-                overallRating = 4,
-                submittedDate = "2024-01-21"
-            ),
-            WeeklyReflection(
-                id = "2",
-                weekStartDate = "2024-01-08",
-                weekEndDate = "2024-01-14",
-                successStory = "Organized a successful health awareness event with 30 community members attending.",
-                challengesFaced = "Limited medical supplies. Difficulty reaching families in remote areas.",
-                lessonsLearned = "Community events are effective for health education. Need better supply management.",
-                goalsNextWeek = "Follow up with event attendees and request additional supplies.",
-                overallRating = 5,
-                submittedDate = "2024-01-14"
-            )
-        )
-    }
 }
+
+data class QuickStats(
+    val lessonsCompleted: Int = 0,
+    val videosWatched: Int = 0,
+    val quizzesCompleted: Int = 0,
+    val reportsSubmitted: Int = 0
+)

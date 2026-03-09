@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.afyaquest.domain.model.Achievement
-import com.example.afyaquest.domain.model.AchievementCategory
 
 /**
  * Profile screen with tabs for Overview, Achievements, and Reflections
@@ -33,6 +32,7 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val xpData by viewModel.xpData.collectAsState()
+    val quickStats by viewModel.quickStats.collectAsState()
     val achievements by viewModel.achievements.collectAsState()
     val selectedTab by viewModel.selectedTab.collectAsState()
 
@@ -74,7 +74,7 @@ fun ProfileScreen(
 
             // Tab content
             when (selectedTab) {
-                0 -> OverviewTab(xpData = xpData)
+                0 -> OverviewTab(xpData = xpData, quickStats = quickStats)
                 1 -> AchievementsTab(achievements = achievements)
                 2 -> ReflectionsTab(viewModel = viewModel)
             }
@@ -83,7 +83,7 @@ fun ProfileScreen(
 }
 
 @Composable
-fun OverviewTab(xpData: com.example.afyaquest.util.XpData) {
+fun OverviewTab(xpData: com.example.afyaquest.util.XpData, quickStats: com.example.afyaquest.presentation.profile.QuickStats) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -176,6 +176,40 @@ fun OverviewTab(xpData: com.example.afyaquest.util.XpData) {
             }
         }
 
+        // Status
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Status",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Badge(
+                        containerColor = Color(0xFF4CAF50)
+                    ) {
+                        Text(
+                            text = "Active",
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+
         // Quick stats
         item {
             Card(modifier = Modifier.fillMaxWidth()) {
@@ -189,10 +223,10 @@ fun OverviewTab(xpData: com.example.afyaquest.util.XpData) {
                         fontWeight = FontWeight.Bold
                     )
 
-                    StatRow(label = "Lessons Completed", value = "6")
-                    StatRow(label = "Videos Watched", value = "4")
-                    StatRow(label = "Quizzes Taken", value = "12")
-                    StatRow(label = "Reports Submitted", value = "8")
+                    StatRow(label = "Lessons Completed", value = "${quickStats.lessonsCompleted}")
+                    StatRow(label = "Videos Watched", value = "${quickStats.videosWatched}")
+                    StatRow(label = "Quizzes Completed", value = "${quickStats.quizzesCompleted}")
+                    StatRow(label = "Reports Submitted", value = "${quickStats.reportsSubmitted}")
                 }
             }
         }
