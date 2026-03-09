@@ -33,6 +33,7 @@ fun ProfileScreen(
 ) {
     val xpData by viewModel.xpData.collectAsState()
     val quickStats by viewModel.quickStats.collectAsState()
+    val userProfile by viewModel.userProfile.collectAsState()
     val achievements by viewModel.achievements.collectAsState()
     val selectedTab by viewModel.selectedTab.collectAsState()
 
@@ -74,7 +75,7 @@ fun ProfileScreen(
 
             // Tab content
             when (selectedTab) {
-                0 -> OverviewTab(xpData = xpData, quickStats = quickStats)
+                0 -> OverviewTab(xpData = xpData, quickStats = quickStats, userName = userProfile?.name, userOrg = userProfile?.organization)
                 1 -> AchievementsTab(achievements = achievements)
                 2 -> ReflectionsTab(viewModel = viewModel)
             }
@@ -83,7 +84,7 @@ fun ProfileScreen(
 }
 
 @Composable
-fun OverviewTab(xpData: com.example.afyaquest.util.XpData, quickStats: com.example.afyaquest.presentation.profile.QuickStats) {
+fun OverviewTab(xpData: com.example.afyaquest.util.XpData, quickStats: com.example.afyaquest.presentation.profile.QuickStats, userName: String? = null, userOrg: String? = null) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -120,17 +121,28 @@ fun OverviewTab(xpData: com.example.afyaquest.util.XpData, quickStats: com.examp
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
-                        text = "Level ${xpData.level}",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    if (userName != null) {
+                        Text(
+                            text = userName,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
 
                     Text(
-                        text = xpData.rank,
-                        fontSize = 18.sp,
+                        text = "Level ${xpData.level} - ${xpData.rank}",
+                        fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
+
+                    if (userOrg != null) {
+                        Text(
+                            text = userOrg,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                        )
+                    }
                 }
             }
         }

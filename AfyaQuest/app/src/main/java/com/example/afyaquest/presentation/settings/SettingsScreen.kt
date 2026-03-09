@@ -12,25 +12,30 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.afyaquest.presentation.auth.AuthViewModel
+import com.example.afyaquest.presentation.navigation.Screen
 import com.example.afyaquest.presentation.profile.ProfileViewModel
 import com.example.afyaquest.util.LanguageManager
 import kotlinx.coroutines.launch
 
-/**
- * Settings screen
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
     val currentLanguage by viewModel.currentLanguage.collectAsState()
+    val userProfile by viewModel.userProfile.collectAsState()
     var showLanguageDialog by remember { mutableStateOf(false) }
+    var showProfileDialog by remember { mutableStateOf(false) }
+    var showPasswordDialog by remember { mutableStateOf(false) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     Scaffold(
@@ -53,9 +58,7 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // General Section
-            item {
-                SectionHeader(text = "General")
-            }
+            item { SectionHeader(text = "General") }
 
             item {
                 SettingsItem(
@@ -80,8 +83,8 @@ fun SettingsScreen(
                 SettingsItem(
                     icon = Icons.Default.Person,
                     title = "Profile Information",
-                    subtitle = "Edit your profile details",
-                    onClick = { /* TODO: Navigate to edit profile */ }
+                    subtitle = userProfile?.name ?: "View your profile details",
+                    onClick = { showProfileDialog = true }
                 )
             }
 
@@ -90,7 +93,7 @@ fun SettingsScreen(
                     icon = Icons.Default.Lock,
                     title = "Change Password",
                     subtitle = "Update your password",
-                    onClick = { /* TODO: Navigate to change password */ }
+                    onClick = { showPasswordDialog = true }
                 )
             }
 
@@ -105,29 +108,11 @@ fun SettingsScreen(
                     icon = Icons.Default.Info,
                     title = "About AfyaQuest",
                     subtitle = "Version 1.0.0",
-                    onClick = { /* TODO: Show about dialog */ }
+                    onClick = { }
                 )
             }
 
-            item {
-                SettingsItem(
-                    icon = Icons.Default.Description,
-                    title = "Privacy Policy",
-                    subtitle = "View our privacy policy",
-                    onClick = { /* TODO: Open privacy policy */ }
-                )
-            }
-
-            item {
-                SettingsItem(
-                    icon = Icons.Default.Gavel,
-                    title = "Terms of Service",
-                    subtitle = "View terms of service",
-                    onClick = { /* TODO: Open terms */ }
-                )
-            }
-
-            // Danger Zone
+            // Logout
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 SectionHeader(text = "Danger Zone")
@@ -138,14 +123,14 @@ fun SettingsScreen(
                     icon = Icons.Default.Logout,
                     title = "Logout",
                     subtitle = "Sign out of your account",
-                    onClick = { /* TODO: Logout */ },
+                    onClick = { showLogoutDialog = true },
                     isDestructive = true
                 )
             }
         }
     }
 
-    // Language selection dialog
+    // Language dialog
     if (showLanguageDialog) {
         LanguageDialog(
             currentLanguage = currentLanguage,
@@ -157,6 +142,159 @@ fun SettingsScreen(
                 }
             }
         )
+    }
+
+    // Profile info dialog
+    if (showProfileDialog) {
+        AlertDialog(
+            onDismissRequest = { showProfileDialog = false },
+            title = { Text("Profile Information") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    ProfileInfoRow("Name", userProfile?.name ?: "—")
+                    ProfileInfoRow("Email", userProfile?.email ?: "—")
+                    ProfileInfoRow("Phone", userProfile?.phone ?: "—")
+                    ProfileInfoRow("Organization", userProfile?.organization ?: "—")
+                    ProfileInfoRow("Role", userProfile?.role ?: "—")
+                    ProfileInfoRow("Level", "${userProfile?.level ?: 0}")
+                    ProfileInfoRow("Total XP", "${userProfile?.totalPoints ?: 0}")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showProfileDialog = false }) {
+                    Text("Close")
+                }
+            }
+        )
+    }
+
+    // Change password dialog
+    if (showPasswordDialog) {
+        var currentPassword by remember { mutableStateOf("") }
+        var newPassword by remember { mutableStateOf("") }
+        var confirmPassword by remember { mutableStateOf("") }
+        var errorMessage by remember { mutableStateOf<String?>(null) }
+        var isLoading by remember { mutableStateOf(false) }
+        var success by remember { mutableStateOf(false) }
+
+        AlertDialog(
+            onDismissRequest = { if (!isLoading) showPasswordDialog = false },
+            title = { Text("Change Password") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    if (success) {
+                        Text("Password changed successfully!", color = MaterialTheme.colorScheme.primary)
+                    } else {
+                        OutlinedTextField(
+                            value = currentPassword,
+                            onValueChange = { currentPassword = it; errorMessage = null },
+                            label = { Text("Current Password") },
+                            visualTransformation = PasswordVisualTransformation(),
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
+                        )
+                        OutlinedTextField(
+                            value = newPassword,
+                            onValueChange = { newPassword = it; errorMessage = null },
+                            label = { Text("New Password") },
+                            visualTransformation = PasswordVisualTransformation(),
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
+                        )
+                        OutlinedTextField(
+                            value = confirmPassword,
+                            onValueChange = { confirmPassword = it; errorMessage = null },
+                            label = { Text("Confirm New Password") },
+                            visualTransformation = PasswordVisualTransformation(),
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
+                        )
+                        errorMessage?.let {
+                            Text(it, color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                if (success) {
+                    TextButton(onClick = { showPasswordDialog = false }) {
+                        Text("Done")
+                    }
+                } else {
+                    TextButton(
+                        onClick = {
+                            when {
+                                currentPassword.isBlank() -> errorMessage = "Enter your current password"
+                                newPassword.length < 8 -> errorMessage = "New password must be at least 8 characters"
+                                newPassword != confirmPassword -> errorMessage = "Passwords don't match"
+                                else -> {
+                                    isLoading = true
+                                    scope.launch {
+                                        val result = viewModel.changePassword(currentPassword, newPassword)
+                                        isLoading = false
+                                        if (result == null) {
+                                            success = true
+                                        } else {
+                                            errorMessage = result
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        enabled = !isLoading
+                    ) {
+                        if (isLoading) {
+                            CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
+                        } else {
+                            Text("Update")
+                        }
+                    }
+                }
+            },
+            dismissButton = {
+                if (!success) {
+                    TextButton(onClick = { showPasswordDialog = false }, enabled = !isLoading) {
+                        Text("Cancel")
+                    }
+                }
+            }
+        )
+    }
+
+    // Logout confirmation dialog
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            title = { Text("Logout") },
+            text = { Text("Are you sure you want to log out?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showLogoutDialog = false
+                    authViewModel.logout()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }) {
+                    Text("Logout", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun ProfileInfoRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(label, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, fontSize = 14.sp, fontWeight = FontWeight.Medium)
     }
 }
 
@@ -193,25 +331,15 @@ fun SettingsItem(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = if (isDestructive) {
-                    MaterialTheme.colorScheme.error
-                } else {
-                    MaterialTheme.colorScheme.primary
-                }
+                tint = if (isDestructive) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    color = if (isDestructive) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    }
+                    color = if (isDestructive) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = subtitle,
@@ -219,10 +347,9 @@ fun SettingsItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Icon(
                 imageVector = Icons.Default.ChevronRight,
-                contentDescription = "Navigate",
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -240,78 +367,33 @@ fun LanguageDialog(
         title = { Text("Select Language") },
         text = {
             Column {
-                LanguageOption(
-                    language = LanguageManager.LANGUAGE_ENGLISH,
-                    displayName = "English",
-                    isSelected = currentLanguage == LanguageManager.LANGUAGE_ENGLISH,
-                    onClick = { onLanguageSelected(LanguageManager.LANGUAGE_ENGLISH) }
-                )
-
+                LanguageOption(LanguageManager.LANGUAGE_ENGLISH, "English", currentLanguage == LanguageManager.LANGUAGE_ENGLISH) { onLanguageSelected(LanguageManager.LANGUAGE_ENGLISH) }
                 Spacer(modifier = Modifier.height(8.dp))
-
-                LanguageOption(
-                    language = LanguageManager.LANGUAGE_SPANISH,
-                    displayName = "Español",
-                    isSelected = currentLanguage == LanguageManager.LANGUAGE_SPANISH,
-                    onClick = { onLanguageSelected(LanguageManager.LANGUAGE_SPANISH) }
-                )
-
+                LanguageOption(LanguageManager.LANGUAGE_SPANISH, "Español", currentLanguage == LanguageManager.LANGUAGE_SPANISH) { onLanguageSelected(LanguageManager.LANGUAGE_SPANISH) }
                 Spacer(modifier = Modifier.height(8.dp))
-
-                LanguageOption(
-                    language = LanguageManager.LANGUAGE_KAQCHIKEL,
-                    displayName = "Kaqchikel",
-                    isSelected = currentLanguage == LanguageManager.LANGUAGE_KAQCHIKEL,
-                    onClick = { onLanguageSelected(LanguageManager.LANGUAGE_KAQCHIKEL) }
-                )
+                LanguageOption(LanguageManager.LANGUAGE_KAQCHIKEL, "Kaqchikel", currentLanguage == LanguageManager.LANGUAGE_KAQCHIKEL) { onLanguageSelected(LanguageManager.LANGUAGE_KAQCHIKEL) }
             }
         },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
+        confirmButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
     )
 }
 
 @Composable
-fun LanguageOption(
-    language: String,
-    displayName: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
+fun LanguageOption(language: String, displayName: String, isSelected: Boolean, onClick: () -> Unit) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) {
-                MaterialTheme.colorScheme.primaryContainer
-            } else {
-                MaterialTheme.colorScheme.surface
-            }
+            containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
         )
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = displayName,
-                fontSize = 16.sp,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-            )
-
+            Text(text = displayName, fontSize = 16.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal)
             if (isSelected) {
-                Icon(
-                    imageVector = Icons.Filled.CheckCircle,
-                    contentDescription = "Selected",
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "Selected", tint = MaterialTheme.colorScheme.primary)
             }
         }
     }
