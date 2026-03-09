@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronDown, ArrowUpDown, RotateCcw, Send, MapPin, Plus, Trash2, X, ChevronRight, CheckCircle, Navigation } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api, ALL_MODULES } from '../../api/api';
-import type { CHV, House, Itinerary, CHVAssignment } from '../../types';
+import type { CHV, House, Itinerary, CHVAssignment, ClockEvent } from '../../types';
 import StatusBadge from '../common/StatusBadge';
 
 interface CHVDetailProps {
@@ -10,6 +10,7 @@ interface CHVDetailProps {
   houses: House[];
   itineraries?: Itinerary[];
   assignments?: CHVAssignment[];
+  clockHistory?: ClockEvent[];
   onDataChanged?: () => void;
 }
 
@@ -229,7 +230,7 @@ function LocationMap({ houses, itineraries }: { houses: House[]; itineraries: It
 }
 
 // --------------- Main component ---------------
-export default function CHVDetail({ chv, houses, itineraries = [], assignments = [], onDataChanged }: CHVDetailProps) {
+export default function CHVDetail({ chv, houses, itineraries = [], assignments = [], clockHistory = [], onDataChanged }: CHVDetailProps) {
   const { t } = useTranslation();
   const [sortField, setSortField] = useState<'distance' | 'priority'>('distance');
   const [sortAsc, setSortAsc] = useState(true);
@@ -444,6 +445,80 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
             </div>
           </div>
         </div>
+      </div>
+
+      {/* === Clock-In Status & History === */}
+      <div className="bg-white rounded-xl border border-border shadow-sm p-5">
+        <h3 className="font-semibold text-text-primary mb-4 flex items-center gap-2">
+          <span className={`w-3 h-3 rounded-full ${chv.manualStatus === 'active' ? 'bg-green-500' : chv.manualStatus === 'inactive' ? 'bg-gray-400' : 'bg-gray-300'}`} />
+          {t('chvDetail.clockStatus')}
+        </h3>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+          <div className="border border-border rounded-lg p-3">
+            <p className="text-xs text-text-secondary">{t('chvDetail.currentStatus')}</p>
+            <p className={`text-lg font-bold mt-1 ${chv.manualStatus === 'active' ? 'text-green-600' : chv.manualStatus === 'inactive' ? 'text-gray-500' : 'text-gray-400'}`}>
+              {chv.manualStatus === 'active' ? t('chvList.clockedIn') : chv.manualStatus === 'inactive' ? t('chvList.clockedOut') : '—'}
+            </p>
+          </div>
+          <div className="border border-border rounded-lg p-3">
+            <p className="text-xs text-text-secondary">{t('chvDetail.lastClockIn')}</p>
+            <p className="text-sm font-medium mt-1">
+              {chv.lastClockIn ? new Date(chv.lastClockIn).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
+            </p>
+          </div>
+          <div className="border border-border rounded-lg p-3">
+            <p className="text-xs text-text-secondary">{t('chvDetail.lastClockOut')}</p>
+            <p className="text-sm font-medium mt-1">
+              {chv.lastClockOut ? new Date(chv.lastClockOut).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
+            </p>
+          </div>
+          <div className="border border-border rounded-lg p-3">
+            <p className="text-xs text-text-secondary">{t('chvDetail.totalSessions')}</p>
+            <p className="text-lg font-bold mt-1">
+              {clockHistory.filter(e => e.action === 'clock_in').length}
+            </p>
+          </div>
+        </div>
+
+        {clockHistory.length > 0 ? (
+          <div>
+            <h4 className="text-sm font-medium text-text-secondary mb-2">{t('chvDetail.clockHistory')}</h4>
+            <div className="max-h-[240px] overflow-y-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-2 px-3 text-text-secondary font-medium">{t('date')}</th>
+                    <th className="text-left py-2 px-3 text-text-secondary font-medium">{t('chvDetail.clockStatus')}</th>
+                    <th className="text-left py-2 px-3 text-text-secondary font-medium">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {clockHistory.slice(0, 50).map((event, i) => (
+                    <tr key={i} className="border-b border-border last:border-0 hover:bg-gray-50">
+                      <td className="py-2 px-3">{event.date}</td>
+                      <td className="py-2 px-3">
+                        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${
+                          event.action === 'clock_in'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-gray-100 text-gray-600'
+                        }`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${event.action === 'clock_in' ? 'bg-green-500' : 'bg-gray-400'}`} />
+                          {t(`chvDetail.clockAction_${event.action}`)}
+                        </span>
+                      </td>
+                      <td className="py-2 px-3 text-text-secondary">
+                        {new Date(event.timestamp).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-text-secondary text-center py-4">{t('chvDetail.noClockHistory')}</p>
+        )}
       </div>
 
       {/* === Map + Itineraries === */}

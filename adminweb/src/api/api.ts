@@ -105,6 +105,7 @@ export const api = {
       houses: import('../types').House[];
       itineraries?: import('../types').Itinerary[];
       assignments?: import('../types').CHVAssignment[];
+      clockHistory?: import('../types').ClockEvent[];
     }>(`/admin/chvs/${chvId}`),
 
   getAnalytics: () =>

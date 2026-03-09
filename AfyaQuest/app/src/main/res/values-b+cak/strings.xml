@@ -54,6 +54,15 @@
     <string name="level_value">Ruk\'aslem %d</string>
     <string name="xp_to_level_format">%1$d XP k\'a pa Ruk\'aslem %2$d</string>
 
+    <!-- Clock In/Out -->
+    <string name="clock_in">Titz\'ib\'äx Okisaxïk</string>
+    <string name="clock_out">Titz\'ib\'äx Elesaxïk</string>
+    <string name="status_active">Nimaläj</string>
+    <string name="status_inactive">Man Nimaläj</string>
+    <string name="clock_in_confirm">¿La kan nawajo\' natz\'ib\'aj ri okisaxïk?</string>
+    <string name="clock_out_confirm">¿La kan nawajo\' natz\'ib\'aj ri elesaxïk?</string>
+    <string name="confirm">Tijikib\'äx</string>
+
     <!-- Daily Tasks -->
     <string name="daily_questions">Kik\'utunïk Jujun Q\'ij</string>
     <string name="daily_questions_desc">Katzolij oxi\' k\'utunïk jujun q\'ij richin ye\'amolo\' ri XP!</string>

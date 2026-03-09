@@ -32,6 +32,9 @@ export interface CHV {
   lastActive: string;
   isActive: boolean;
   status: 'active' | 'caution' | 'inactive';
+  manualStatus?: 'active' | 'inactive' | null;
+  lastClockIn?: string | null;
+  lastClockOut?: string | null;
   language?: string;
   createdAt?: string;
   // Legacy fields for backward compatibility with detail views
@@ -41,6 +44,12 @@ export interface CHV {
   completionRate?: number;
   profilePictureUrl?: string;
   flags?: string[];
+}
+
+export interface ClockEvent {
+  action: 'clock_in' | 'clock_out';
+  timestamp: string;
+  date: string;
 }
 
 export interface House {

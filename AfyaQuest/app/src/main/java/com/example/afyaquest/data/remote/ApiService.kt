@@ -107,6 +107,14 @@ interface ApiService {
         @Header("Authorization") token: String
     ): Response<AssignmentsResponse>
 
+    // ==================== Clock In/Out ====================
+
+    @POST("user/clock")
+    suspend fun clockAction(
+        @Header("Authorization") token: String,
+        @Body request: Map<String, String>
+    ): Response<ClockActionResponse>
+
     // ==================== Reports ====================
 
     @POST("reports")

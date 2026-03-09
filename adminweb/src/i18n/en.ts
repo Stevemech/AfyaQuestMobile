@@ -79,6 +79,8 @@ const en = {
       status_active: 'Active',
       status_caution: 'Caution',
       status_inactive: 'Inactive',
+      clockedIn: 'Clocked In',
+      clockedOut: 'Clocked Out',
     },
 
     // CHV Detail
@@ -136,6 +138,17 @@ const en = {
       priority_high: 'High',
       priority_medium: 'Medium',
       priority_low: 'Low',
+      // Clock-in stats
+      clockStatus: 'Clock-In Status',
+      currentStatus: 'Current Status',
+      lastClockIn: 'Last Clock In',
+      lastClockOut: 'Last Clock Out',
+      clockHistory: 'Clock-In History',
+      clockAction_clock_in: 'Clock In',
+      clockAction_clock_out: 'Clock Out',
+      noClockHistory: 'No clock-in records yet',
+      totalHoursToday: 'Hours Today',
+      totalSessions: 'Total Sessions',
     },
 
     // Analytics

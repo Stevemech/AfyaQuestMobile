@@ -40,6 +40,14 @@ data class ErrorResponse(
     @SerializedName("details") val details: String? = null
 )
 
+// ==================== Clock In/Out ====================
+
+data class ClockActionResponse(
+    @SerializedName("message") val message: String,
+    @SerializedName("manualStatus") val manualStatus: String,
+    @SerializedName("timestamp") val timestamp: String
+)
+
 // ==================== Organizations ====================
 
 data class OrganizationsResponse(

@@ -62,6 +62,9 @@ exports.handler = async (event) => {
         lastActive: item.lastActiveDate || 'Never',
         isActive: item.isActive !== false,
         status,
+        manualStatus: item.manualStatus || null,
+        lastClockIn: item.lastClockIn || null,
+        lastClockOut: item.lastClockOut || null,
         language: item.language || 'en',
         createdAt: item.createdAt,
       };

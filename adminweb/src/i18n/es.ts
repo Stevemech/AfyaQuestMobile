@@ -78,6 +78,8 @@ const es = {
       status_active: 'Activo',
       status_caution: 'Precaucion',
       status_inactive: 'Inactivo',
+      clockedIn: 'Entrada Registrada',
+      clockedOut: 'Salida Registrada',
     },
 
     // CHV Detail
@@ -133,6 +135,16 @@ const es = {
       priority_high: 'Alta',
       priority_medium: 'Media',
       priority_low: 'Baja',
+      clockStatus: 'Estado de Registro',
+      currentStatus: 'Estado Actual',
+      lastClockIn: 'Ultima Entrada',
+      lastClockOut: 'Ultima Salida',
+      clockHistory: 'Historial de Registro',
+      clockAction_clock_in: 'Entrada',
+      clockAction_clock_out: 'Salida',
+      noClockHistory: 'Sin registros de entrada aun',
+      totalHoursToday: 'Horas Hoy',
+      totalSessions: 'Total de Sesiones',
     },
 
     // Analytics

@@ -78,6 +78,8 @@ const cak = {
       status_active: 'Tajin nisamaj',
       status_caution: 'Tichajix',
       status_inactive: 'Man nisamaj ta',
+      clockedIn: 'Xtz\'ib\'äx Okisaxïk',
+      clockedOut: 'Xtz\'ib\'äx Elesaxïk',
     },
 
     // CHV Detail
@@ -133,6 +135,16 @@ const cak = {
       priority_high: 'Nimalaj',
       priority_medium: 'Nik\'aj',
       priority_low: 'Jub\'a\'',
+      clockStatus: 'Rub\'anikil Tz\'ib\'axïk',
+      currentStatus: 'Rub\'anikil Wakami',
+      lastClockIn: 'Ruk\'isib\'al Okisaxïk',
+      lastClockOut: 'Ruk\'isib\'al Elesaxïk',
+      clockHistory: 'Rub\'eyal Tz\'ib\'axïk',
+      clockAction_clock_in: 'Okisaxïk',
+      clockAction_clock_out: 'Elesaxïk',
+      noClockHistory: 'Majun tz\'ib\'axïk k\'o',
+      totalHoursToday: 'Ramaj Wakami',
+      totalSessions: 'Ronojel Taq Samaj',
     },
 
     // Analytics

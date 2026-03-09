@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import CHVList from '../components/operations/CHVList';
 import CHVDetail from '../components/operations/CHVDetail';
 import { api } from '../api/api';
-import type { CHV, House, Itinerary, CHVAssignment } from '../types';
+import type { CHV, House, Itinerary, CHVAssignment, ClockEvent } from '../types';
 
 export default function OperationsPage() {
   const { t } = useTranslation();
@@ -14,6 +14,7 @@ export default function OperationsPage() {
   const [houses, setHouses] = useState<House[]>([]);
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
   const [assignments, setAssignments] = useState<CHVAssignment[]>([]);
+  const [clockHistory, setClockHistory] = useState<ClockEvent[]>([]);
   const [localSearch, setLocalSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -40,11 +41,13 @@ export default function OperationsPage() {
         setHouses(res.houses || []);
         setItineraries(res.itineraries || []);
         setAssignments(res.assignments || []);
+        setClockHistory(res.clockHistory || []);
       })
       .catch(() => {
         setHouses([]);
         setItineraries([]);
         setAssignments([]);
+        setClockHistory([]);
       });
   }, []);
 
@@ -53,6 +56,7 @@ export default function OperationsPage() {
       setHouses([]);
       setItineraries([]);
       setAssignments([]);
+      setClockHistory([]);
       return;
     }
     fetchDetail(selectedCHV.id);
@@ -125,6 +129,7 @@ export default function OperationsPage() {
               houses={houses}
               itineraries={itineraries}
               assignments={assignments}
+              clockHistory={clockHistory}
               onDataChanged={handleDataChanged}
             />
           ) : (

@@ -172,6 +172,37 @@ class AuthRepository @Inject constructor(
     }
 
     /**
+     * Clock in or clock out.
+     * @param action "clock_in" or "clock_out"
+     */
+    fun clockAction(action: String): Flow<Resource<String>> = flow {
+        emit(Resource.Loading())
+        try {
+            val idToken = tokenManager.getIdToken()
+            if (idToken.isNullOrBlank()) {
+                emit(Resource.Error("Not authenticated"))
+                return@flow
+            }
+            val response = apiService.clockAction(
+                "Bearer $idToken",
+                mapOf("action" to action)
+            )
+            if (response.isSuccessful) {
+                val body = response.body()
+                emit(Resource.Success(body?.manualStatus ?: action))
+            } else {
+                emit(Resource.Error("Failed to ${action.replace('_', ' ')}"))
+            }
+        } catch (e: HttpException) {
+            emit(Resource.Error("Network error: ${e.localizedMessage}"))
+        } catch (e: IOException) {
+            emit(Resource.Error("Connection error"))
+        } catch (e: Exception) {
+            emit(Resource.Error("Unexpected error: ${e.localizedMessage}"))
+        }
+    }
+
+    /**
      * Logout user.
      */
     fun logout() {

@@ -54,6 +54,15 @@
     <string name="level_value">Nivel %d</string>
     <string name="xp_to_level_format">%1$d XP para Nivel %2$d</string>
 
+    <!-- Clock In/Out -->
+    <string name="clock_in">Registrar Entrada</string>
+    <string name="clock_out">Registrar Salida</string>
+    <string name="status_active">Activo</string>
+    <string name="status_inactive">Inactivo</string>
+    <string name="clock_in_confirm">¿Estás seguro de que quieres registrar entrada?</string>
+    <string name="clock_out_confirm">¿Estás seguro de que quieres registrar salida?</string>
+    <string name="confirm">Confirmar</string>
+
     <!-- Daily Tasks -->
     <string name="daily_questions">Preguntas Diarias</string>
     <string name="daily_questions_desc">¡Responde tus tres preguntas diarias para ganar tu XP!</string>

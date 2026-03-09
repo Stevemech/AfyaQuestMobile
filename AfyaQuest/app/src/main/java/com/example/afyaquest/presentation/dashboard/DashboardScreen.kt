@@ -1,6 +1,8 @@
 package com.example.afyaquest.presentation.dashboard
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -58,10 +60,14 @@ fun DashboardScreen(
         assignmentsViewModel.loadAssignments()
     }
     var showLogoutDialog by remember { mutableStateOf(false) }
+    var showClockDialog by remember { mutableStateOf(false) }
     val isConnected by dashboardViewModel.isConnected.collectAsState()
     val unsyncedCount by dashboardViewModel.unsyncedCount.collectAsState()
     val isSyncing by dashboardViewModel.isSyncing.collectAsState()
     val syncError by dashboardViewModel.syncError.collectAsState()
+    val isClockActive by dashboardViewModel.isClockActive.collectAsState()
+    val clockLoading by dashboardViewModel.clockLoading.collectAsState()
+    val clockError by dashboardViewModel.clockError.collectAsState()
     var showLanguageMenu by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
@@ -146,6 +152,40 @@ fun DashboardScreen(
                 onSyncClick = { dashboardViewModel.triggerSync() }
             )
 
+            // Clock In/Out Status Banner
+            ClockStatusBanner(
+                isActive = isClockActive,
+                isLoading = clockLoading,
+                onToggle = { showClockDialog = true }
+            )
+
+            // Clock error snackbar
+            if (clockError != null) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = clockError ?: "",
+                            modifier = Modifier.weight(1f),
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                        TextButton(onClick = { dashboardViewModel.dismissClockError() }) {
+                            Text(stringResource(R.string.ok))
+                        }
+                    }
+                }
+            }
+
             // Stats Header
             StatsHeader(
                 streak = xpData.streak,
@@ -184,6 +224,38 @@ fun DashboardScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
         }
+    }
+
+    // Clock in/out confirmation dialog
+    if (showClockDialog) {
+        AlertDialog(
+            onDismissRequest = { showClockDialog = false },
+            title = {
+                Text(
+                    if (isClockActive) stringResource(R.string.clock_out)
+                    else stringResource(R.string.clock_in)
+                )
+            },
+            text = {
+                Text(
+                    if (isClockActive) stringResource(R.string.clock_out_confirm)
+                    else stringResource(R.string.clock_in_confirm)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showClockDialog = false
+                    dashboardViewModel.toggleClockStatus()
+                }) {
+                    Text(stringResource(R.string.confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showClockDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
     }
 
     // Logout confirmation dialog
@@ -767,6 +839,82 @@ fun TaskCard(
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 18.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ClockStatusBanner(
+    isActive: Boolean,
+    isLoading: Boolean,
+    onToggle: () -> Unit
+) {
+    val activeGreen = Color(0xFF22C55E)
+    val inactiveGray = Color(0xFF94A3B8)
+    val bgColor by animateColorAsState(
+        targetValue = if (isActive) activeGreen.copy(alpha = 0.1f) else inactiveGray.copy(alpha = 0.08f),
+        label = "clockBg"
+    )
+    val borderColor by animateColorAsState(
+        targetValue = if (isActive) activeGreen else inactiveGray,
+        label = "clockBorder"
+    )
+    val dotColor by animateColorAsState(
+        targetValue = if (isActive) activeGreen else inactiveGray,
+        label = "clockDot"
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(bgColor)
+            .border(1.dp, borderColor.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+            .clickable(enabled = !isLoading) { onToggle() }
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(12.dp)
+                    .clip(CircleShape)
+                    .background(dotColor)
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                text = if (isActive) stringResource(R.string.status_active)
+                else stringResource(R.string.status_inactive),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = if (isActive) activeGreen else inactiveGray
+            )
+        }
+
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                strokeWidth = 2.dp
+            )
+        } else {
+            Button(
+                onClick = onToggle,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isActive) inactiveGray else activeGreen
+                ),
+                shape = RoundedCornerShape(8.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Text(
+                    text = if (isActive) stringResource(R.string.clock_out)
+                    else stringResource(R.string.clock_in),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
                 )
             }
         }

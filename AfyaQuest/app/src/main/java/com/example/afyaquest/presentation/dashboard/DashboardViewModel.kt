@@ -10,8 +10,10 @@ import com.example.afyaquest.util.Resource
 import com.example.afyaquest.util.XpData
 import com.example.afyaquest.util.XpManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
@@ -59,6 +61,16 @@ class DashboardViewModel @Inject constructor(
     // Sync error message
     val syncError: StateFlow<String?> = syncManager.lastSyncError
 
+    // Clock-in status
+    private val _isClockActive = MutableStateFlow(false)
+    val isClockActive: StateFlow<Boolean> = _isClockActive.asStateFlow()
+
+    private val _clockLoading = MutableStateFlow(false)
+    val clockLoading: StateFlow<Boolean> = _clockLoading.asStateFlow()
+
+    private val _clockError = MutableStateFlow<String?>(null)
+    val clockError: StateFlow<String?> = _clockError.asStateFlow()
+
     init {
         // Initialize lives if needed
         viewModelScope.launch {
@@ -76,6 +88,7 @@ class DashboardViewModel @Inject constructor(
                         level = user.level,
                         rank = user.rank
                     )
+                    _isClockActive.value = user.isActive
                     Log.d("DashboardVM", "Synced XP from server: xp=${user.totalPoints}, level=${user.level}")
                 }
             }
@@ -100,6 +113,34 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             syncManager.syncNow()
         }
+    }
+
+    /**
+     * Toggle clock in/out status.
+     */
+    fun toggleClockStatus() {
+        viewModelScope.launch {
+            _clockLoading.value = true
+            _clockError.value = null
+            val action = if (_isClockActive.value) "clock_out" else "clock_in"
+            authRepository.clockAction(action).collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _isClockActive.value = result.data == "active"
+                        _clockLoading.value = false
+                    }
+                    is Resource.Error -> {
+                        _clockError.value = result.message
+                        _clockLoading.value = false
+                    }
+                    is Resource.Loading -> { /* loading already set */ }
+                }
+            }
+        }
+    }
+
+    fun dismissClockError() {
+        _clockError.value = null
     }
 
     /**

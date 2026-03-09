@@ -30,8 +30,8 @@ exports.handler = async (event) => {
 
     const item = profileResult.Item;
 
-    // Fetch houses, itineraries, and assignments in parallel
-    const [housesResult, itinerariesResult, assignmentsResult] = await Promise.all([
+    // Fetch houses, itineraries, assignments, and clock history in parallel
+    const [housesResult, itinerariesResult, assignmentsResult, clockResult] = await Promise.all([
       ddb.send(new QueryCommand({
         TableName: TABLE,
         KeyConditionExpression: 'PK = :pk AND begins_with(SK, :sk)',
@@ -47,6 +47,13 @@ exports.handler = async (event) => {
         TableName: TABLE,
         KeyConditionExpression: 'PK = :pk AND begins_with(SK, :sk)',
         ExpressionAttributeValues: { ':pk': `USER#${chvId}`, ':sk': 'ASSIGNMENT#' },
+      })),
+      ddb.send(new QueryCommand({
+        TableName: TABLE,
+        KeyConditionExpression: 'PK = :pk AND begins_with(SK, :sk)',
+        ExpressionAttributeValues: { ':pk': `USER#${chvId}`, ':sk': 'CLOCK#' },
+        ScanIndexForward: false,
+        Limit: 100,
       })),
     ]);
 
@@ -98,6 +105,12 @@ exports.handler = async (event) => {
       assignedBy: a.assignedBy || '',
     }));
 
+    const clockHistory = (clockResult.Items || []).map(c => ({
+      action: c.action,
+      timestamp: c.timestamp,
+      date: c.date,
+    }));
+
     // Calculate status
     let status = 'active';
     if (item.lastActiveDate) {
@@ -125,12 +138,15 @@ exports.handler = async (event) => {
       lastActive: item.lastActiveDate || item.updatedAt || '',
       isActive: item.isActive !== false,
       status,
+      manualStatus: item.manualStatus || null,
+      lastClockIn: item.lastClockIn || null,
+      lastClockOut: item.lastClockOut || null,
       language: item.language || 'en',
       createdAt: item.createdAt || '',
       flags: [],
     };
 
-    return { statusCode: 200, headers, body: JSON.stringify({ chv, houses, itineraries, assignments }) };
+    return { statusCode: 200, headers, body: JSON.stringify({ chv, houses, itineraries, assignments, clockHistory }) };
   } catch (err) {
     console.error('Error fetching CHV detail:', err);
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to fetch CHV detail' }) };
