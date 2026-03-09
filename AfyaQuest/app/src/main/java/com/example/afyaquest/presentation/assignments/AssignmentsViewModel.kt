@@ -2,6 +2,7 @@ package com.example.afyaquest.presentation.assignments
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import android.util.Log
 import com.example.afyaquest.data.remote.dto.AssignmentDto
 import com.example.afyaquest.data.repository.AssignmentsRepository
 import com.example.afyaquest.sync.VideoDownloadManager
@@ -43,6 +44,10 @@ class AssignmentsViewModel @Inject constructor(
                 when (resource) {
                     is Resource.Success -> {
                         val assignments = resource.data?.assignments ?: emptyList()
+                        Log.d("AssignmentsVM", "Loaded ${assignments.size} assignments:")
+                        assignments.forEach { a ->
+                            Log.d("AssignmentsVM", "  type=${a.type} moduleId=${a.moduleId} lessonId=${a.lessonId} status=${a.status}")
+                        }
                         _assignmentsState.value = Resource.Success(assignments)
 
                         // Auto-queue downloads for assigned video modules
