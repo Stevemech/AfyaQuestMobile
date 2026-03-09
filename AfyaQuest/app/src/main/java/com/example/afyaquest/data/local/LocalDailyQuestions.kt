@@ -2,6 +2,7 @@ package com.example.afyaquest.data.local
 
 import com.example.afyaquest.domain.model.Difficulty
 import com.example.afyaquest.domain.model.Question
+
 /**
  * Local daily questions bundled in the APK.
  * Questions are organized by category and rotated daily based on the day of year.
