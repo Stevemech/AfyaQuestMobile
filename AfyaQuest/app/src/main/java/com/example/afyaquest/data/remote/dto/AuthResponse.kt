@@ -71,7 +71,8 @@ data class ItineraryStopDto(
     val address: String,
     val description: String? = null,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
+    val completed: Boolean = false
 )
 
 // ==================== Assignments ====================

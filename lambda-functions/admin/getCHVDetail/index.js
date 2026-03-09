@@ -63,22 +63,29 @@ exports.handler = async (event) => {
       lastVisit: h.lastVisit || null,
     }));
 
-    const itineraries = (itinerariesResult.Items || []).map(it => ({
-      date: it.date || it.SK.replace('ITINERARY#', ''),
-      stops: (it.stops || []).map(s => ({
-        order: s.order || 0,
-        houseId: s.houseId || '',
-        label: s.label || '',
-        address: s.address || '',
-        description: s.description || '',
-        notes: s.notes || '',
-        latitude: s.latitude || 0,
-        longitude: s.longitude || 0,
-      })),
-      status: it.status || 'active',
-      createdAt: it.createdAt || '',
-      createdBy: it.createdBy || '',
-    }));
+    const itineraries = (itinerariesResult.Items || []).map(it => {
+      const completedStops = it.completedStops
+        ? (it.completedStops instanceof Set ? [...it.completedStops] : Array.isArray(it.completedStops) ? it.completedStops : [])
+        : [];
+      return {
+        date: it.date || it.SK.replace('ITINERARY#', ''),
+        stops: (it.stops || []).map(s => ({
+          order: s.order || 0,
+          houseId: s.houseId || '',
+          label: s.label || '',
+          address: s.address || '',
+          description: s.description || '',
+          notes: s.notes || '',
+          latitude: s.latitude || 0,
+          longitude: s.longitude || 0,
+          completed: completedStops.includes(s.houseId),
+        })),
+        completedStops,
+        status: it.status || 'active',
+        createdAt: it.createdAt || '',
+        createdBy: it.createdBy || '',
+      };
+    });
 
     const assignments = (assignmentsResult.Items || []).map(a => ({
       type: a.type || 'module',

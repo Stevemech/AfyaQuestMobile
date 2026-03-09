@@ -52,5 +52,6 @@ data class ItineraryStop(
     val address: String,
     val latitude: Double,
     val longitude: Double,
-    val description: String? = null
+    val description: String? = null,
+    val completed: Boolean = false
 )

@@ -291,7 +291,10 @@ private fun MapAndItineraryTab(
                         contentPadding = PaddingValues(bottom = 8.dp)
                     ) {
                         items(dailyStops) { stop ->
-                            ItineraryStopRow(stop = stop)
+                            ItineraryStopRow(
+                                stop = stop,
+                                onMarkVisited = { viewModel.markStopCompleted(stop.id) }
+                            )
                         }
                     }
                 }
@@ -310,27 +313,34 @@ private fun MapAndItineraryTab(
 }
 
 @Composable
-private fun ItineraryStopRow(stop: ItineraryStop) {
+private fun ItineraryStopRow(
+    stop: ItineraryStop,
+    onMarkVisited: () -> Unit
+) {
+    val bgColor = if (stop.completed) {
+        Color(0xFF4CAF50).copy(alpha = 0.08f)
+    } else {
+        MaterialTheme.colorScheme.surface
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                MaterialTheme.colorScheme.surface,
-                RoundedCornerShape(8.dp)
-            )
+            .background(bgColor, RoundedCornerShape(8.dp))
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Order number / checkmark
         Surface(
             shape = RoundedCornerShape(8.dp),
-            color = MaterialTheme.colorScheme.primary
+            color = if (stop.completed) Color(0xFF4CAF50) else MaterialTheme.colorScheme.primary
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                text = "${stop.order}",
+                text = if (stop.completed) "✓" else "${stop.order}",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = Color.White
             )
         }
         Spacer(modifier = Modifier.width(12.dp))
@@ -339,7 +349,7 @@ private fun ItineraryStopRow(stop: ItineraryStop) {
                 text = stop.label,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = if (stop.completed) Color(0xFF388E3C) else MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = stop.address,
@@ -352,6 +362,26 @@ private fun ItineraryStopRow(stop: ItineraryStop) {
                     fontSize = 11.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.9f)
                 )
+            }
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        if (stop.completed) {
+            Badge(containerColor = Color(0xFF4CAF50)) {
+                Text(
+                    text = "Visited",
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                    fontSize = 11.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        } else {
+            FilledTonalButton(
+                onClick = onMarkVisited,
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                modifier = Modifier.height(32.dp)
+            ) {
+                Text("Mark Visited", fontSize = 11.sp)
             }
         }
     }

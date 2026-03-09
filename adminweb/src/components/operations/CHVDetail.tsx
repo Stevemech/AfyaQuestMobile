@@ -464,7 +464,9 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
                       <MapPin size={16} className="text-primary" />
                       <div>
                         <p className="text-sm font-semibold text-text-primary">{it.date}</p>
-                        <p className="text-xs text-text-secondary">{it.stops.length} {t('itinerary.stops').toLowerCase()}</p>
+                        <p className="text-xs text-text-secondary">
+                          {it.stops.filter(s => s.completed).length}/{it.stops.length} {t('itinerary.stops').toLowerCase()} visited
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -489,21 +491,26 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
                   </div>
                   <div className="divide-y divide-border">
                     {it.stops.map((stop, j) => (
-                      <div key={j} className="px-4 py-2.5 flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-semibold shrink-0 mt-0.5">
-                          {stop.order || j + 1}
+                      <div key={j} className={`px-4 py-2.5 flex items-start gap-3 ${stop.completed ? 'bg-green-50' : ''}`}>
+                        <span className={`w-6 h-6 rounded-full text-white text-xs flex items-center justify-center font-semibold shrink-0 mt-0.5 ${stop.completed ? 'bg-green-500' : 'bg-primary'}`}>
+                          {stop.completed ? '✓' : (stop.order || j + 1)}
                         </span>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-text-primary">{stop.label}</p>
+                          <p className={`text-sm font-medium ${stop.completed ? 'text-green-700' : 'text-text-primary'}`}>{stop.label}</p>
                           {stop.address && <p className="text-xs text-text-secondary truncate">{stop.address}</p>}
                           {stop.description && <p className="text-xs text-text-secondary">{stop.description}</p>}
                         </div>
-                        {stop.latitude && stop.longitude ? (
-                          <a href={`https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}`}
-                            target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark shrink-0" title={t('itinerary.viewOnMap')}>
-                            <Navigation size={14} />
-                          </a>
-                        ) : null}
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${stop.completed ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                            {stop.completed ? 'Visited' : 'To Visit'}
+                          </span>
+                          {stop.latitude && stop.longitude ? (
+                            <a href={`https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}`}
+                              target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark" title={t('itinerary.viewOnMap')}>
+                              <Navigation size={14} />
+                            </a>
+                          ) : null}
+                        </div>
                       </div>
                     ))}
                   </div>

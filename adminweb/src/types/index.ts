@@ -97,6 +97,7 @@ export interface Itinerary {
   chvId?: string;
   date: string;
   stops: ItineraryStop[];
+  completedStops?: string[];
   status?: string;
   createdAt?: string;
   createdBy?: string;
@@ -122,6 +123,7 @@ export interface ItineraryStop {
   notes?: string;
   latitude: number;
   longitude: number;
+  completed?: boolean;
 }
 
 export interface DailyReport {

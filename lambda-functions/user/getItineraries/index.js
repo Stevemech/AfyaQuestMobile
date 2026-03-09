@@ -37,12 +37,21 @@ exports.handler = async (event) => {
       ScanIndexForward: false,
     }));
 
-    const itineraries = (result.Items || []).map(item => ({
-      date: item.date,
-      stops: item.stops || [],
-      status: item.status || 'active',
-      createdAt: item.createdAt,
-    }));
+    const itineraries = (result.Items || []).map(item => {
+      const completedStops = item.completedStops
+        ? (item.completedStops instanceof Set ? [...item.completedStops] : Array.isArray(item.completedStops) ? item.completedStops : [])
+        : [];
+      return {
+        date: item.date,
+        stops: (item.stops || []).map(s => ({
+          ...s,
+          completed: completedStops.includes(s.houseId),
+        })),
+        completedStops,
+        status: item.status || 'active',
+        createdAt: item.createdAt,
+      };
+    });
 
     return { statusCode: 200, headers, body: JSON.stringify({ itineraries }) };
   } catch (err) {

@@ -123,15 +123,18 @@ class MapViewModel @Inject constructor(
                     val body = response.body() ?: return@launch
                     val itinerary = body.itineraries.firstOrNull() ?: return@launch
                     if (itinerary.stops.isNotEmpty()) {
+                        val localCompleted = _completedStopIds.value
                         _dailyItineraryStops.value = itinerary.stops.map { stopDto ->
+                            val stopId = stopDto.houseId ?: "stop-${stopDto.order}"
                             ItineraryStop(
                                 order = stopDto.order,
-                                id = stopDto.houseId ?: "stop-${stopDto.order}",
+                                id = stopId,
                                 label = stopDto.label,
                                 address = stopDto.address,
                                 latitude = stopDto.latitude,
                                 longitude = stopDto.longitude,
-                                description = stopDto.description
+                                description = stopDto.description,
+                                completed = stopDto.completed || localCompleted.contains(stopId)
                             )
                         }
                     }
@@ -149,6 +152,11 @@ class MapViewModel @Inject constructor(
     fun markStopCompleted(stopId: String) {
         if (_completedStopIds.value.contains(stopId)) return
         _completedStopIds.value = _completedStopIds.value + stopId
+
+        // Update the stop in the itinerary list immediately
+        _dailyItineraryStops.value = _dailyItineraryStops.value.map { stop ->
+            if (stop.id == stopId) stop.copy(completed = true) else stop
+        }
 
         viewModelScope.launch {
             progressDataStore.markStopCompleted(stopId)
