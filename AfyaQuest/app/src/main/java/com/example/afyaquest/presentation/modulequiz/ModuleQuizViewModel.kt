@@ -46,13 +46,13 @@ class ModuleQuizViewModel @Inject constructor(
     val isFinished: StateFlow<Boolean> = _isFinished.asStateFlow()
 
     private val moduleTitles = mapOf(
-        "8" to "Male Reproductive System",
-        "9" to "Female Reproductive System",
-        "10" to "Urinary System"
+        "video-8" to "Male Reproductive System",
+        "video-9" to "Female Reproductive System",
+        "video-10" to "Urinary System"
     )
 
     private val allQuizzes: Map<String, List<ModuleQuizQuestion>> = mapOf(
-        "8" to listOf(
+        "video-8" to listOf(
             ModuleQuizQuestion(
                 id = "8_q1",
                 moduleId = "8",
@@ -184,7 +184,7 @@ class ModuleQuizViewModel @Inject constructor(
                 explanation = "Erectile dysfunction (also called impotence) is the inability to get or maintain an erection sufficient for sexual activity."
             )
         ),
-        "9" to listOf(
+        "video-9" to listOf(
             ModuleQuizQuestion(
                 id = "9_q1",
                 moduleId = "9",
@@ -316,7 +316,7 @@ class ModuleQuizViewModel @Inject constructor(
                 explanation = "Placenta previa occurs when the placenta partially or fully covers the cervix (neck of the uterus), which can cause complications during delivery."
             )
         ),
-        "10" to listOf(
+        "video-10" to listOf(
             ModuleQuizQuestion(
                 id = "10_q1",
                 moduleId = "10",

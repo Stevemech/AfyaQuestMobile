@@ -65,7 +65,7 @@ class LessonsViewModel @Inject constructor(
     private fun loadLessons() {
         _lessons.value = listOf(
             Lesson(
-                id = "1",
+                id = "lesson-1",
                 title = context.getString(R.string.lesson_1_title),
                 description = context.getString(R.string.lesson_1_description),
                 category = LessonCategory.HYGIENE,
@@ -75,7 +75,7 @@ class LessonsViewModel @Inject constructor(
                 points = 50
             ),
             Lesson(
-                id = "2",
+                id = "lesson-2",
                 title = context.getString(R.string.lesson_2_title),
                 description = context.getString(R.string.lesson_2_description),
                 category = LessonCategory.NUTRITION,
@@ -85,7 +85,7 @@ class LessonsViewModel @Inject constructor(
                 points = 75
             ),
             Lesson(
-                id = "3",
+                id = "lesson-3",
                 title = context.getString(R.string.lesson_3_title),
                 description = context.getString(R.string.lesson_3_description),
                 category = LessonCategory.MATERNAL_HEALTH,
@@ -95,7 +95,7 @@ class LessonsViewModel @Inject constructor(
                 points = 75
             ),
             Lesson(
-                id = "4",
+                id = "lesson-4",
                 title = context.getString(R.string.lesson_4_title),
                 description = context.getString(R.string.lesson_4_description),
                 category = LessonCategory.CHILD_CARE,
@@ -105,7 +105,7 @@ class LessonsViewModel @Inject constructor(
                 points = 50
             ),
             Lesson(
-                id = "5",
+                id = "lesson-5",
                 title = context.getString(R.string.lesson_5_title),
                 description = context.getString(R.string.lesson_5_description),
                 category = LessonCategory.DISEASE_PREVENTION,
@@ -115,7 +115,7 @@ class LessonsViewModel @Inject constructor(
                 points = 75
             ),
             Lesson(
-                id = "6",
+                id = "lesson-6",
                 title = context.getString(R.string.lesson_6_title),
                 description = context.getString(R.string.lesson_6_description),
                 category = LessonCategory.FIRST_AID,

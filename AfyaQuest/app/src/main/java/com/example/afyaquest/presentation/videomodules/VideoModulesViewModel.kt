@@ -54,7 +54,7 @@ class VideoModulesViewModel @Inject constructor(
     private fun loadVideos() {
         _videos.value = listOf(
             VideoModule(
-                id = "8",
+                id = "video-8",
                 title = context.getString(R.string.video_module_8_title),
                 description = context.getString(R.string.video_module_8_desc),
                 thumbnail = "🔬",
@@ -65,7 +65,7 @@ class VideoModulesViewModel @Inject constructor(
                 watched = false
             ),
             VideoModule(
-                id = "9",
+                id = "video-9",
                 title = context.getString(R.string.video_module_9_title),
                 description = context.getString(R.string.video_module_9_desc),
                 thumbnail = "🔬",
@@ -76,7 +76,7 @@ class VideoModulesViewModel @Inject constructor(
                 watched = false
             ),
             VideoModule(
-                id = "10",
+                id = "video-10",
                 title = context.getString(R.string.video_module_10_title),
                 description = context.getString(R.string.video_module_10_desc),
                 thumbnail = "🔬",

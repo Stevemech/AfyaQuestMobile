@@ -545,7 +545,8 @@ fun AssignmentPreviewCard(
         else -> assignment.type
     }
 
-    val itemId = assignment.moduleId ?: assignment.lessonId
+    val rawId = assignment.moduleId ?: assignment.lessonId
+    val itemName = getAssignmentDisplayName(rawId)
 
     Card(
         modifier = Modifier
@@ -597,9 +598,9 @@ fun AssignmentPreviewCard(
                         )
                     }
                 }
-                if (itemId != null) {
+                if (itemName != null) {
                     Text(
-                        text = itemId,
+                        text = itemName,
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -615,6 +616,35 @@ fun AssignmentPreviewCard(
             }
         }
     }
+}
+
+/**
+ * Maps admin module/lesson IDs to human-readable display names.
+ * Returns the raw ID if no mapping is found.
+ */
+private fun getAssignmentDisplayName(id: String?): String? {
+    if (id == null) return null
+    val names = mapOf(
+        // Video modules (admin IDs)
+        "video-1" to "Health Assessments",
+        "video-2" to "Water Sanitation",
+        "video-3" to "Maternal & Child Health",
+        "video-4" to "Vaccination Programs",
+        "video-5" to "Emergency First Aid",
+        "video-6" to "Nutrition Basics",
+        "video-7" to "Disease Prevention",
+        "video-8" to "Male Reproductive System",
+        "video-9" to "Female Reproductive System",
+        "video-10" to "Urinary System",
+        // Interactive lessons (admin IDs)
+        "lesson-1" to "Handwashing Techniques",
+        "lesson-2" to "Balanced Diet for Children",
+        "lesson-3" to "Prenatal Care Essentials",
+        "lesson-4" to "Child Vaccination Schedule",
+        "lesson-5" to "Malaria Prevention",
+        "lesson-6" to "CPR Basics"
+    )
+    return names[id] ?: id.replace("-", " ").replaceFirstChar { it.uppercase() }
 }
 
 private fun formatDueDate(isoDate: String): String {

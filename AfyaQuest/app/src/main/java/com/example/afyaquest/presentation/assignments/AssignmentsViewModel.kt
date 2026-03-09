@@ -15,9 +15,9 @@ import javax.inject.Inject
  * Known S3 video URLs for modules — used to trigger downloads for assigned modules.
  */
 private val moduleVideoUrls = mapOf(
-    "8" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Male+Reproductive+System+(1).mp4",
-    "9" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Female+Reproductive+System.mp4",
-    "10" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Urinary+System.mov"
+    "video-8" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Male+Reproductive+System+(1).mp4",
+    "video-9" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Female+Reproductive+System.mp4",
+    "video-10" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Urinary+System.mov"
 )
 
 @HiltViewModel
