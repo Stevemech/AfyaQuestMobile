@@ -145,6 +145,12 @@ const es = {
       noClockHistory: 'Sin registros de entrada aun',
       totalHoursToday: 'Horas Hoy',
       totalSessions: 'Total de Sesiones',
+      requestReport: 'Solicitar Reporte',
+      requestReportFrom: 'Solicitar Reporte de {{name}}',
+      requestReportDesc: 'Esto enviara una solicitud de reporte diario al CHV. Aparecera en su seccion "Asignado para ti" en la aplicacion.',
+      reportDueDate: 'Fecha limite (opcional)',
+      reportDueDateHint: 'Deje en blanco si no hay fecha limite.',
+      reportRequested: 'Reporte diario solicitado exitosamente',
     },
 
     // Analytics

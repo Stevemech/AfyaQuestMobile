@@ -149,6 +149,12 @@ const en = {
       noClockHistory: 'No clock-in records yet',
       totalHoursToday: 'Hours Today',
       totalSessions: 'Total Sessions',
+      requestReport: 'Request Report',
+      requestReportFrom: 'Request Report from {{name}}',
+      requestReportDesc: 'This will send a daily report request to the CHV. It will appear in their "Assigned to You" section in the app.',
+      reportDueDate: 'Due Date (optional)',
+      reportDueDateHint: 'Leave blank for no specific deadline.',
+      reportRequested: 'Daily report requested successfully',
     },
 
     // Analytics

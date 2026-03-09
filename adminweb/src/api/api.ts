@@ -135,6 +135,12 @@ export const api = {
       body: JSON.stringify({ chvId, type: 'lesson', data: { lessonId, dueDate: dueDate || null } }),
     }),
 
+  requestReport: (chvId: string, dueDate?: string) =>
+    request('/admin/assign', {
+      method: 'POST',
+      body: JSON.stringify({ chvId, type: 'report', data: { reportType: 'daily', dueDate: dueDate || null } }),
+    }),
+
   createItinerary: (chvId: string, date: string, stops: import('../types').ItineraryStop[]) =>
     request('/admin/itineraries', {
       method: 'POST',

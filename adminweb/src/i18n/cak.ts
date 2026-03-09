@@ -145,6 +145,12 @@ const cak = {
       noClockHistory: 'Majun tz\'ib\'axïk k\'o',
       totalHoursToday: 'Ramaj Wakami',
       totalSessions: 'Ronojel Taq Samaj',
+      requestReport: 'Tik\'utüx Rutzijol',
+      requestReportFrom: 'Tik\'utüx Rutzijol chi re {{name}}',
+      requestReportDesc: 'Re\' xtitaq jun k\'utunïk chi re ri CHV. Xtuya\' pa ri "Ya\'on chawe" pa ri ch\'ich\'.',
+      reportDueDate: 'Ruk\'isib\'al Q\'ij (man rajawaxik ta)',
+      reportDueDateHint: 'Tiya\' chuwäch we majun ruk\'isib\'al q\'ij.',
+      reportRequested: 'Utz xk\'utüx ri rutzijol',
     },
 
     // Analytics

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronDown, ArrowUpDown, RotateCcw, Send, MapPin, Plus, Trash2, X, ChevronRight, CheckCircle, Navigation } from 'lucide-react';
+import { ChevronDown, ArrowUpDown, RotateCcw, Send, MapPin, Plus, Trash2, X, ChevronRight, CheckCircle, Navigation, FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api, ALL_MODULES } from '../../api/api';
 import type { CHV, House, Itinerary, CHVAssignment, ClockEvent } from '../../types';
@@ -244,6 +244,12 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
   const [assignLoading, setAssignLoading] = useState(false);
   const [assignError, setAssignError] = useState('');
 
+  // Request report modal
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportDueDate, setReportDueDate] = useState('');
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportError, setReportError] = useState('');
+
   // Create itinerary modal
   const [showItineraryModal, setShowItineraryModal] = useState(false);
   const [itDate, setItDate] = useState('');
@@ -321,6 +327,23 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
       setAssignError(err instanceof Error ? err.message : 'Failed');
     } finally {
       setAssignLoading(false);
+    }
+  };
+
+  // Request daily report
+  const handleRequestReport = async () => {
+    setReportError('');
+    setReportLoading(true);
+    try {
+      await api.requestReport(chv.id, reportDueDate || undefined);
+      showToast(t('chvDetail.reportRequested'));
+      setShowReportModal(false);
+      setReportDueDate('');
+      onDataChanged?.();
+    } catch (err) {
+      setReportError(err instanceof Error ? err.message : 'Failed');
+    } finally {
+      setReportLoading(false);
     }
   };
 
@@ -411,6 +434,12 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
               className="flex items-center gap-1.5 px-3 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark"
             >
               <Send size={14} /> {t('itinerary.assignModule')}
+            </button>
+            <button
+              onClick={() => { setShowReportModal(true); setReportDueDate(''); setReportError(''); }}
+              className="flex items-center gap-1.5 px-3 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600"
+            >
+              <FileText size={14} /> {t('chvDetail.requestReport')}
             </button>
             <button
               onClick={() => { setShowItineraryModal(true); setItDate(''); setItStops([emptyStop()]); setItRawJson(''); setItShowAdvanced(false); setItError(''); }}
@@ -1008,6 +1037,41 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
               className="mt-6 w-full py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark disabled:opacity-50 flex items-center justify-center gap-2"
             >
               <MapPin size={14} /> {itLoading ? t('settings.creating') : t('itinerary.createItinerary')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* === Request Report Modal === */}
+      {showReportModal && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50" onClick={() => setShowReportModal(false)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">{t('chvDetail.requestReportFrom', { name: chv.name })}</h3>
+              <button onClick={() => setShowReportModal(false)} className="p-1 rounded hover:bg-gray-100"><X size={20} className="text-text-secondary" /></button>
+            </div>
+
+            <p className="text-sm text-text-secondary mb-4">{t('chvDetail.requestReportDesc')}</p>
+
+            {reportError && <div className="mb-3 p-2 bg-danger-light text-danger text-sm rounded-lg">{reportError}</div>}
+
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-1.5">{t('chvDetail.reportDueDate')}</label>
+              <input
+                type="date"
+                value={reportDueDate}
+                onChange={e => setReportDueDate(e.target.value)}
+                className="w-full px-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
+              />
+              <p className="text-xs text-text-secondary mt-1">{t('chvDetail.reportDueDateHint')}</p>
+            </div>
+
+            <button
+              onClick={handleRequestReport}
+              disabled={reportLoading}
+              className="mt-6 w-full py-2.5 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              <FileText size={14} /> {reportLoading ? t('settings.creating') : t('chvDetail.requestReport')}
             </button>
           </div>
         </div>
