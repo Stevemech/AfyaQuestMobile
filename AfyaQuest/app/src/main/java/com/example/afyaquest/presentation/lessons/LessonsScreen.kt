@@ -118,7 +118,10 @@ fun LessonsScreen(
                     items(viewModel.categories) { category ->
                         FilterChip(
                             selected = selectedCategory == category,
-                            onClick = { viewModel.setCategory(category) },
+                            onClick = {
+                                if (selectedCategory == category) viewModel.setCategory(null)
+                                else viewModel.setCategory(category)
+                            },
                             label = { Text(viewModel.getCategoryDisplayName(category)) }
                         )
                     }

@@ -1,8 +1,9 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand, UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 
-const client = new DynamoDBClient({ region: process.env.AWS_REGION });
+const client = new DynamoDBClient({ region: "af-south-1" });
 const docClient = DynamoDBDocumentClient.from(client);
+const TABLE = "AfyaQuestData";
 
 /**
  * Update lesson progress
@@ -10,7 +11,7 @@ const docClient = DynamoDBDocumentClient.from(client);
  */
 exports.handler = async (event) => {
     try {
-        const userId = event.requestContext?.authorizer?.claims?.sub;
+        const userId = event.requestContext?.authorizer?.jwt?.claims?.sub;
 
         if (!userId) {
             return {
@@ -47,7 +48,7 @@ exports.handler = async (event) => {
 
         // Save lesson progress
         await docClient.send(new PutCommand({
-            TableName: process.env.DYNAMODB_TABLE,
+            TableName: TABLE,
             Item: {
                 PK: `USER#${userId}`,
                 SK: `PROGRESS#${lessonId}`,
@@ -65,7 +66,7 @@ exports.handler = async (event) => {
 
             // Get current user profile
             const userResult = await docClient.send(new GetCommand({
-                TableName: process.env.DYNAMODB_TABLE,
+                TableName: TABLE,
                 Key: {
                     PK: `USER#${userId}`,
                     SK: "PROFILE"
@@ -81,7 +82,7 @@ exports.handler = async (event) => {
 
                 // Update user profile with new XP
                 await docClient.send(new UpdateCommand({
-                    TableName: process.env.DYNAMODB_TABLE,
+                    TableName: TABLE,
                     Key: {
                         PK: `USER#${userId}`,
                         SK: "PROFILE"

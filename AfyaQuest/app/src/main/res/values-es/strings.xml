@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Name -->
-    <string name="app_name">Afya Quest</string>
+    <string name="app_name">AfyaQuest</string>
 
     <!-- Common -->
     <string name="ok">Aceptar</string>
@@ -156,7 +156,7 @@
     <string name="your_location">Tu ubicación</string>
     <string name="your_stops_for_the_day">¡Tus paradas del día!</string>
     <string name="no_stops_for_today">No hay paradas para hoy.</string>
-    <string name="map_location_disclaimer">Chimaltenango, Guatemala. Tu ubicación usa el GPS del dispositivo cuando se otorga permiso.</string>
+    <string name="map_location_disclaimer">Tu ubicación usa el GPS del dispositivo cuando se otorga permiso.</string>
     <string name="close">Cerrar</string>
     <string name="address">Dirección</string>
     <string name="description">Descripción</string>
@@ -195,21 +195,13 @@
     <string name="watched">✓ Visto</string>
     <string name="quiz_check">Cuestionario ✓</string>
 
-    <!-- Video Modules (sample data / categories) -->
-    <string name="video_module_1_title">Módulo 1: Evaluaciones de Salud</string>
-    <string name="video_module_1_desc">Aprende a realizar evaluaciones integrales de salud usando el Manual del Detective Médico</string>
-    <string name="video_module_2_title">Módulo 2: Prácticas de Saneamiento del Agua</string>
-    <string name="video_module_2_desc">Comprensión del tratamiento del agua y almacenamiento seguro</string>
-    <string name="video_module_3_title">Módulo 3: Salud Materno-Infantil</string>
-    <string name="video_module_3_desc">Cuidados esenciales para madres y niños</string>
-    <string name="video_module_4_title">Módulo 4: Programas de Vacunación</string>
-    <string name="video_module_4_desc">Comprensión de los calendarios de vacunación y su importancia</string>
-    <string name="video_module_5_title">Módulo 5: Primeros Auxilios de Emergencia</string>
-    <string name="video_module_5_desc">Aprende técnicas esenciales de primeros auxilios para situaciones médicas comunes</string>
-    <string name="video_module_6_title">Módulo 6: Fundamentos de Nutrición</string>
-    <string name="video_module_6_desc">Comprensión de la nutrición balanceada y las necesidades dietéticas</string>
-    <string name="video_module_7_title">Módulo 7: Prevención de Enfermedades</string>
-    <string name="video_module_7_desc">Enfermedades comunes y estrategias de prevención</string>
+    <!-- Video Modules (with actual S3 video content) -->
+    <string name="video_module_8_title">Módulo 8: Sistema Reproductor Masculino</string>
+    <string name="video_module_8_desc">Comprender la anatomía y función del sistema reproductor masculino</string>
+    <string name="video_module_9_title">Módulo 9: Sistema Reproductor Femenino</string>
+    <string name="video_module_9_desc">Comprender la anatomía y función del sistema reproductor femenino</string>
+    <string name="video_module_10_title">Módulo 10: Sistema Urinario</string>
+    <string name="video_module_10_desc">Comprender los órganos, funciones y condiciones comunes del sistema urinario</string>
 
     <string name="video_category_basics">Evaluación de Salud</string>
     <string name="video_category_sanitation">Saneamiento</string>
@@ -241,39 +233,7 @@
     <string name="service_family_planning">Planificación Familiar</string>
     <string name="service_pharmacy">Farmacia</string>
 
-    <string name="facility_hospital_nacional_chimaltenango_name">Hospital Nacional de Chimaltenango</string>
-    <string name="facility_centro_salud_chimaltenango_name">Centro de Salud Chimaltenango</string>
-    <string name="facility_hospital_san_juan_comalapa_name">Hospital San Juan Comalapa</string>
-    <string name="facility_puesto_salud_parramos_name">Puesto de Salud Parramos</string>
-
-    <string name="client_familia_hernandez_name">Familia Hernández</string>
-    <string name="client_casa_lopez_name">Casa López</string>
-    <string name="client_familia_garcia_name">Familia García</string>
-    <string name="client_casa_martinez_name">Casa Martínez</string>
-    <string name="client_familia_rodriguez_name">Familia Rodríguez</string>
-    <string name="client_familia_cumes_name">Familia Cumes</string>
-
-    <string name="address_calle_real_chimaltenango">Calle Real, Chimaltenango</string>
-    <string name="address_canton_san_jacinto">Cantón San Jacinto</string>
-    <string name="address_aldea_san_andres_itzapa">Aldea San Andrés Itzapa</string>
-    <string name="address_colonia_las_victorias">Colonia Las Victorias</string>
-    <string name="address_barrio_el_calvario">Barrio El Calvario</string>
-    <string name="address_km_54_ruta_interamericana">Km 54 Ruta Interamericana</string>
-    <string name="address_centro_chimaltenango">Centro, Chimaltenango</string>
-    <string name="address_salida_antigua_guatemala">Salida a Antigua Guatemala</string>
-
-    <string name="desc_maternal_health_checkup_needed">Se necesita revisión de salud materna</string>
-    <string name="desc_child_vaccination_due">Vacunación infantil pendiente</string>
-    <string name="desc_dropoff_pickup_supplies">Entrega / recogida de suministros</string>
-    <string name="desc_family_planning_consultation">Consulta de planificación familiar</string>
-    <string name="desc_hypertension_screening_needed">Se necesita examen de hipertensión</string>
-    <string name="desc_followup_completed">Seguimiento completado</string>
-    <string name="desc_prenatal_care_appointment">Cita de atención prenatal</string>
-
-    <string name="time_2_days_ago">Hace 2 días</string>
     <string name="time_just_now">Ahora mismo</string>
-    <string name="time_tomorrow_10_am">Mañana 10:00 AM</string>
-    <string name="time_friday_2_pm">Viernes 2:00 PM</string>
     <string name="mark_complete_xp">Marcar como Completado (+%d XP)</string>
     <string name="lesson_completed">¡Lección completada!</string>
     <string name="min_format">⏱️ %s min</string>
@@ -331,8 +291,8 @@
     <string name="send_message">Enviar mensaje</string>
 
     <!-- Fred\'s messages (localized) -->
-    <string name="fred_greeting">¡Hola! Soy Fred, tu asistente de salud con IA para Afya Quest. Estoy aquí para ayudarte con educación en salud, consejos de estudio y cualquier pregunta sobre la plataforma. ¿En qué puedo ayudarte hoy? 😊</string>
-    <string name="fred_response_hello">¡Hola! 😊 Soy Fred, tu asistente de salud con IA. Estoy aquí para ayudarte con educación en salud, consejos de estudio y cualquier pregunta sobre Afya Quest. ¿En qué puedo ayudarte hoy?</string>
+    <string name="fred_greeting">¡Hola! Soy Fred, tu asistente de salud con IA para AfyaQuest. Estoy aquí para ayudarte con educación en salud, consejos de estudio y cualquier pregunta sobre la plataforma. ¿En qué puedo ayudarte hoy? 😊</string>
+    <string name="fred_response_hello">¡Hola! 😊 Soy Fred, tu asistente de salud con IA. Estoy aquí para ayudarte con educación en salud, consejos de estudio y cualquier pregunta sobre AfyaQuest. ¿En qué puedo ayudarte hoy?</string>
     <string name="fred_response_handwashing">¡Excelente pregunta sobre el lavado de manos! 🧼 Recuerda los 7 pasos: moja, aplica jabón, frota las palmas, entre los dedos, dorso de las manos, debajo de las uñas y enjuaga bien durante al menos 20 segundos. ¡Esta es una de las mejores formas de prevenir la transmisión de enfermedades!</string>
     <string name="fred_response_malaria">¡La prevención de malaria es crucial! 🦟 Las estrategias clave son: dormir bajo mosquiteros tratados con insecticida, eliminar el agua estancada, mantener los alrededores limpios y buscar ayuda médica inmediata si aparecen síntomas (fiebre, escalofríos, dolor de cabeza). Siempre completa todo el tratamiento prescrito.</string>
     <string name="fred_response_vaccination">¡Las vacunas son vitales para la salud infantil! 💉 Los niños deben recibir vacunas al nacer (BCG, Polio 0), a las 6, 10 y 14 semanas (Polio, Pentavalente, serie PCV), y a los 9 meses (Sarampión, Fiebre Amarilla). ¡Estas protegen contra enfermedades graves y salvan vidas!</string>

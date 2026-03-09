@@ -98,7 +98,7 @@ fun RegisterScreen(
 
             // Title
             Text(
-                text = "Join Afya Quest",
+                text = "Join AfyaQuest",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary

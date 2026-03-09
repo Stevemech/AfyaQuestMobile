@@ -305,22 +305,32 @@ class SyncManager @Inject constructor(
     }
 
     /**
-     * Sync pending client visits
+     * Sync pending client visits (itinerary stop completions) to the API
      * @return number of visits synced
      */
     suspend fun syncClientVisits(): Int {
         val unsyncedVisits = pendingSyncDao.getUnsyncedClientVisits()
         var syncedCount = 0
 
+        val idToken = tokenManager.getIdToken() ?: return 0
+
         for (visit in unsyncedVisits) {
             try {
-                // TODO: Call API to update client visit status
-                Log.d("SyncManager", "Syncing client visit: ${visit.id}")
+                val requestBody = mapOf<String, Any>(
+                    "type" to "itinerary_stop_complete",
+                    "itemId" to visit.clientId,
+                    "date" to visit.visitDate
+                )
 
-                // Mark as synced
-                pendingSyncDao.markClientVisitSynced(visit.id)
-                syncedCount++
+                val response = apiService.updateUserProgress("Bearer $idToken", requestBody)
 
+                if (response.isSuccessful) {
+                    pendingSyncDao.markClientVisitSynced(visit.id)
+                    syncedCount++
+                    Log.d("SyncManager", "Synced visit: ${visit.id}")
+                } else {
+                    Log.e("SyncManager", "Failed to sync visit ${visit.id}: ${response.code()}")
+                }
             } catch (e: Exception) {
                 Log.e("SyncManager", "Failed to sync visit ${visit.id}: ${e.message}")
             }

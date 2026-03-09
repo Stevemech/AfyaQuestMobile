@@ -1,17 +1,31 @@
 package com.example.afyaquest.presentation.modulequiz
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.afyaquest.data.remote.ApiService
 import com.example.afyaquest.domain.model.ModuleQuizQuestion
+import com.example.afyaquest.domain.model.QuizSubmissionRequest
+import com.example.afyaquest.domain.model.QuizAnswer
+import com.example.afyaquest.util.ProgressDataStore
+import com.example.afyaquest.util.TokenManager
+import com.example.afyaquest.util.XpManager
+import com.example.afyaquest.util.XpRewards
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ModuleQuizViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val progressDataStore: ProgressDataStore,
+    private val apiService: ApiService,
+    private val tokenManager: TokenManager,
+    private val xpManager: XpManager
 ) : ViewModel() {
 
     val moduleId: String = savedStateHandle.get<String>("moduleId") ?: ""
@@ -460,6 +474,48 @@ class ModuleQuizViewModel @Inject constructor(
     }
 
     fun finishQuiz() {
-        _isFinished.value = true
+        viewModelScope.launch {
+            // Persist quiz completion locally
+            progressDataStore.markQuizCompleted(moduleId)
+
+            // Award XP
+            xpManager.addXP(
+                XpRewards.MODULE_COMPLETED,
+                "Completed quiz for module $moduleId"
+            )
+
+            // Sync to AWS (best-effort)
+            try {
+                val token = tokenManager.getIdToken()
+                if (token != null) {
+                    val request = QuizSubmissionRequest(
+                        videoId = "module-$moduleId",
+                        totalQuestions = getTotalQuestions(),
+                        correctAnswers = _correctAnswers.value,
+                        incorrectAnswers = getTotalQuestions() - _correctAnswers.value,
+                        answers = questions.mapIndexed { index, q ->
+                            QuizAnswer(
+                                questionId = q.id,
+                                selectedAnswer = if (index == _currentQuestionIndex.value) _selectedAnswer.value ?: -1 else -1,
+                                isCorrect = false
+                            )
+                        }
+                    )
+                    apiService.submitQuiz("Bearer $token", request)
+
+                    // Update assignment status
+                    val progressBody = mapOf<String, Any>(
+                        "type" to "module_quiz_complete",
+                        "itemId" to moduleId,
+                        "score" to _correctAnswers.value
+                    )
+                    apiService.updateUserProgress("Bearer $token", progressBody)
+                }
+            } catch (e: Exception) {
+                Log.d("ModuleQuizVM", "Quiz sync failed (progress saved locally): ${e.message}")
+            }
+
+            _isFinished.value = true
+        }
     }
 }

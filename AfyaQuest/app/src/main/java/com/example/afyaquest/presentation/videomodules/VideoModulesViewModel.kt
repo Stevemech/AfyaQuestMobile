@@ -1,24 +1,33 @@
 package com.example.afyaquest.presentation.videomodules
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.afyaquest.R
+import com.example.afyaquest.data.remote.ApiService
 import com.example.afyaquest.domain.model.VideoCategory
 import com.example.afyaquest.domain.model.VideoModule
+import com.example.afyaquest.util.ProgressDataStore
+import com.example.afyaquest.util.TokenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * ViewModel for Video Modules screen
+ * ViewModel for Video Modules screen.
+ * Persists watched/quiz-complete state via DataStore and syncs to AWS.
  */
 @HiltViewModel
 class VideoModulesViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
-    // TODO: Inject VideosRepository when backend is ready
+    @ApplicationContext private val context: Context,
+    private val progressDataStore: ProgressDataStore,
+    private val apiService: ApiService,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
 
     private val _videos = MutableStateFlow<List<VideoModule>>(emptyList())
@@ -34,100 +43,20 @@ class VideoModulesViewModel @Inject constructor(
     val completedQuizzes: StateFlow<Set<String>> = _completedQuizzes.asStateFlow()
 
     val categories = listOf(
-        VideoCategory.BASICS,
-        VideoCategory.SANITATION,
-        VideoCategory.MATERNAL,
-        VideoCategory.IMMUNIZATION,
-        VideoCategory.EMERGENCY,
-        VideoCategory.NUTRITION,
-        VideoCategory.DISEASE_PREVENTION
+        VideoCategory.BASICS
     )
 
     init {
         loadVideos()
+        loadSavedProgress()
     }
 
-    /**
-     * Load video modules
-     * In production, this would fetch from API
-     */
     private fun loadVideos() {
-        // Sample video data - titles and descriptions from localized strings
         _videos.value = listOf(
             VideoModule(
-                id = "1",
-                title = context.getString(R.string.video_module_1_title),
-                description = context.getString(R.string.video_module_1_desc),
-                thumbnail = "🎬",
-                duration = "6:50",
-                category = VideoCategory.BASICS,
-                hasQuiz = true,
-                watched = false
-            ),
-            VideoModule(
-                id = "2",
-                title = context.getString(R.string.video_module_2_title),
-                description = context.getString(R.string.video_module_2_desc),
-                thumbnail = "💧",
-                duration = "15:45",
-                category = VideoCategory.SANITATION,
-                hasQuiz = true,
-                watched = false
-            ),
-            VideoModule(
-                id = "3",
-                title = context.getString(R.string.video_module_3_title),
-                description = context.getString(R.string.video_module_3_desc),
-                thumbnail = "👶",
-                duration = "20:15",
-                category = VideoCategory.MATERNAL,
-                hasQuiz = true,
-                watched = false
-            ),
-            VideoModule(
-                id = "4",
-                title = context.getString(R.string.video_module_4_title),
-                description = context.getString(R.string.video_module_4_desc),
-                thumbnail = "💉",
-                duration = "18:00",
-                category = VideoCategory.IMMUNIZATION,
-                hasQuiz = true,
-                watched = false
-            ),
-            VideoModule(
-                id = "5",
-                title = context.getString(R.string.video_module_5_title),
-                description = context.getString(R.string.video_module_5_desc),
-                thumbnail = "🚨",
-                duration = "7:21",
-                category = VideoCategory.EMERGENCY,
-                hasQuiz = true,
-                watched = false
-            ),
-            VideoModule(
-                id = "6",
-                title = context.getString(R.string.video_module_6_title),
-                description = context.getString(R.string.video_module_6_desc),
-                thumbnail = "🥗",
-                duration = "12:30",
-                category = VideoCategory.NUTRITION,
-                hasQuiz = true,
-                watched = false
-            ),
-            VideoModule(
-                id = "7",
-                title = context.getString(R.string.video_module_7_title),
-                description = context.getString(R.string.video_module_7_desc),
-                thumbnail = "🛡️",
-                duration = "14:15",
-                category = VideoCategory.DISEASE_PREVENTION,
-                hasQuiz = true,
-                watched = false
-            ),
-            VideoModule(
                 id = "8",
-                title = "Module 8: Male Reproductive System",
-                description = "Understanding the anatomy and function of the male reproductive system",
+                title = context.getString(R.string.video_module_8_title),
+                description = context.getString(R.string.video_module_8_desc),
                 thumbnail = "🔬",
                 duration = "",
                 category = VideoCategory.BASICS,
@@ -137,8 +66,8 @@ class VideoModulesViewModel @Inject constructor(
             ),
             VideoModule(
                 id = "9",
-                title = "Module 9: Female Reproductive System",
-                description = "Understanding the anatomy and function of the female reproductive system",
+                title = context.getString(R.string.video_module_9_title),
+                description = context.getString(R.string.video_module_9_desc),
                 thumbnail = "🔬",
                 duration = "",
                 category = VideoCategory.BASICS,
@@ -148,8 +77,8 @@ class VideoModulesViewModel @Inject constructor(
             ),
             VideoModule(
                 id = "10",
-                title = "Module 10: Urinary System",
-                description = "Understanding the organs, functions, and common conditions of the urinary system",
+                title = context.getString(R.string.video_module_10_title),
+                description = context.getString(R.string.video_module_10_desc),
                 thumbnail = "🔬",
                 duration = "",
                 category = VideoCategory.BASICS,
@@ -161,8 +90,21 @@ class VideoModulesViewModel @Inject constructor(
     }
 
     /**
-     * Get filtered videos by category
+     * Load saved progress from DataStore so it persists across navigation
      */
+    private fun loadSavedProgress() {
+        viewModelScope.launch {
+            progressDataStore.getWatchedVideos().collect { watched ->
+                _watchedVideos.value = watched
+            }
+        }
+        viewModelScope.launch {
+            progressDataStore.getCompletedQuizzes().collect { completed ->
+                _completedQuizzes.value = completed
+            }
+        }
+    }
+
     fun getFilteredVideos(): List<VideoModule> {
         val category = _selectedCategory.value
         val allVideos = _videos.value
@@ -179,32 +121,55 @@ class VideoModulesViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Set category filter
-     */
     fun setCategory(category: VideoCategory?) {
         _selectedCategory.value = category
     }
 
     /**
-     * Mark video as watched
+     * Mark video as watched — persists locally and syncs to AWS
      */
     fun markVideoWatched(videoId: String) {
+        if (_watchedVideos.value.contains(videoId)) return
         _watchedVideos.value = _watchedVideos.value + videoId
+        viewModelScope.launch {
+            progressDataStore.markVideoWatched(videoId)
+            syncProgressToApi("module_watched", videoId)
+        }
     }
 
     /**
-     * Mark quiz as completed
+     * Mark quiz as completed — persists locally and syncs to AWS
      */
     fun markQuizCompleted(videoId: String) {
+        if (_completedQuizzes.value.contains(videoId)) return
         _completedQuizzes.value = _completedQuizzes.value + videoId
+        viewModelScope.launch {
+            progressDataStore.markQuizCompleted(videoId)
+            syncProgressToApi("module_quiz_complete", videoId)
+        }
     }
 
     /**
-     * Get stats
+     * Sync progress update to the backend (best-effort, non-blocking)
      */
+    private suspend fun syncProgressToApi(type: String, itemId: String) {
+        try {
+            val token = tokenManager.getIdToken() ?: return
+            val body = mapOf<String, Any>(
+                "type" to type,
+                "itemId" to itemId
+            )
+            apiService.updateUserProgress("Bearer $token", body)
+        } catch (e: Exception) {
+            Log.d("VideoModulesVM", "Progress sync failed (will retry): ${e.message}")
+        }
+    }
+
     fun getVideoUrl(videoId: String): String? =
         _videos.value.find { it.id == videoId }?.videoUrl
+
+    fun getLocalFilePath(videoId: String): String? =
+        _videos.value.find { it.id == videoId }?.localFilePath
 
     fun getVideoTitle(videoId: String): String =
         _videos.value.find { it.id == videoId }?.title ?: "Video"
@@ -213,9 +178,6 @@ class VideoModulesViewModel @Inject constructor(
     fun getQuizCompletedCount(): Int = _completedQuizzes.value.size
     fun getTotalVideos(): Int = _videos.value.size
 
-    /**
-     * Get category display name
-     */
     fun getCategoryDisplayName(category: VideoCategory): String {
         return when (category) {
             VideoCategory.BASICS -> context.getString(R.string.video_category_basics)

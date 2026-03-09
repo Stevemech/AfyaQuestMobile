@@ -4,15 +4,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.afyaquest.data.remote.dto.AssignmentDto
 import com.example.afyaquest.data.repository.AssignmentsRepository
+import com.example.afyaquest.sync.VideoDownloadManager
 import com.example.afyaquest.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Known S3 video URLs for modules — used to trigger downloads for assigned modules.
+ */
+private val moduleVideoUrls = mapOf(
+    "8" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Male+Reproductive+System+(1).mp4",
+    "9" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Female+Reproductive+System.mp4",
+    "10" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Urinary+System.mov"
+)
+
 @HiltViewModel
 class AssignmentsViewModel @Inject constructor(
-    private val assignmentsRepository: AssignmentsRepository
+    private val assignmentsRepository: AssignmentsRepository,
+    private val videoDownloadManager: VideoDownloadManager
 ) : ViewModel() {
 
     private val _assignmentsState = MutableStateFlow<Resource<List<AssignmentDto>>?>(null)
@@ -22,6 +33,7 @@ class AssignmentsViewModel @Inject constructor(
     val selectedFilter: StateFlow<AssignmentFilter> = _selectedFilter.asStateFlow()
 
     init {
+        videoDownloadManager.refreshDownloadedState()
         loadAssignments()
     }
 
@@ -30,9 +42,11 @@ class AssignmentsViewModel @Inject constructor(
             assignmentsRepository.getAssignments().collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        _assignmentsState.value = Resource.Success(
-                            resource.data?.assignments ?: emptyList()
-                        )
+                        val assignments = resource.data?.assignments ?: emptyList()
+                        _assignmentsState.value = Resource.Success(assignments)
+
+                        // Auto-queue downloads for assigned video modules
+                        queueModuleDownloads(assignments)
                     }
                     is Resource.Error -> {
                         _assignmentsState.value = Resource.Error(
@@ -45,6 +59,19 @@ class AssignmentsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    /**
+     * Automatically queue video downloads for any assigned modules.
+     * WorkManager handles the network constraint — downloads start
+     * once a good connection is established.
+     */
+    private fun queueModuleDownloads(assignments: List<AssignmentDto>) {
+        val assignedModuleIds = assignments
+            .filter { it.type == "module" && it.moduleId != null }
+            .mapNotNull { it.moduleId }
+
+        videoDownloadManager.queueAssignedModuleDownloads(assignedModuleIds, moduleVideoUrls)
     }
 
     fun setFilter(filter: AssignmentFilter) {

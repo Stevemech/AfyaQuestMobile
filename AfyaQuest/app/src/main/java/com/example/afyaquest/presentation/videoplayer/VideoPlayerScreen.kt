@@ -1,5 +1,6 @@
 package com.example.afyaquest.presentation.videoplayer
 
+import android.net.Uri
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.compose.foundation.background
@@ -15,12 +16,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.example.afyaquest.presentation.videomodules.VideoModulesViewModel
+import com.example.afyaquest.sync.VideoDownloadManager
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ui.PlayerView
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,6 +35,21 @@ fun VideoPlayerScreen(
     val context = LocalContext.current
     val videoUrl = viewModel.getVideoUrl(moduleId)
 
+    // Check for locally downloaded file first (offline playback)
+    val localPath = remember(moduleId) {
+        val videoDir = context.getExternalFilesDir(VideoDownloadManager.VIDEO_DIR)
+        val localFile = videoDir?.resolve("module_$moduleId.mp4")
+        if (localFile != null && localFile.exists() && localFile.length() > 0) {
+            localFile.absolutePath
+        } else {
+            null
+        }
+    }
+
+    // Prefer local file over streaming URL
+    val mediaUri = localPath?.let { Uri.fromFile(File(it)) }
+        ?: videoUrl?.let { Uri.parse(it) }
+
     val exoPlayer = remember {
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
@@ -39,8 +57,8 @@ fun VideoPlayerScreen(
             .build()
         ExoPlayer.Builder(context).build().apply {
             setAudioAttributes(audioAttributes, /* handleAudioFocus = */ true)
-            if (videoUrl != null) {
-                setMediaItem(MediaItem.fromUri(videoUrl))
+            if (mediaUri != null) {
+                setMediaItem(MediaItem.fromUri(mediaUri))
                 prepare()
                 playWhenReady = true
             }
@@ -54,7 +72,7 @@ fun VideoPlayerScreen(
         }
     }
 
-    // Mark watched when the player starts playing (not just on completion)
+    // Mark watched when the player starts playing
     LaunchedEffect(Unit) {
         viewModel.markVideoWatched(moduleId)
     }
@@ -82,7 +100,7 @@ fun VideoPlayerScreen(
                 .background(Color.Black),
             contentAlignment = Alignment.Center
         ) {
-            if (videoUrl != null) {
+            if (mediaUri != null) {
                 AndroidView(
                     factory = {
                         PlayerView(it).apply {

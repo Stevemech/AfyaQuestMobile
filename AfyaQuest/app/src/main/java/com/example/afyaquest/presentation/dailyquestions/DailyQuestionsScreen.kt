@@ -43,18 +43,14 @@ fun DailyQuestionsScreen(
     val score by viewModel.score.collectAsState()
     val correctAnswers by viewModel.correctAnswers.collectAsState()
     val lives by viewModel.lives.collectAsState()
-    val quizSubmissionState by viewModel.quizSubmissionState.collectAsState()
+    val quizFinished by viewModel.quizFinished.collectAsState()
 
     val scrollState = rememberScrollState()
 
-    // Handle quiz submission completion
-    LaunchedEffect(quizSubmissionState) {
-        when (quizSubmissionState) {
-            is Resource.Success -> {
-                // Quiz submitted successfully, navigate back to dashboard
-                navController.popBackStack()
-            }
-            else -> {}
+    // Handle quiz completion — navigate back to dashboard
+    LaunchedEffect(quizFinished) {
+        if (quizFinished) {
+            navController.popBackStack()
         }
     }
 

@@ -24,7 +24,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 /**
- * Main activity for the Afya Quest application.
+ * Main activity for the AfyaQuest application.
  * Entry point for the app with Jetpack Compose UI and Navigation.
  */
 @AndroidEntryPoint

@@ -5,9 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.afyaquest.data.repository.QuestionsRepository
 import com.example.afyaquest.domain.model.Difficulty
 import com.example.afyaquest.domain.model.Question
-import com.example.afyaquest.domain.model.QuizAnswer
-import com.example.afyaquest.domain.model.QuizSubmissionRequest
-import com.example.afyaquest.domain.model.QuizSubmissionResponse
 import com.example.afyaquest.util.Resource
 import com.example.afyaquest.util.XpManager
 import com.example.afyaquest.util.XpRewards
@@ -45,8 +42,8 @@ class DailyQuestionsViewModel @Inject constructor(
 
     private val _answeredQuestions = MutableStateFlow<Set<String>>(emptySet())
 
-    private val _quizSubmissionState = MutableStateFlow<Resource<QuizSubmissionResponse>?>(null)
-    val quizSubmissionState: StateFlow<Resource<QuizSubmissionResponse>?> = _quizSubmissionState.asStateFlow()
+    private val _quizFinished = MutableStateFlow(false)
+    val quizFinished: StateFlow<Boolean> = _quizFinished.asStateFlow()
 
     // Lives from XpManager
     val lives: StateFlow<Int> = xpManager.getXpDataFlow()
@@ -62,7 +59,7 @@ class DailyQuestionsViewModel @Inject constructor(
     }
 
     /**
-     * Load daily questions from API
+     * Load daily questions from local question bank (works offline)
      */
     private fun loadDailyQuestions() {
         viewModelScope.launch {
@@ -149,57 +146,24 @@ class DailyQuestionsViewModel @Inject constructor(
     }
 
     /**
-     * Finish quiz and submit results
+     * Finish quiz - awards bonus XP and signals navigation back.
+     * Works entirely offline; no API call required.
      */
     fun finishQuiz() {
         viewModelScope.launch {
             val questions = (_questionsState.value as? Resource.Success)?.data ?: return@launch
-            val totalQuestions = questions.size
-            val correctCount = _correctAnswers.value
-            val incorrectCount = totalQuestions - correctCount
 
             // Award bonus XP for completing all questions
-            if (_answeredQuestions.value.size == totalQuestions) {
+            if (_answeredQuestions.value.size == questions.size) {
                 xpManager.addXP(
                     XpRewards.DAILY_QUESTION_BONUS,
                     "Completed all daily questions!"
                 )
             }
 
-            // Build answers list
-            val answers = questions.mapIndexed { index, question ->
-                val selectedIdx = if (_answeredQuestions.value.contains(question.id)) {
-                    _selectedAnswer.value ?: -1
-                } else {
-                    -1
-                }
-                QuizAnswer(
-                    questionId = question.id,
-                    selectedAnswer = selectedIdx,
-                    isCorrect = selectedIdx == question.correctAnswerIndex
-                )
-            }
-
-            // Submit to backend
-            val request = QuizSubmissionRequest(
-                videoId = "daily-${System.currentTimeMillis()}", // Use timestamp as unique ID
-                totalQuestions = totalQuestions,
-                correctAnswers = correctCount,
-                incorrectAnswers = incorrectCount,
-                answers = answers
-            )
-
-            questionsRepository.submitQuiz(request).collect { resource ->
-                _quizSubmissionState.value = resource
-            }
+            // Signal quiz is finished — UI will navigate back
+            _quizFinished.value = true
         }
-    }
-
-    /**
-     * Reset quiz submission state
-     */
-    fun resetQuizSubmissionState() {
-        _quizSubmissionState.value = null
     }
 
     /**

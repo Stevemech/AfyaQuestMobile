@@ -10,11 +10,13 @@ data class VideoModule(
     val thumbnail: String = "", // Emoji or URL
     val duration: String, // e.g., "6:50"
     val category: VideoCategory,
-    val videoUrl: String? = null, // CloudFront URL
+    val videoUrl: String? = null, // CloudFront/S3 URL for streaming
     val s3Key: String? = null,
+    val localFilePath: String? = null, // Path to downloaded file for offline playback
     val hasQuiz: Boolean = false,
     val watched: Boolean = false,
-    val quizComplete: Boolean = false
+    val quizComplete: Boolean = false,
+    val isDownloaded: Boolean = false
 )
 
 enum class VideoCategory {

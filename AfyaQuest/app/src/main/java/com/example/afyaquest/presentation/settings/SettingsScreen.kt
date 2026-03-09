@@ -103,7 +103,7 @@ fun SettingsScreen(
             item {
                 SettingsItem(
                     icon = Icons.Default.Info,
-                    title = "About Afya Quest",
+                    title = "About AfyaQuest",
                     subtitle = "Version 1.0.0",
                     onClick = { /* TODO: Show about dialog */ }
                 )

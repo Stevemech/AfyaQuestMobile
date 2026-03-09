@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Name -->
-    <string name="app_name">Afya Quest</string>
+    <string name="app_name">AfyaQuest</string>
 
     <!-- Common -->
     <string name="ok">Ütz</string>
@@ -156,7 +156,7 @@
     <string name="your_location">Akuchi\' yat k\'o wi</string>
     <string name="your_stops_for_the_day">Ri ak\'olib\'äl richin re q\'ij re\'!</string>
     <string name="no_stops_for_today">Man k\'o ta ak\'olib\'äl richin wakami.</string>
-    <string name="map_location_disclaimer">Chimaltenango, Guatemala. Ri ak\'olib\'äl nrokisaj GPS toq ya\'on q\'ij.</string>
+    <string name="map_location_disclaimer">Ri ak\'olib\'äl nrokisaj GPS toq ya\'on q\'ij.</string>
     <string name="close">Titz\'apïx</string>
     <string name="address">Ochochib\'äl</string>
     <string name="description">Rutzijoxkil</string>
@@ -195,21 +195,13 @@
     <string name="watched">\u2713 Xtz\'et</string>
     <string name="quiz_check">Moloj K\'utunïk \u2713</string>
 
-    <!-- Video Modules (sample data / categories) -->
-    <string name="video_module_1_title">Nab\'ey: Rutz\'etik K\'aslemal</string>
-    <string name="video_module_1_desc">Tawetamaj achike rub\'eyal nab\'an jun tz\'aqät rutz\'etik k\'aslemal</string>
-    <string name="video_module_2_title">Ruka\'n: Ruch\'ajch\'ojil Ya\'</string>
-    <string name="video_module_2_desc">Tawetamaj ri ruch\'ajch\'ojil ya\' chuqa\' ri ütz ruyakom</string>
-    <string name="video_module_3_title">Rox: Ruk\'aslemal Nan chuqa\' Ak\'wala\'</string>
-    <string name="video_module_3_desc">K\'atzinel taq samaj kichin ri taq nan chuqa\' ri ak\'wala\'</string>
-    <string name="video_module_4_title">Rukaj: Taq Tz\'u\' Richin Ak\'wala\'</string>
-    <string name="video_module_4_desc">Tawetamaj achike ora\' chuqa\' achike ruma k\'atzinel ri taq tz\'u\'</string>
-    <string name="video_module_5_title">Ro\': Nab\'ey To\'ïk pa Sachoj</string>
-    <string name="video_module_5_desc">Tawetamaj ri taq nab\'ey to\'ïk pa sachoj richin ri jutaqil taq yab\'il</string>
-    <string name="video_module_6_title">Ruwaq: Ruq\'ij Wa\'im</string>
-    <string name="video_module_6_desc">Tawetamaj ri ütz wa\'im chuqa\' ri achike nik\'atzin chi re ri ruch\'akul</string>
-    <string name="video_module_7_title">Ruwuq: Richajixik Yab\'il</string>
-    <string name="video_module_7_desc">Jutaqil taq yab\'il chuqa\' achike rub\'eyal nikichajij ki\'</string>
+    <!-- Video Modules (with actual S3 video content) -->
+    <string name="video_module_8_title">Ruwaq: Male Reproductive System</string>
+    <string name="video_module_8_desc">Tawetamaj ri ruwäch chuqa\' rusamaj ri male reproductive system</string>
+    <string name="video_module_9_title">Rub\'eleje\': Female Reproductive System</string>
+    <string name="video_module_9_desc">Tawetamaj ri ruwäch chuqa\' rusamaj ri female reproductive system</string>
+    <string name="video_module_10_title">Rulajuj: Urinary System</string>
+    <string name="video_module_10_desc">Tawetamaj ri taq ruwach\'ulew, rusamaj, chuqa\' jutaqil taq yab\'il chi rij ri urinary system</string>
 
     <string name="video_category_basics">Rutz\'etik K\'aslemal</string>
     <string name="video_category_sanitation">Ch\'ajch\'ojil</string>
@@ -241,39 +233,7 @@
     <string name="service_family_planning">Runuk\'ulem Ach\'alalri\'ïl</string>
     <string name="service_pharmacy">Ajkunab\'äl</string>
 
-    <string name="facility_hospital_nacional_chimaltenango_name">Kowilab\'äl Chimaltenango</string>
-    <string name="facility_centro_salud_chimaltenango_name">K\'olib\'äl K\'aslemal Chimaltenango</string>
-    <string name="facility_hospital_san_juan_comalapa_name">Kowilab\'äl San Juan Comalapa</string>
-    <string name="facility_puesto_salud_parramos_name">Ajkunab\'äl Parramos</string>
-
-    <string name="client_familia_hernandez_name">Rach\'alalri\'ïl Hernández</string>
-    <string name="client_casa_lopez_name">Rachoch López</string>
-    <string name="client_familia_garcia_name">Rach\'alalri\'ïl García</string>
-    <string name="client_casa_martinez_name">Rachoch Martínez</string>
-    <string name="client_familia_rodriguez_name">Rach\'alalri\'ïl Rodríguez</string>
-    <string name="client_familia_cumes_name">Rach\'alalri\'ïl Cumes</string>
-
-    <string name="address_calle_real_chimaltenango">Calle Real, Chimaltenango</string>
-    <string name="address_canton_san_jacinto">Cantón San Jacinto</string>
-    <string name="address_aldea_san_andres_itzapa">Tinamït San Andrés Itzapa</string>
-    <string name="address_colonia_las_victorias">Colonia Las Victorias</string>
-    <string name="address_barrio_el_calvario">Barrio El Calvario</string>
-    <string name="address_km_54_ruta_interamericana">Km 54 Rub\'ey Interamericana</string>
-    <string name="address_centro_chimaltenango">Runik\'ajal, Chimaltenango</string>
-    <string name="address_salida_antigua_guatemala">Rub\'ey pa Antigua Guatemala</string>
-
-    <string name="desc_maternal_health_checkup_needed">Nik\'atzin rutz\'etik ruk\'aslemal ri nan</string>
-    <string name="desc_child_vaccination_due">Rub\'ey rutz\'u\' ri ak\'wal</string>
-    <string name="desc_dropoff_pickup_supplies">Keya\' / Kemolo\' taq wachinäq</string>
-    <string name="desc_family_planning_consultation">Runuk\'ulem ach\'alalri\'ïl</string>
-    <string name="desc_hypertension_screening_needed">Nik\'atzin rutz\'etik ruchukul kik\'el</string>
-    <string name="desc_followup_completed">Xtz\'aqät ri rub\'eyik</string>
-    <string name="desc_prenatal_care_appointment">Rutz\'etik ruk\'aslemal ri nan</string>
-
-    <string name="time_2_days_ago">Ka\'i\' q\'ij kan</string>
     <string name="time_just_now">Wakami</string>
-    <string name="time_tomorrow_10_am">Chwa\'q 10:00 AM</string>
-    <string name="time_friday_2_pm">Waqxaqib\'al 2:00 PM</string>
     <string name="mark_complete_xp">Tiya\' retal chi xtz\'aqät (+%d XP)</string>
     <string name="lesson_completed">Xtz\'aqät ri tijonik!</string>
     <string name="min_format">\u23F1\uFE0F %s ch\'uti ramaj</string>
@@ -331,8 +291,8 @@
     <string name="send_message">Titaq ri tzij</string>
 
     <!-- Fred\'s messages (localized) -->
-    <string name="fred_greeting">Ütz apetik! Yin Fred, ri ato\'onel AI pa k\'aslemal richin Afya Quest. Yin k\'o wawe\' richin yinto\'on awik\'in pa tijonik pa k\'aslemal, taq na\'oj richin natijon, chuqa\' achike na k\'utunïk chi rij ri k\'oja\'. Achike yitikïr yinto\'on awik\'in wakami? \uD83D\uDE0A</string>
-    <string name="fred_response_hello">Ütz apetik! \uD83D\uDE0A Yin Fred, ri ato\'onel AI pa k\'aslemal. Yin k\'o wawe\' richin yinto\'on awik\'in pa tijonik pa k\'aslemal, taq na\'oj richin natijon, chuqa\' achike na k\'utunïk chi rij Afya Quest. Achike yitikïr yinto\'on awik\'in wakami?</string>
+    <string name="fred_greeting">Ütz apetik! Yin Fred, ri ato\'onel AI pa k\'aslemal richin AfyaQuest. Yin k\'o wawe\' richin yinto\'on awik\'in pa tijonik pa k\'aslemal, taq na\'oj richin natijon, chuqa\' achike na k\'utunïk chi rij ri k\'oja\'. Achike yitikïr yinto\'on awik\'in wakami? \uD83D\uDE0A</string>
+    <string name="fred_response_hello">Ütz apetik! \uD83D\uDE0A Yin Fred, ri ato\'onel AI pa k\'aslemal. Yin k\'o wawe\' richin yinto\'on awik\'in pa tijonik pa k\'aslemal, taq na\'oj richin natijon, chuqa\' achike na k\'utunïk chi rij AfyaQuest. Achike yitikïr yinto\'on awik\'in wakami?</string>
     <string name="fred_response_handwashing">Ütz k\'utunïk chi rij ruch\'ajik q\'ab\'! \uD83E\uDDFC Tanataj ri wuqu\' taq ruxaq: taya\'a\' ya\', takuyu\' jabón, tach\'ajo\' ri aq\'ab\', chi kikojol ri arï\', chi rij ri aq\'ab\', chuxe\' ri arixk\'aq, chuqa\' tab\'ana\' ütz ruch\'ajik rik\'in ya\' jun juwinäq segundo. Re\' jun chi ke ri nimaläj taq rub\'eyal richin nichajïx ri yab\'il!</string>
     <string name="fred_response_malaria">Yalan k\'atzinel richajixik malaria! \uD83E\uDD9F Ri nimaläj taq rub\'eyal rija\': katwär chuxe\' malla rik\'in kunaj, telesäx ri ya\' k\'o wi, taya\' ütz chi re ri ak\'olib\'äl, chuqa\' tatzukuj to\'ïk aninäq we yetz\'etetäj ri taq retal (k\'atan, tew, k\'axk\'ol pa jolom). Junelïk tatz\'aqatisaj ronojel ri kunaj we ya\'on chawe.</string>
     <string name="fred_response_vaccination">Yalan k\'atzinel ri taq tz\'u\' richin kik\'aslemal ri ak\'wala\'! \uD83D\uDC89 Ri ak\'wala\' nik\'atzin nikik\'ul ri taq tz\'u\' toq ye\'aläx (BCG, Polio 0), pa 6 wuqu\' q\'ij, 10 wuqu\' q\'ij, 14 wuqu\' q\'ij (Polio, Pentavalent, PCV), chuqa\' 9 ik\' (Sarampión, Fiebre Amarilla). Re taq re\' nikichajij chi kiwäch nimaläj taq yab\'il!</string>

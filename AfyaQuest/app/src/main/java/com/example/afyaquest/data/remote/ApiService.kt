@@ -68,6 +68,17 @@ interface ApiService {
         @Body request: QuizSubmissionRequest
     ): Response<QuizSubmissionResponse>
 
+    @POST("progress/updateLesson")
+    suspend fun updateLessonProgress(
+        @Header("Authorization") token: String,
+        @Body request: @JvmSuppressWildcards Map<String, Any>
+    ): Response<Map<String, Any>>
+
+    @POST("user/progress")
+    suspend fun updateUserProgress(
+        @Header("Authorization") token: String,
+        @Body request: @JvmSuppressWildcards Map<String, Any>
+    ): Response<Map<String, Any>>
 
     // ==================== Organizations ====================
 

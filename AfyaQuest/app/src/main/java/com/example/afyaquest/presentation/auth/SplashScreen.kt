@@ -57,7 +57,7 @@ fun SplashScreen(
                 // App icon/logo (placeholder)
                 Icon(
                     painter = painterResource(id = android.R.drawable.ic_dialog_info),
-                    contentDescription = "Afya Quest Logo",
+                    contentDescription = "AfyaQuest Logo",
                     modifier = Modifier.size(120.dp),
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
@@ -66,7 +66,7 @@ fun SplashScreen(
 
                 // App name
                 Text(
-                    text = "Afya Quest",
+                    text = "AfyaQuest",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimary

@@ -1,12 +1,16 @@
 package com.example.afyaquest.presentation.lessons
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.afyaquest.R
+import com.example.afyaquest.data.remote.ApiService
 import com.example.afyaquest.domain.model.Difficulty
 import com.example.afyaquest.domain.model.Lesson
 import com.example.afyaquest.domain.model.LessonCategory
+import com.example.afyaquest.util.ProgressDataStore
+import com.example.afyaquest.util.TokenManager
 import com.example.afyaquest.util.XpManager
 import com.example.afyaquest.util.XpRewards
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,13 +22,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * ViewModel for Interactive Lessons
+ * ViewModel for Interactive Lessons.
+ * Persists completed lesson state via DataStore and syncs to AWS.
  */
 @HiltViewModel
 class LessonsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val xpManager: XpManager
-    // TODO: Inject LessonsRepository when backend is ready
+    private val xpManager: XpManager,
+    private val progressDataStore: ProgressDataStore,
+    private val apiService: ApiService,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
 
     private val _lessons = MutableStateFlow<List<Lesson>>(emptyList())
@@ -52,12 +59,9 @@ class LessonsViewModel @Inject constructor(
 
     init {
         loadLessons()
+        loadSavedProgress()
     }
 
-    /**
-     * Load lessons
-     * In production, this would fetch from API
-     */
     private fun loadLessons() {
         _lessons.value = listOf(
             Lesson(
@@ -124,8 +128,16 @@ class LessonsViewModel @Inject constructor(
     }
 
     /**
-     * Get filtered lessons
+     * Load saved progress from DataStore so it persists across navigation
      */
+    private fun loadSavedProgress() {
+        viewModelScope.launch {
+            progressDataStore.getCompletedLessons().collect { completed ->
+                _completedLessons.value = completed
+            }
+        }
+    }
+
     fun getFilteredLessons(): List<Lesson> {
         val category = _selectedCategory.value
         return if (category == null) {
@@ -137,26 +149,22 @@ class LessonsViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Set category filter
-     */
     fun setCategory(category: LessonCategory?) {
         _selectedCategory.value = category
     }
 
-    /**
-     * Select a lesson to view
-     */
     fun selectLesson(lesson: Lesson?) {
         _selectedLesson.value = lesson
     }
 
     /**
-     * Mark lesson as completed and award XP
+     * Mark lesson as completed — persists locally, awards XP, and syncs to AWS
      */
     fun completeLesson(lessonId: String) {
+        if (_completedLessons.value.contains(lessonId)) return
         viewModelScope.launch {
             _completedLessons.value = _completedLessons.value + lessonId
+            progressDataStore.markLessonCompleted(lessonId)
 
             val lesson = _lessons.value.find { it.id == lessonId }
             if (lesson != null) {
@@ -165,18 +173,38 @@ class LessonsViewModel @Inject constructor(
                     "Completed lesson: ${lesson.title}"
                 )
             }
+
+            // Sync to AWS
+            syncLessonProgress(lessonId)
         }
     }
 
     /**
-     * Get stats
+     * Sync lesson completion to the backend
      */
+    private suspend fun syncLessonProgress(lessonId: String) {
+        try {
+            val token = tokenManager.getIdToken() ?: return
+            val body = mapOf<String, Any>(
+                "lessonId" to lessonId,
+                "completed" to true
+            )
+            apiService.updateLessonProgress("Bearer $token", body)
+
+            // Also update assignment status
+            val progressBody = mapOf<String, Any>(
+                "type" to "lesson_complete",
+                "itemId" to lessonId
+            )
+            apiService.updateUserProgress("Bearer $token", progressBody)
+        } catch (e: Exception) {
+            Log.d("LessonsVM", "Progress sync failed (will retry): ${e.message}")
+        }
+    }
+
     fun getCompletedCount(): Int = _completedLessons.value.size
     fun getTotalLessons(): Int = _lessons.value.size
 
-    /**
-     * Get category display name
-     */
     fun getCategoryDisplayName(category: LessonCategory): String {
         return when (category) {
             LessonCategory.HYGIENE -> context.getString(R.string.category_hygiene)
