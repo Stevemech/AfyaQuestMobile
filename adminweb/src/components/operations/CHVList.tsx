@@ -177,29 +177,24 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-text-primary">{chv.name}</span>
-                    {chv.manualStatus === 'active' ? (
-                      <span className="w-3 h-3 rounded-full bg-success inline-block" title={t('chvList.clockedIn')} />
-                    ) : chv.manualStatus === 'inactive' ? (
-                      <span className="w-3 h-3 rounded-full bg-gray-400 inline-block" title={t('chvList.clockedOut')} />
-                    ) : chv.status === 'active' ? (
+                    {(chv.manualStatus === 'active' || (!chv.manualStatus && chv.status === 'active')) && (
                       <span className="w-3 h-3 rounded-full bg-success inline-block" />
-                    ) : null}
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    {chv.manualStatus && (
-                      <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold ${
-                        chv.manualStatus === 'active'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {chv.manualStatus === 'active' ? t('chvList.clockedIn') : t('chvList.clockedOut')}
-                      </span>
                     )}
-                    <StatusBadge
-                      type={chv.status === 'active' ? 'active' : chv.status === 'caution' ? 'caution' : 'inactive'}
-                      label={t(`chvList.status_${chv.status}`)}
-                    />
                   </div>
+                  <StatusBadge
+                    type={
+                      chv.manualStatus === 'active' ? 'active'
+                        : chv.manualStatus === 'inactive' ? 'inactive'
+                        : chv.status === 'active' ? 'active'
+                        : chv.status === 'caution' ? 'caution'
+                        : 'inactive'
+                    }
+                    label={
+                      chv.manualStatus === 'active' ? t('chvList.status_active')
+                        : chv.manualStatus === 'inactive' ? t('chvList.status_inactive')
+                        : t(`chvList.status_${chv.status}`)
+                    }
+                  />
                 </div>
                 <p className="text-xs text-text-secondary mt-0.5">{chv.clinic}</p>
                 <div className="flex items-center justify-between mt-1">
