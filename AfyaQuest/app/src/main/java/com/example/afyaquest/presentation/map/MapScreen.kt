@@ -197,7 +197,7 @@ private fun MapAndItineraryTab(
                 routeLatLngs.takeIf { it.size >= 2 }?.let { points ->
                     Polyline(
                         points = points,
-                        color = Color(0xFF2D6E6A),
+                        color = Color(0xFF254D4D),
                         width = 10f,
                         geodesic = true
                     )
@@ -294,7 +294,7 @@ private fun ItineraryStopRow(
 ) {
     val context = LocalContext.current
     val bgColor = if (stop.completed) {
-        Color(0xFF4CAF50).copy(alpha = 0.08f)
+        Color(0xFF438894).copy(alpha = 0.08f)
     } else {
         MaterialTheme.colorScheme.surface
     }
@@ -310,7 +310,7 @@ private fun ItineraryStopRow(
             // Order number / checkmark
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = if (stop.completed) Color(0xFF4CAF50) else MaterialTheme.colorScheme.primary
+                color = if (stop.completed) Color(0xFF438894) else MaterialTheme.colorScheme.primary
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
@@ -326,7 +326,7 @@ private fun ItineraryStopRow(
                     text = stop.label,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Medium,
-                    color = if (stop.completed) Color(0xFF388E3C) else MaterialTheme.colorScheme.onSurface
+                    color = if (stop.completed) Color(0xFF254D4D) else MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = stop.address,
@@ -343,7 +343,7 @@ private fun ItineraryStopRow(
             }
             Spacer(modifier = Modifier.width(8.dp))
             if (stop.completed) {
-                Badge(containerColor = Color(0xFF4CAF50)) {
+                Badge(containerColor = Color(0xFF438894)) {
                     Text(
                         text = "Visited",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),

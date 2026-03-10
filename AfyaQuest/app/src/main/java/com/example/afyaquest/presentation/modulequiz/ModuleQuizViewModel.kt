@@ -475,14 +475,18 @@ class ModuleQuizViewModel @Inject constructor(
 
     fun finishQuiz() {
         viewModelScope.launch {
-            // Persist quiz completion locally
-            progressDataStore.markQuizCompleted(moduleId)
+            try {
+                // Persist quiz completion locally
+                progressDataStore.markQuizCompleted(moduleId)
 
-            // Award XP
-            xpManager.addXP(
-                XpRewards.MODULE_COMPLETED,
-                "Completed quiz for module $moduleId"
-            )
+                // Award XP
+                xpManager.addXP(
+                    XpRewards.MODULE_COMPLETED,
+                    "Completed quiz for module $moduleId"
+                )
+            } catch (e: Exception) {
+                Log.d("ModuleQuizVM", "Local progress save failed: ${e.message}")
+            }
 
             // Sync to AWS (best-effort)
             try {

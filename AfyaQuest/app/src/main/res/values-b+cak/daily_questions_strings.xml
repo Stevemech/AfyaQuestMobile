@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Daily Question Categories -->
+    <string name="cat_hygiene">Rutzil K\'aslem (Hygiene)</string>
+    <string name="cat_nutrition">Ruwi\' Wa\'im</string>
+    <string name="cat_maternal_health">Rutzil Ruk\'aslem Nan</string>
+    <string name="cat_immunization">Koyonisaxïk (Immunization)</string>
+    <string name="cat_disease_prevention">Kuchajixïk Yab\'il</string>
+    <string name="cat_first_aid">Nab\'ey To\'ïk</string>
+    <string name="cat_child_care">Richinaxïk Ak\'alab\'</string>
+    <string name="cat_community_health">Rutzil K\'aslem Tinamit</string>
+    <string name="cat_reproductive_health">Rutzil Ruk\'aslem Alk\'uaxïk</string>
+    <string name="cat_emergency">Pa Jun Ramaj (Emergency)</string>
+
+    <!-- Daily Questions -->
+
+    <!-- Hygiene -->
+    <string name="dq_local_hyg_1">Jarupe\' ramaj nik\'atzin nach\'aj aq\'ab\' rik\'in jabón richin nelesäx ütz ri taq yab\'il?</string>
+    <string name="dq_local_hyg_1_a">5 taq segundo</string>
+    <string name="dq_local_hyg_1_b">10 taq segundo</string>
+    <string name="dq_local_hyg_1_c">Pa k\'a man ko\'öl ta 20 taq segundo</string>
+    <string name="dq_local_hyg_1_d">1 minuto</string>
+    <string name="dq_local_hyg_1_exp">Ri OMS (Organización Mundial de la Salud) nub\'ij chi nach\'aj aq\'ab\' rik\'in jabón pa k\'a man ko\'öl ta 20 taq segundo richin nelesäx ütz ri taq yab\'il chuqa\' richin nichajïx ri ruk\'iyik yab\'il.</string>
+
+    <string name="dq_local_hyg_2">Achike chi ke re taq re\' MAN jun ta chi ke ri nimaläj taq ramaj richin ruch\'ajik q\'ab\'?</string>
+    <string name="dq_local_hyg_2_a">Chuwäch nanuk\'u\' ri wa</string>
+    <string name="dq_local_hyg_2_b">Chi rij nawokisaj ri ja</string>
+    <string name="dq_local_hyg_2_c">Chi rij natz\'ët televisión</string>
+    <string name="dq_local_hyg_2_d">Chuwäch natij ri wa</string>
+    <string name="dq_local_hyg_2_exp">Ri nimaläj taq ramaj richin ruch\'ajik q\'ab\' k\'o: chuwäch nanuk\'u\'/natij wa, chi rij nawokisaj ja, chi rij nakoq\'ej o naxik\'a\', chi rij nachäp chicop. Ritz\'ët televisión man jun ta nimaläj ramaj.</string>
+
+    <string name="dq_local_hyg_3">Achike ri ütz rub\'eyal richin nib\'an ütz ri ya\' richin nitij pa jun ochoch?</string>
+    <string name="dq_local_hyg_3_a">Taya\' chi nitz\'apïx chi q\'equmal</string>
+    <string name="dq_local_hyg_3_b">Tatïj pa k\'a man ko\'öl ta 1 minuto</string>
+    <string name="dq_local_hyg_3_c">Taya\' asükär</string>
+    <string name="dq_local_hyg_3_d">Tach\'utuj xa xe rik\'in tz\'um</string>
+    <string name="dq_local_hyg_3_exp">Ri yatïj ya\' pa k\'a man ko\'öl ta 1 minuto (3 taq minuto pa nïm juyub\') nik\'ajmaj ronojel ri taq yab\'il chuqa\' ja ri ütz rub\'eyal richin nib\'an ütz ri ya\' pa ochoch.</string>
+
+    <string name="dq_local_hyg_4">Achike ri ütz rub\'eyal richin nitz\'aqatisaj ri tz\'um ak\'alab\'?</string>
+    <string name="dq_local_hyg_4_a">Taya\' chi pa k\'olib\'äl</string>
+    <string name="dq_local_hyg_4_b">Taya\' pa ri nima\' ya\'</string>
+    <string name="dq_local_hyg_4_c">Tatz\'aqatisaj pa jun latrina o ja</string>
+    <string name="dq_local_hyg_4_d">Tatz\'apïx pa ri k\'olib\'äl</string>
+    <string name="dq_local_hyg_4_exp">Ri tz\'um ak\'alab\' junelïk nik\'atzin nitz\'aqatisaj pa latrina o ja. Ri tz\'um pa k\'olib\'äl nuk\'äm ri ya\' chuqa\' nik\'iy ri yab\'il achi\'el Cólera chuqa\' tifus.</string>
+
+    <string name="dq_local_hyg_5">Achike yab\'il nik\'iy k\'ïy chi rij ya\' man ütz ta?</string>
+    <string name="dq_local_hyg_5_a">Malaria</string>
+    <string name="dq_local_hyg_5_b">Cólera</string>
+    <string name="dq_local_hyg_5_c">Tuberculosis</string>
+    <string name="dq_local_hyg_5_d">VIH</string>
+    <string name="dq_local_hyg_5_exp">Ri Cólera nik\'iy k\'ïy chi rij ya\' chuqa\' wa man ütz ta. Nik\'ajmaj k\'ïy tz\'um chuqa\' nik\'ajmaj ya\' chuqa\' we man nito\' ta, yatikïr nik\'ajmaj ri winäq.</string>
+
+    <!-- Nutrition -->
+    <string name="dq_local_nut_1">Jarupe\' ramaj nik\'atzin ri ch\'ajch\'öj ch\'uti\' nan xa xe?</string>
+    <string name="dq_local_nut_1_a">2 taq ik\'</string>
+    <string name="dq_local_nut_1_b">4 taq ik\'</string>
+    <string name="dq_local_nut_1_c">6 taq ik\'</string>
+    <string name="dq_local_nut_1_d">12 taq ik\'</string>
+    <string name="dq_local_nut_1_exp">Ri OMS nub\'ij chi ri ch\'ajch\'öj ch\'uti\' nan xa xe pa ri nab\'ey 6 taq ik\' ri k\'aslemal. Chi rij 6 ik\', nik\'atzin naya\' ch\'aqa\' wa chuqa\' katij chik ri ch\'uti\' nan chi rij ka\'i\' juna\' o ch\'aqa\' chik.</string>
+
+    <string name="dq_local_nut_2">Achike ruk\'ul man k\'o ta nik\'ajmaj ri retz\'eb\'al pa ak\'alab\' (ceguera nocturna)?</string>
+    <string name="dq_local_nut_2_a">Hierro</string>
+    <string name="dq_local_nut_2_b">Vitamina A</string>
+    <string name="dq_local_nut_2_c">Calcio</string>
+    <string name="dq_local_nut_2_d">Vitamina C</string>
+    <string name="dq_local_nut_2_exp">Ri man k\'o ta Vitamina A ja ri ruk\'ul nimaläj richin ri retz\'eb\'al pa ak\'alab\'. Ri wa rik\'in k\'ïy Vitamina A: q\'ana\' ichaj, mango, sek, q\'ana\' ch\'ajch\'öj ichaj, k\'oxom, chuqa\' kaxlan wa.</string>
+
+    <string name="dq_local_nut_3">Achike jun retal ri nïm ch\'ajch\'öj man ütz ta wa\'im pa ak\'alab\'?</string>
+    <string name="dq_local_nut_3_a">K\'o nïm nim</string>
+    <string name="dq_local_nut_3_b">Edema (nitz\'apïx) ri ka\'i\' arixk\'aq</string>
+    <string name="dq_local_nut_3_c">K\'o nïm rajilab\'al wa</string>
+    <string name="dq_local_nut_3_d">Nik\'ïy ruk\'ul aninäq</string>
+    <string name="dq_local_nut_3_exp">Ri edema pa ka\'i\' arixk\'aq (nitz\'apïx) ja jun retal kwashiorkor, jun ruwäch ch\'ajch\'öj man ütz ta. Ch\'aqa\' retal: man k\'o ta ruk\'ul, MUAC ko\'öl, chuqa\' retz\'eb\'al nïm ch\'ajch\'öj.</string>
+
+    <string name="dq_local_nut_4">Pa jarupe\' ik\' nik\'atzin naya\' ri ch\'aqa\' wa chi ke ri ch\'uti\' nan?</string>
+    <string name="dq_local_nut_4_a">2 taq ik\'</string>
+    <string name="dq_local_nut_4_b">4 taq ik\'</string>
+    <string name="dq_local_nut_4_c">6 taq ik\'</string>
+    <string name="dq_local_nut_4_d">9 taq ik\'</string>
+    <string name="dq_local_nut_4_exp">Ri ch\'aqa\' wa nik\'atzin naya\' pa 6 taq ik\' chuqa\' katij chik ri ch\'uti\' nan. Chi rij 6 ik\', xa xe ri ch\'uti\' nan nikiköl ronojel ri nik\'atzin.</string>
+
+    <string name="dq_local_nut_5">Achike chi ke re taq re\' ja ri ütz richin nichajïx anemia (man k\'o ta hierro)?</string>
+    <string name="dq_local_nut_5_a">Saq arroz</string>
+    <string name="dq_local_nut_5_b">Q\'eq ch\'ajch\'öj ichaj chuqa\' k\'oxom</string>
+    <string name="dq_local_nut_5_c">Taq banana</string>
+    <string name="dq_local_nut_5_d">Ruk\'wa\'</string>
+    <string name="dq_local_nut_5_exp">Ri q\'eq ch\'ajch\'öj ichaj chuqa\' k\'oxom k\'o k\'ïy hierro. Ri man k\'o ta hierro (anemia) jun chi ke ri k\'ïy taq ruk\'ul man ütz ta wa\'im pa ronojel ruch\'och\'och\'.</string>
+
+    <!-- Maternal Health -->
+    <string name="dq_local_mat_1">Jacha\' taq b\'ey nik\'atzin nib\'e pa kowilab\'äl toq k\'o rak\'wal (atención prenatal)?</string>
+    <string name="dq_local_mat_1_a">2 taq b\'ey</string>
+    <string name="dq_local_mat_1_b">4 taq b\'ey</string>
+    <string name="dq_local_mat_1_c">Pa k\'a man ko\'öl ta 8 taq b\'ey</string>
+    <string name="dq_local_mat_1_d">1 b\'ey</string>
+    <string name="dq_local_mat_1_exp">Ri OMS nub\'ij chi pa k\'a man ko\'öl ta 8 taq b\'ey richin atención prenatal toq k\'o rak\'wal, richin nik\'ajmaj ri sachoj chuqa\' richin nib\'an ütz ri to\'ïk chi ke ri nan.</string>
+
+    <string name="dq_local_mat_2">Achike chi ke re taq re\' ja jun retal k\'ax richin toq k\'o rak\'wal chuqa\' nik\'atzin to\'ïk aninäq?</string>
+    <string name="dq_local_mat_2_a">Man k\'ax ta nïm k\'axk\'ol pa saq\'ij</string>
+    <string name="dq_local_mat_2_b">Sangrado vaginal (nik\'e\'ej ri b\'e)</string>
+    <string name="dq_local_mat_2_c">Nik\'ïy rajilab\'al wa</string>
+    <string name="dq_local_mat_2_d">Man k\'ax ta k\'axk\'ol pa pamaj</string>
+    <string name="dq_local_mat_2_exp">Ri sangrado vaginal (nik\'e\'ej ri b\'e) toq k\'o rak\'wal ja jun retal k\'ax. Yatikïr nib\'ij chi k\'o placenta previa, desprendimiento, o aborto. Ch\'aqa\' retal: nïm k\'axk\'ol pa jolom, man ütz ta natz\'ët, nik\'el nipe, nïm tew.</string>
+
+    <string name="dq_local_mat_3">Achike suplemento nik\'atzin nuk\'u\' ri nan toq k\'o rak\'wal richin nichajïx ri defectos del tubo neural?</string>
+    <string name="dq_local_mat_3_a">Vitamina C</string>
+    <string name="dq_local_mat_3_b">Calcio</string>
+    <string name="dq_local_mat_3_c">Ácido fólico</string>
+    <string name="dq_local_mat_3_d">Vitamina D</string>
+    <string name="dq_local_mat_3_exp">Ri ácido fólico chuwäch chuqa\' toq k\'ak\' k\'o rak\'wal nik\'ajmaj ütz ri sachoj defectos del tubo neural achi\'el spina bífida pa ri k\'ak\'a\' aläx.</string>
+
+    <string name="dq_local_mat_4">Achike ja ri ruk\'ul nimaläj richin sachoj nan pa ronojel ruch\'och\'och\'?</string>
+    <string name="dq_local_mat_4_a">Malaria</string>
+    <string name="dq_local_mat_4_b">Hemorragia posparto (nïm tz\'ej chi rij xaläx)</string>
+    <string name="dq_local_mat_4_c">VIH</string>
+    <string name="dq_local_mat_4_d">Tuberculosis</string>
+    <string name="dq_local_mat_4_exp">Ri hemorragia posparto (nïm tz\'ej chi rij xaläx) ja ri ruk\'ul nimaläj richin sachoj nan pa ronojel ruch\'och\'och\'. Ri ütz rub\'eyal richin nik\'ajmaj ja ri activo rub\'eyal pa ri oxi\' ruxaq ri aläxik.</string>
+
+    <string name="dq_local_mat_5">Achike ora\' nik\'atzin naya\' ri k\'ak\'a\' aläx chi re ri ch\'uti\' nan nab\'ey mul?</string>
+    <string name="dq_local_mat_5_a">Pa ri nab\'ey hora chi rij xaläx</string>
+    <string name="dq_local_mat_5_b">Chi rij 6 taq hora</string>
+    <string name="dq_local_mat_5_c">Ri jun chik q\'ij</string>
+    <string name="dq_local_mat_5_d">Toq ri nan nub\'an chi ütz</string>
+    <string name="dq_local_mat_5_exp">Ri nab\'ey mul naya\' chi re ri ch\'uti\' nan pa ri nab\'ey hora chi rij xaläx yalan k\'atzinel. Ri colostrum (nab\'ey ruk\'wa\' nan) k\'o k\'ïy anticuerpos chuqa\' nik\'atzin taq ruwäch richin ri k\'ak\'a\' aläx.</string>
+
+    <!-- Immunization -->
+    <string name="dq_local_imm_1">Pa jarupe\' ik\' nik\'atzin naya\' ri tz\'u\' BCG chi ke ri ak\'alab\'?</string>
+    <string name="dq_local_imm_1_a">Toq xaläx</string>
+    <string name="dq_local_imm_1_b">6 wuqu\' q\'ij</string>
+    <string name="dq_local_imm_1_c">9 taq ik\'</string>
+    <string name="dq_local_imm_1_d">5 taq juna\'</string>
+    <string name="dq_local_imm_1_exp">Ri tz\'u\' BCG (richin tuberculosis) nik\'atzin naya\' toq xaläx o aninäq chi rij xaläx.</string>
+
+    <string name="dq_local_imm_2">Achike yab\'il nikichajij ri tz\'u\' pentavalente?</string>
+    <string name="dq_local_imm_2_a">Malaria, TB, Cólera, tifus, chuqa\' polio</string>
+    <string name="dq_local_imm_2_b">Difteria, tos ferina, tétanos, hepatitis B, chuqa\' Hib</string>
+    <string name="dq_local_imm_2_c">Sarampión, paperas, rubéola, varicela, chuqa\' polio</string>
+    <string name="dq_local_imm_2_d">VIH, hepatitis A, hepatitis B, HPV, chuqa\' meningitis</string>
+    <string name="dq_local_imm_2_exp">Ri tz\'u\' pentavalente nikichajij chi kiwäch 5 taq yab\'il: Difteria, Tos ferina, Tétanos, Hepatitis B, chuqa\' Haemophilus influenzae tipo b (Hib).</string>
+
+    <string name="dq_local_imm_3">Pa jarupe\' ik\' naya\' k\'ïy ri tz\'u\' sarampión?</string>
+    <string name="dq_local_imm_3_a">Toq xaläx</string>
+    <string name="dq_local_imm_3_b">6 wuqu\' q\'ij</string>
+    <string name="dq_local_imm_3_c">9 taq ik\'</string>
+    <string name="dq_local_imm_3_d">2 taq juna\'</string>
+    <string name="dq_local_imm_3_exp">Ri nab\'ey dosis sarampión naya\' k\'ïy pa 9 taq ik\'. Jun chik dosis naya\' pa 18 taq ik\' pa k\'ïy taq tinamit richin nib\'an ütz ri chajixïk.</string>
+
+    <string name="dq_local_imm_4">Achike ri ütz rub\'eyal richin nitz\'apïx ronojel ri taq tz\'u\'?</string>
+    <string name="dq_local_imm_4_a">Pa ruwäch k\'oja\'</string>
+    <string name="dq_local_imm_4_b">Pa jun congelador -20°C</string>
+    <string name="dq_local_imm_4_c">Pa jun refrigerador 2-8°C</string>
+    <string name="dq_local_imm_4_d">Pa q\'equmal q\'ij</string>
+    <string name="dq_local_imm_4_exp">Ronojel ri taq tz\'u\' nik\'atzin nitz\'apïx pa refrigerador 2-8°C richin nik\'ajmaj ri rusamaj. Re\' nib\'ïx cadena de frío. Jujun taq tz\'u\' man yatikïr ta nitïj.</string>
+
+    <string name="dq_local_imm_5">Achike chi ke re taq re\' ja jun contraindication (man ütz ta naya\' tz\'u\')?</string>
+    <string name="dq_local_imm_5_a">Man k\'ax ta tew</string>
+    <string name="dq_local_imm_5_b">Xk\'ul jun nïm reacción alérgica chi rij ri tz\'u\'</string>
+    <string name="dq_local_imm_5_c">Man k\'ax ta tz\'um</string>
+    <string name="dq_local_imm_5_d">Man k\'o ta ruk\'ul ütz</string>
+    <string name="dq_local_imm_5_exp">Jun nïm reacción alérgica (anafilaxia) chi rij jun tz\'u\' ja jun contraindication ütz. Ri man k\'ax ta yab\'il, tz\'um, o man k\'o ta ruk\'ul MAN ta ruma richin nitz\'apïx ri tz\'u\'.</string>
+
+    <!-- Disease Prevention -->
+    <string name="dq_local_dis_1">Achike ri rub\'eyal nimaläj richin nik\'iy ri malaria?</string>
+    <string name="dq_local_dis_1_a">Chi rij ya\' man ütz ta</string>
+    <string name="dq_local_dis_1_b">Chi rij ri tz\'ub\'uxïk taq mosco</string>
+    <string name="dq_local_dis_1_c">Chi rij nakoq\'ej</string>
+    <string name="dq_local_dis_1_d">Chi rij nachäp</string>
+    <string name="dq_local_dis_1_exp">Ri malaria nik\'iy chi rij ri tz\'ub\'uxïk jun mosco Anopheles ri k\'o yab\'il. Richin nichajïx: katwär chuxe\' malla rik\'in kunaj chuqa\' telesäx ri ya\' k\'o wi.</string>
+
+    <string name="dq_local_dis_2">Achike chi ke re taq re\' ja jun retal tuberculosis (TB)?</string>
+    <string name="dq_local_dis_2_a">Nakoq\'ej man tz\'aqät ta chi rij ka\'i\' wuqu\' q\'ij</string>
+    <string name="dq_local_dis_2_b">Retal pa ulew</string>
+    <string name="dq_local_dis_2_c">Nitz\'apïx ri taq b\'aq</string>
+    <string name="dq_local_dis_2_d">Man ütz ta natz\'ët</string>
+    <string name="dq_local_dis_2_exp">Ri nakoq\'ej man tz\'aqät ta chi rij ka\'i\' wuqu\' q\'ij ja ri retal k\'ïy richin TB pa siki\'x. Ch\'aqa\' retal: nik\'el nipe pa q\'equmal, nik\'ajmaj ruk\'ul, tew, chuqa\' nik\'e\'ej tz\'ej pa nakoq\'ej.</string>
+
+    <string name="dq_local_dis_3">Achike ri ütz rub\'eyal richin nichajïx ri yab\'il chi rij taq mosco?</string>
+    <string name="dq_local_dis_3_a">Nitij ya\' tïj</string>
+    <string name="dq_local_dis_3_b">Katwär chuxe\' malla rik\'in kunaj (ITN)</string>
+    <string name="dq_local_dis_3_c">Nuk\'u\' antibióticos</string>
+    <string name="dq_local_dis_3_d">Nitij ajo</string>
+    <string name="dq_local_dis_3_exp">Ri katwär chuxe\' malla rik\'in kunaj (ITN) jun chi ke ri ütz taq rub\'eyal richin nichajïx malaria chuqa\' ch\'aqa\' yab\'il chi rij taq mosco. Ri taq malla nik\'atzin nik\'ex o nitz\'aqatisaj.</string>
+
+    <string name="dq_local_dis_4">Achike ruma nik\'atzin ri ORS (solución de rehidratación oral)?</string>
+    <string name="dq_local_dis_4_a">Richin nito\' malaria</string>
+    <string name="dq_local_dis_4_b">Richin nichajïx ri man k\'o ta ya\' chi rij tz\'um</string>
+    <string name="dq_local_dis_4_c">Richin nito\' TB</string>
+    <string name="dq_local_dis_4_d">Richin nito\' neumonía</string>
+    <string name="dq_local_dis_4_exp">Ri ORS jun ruk\'ul ya\' ütz, atz\'am, chuqa\' asükär richin nichajïx chuqa\' nito\' ri man k\'o ta ya\' chi rij tz\'um. Nikitzol ri ya\' xelesäx chuqa\' nikito\' k\'ïy k\'aslemal jujun q\'ij.</string>
+
+    <string name="dq_local_dis_5">Achike rub\'eyal nik\'iy k\'ïy ri VIH?</string>
+    <string name="dq_local_dis_5_a">Chi rij tz\'ub\'uxïk taq mosco</string>
+    <string name="dq_local_dis_5_b">Chi rij nikomonij taq rub\'eyal</string>
+    <string name="dq_local_dis_5_c">Chi rij alk\'uaxïk man k\'o ta chajixïk chuqa\' tz\'ej man ütz ta</string>
+    <string name="dq_local_dis_5_d">Chi rij nakoq\'ej</string>
+    <string name="dq_local_dis_5_exp">Ri VIH nik\'iy k\'ïy chi rij alk\'uaxïk man k\'o ta condón, tz\'ej man ütz ta (jeringas/transfusiones), chuqa\' chi rij nan chuqa\' ak\'alab\' toq k\'o rak\'wal, xaläx, o ch\'uti\' nan.</string>
+
+    <!-- First Aid -->
+    <string name="dq_local_fa_1">Achike ri nab\'ey ruxaq toq natz\'ët jun winäq man k\'o ta retamab\'al?</string>
+    <string name="dq_local_fa_1_a">Taya\' ya\'</string>
+    <string name="dq_local_fa_1_b">Tatz\'eta\' we k\'o retamab\'al chuqa\' tawokoj to\'ïk</string>
+    <string name="dq_local_fa_1_c">Tasipaj aninäq</string>
+    <string name="dq_local_fa_1_d">Tach\'ob\'ej chi npe</string>
+    <string name="dq_local_fa_1_exp">Ri nab\'ey ruxaq: tatz\'eta\' we k\'o retamab\'al rik\'in tach\'äp chuqa\' tatzij, k\'a te ri\' tawokoj to\'ïk. Tatz\'eta\' we nuxlan chuqa\' tab\'ana\' CPR we nik\'atzin.</string>
+
+    <string name="dq_local_fa_2">Achike ri ütz rajilab\'al taq tz\'ub\'uxïk richin CPR chi ke nimaläj winäq?</string>
+    <string name="dq_local_fa_2_a">60 pa jun minuto</string>
+    <string name="dq_local_fa_2_b">80 pa jun minuto</string>
+    <string name="dq_local_fa_2_c">100-120 pa jun minuto</string>
+    <string name="dq_local_fa_2_d">150 pa jun minuto</string>
+    <string name="dq_local_fa_2_exp">Ri ütz rajilab\'al richin CPR ja 100-120 taq tz\'ub\'uxïk pa jun minuto. Ri taq tz\'ub\'uxïk nik\'atzin ko\'öl pa k\'a man ko\'öl ta ka\'i\' pulgada (5 cm) richin nimaläj winäq.</string>
+
+    <string name="dq_local_fa_3">Achike rub\'eyal nito\' jun man k\'ax ta tïj?</string>
+    <string name="dq_local_fa_3_a">Taya\' manteca o aceite</string>
+    <string name="dq_local_fa_3_b">Tatïj rik\'in ya\' ütz pa k\'a man ko\'öl ta 20 taq minuto</string>
+    <string name="dq_local_fa_3_c">Taya\' chi nitz\'apïx ri taq ampolla</string>
+    <string name="dq_local_fa_3_d">Taya\' hielo chikaj</string>
+    <string name="dq_local_fa_3_exp">Ri taq tïj man k\'ax ta nik\'atzin nitïj rik\'in ya\' ütz pa k\'a man ko\'öl ta 20 taq minuto. Man taya\' ta manteca, aceite, pasta dientes, o hielo. Tach\'utuj rik\'in jun tz\'um ütz.</string>
+
+    <string name="dq_local_fa_4">Achike tab\'ana\' we jun winäq tajin nik\'äm chuqa\' man yatikïr ta nakoq\'ej, natzij, o nuxlan?</string>
+    <string name="dq_local_fa_4_a">Taya\' ya\'</string>
+    <string name="dq_local_fa_4_b">Tab\'ana\' maniobras abdominales (Heimlich)</string>
+    <string name="dq_local_fa_4_c">Tach\'äp pa ulew</string>
+    <string name="dq_local_fa_4_d">Tab\'ij chi nujot</string>
+    <string name="dq_local_fa_4_exp">Richin jun winäq tajin nik\'äm chuqa\' k\'o retamab\'al, tab\'ana\' maniobras abdominales (Heimlich): katk\'oje\' chi rij chuqa\' taya\' taq tz\'ub\'uxïk chi rij ri pamaj chuwäch ri xuk\'.</string>
+
+    <string name="dq_local_fa_5">Achike rub\'eyal nichajïx ri nïm tz\'ej chi rij jun ch\'akul?</string>
+    <string name="dq_local_fa_5_a">Tayuj ri vendaje k\'ïy mul richin tatz\'eta\'</string>
+    <string name="dq_local_fa_5_b">Taya\' nïm to\'ïk, chikaj pa ri ch\'akul rik\'in tz\'um ütz</string>
+    <string name="dq_local_fa_5_c">Taya\' tourniquet achi\'el nab\'ey ruxaq</string>
+    <string name="dq_local_fa_5_d">Taya\' ya\' pa ri ch\'akul</string>
+    <string name="dq_local_fa_5_exp">Taya\' nïm to\'ïk, chikaj pa ri ch\'akul rik\'in tz\'um ütz o vendaje. Katk\'oje\' ri to\'ïk junelïk. We yatikïr, taya\' chi rij ri b\'aq. Xa xe katwokisaj tourniquet achi\'el ruk\'isib\'äl rub\'eyal.</string>
+
+    <!-- Child Care -->
+    <string name="dq_local_cc_1">Achike jun retal neumonía pa ak\'alab\' chi rij 5 juna\'?</string>
+    <string name="dq_local_cc_1_a">Nuxlan aninäq o k\'ax richin nuxlan</string>
+    <string name="dq_local_cc_1_b">Nitz\'ub\' ri ulew</string>
+    <string name="dq_local_cc_1_c">Man k\'o ta tz\'um</string>
+    <string name="dq_local_cc_1_d">K\'ïy rajilab\'al ya\'</string>
+    <string name="dq_local_cc_1_exp">Ri nuxlan aninäq o k\'ax richin nuxlan ja jun retal nimaläj richin neumonía pa ak\'alab\' chi rij 5 juna\'. Ch\'aqa\' retal: nik\'el nipe pa siki\'x, man yatikïr ta nitij, tew. Ri neumonía jun ruk\'ul nimaläj richin sachoj ak\'alab\' chi rij 5 juna\'.</string>
+
+    <string name="dq_local_cc_2">Achike ja ri retal k\'ax richin man k\'o ta ya\' pa ch\'uti\'?</string>
+    <string name="dq_local_cc_2_a">Ri taq pañal nik\'e\'ej</string>
+    <string name="dq_local_cc_2_b">Fontanela hundida (ri ko\'öl k\'olib\'äl pa jolom)</string>
+    <string name="dq_local_cc_2_c">Ütz rajilab\'al wa</string>
+    <string name="dq_local_cc_2_d">Nisamaj chuqa\' nik\'oje\'</string>
+    <string name="dq_local_cc_2_exp">Ri fontanela hundida (ri ko\'öl k\'olib\'äl pa jolom ri ch\'uti\') ja jun retal man k\'o ta ya\'. Ch\'aqa\' retal: q\'eq chi\'aj, man k\'o ta taq tz\'ej toq nwa\'ej, nik\'ajmaj ri nik\'e\'ej, chuqa\' man nisamaj ta.</string>
+
+    <string name="dq_local_cc_3">Pa jarupe\' ik\' nik\'atzin naya\' Vitamina A chi ke ri ak\'alab\'?</string>
+    <string name="dq_local_cc_3_a">Toq xaläx</string>
+    <string name="dq_local_cc_3_b">6 taq ik\'</string>
+    <string name="dq_local_cc_3_c">1 juna\'</string>
+    <string name="dq_local_cc_3_d">2 taq juna\'</string>
+    <string name="dq_local_cc_3_exp">Ri Vitamina A nik\'atzin naya\' pa 6 taq ik\' chuqa\' katb\'e jun mul pa 6 taq ik\' chi rij chi rij 5 juna\'. Ri Vitamina A yalan k\'atzinel richin ri chajixïk chuqa\' richin nichajïx retz\'eb\'al.</string>
+
+    <string name="dq_local_cc_4">Achike ri MUAC cutoff richin nïm ch\'ajch\'öj man ütz ta wa\'im pa ak\'alab\' 6-59 taq ik\'?</string>
+    <string name="dq_local_cc_4_a">Ko\'öl chi ke 11.5 cm</string>
+    <string name="dq_local_cc_4_b">Ko\'öl chi ke 13.5 cm</string>
+    <string name="dq_local_cc_4_c">Ko\'öl chi ke 15 cm</string>
+    <string name="dq_local_cc_4_d">Ko\'öl chi ke 17 cm</string>
+    <string name="dq_local_cc_4_exp">Ri MUAC ko\'öl chi ke 11.5 cm nib\'ij chi k\'o SAM (severe acute malnutrition) pa ak\'alab\' 6-59 taq ik\'. Ri MUAC 11.5-12.5 cm nib\'ij chi k\'o MAM (moderate acute malnutrition).</string>
+
+    <string name="dq_local_cc_5">Achike rub\'eyal nik\'atzin nib\'an ütz ri ORS?</string>
+    <string name="dq_local_cc_5_a">Tayuj ri ronojel sobre rik\'in 500 ml ya\'</string>
+    <string name="dq_local_cc_5_b">Tayuj ri ronojel sobre rik\'in 1 litro ya\' ütz</string>
+    <string name="dq_local_cc_5_c">Tayuj ri jun chik sobre rik\'in 2 taq litro ya\'</string>
+    <string name="dq_local_cc_5_d">Tayuj pa té k\'atan</string>
+    <string name="dq_local_cc_5_exp">Jun sobre ORS nik\'atzin nitz\'aqatisaj pa 1 litro (1000 ml) ya\' ütz. Ri solución nik\'atzin nokisäx pa 24 taq hora. Man tatïj ta ri solución o taya\' asükär.</string>
+
+    <!-- Community Health -->
+    <string name="dq_local_ch_1">Achike ri rub\'eyal richin ri samajinel pa k\'aslemal toq nub\'e pa ochoch?</string>
+    <string name="dq_local_ch_1_a">Richin nik\'ul ch\'a\'oj</string>
+    <string name="dq_local_ch_1_b">Richin nitz\'eta\' k\'aslemal, naya\' tijonik, chuqa\' nitaq we nik\'atzin</string>
+    <string name="dq_local_ch_1_c">Richin nik\'ul kunaj</string>
+    <string name="dq_local_ch_1_d">Richin nib\'an cirugía</string>
+    <string name="dq_local_ch_1_exp">Ri taq samajinel pa k\'aslemal nikib\'e pa achoch richin nitz\'eta\' ri k\'aslemal kichin ri taq winäq, nikiya\' tijonik pa k\'aslemal, nikit\'oj retal k\'ax, nikitaq pa kowilab\'äl, chuqa\' nikitz\'eta\' chi rij ri to\'ïk.</string>
+
+    <string name="dq_local_ch_2">Achike nib\'ij ri tzij \'referral\' (taqonem) pa k\'aslemal tinamit?</string>
+    <string name="dq_local_ch_2_a">Nitaq ri yab\'il winäq chi pa ochoch</string>
+    <string name="dq_local_ch_2_b">Nitaq ri yab\'il winäq pa jun k\'olib\'äl k\'aslemal nïm richin ch\'aqa\' to\'ïk</string>
+    <string name="dq_local_ch_2_c">Niya\' kunaj</string>
+    <string name="dq_local_ch_2_d">Nib\'an cirugía pa tinamit</string>
+    <string name="dq_local_ch_2_exp">Ri referral nib\'ij chi nitaq ri yab\'il winäq pa jun k\'olib\'äl k\'aslemal nïm o especialista richin to\'ïk ri man yatikïr ta nito\' pa tinamit. Ri taqonem aninäq yatikïr nikito\' k\'aslemal.</string>
+
+    <string name="dq_local_ch_3">Achike chi ke re taq re\' ja jun samaj k\'atzinel richin jun Voluntario pa K\'aslemal Tinamit?</string>
+    <string name="dq_local_ch_3_a">Cirugía</string>
+    <string name="dq_local_ch_3_b">Rutz\'eta\'nik ütz chuqa\' tijonik pa k\'aslemal</string>
+    <string name="dq_local_ch_3_c">Niya\' kunaj</string>
+    <string name="dq_local_ch_3_d">Nokisaj taq rayos X</string>
+    <string name="dq_local_ch_3_exp">Ri rutz\'eta\'nik ütz (active listening) chuqa\' tijonik pa k\'aslemal ja ri taq samaj k\'atzinel richin Voluntarios pa K\'aslemal. Nikib\'an achi\'el b\'ey chi rij tinamit chuqa\' ri rub\'eyal k\'aslemal.</string>
+
+    <string name="dq_local_ch_4">Achike ruma nik\'atzin ri rutz\'eta\'nik nik\'ïy (growth monitoring) pa ak\'alab\'?</string>
+    <string name="dq_local_ch_4_a">Richin nitz\'eta\' jarupe\' nim xtz\'aqät ri ak\'alab\'</string>
+    <string name="dq_local_ch_4_b">Richin nitz\'eta\' ri nik\'ïy ri ak\'alab\' chuqa\' nitz\'eta\' ch\'ajch\'öj aninäq</string>
+    <string name="dq_local_ch_4_c">Richin nitz\'eta\' ri etamab\'al ri ak\'alab\'</string>
+    <string name="dq_local_ch_4_d">Richin nitz\'eta\' achike tijonïk xtik\'ul</string>
+    <string name="dq_local_ch_4_exp">Ri growth monitoring nitz\'eta\' ri ruk\'ul chuqa\' nim ri ak\'alab\' chi rij ramaj richin nitz\'eta\' ri man nik\'ïy ta ütz o ch\'ajch\'öj aninäq. Re\' nik\'ajmaj chi yatikïr nito\' aninäq chuqa\' naya\' ch\'aqa\' wa\'im.</string>
+
+    <string name="dq_local_ch_5">Achike nik\'atzin nib\'an ri CHV toq nitz\'eta\' jun retal k\'ax pa jun yab\'il winäq?</string>
+    <string name="dq_local_ch_5_a">Tach\'ob\'ej chuqa\' tatz\'eta\' jun wuqu\' q\'ij</string>
+    <string name="dq_local_ch_5_b">Nitaq ri yab\'il winäq aninäq pa jun k\'olib\'äl k\'aslemal</string>
+    <string name="dq_local_ch_5_c">Niya\' kunaj</string>
+    <string name="dq_local_ch_5_d">Man tatz\'eta\' ta we ri yab\'il winäq nub\'ij chi ütz</string>
+    <string name="dq_local_ch_5_exp">Toq jun CHV nitz\'eta\' retal k\'ax, nik\'atzin nitaq ri yab\'il winäq aninäq pa ri k\'olib\'äl k\'aslemal naj. Ri man nitaq ta aninäq yatikïr nik\'ajmaj sachoj o sachoj k\'aslemal.</string>
+
+    <!-- Reproductive Health -->
+    <string name="dq_local_rh_1">Achike ja ri planificación familiar?</string>
+    <string name="dq_local_rh_1_a">Nitz\'eta\' jacha\' taq k\'ojlib\'äl k\'o pa ochoch</string>
+    <string name="dq_local_rh_1_b">Ri ruk\'ul nitz\'eta\' jacha\' taq ak\'alab\' chuqa\' jarupe\' nik\'ïy rik\'in taq rub\'eyal anticonceptivos</string>
+    <string name="dq_local_rh_1_c">Nitz\'eta\' taq reunión familiar</string>
+    <string name="dq_local_rh_1_d">Nitz\'eta\' achike tijonïk xtik\'ul ri ak\'alab\'</string>
+    <string name="dq_local_rh_1_exp">Ri planificación familiar nik\'ajmaj chi ri winäq yatikïr nitz\'eta\' jacha\' taq ak\'alab\' chuqa\' jarupe\' nik\'ïy rik\'in taq rub\'eyal anticonceptivos chuqa\' etamab\'al.</string>
+
+    <string name="dq_local_rh_2">Achike chi ke re taq re\' ja jun rub\'eyal anticonceptivo nik\'ïy chuqa\' yatikïr nitzolïx?</string>
+    <string name="dq_local_rh_2_a">Condones</string>
+    <string name="dq_local_rh_2_b">Taq píldora</string>
+    <string name="dq_local_rh_2_c">DIU (dispositivo intrauterino)</string>
+    <string name="dq_local_rh_2_d">Anticoncepción de emergencia</string>
+    <string name="dq_local_rh_2_exp">Ri DIU (dispositivo intrauterino) ja jun rub\'eyal anticonceptivo nik\'ïy (5-12 juna\' chi rij ri ruwäch). Ch\'aqa\' rub\'eyal nik\'ïy: implantes.</string>
+
+    <string name="dq_local_rh_3">Achike ri ütz rub\'eyal richin nichajïx ri taq ITS (infecciones de transmisión sexual)?</string>
+    <string name="dq_local_rh_3_a">Nuk\'u\' antibióticos junelïk</string>
+    <string name="dq_local_rh_3_b">Rokisaxik ütz chuqa\' junam condones</string>
+    <string name="dq_local_rh_3_c">Nach\'aj chi rij alk\'uaxïk</string>
+    <string name="dq_local_rh_3_d">Rokisaxik taq píldora</string>
+    <string name="dq_local_rh_3_exp">Ri rokisaxik ütz chuqa\' junam condones ja ri ütz rub\'eyal richin nichajïx ITS chi rij ri man alk\'uaxïk ta. Ri taq píldora nikichajij chi rij rak\'wal xa xe, man nikichajij ta chi kiwäch ITS.</string>
+
+    <!-- Emergency -->
+    <string name="dq_local_em_1">Achike ruma nik\'atzin ri posición de recuperación?</string>
+    <string name="dq_local_em_1_a">Jun rub\'eyal richin nujot ütz</string>
+    <string name="dq_local_em_1_b">Taya\' jun winäq man k\'o ta retamab\'al xa xe we nuxlan pa jun ruxaq richin nib\'an ütz ri b\'e richin nuxlan</string>
+    <string name="dq_local_em_1_c">Jun rub\'eyal richin taq flexiones</string>
+    <string name="dq_local_em_1_d">Jun rub\'eyal richin naya\' kunaj</string>
+    <string name="dq_local_em_1_exp">Ri posición de recuperación nokisäx richin winäq man k\'o ta retamab\'al xa xe we nuxlan ütz. Nik\'ajmaj ütz ri b\'e richin nuxlan chuqa\' nikichajij chi man nik\'äm ta chi rij tz\'ej o ya\'.</string>
+
+    <string name="dq_local_em_2">Achike ri taq retal stroke (accidente cerebrovascular)?</string>
+    <string name="dq_local_em_2_a">Nitz\'ub\' ri ulew chuqa\' naxik\'a\'</string>
+    <string name="dq_local_em_2_b">Ruwäch nitz\'apïx, man k\'o ta ch\'akul pa b\'aq, k\'ax richin natzij</string>
+    <string name="dq_local_em_2_c">K\'axk\'ol pa pamaj chuqa\' nïm k\'axk\'ol</string>
+    <string name="dq_local_em_2_d">K\'axk\'ol pa taq b\'aq chuqa\' nitz\'apïx</string>
+    <string name="dq_local_em_2_exp">Katk\'oj: FAST — Face (ruwäch nitz\'apïx), Arm (man k\'o ta ch\'akul pa b\'aq), Speech (k\'ax richin natzij), Time (nik\'atzin tawokoj to\'ïk aninäq). Ri stroke nik\'atzin to\'ïk aninäq richin nichajïx sachoj pa jolom.</string>
+
+    <string name="dq_local_em_3">Achike tab\'ana\' we jun winäq tajin k\'o convulsión (ataque)?</string>
+    <string name="dq_local_em_3_a">Taya\' jun ruwäch pa ri chi\'aj</string>
+    <string name="dq_local_em_3_b">Katk\'oje\' nïm</string>
+    <string name="dq_local_em_3_c">Telesäx ri taq ruwäch k\'ax chuqa\' tach\'utuj ri jolom</string>
+    <string name="dq_local_em_3_d">Taya\' ya\' pa ri ulew</string>
+    <string name="dq_local_em_3_exp">Toq k\'o convulsión, telesäx ri taq ruwäch k\'ax o k\'aj, tach\'utuj ri jolom, chuqa\' MAN taya\' ta jun ruwäch pa ri chi\'aj o katk\'oje\'. Chi rij xtz\'aqät ri convulsión, taya\' pa jun ruxaq.</string>
+
+    <!-- Module 8 Quiz: Male Reproductive System -->
+    <string name="quiz_8_q1">Achike ja ri nab\'ey rusamaj ri male reproductive system (ruwäch alk\'uaxïk achij)?</string>
+    <string name="quiz_8_q1_a">Richin nitz\'apïx ri tew ri b\'aq</string>
+    <string name="quiz_8_q1_b">Xa xe richin nitz\'uq taq hormona</string>
+    <string name="quiz_8_q1_c">Richin nib\'an chuqa\' nitaq esperma chuqa\' nitz\'uq taq hormona achij</string>
+    <string name="quiz_8_q1_d">Richin nisüy ri tz\'ej</string>
+    <string name="quiz_8_q1_exp">Ri male reproductive system nib\'an esperma chuqa\' nitaq, chuqa\' nitz\'uq taq hormona achij achi\'el testosterona.</string>
+
+    <string name="quiz_8_q2">Achike ruwäch nik\'ajmaj chi ri tz\'ej chuqa\' ri semen yeb\'e?</string>
+    <string name="quiz_8_q2_a">Vas deferens</string>
+    <string name="quiz_8_q2_b">Próstata</string>
+    <string name="quiz_8_q2_c">Uretra</string>
+    <string name="quiz_8_q2_d">Vesícula seminal</string>
+    <string name="quiz_8_q2_exp">Ri uretra ja ri b\'e rik\'in nik\'e\'ej ri tz\'ej chuqa\' ri semen.</string>
+
+    <string name="quiz_8_q3">Ri pene k\'o jacha\' taq ruwäch nimaläj?</string>
+    <string name="quiz_8_q3_a">Shaft chuqa\' escroto</string>
+    <string name="quiz_8_q3_b">Shaft chuqa\' glans del pene</string>
+    <string name="quiz_8_q3_c">Glans chuqa\' uretra</string>
+    <string name="quiz_8_q3_d">Shaft chuqa\' vas deferens</string>
+    <string name="quiz_8_q3_exp">Ri pene k\'o ri shaft (ri nimab\'äl) chuqa\' ri glans (ri ko\'öl ruk\'isib\'äl).</string>
+
+    <string name="quiz_8_q4">Achike ja ri nab\'ey rusamaj ri testículos?</string>
+    <string name="quiz_8_q4_a">Nitz\'uq tz\'ej</string>
+    <string name="quiz_8_q4_b">Nitz\'apïx líquido seminal</string>
+    <string name="quiz_8_q4_c">Nitz\'uq esperma chuqa\' testosterona</string>
+    <string name="quiz_8_q4_d">Nitz\'apïx ri presión pa tz\'ej</string>
+    <string name="quiz_8_q4_exp">Ri testículos nitz\'uq esperma chuqa\' ri hormona testosterona.</string>
+
+    <string name="quiz_8_q5">Ri vas deferens nuk\'äm ri testículos chi ke:</string>
+    <string name="quiz_8_q5_a">Próstata</string>
+    <string name="quiz_8_q5_b">Uretra</string>
+    <string name="quiz_8_q5_c">Vejiga</string>
+    <string name="quiz_8_q5_d">Vesícula seminal</string>
+    <string name="quiz_8_q5_exp">Ri vas deferens ja jun b\'e nik\'am ri esperma chi rij ri testículos chi ke ri uretra richin eyaculación.</string>
+
+    <string name="quiz_8_q6">Ri vesículas seminales nitz\'uq k\'ïy:</string>
+    <string name="quiz_8_q6_a">Testosterona</string>
+    <string name="quiz_8_q6_b">Tz\'ej</string>
+    <string name="quiz_8_q6_c">Líquido nikiköl ri semen chuqa\' nikito\'o\' ri esperma</string>
+    <string name="quiz_8_q6_d">Taq célula esperma</string>
+    <string name="quiz_8_q6_exp">Ri vesículas seminales nitz\'uq jun líquido rik\'in k\'ïy ruwäch wa\'im richin nib\'an ri semen chuqa\' nikito\'o\' ri esperma.</string>
+
+    <string name="quiz_8_q7">Ri glándula próstata nitz\'uq richin ri semen:</string>
+    <string name="quiz_8_q7_a">Esperma</string>
+    <string name="quiz_8_q7_b">Ri líquido seminal ch\'aqa\' chik</string>
+    <string name="quiz_8_q7_c">Tz\'ej</string>
+    <string name="quiz_8_q7_d">Xa xe taq hormona</string>
+    <string name="quiz_8_q7_exp">Ri glándula próstata nitz\'uq jun líquido ruk\'wa\' nikimon ri esperma chuqa\' ri líquido vesícula seminal richin nib\'an semen.</string>
+
+    <string name="quiz_8_q8">Achike hormona nib\'ij chi ja ri andrógeno nimaläj?</string>
+    <string name="quiz_8_q8_a">Estrógeno</string>
+    <string name="quiz_8_q8_b">Progesterona</string>
+    <string name="quiz_8_q8_c">Testosterona</string>
+    <string name="quiz_8_q8_d">Insulina</string>
+    <string name="quiz_8_q8_exp">Ri testosterona ja ri hormona achij nab\'ey chuqa\' ri andrógeno nimaläj, richin ri taq retal achij chuqa\' rusamaj alk\'uaxïk.</string>
+
+    <string name="quiz_8_q9">Ri testosterona nik\'ajmaj achike chi ke re taq re\'?</string>
+    <string name="quiz_8_q9_a">Ruch\'ab\'al ko\'öl chuqa\' nik\'ïy ruk\'ul ch\'akul</string>
+    <string name="quiz_8_q9_b">Ri tz\'ej nik\'ajmaj</string>
+    <string name="quiz_8_q9_c">Ri riñones nisüy</string>
+    <string name="quiz_8_q9_d">Nitz\'uq taq enzima digestivas</string>
+    <string name="quiz_8_q9_exp">Ri testosterona nik\'ajmaj ri taq retal achij achi\'el ruch\'ab\'al ko\'öl chuqa\' nik\'ïy ruk\'ul ch\'akul.</string>
+
+    <string name="quiz_8_q10">Achike nib\'ij chi k\'ax richin nib\'an o nik\'oje\' jun erección?</string>
+    <string name="quiz_8_q10_a">Infertilidad</string>
+    <string name="quiz_8_q10_b">ITS</string>
+    <string name="quiz_8_q10_c">Disfunción eréctil (impotencia)</string>
+    <string name="quiz_8_q10_d">Esperma man nisamaj ta ütz</string>
+    <string name="quiz_8_q10_exp">Ri disfunción eréctil (impotencia) nib\'ij chi man yatikïr ta nib\'an o nik\'oje\' jun erección ütz richin alk\'uaxïk.</string>
+
+    <!-- Module 9 Quiz: Female Reproductive System -->
+    <string name="quiz_9_q1">Achike chi ke re taq re\' ja jun ruwäch nimaläj ri female reproductive system?</string>
+    <string name="quiz_9_q1_a">Próstata</string>
+    <string name="quiz_9_q1_b">Ovarios</string>
+    <string name="quiz_9_q1_c">Testículos</string>
+    <string name="quiz_9_q1_d">Vas deferens</string>
+    <string name="quiz_9_q1_exp">Ri ovarios ja jun ruwäch nimaläj ri female reproductive system. Ri próstata, testículos, chuqa\' vas deferens ja ri male reproductive system.</string>
+
+    <string name="quiz_9_q2">Achike ja ri nab\'ey rusamaj ri ovarios?</string>
+    <string name="quiz_9_q2_a">Nichajij ri taq b\'e pa k\'olib\'äl</string>
+    <string name="quiz_9_q2_b">Nitz\'uq taq óvulo (huevo)</string>
+    <string name="quiz_9_q2_c">Nitaq ri aläx</string>
+    <string name="quiz_9_q2_d">Nitz\'apïx esperma</string>
+    <string name="quiz_9_q2_exp">Ri ovarios nitz\'uq taq óvulo chuqa\' nitz\'uq taq hormona achi\'el estrógeno chuqa\' progesterona.</string>
+
+    <string name="quiz_9_q3">Ri trompas de Falopio nuk\'äm ri ovarios chi ke:</string>
+    <string name="quiz_9_q3_a">Vagina</string>
+    <string name="quiz_9_q3_b">Vulva</string>
+    <string name="quiz_9_q3_c">Útero</string>
+    <string name="quiz_9_q3_d">Glándula pituitaria</string>
+    <string name="quiz_9_q3_exp">Ri trompas de Falopio nik\'am ri taq óvulo chi rij ri ovarios chi ke ri útero, chuqa\' k\'o wawe\' nik\'ul ri fertilización.</string>
+
+    <string name="quiz_9_q4">Achike k\'o wi nik\'ïy ri feto toq k\'o rak\'wal?</string>
+    <string name="quiz_9_q4_a">Vagina</string>
+    <string name="quiz_9_q4_b">Ovarios</string>
+    <string name="quiz_9_q4_c">Trompas de Falopio</string>
+    <string name="quiz_9_q4_d">Útero</string>
+    <string name="quiz_9_q4_exp">Ri útero (matriz) ja ri ruwäch k\'o wi nik\'ul ri óvulo chuqa\' nik\'ïy ri feto toq k\'o rak\'wal.</string>
+
+    <string name="quiz_9_q5">Ri vagina nib\'an achike?</string>
+    <string name="quiz_9_q5_a">Nitz\'uq taq óvulo</string>
+    <string name="quiz_9_q5_b">Nichajij ri taq b\'e pa k\'olib\'äl</string>
+    <string name="quiz_9_q5_c">Nuk\'äm ri útero chi ke k\'olib\'äl chuqa\' nik\'ajmaj chi yok ri esperma</string>
+    <string name="quiz_9_q5_d">Nitz\'uq taq hormona</string>
+    <string name="quiz_9_q5_exp">Ri vagina ja ri b\'e nuk\'äm ri útero chi ke k\'olib\'äl. Nik\'ajmaj chi yok ri esperma, nib\'an achi\'el b\'e richin aläx, chuqa\' nik\'ajmaj chi nik\'e\'ej ri tz\'ej menstrual.</string>
+
+    <string name="quiz_9_q6">Ri vulva nib\'an k\'ïy:</string>
+    <string name="quiz_9_q6_a">Nitz\'uq taq hormona</string>
+    <string name="quiz_9_q6_b">Nichajij ri taq b\'e pa k\'olib\'äl chi kiwäch sachoj chuqa\' yab\'il</string>
+    <string name="quiz_9_q6_c">Nik\'am ri taq óvulo</string>
+    <string name="quiz_9_q6_d">Nito\'o\' ri nik\'ïy ri feto</string>
+    <string name="quiz_9_q6_exp">Ri vulva k\'o ri taq ruwäch pa k\'olib\'äl chuqa\' rusamaj nab\'ey ja richin nichajij ri vagina chuqa\' uretra chi kiwäch sachoj chuqa\' yab\'il.</string>
+
+    <string name="quiz_9_q7">Achike glándulas nitz\'apïx ri ciclo menstrual?</string>
+    <string name="quiz_9_q7_a">Glándula tiroides chuqa\' adrenales</string>
+    <string name="quiz_9_q7_b">Ovarios chuqa\' glándula pituitaria</string>
+    <string name="quiz_9_q7_c">Páncreas chuqa\' ovarios</string>
+    <string name="quiz_9_q7_d">Útero chuqa\' k\'oxom</string>
+    <string name="quiz_9_q7_exp">Ri ciclo menstrual nitz\'apïx chi rij taq hormona chi ke ri ovarios (estrógeno, progesterona) chuqa\' ri glándula pituitaria (FSH, LH).</string>
+
+    <string name="quiz_9_q8">Ri ciclo menstrual nik\'ïy k\'ïy ramaj:</string>
+    <string name="quiz_9_q8_a">14 taq q\'ij</string>
+    <string name="quiz_9_q8_b">21 taq q\'ij</string>
+    <string name="quiz_9_q8_c">28 taq q\'ij</string>
+    <string name="quiz_9_q8_d">35 taq q\'ij</string>
+    <string name="quiz_9_q8_exp">Ri ciclo menstrual nik\'ïy k\'ïy 28 taq q\'ij, xa xe ri 21-35 taq q\'ij nib\'ij chi ütz.</string>
+
+    <string name="quiz_9_q9">Ri embarazo ectópico nik\'ul k\'ïy pa:</string>
+    <string name="quiz_9_q9_a">Útero</string>
+    <string name="quiz_9_q9_b">Vagina</string>
+    <string name="quiz_9_q9_c">Trompa de Falopio</string>
+    <string name="quiz_9_q9_d">Vulva</string>
+    <string name="quiz_9_q9_exp">Ri embarazo ectópico nik\'ul toq ri óvulo nik\'ul man pa útero ta. Ri trompa de Falopio ja ri k\'olib\'äl k\'ïy.</string>
+
+    <string name="quiz_9_q10">Ri placenta previa nib\'ij chi:</string>
+    <string name="quiz_9_q10_a">Ri placenta nitz\'apïx chi rij ri útero chuwäch xaläx</string>
+    <string name="quiz_9_q10_b">Ri placenta nitz\'apïx ri b\'e ri útero (cuello uterino)</string>
+    <string name="quiz_9_q10_c">Ri feto nik\'ïy chi k\'olib\'äl ri útero</string>
+    <string name="quiz_9_q10_d">Ri tejido endometrial nik\'ïy chi k\'olib\'äl ri útero</string>
+    <string name="quiz_9_q10_exp">Ri placenta previa nik\'ul toq ri placenta nitz\'apïx ri cuello uterino (b\'e ri útero), ri yatikïr nib\'an sachoj toq nialäx.</string>
+
+    <!-- Module 10 Quiz: Urinary System -->
+    <string name="quiz_10_q1">Achike chi ke re taq re\' MAN jun ta ruwäch ri urinary system?</string>
+    <string name="quiz_10_q1_a">Riñón</string>
+    <string name="quiz_10_q1_b">Uréter</string>
+    <string name="quiz_10_q1_c">K\'oxom (hígado)</string>
+    <string name="quiz_10_q1_d">Uretra</string>
+    <string name="quiz_10_q1_exp">Ri k\'oxom (hígado) ja ruwäch digestivo, man jun ta ri urinary system. Ri riñones, uréteres, chuqa\' uretra ja ri taq ruwäch urinary system.</string>
+
+    <string name="quiz_10_q2">Achike ruma nik\'atzin ri jolom (cerebro) richin ri nik\'e\'ej?</string>
+    <string name="quiz_10_q2_a">Nutaq taq hormona richin nisüy ri taq toxina chi rij ri tz\'ej</string>
+    <string name="quiz_10_q2_b">Nitz\'apïx ri nik\'e\'ej chuqa\' nik\'ïy ri vejiga</string>
+    <string name="quiz_10_q2_c">Nik\'ajmaj chi yok ri tz\'ej pa vejiga</string>
+    <string name="quiz_10_q2_d">Nitz\'eta\' ri taq toxina pa tz\'ej</string>
+    <string name="quiz_10_q2_exp">Ri jolom (cerebro) nik\'ul taq retal chi ke ri vejiga chuqa\' nitz\'apïx achike ora\' nik\'e\'ej o nik\'oje\' ri tz\'ej rik\'in nitz\'apïx ri taq ch\'akul.</string>
+
+    <string name="quiz_10_q3">Achike chi ke re taq re\' ja jun yab\'il k\'ïy chi rij ri urinary system?</string>
+    <string name="quiz_10_q3_a">ITU (infecciones tracto urinario)</string>
+    <string name="quiz_10_q3_b">Neumonía</string>
+    <string name="quiz_10_q3_c">Hipertensión</string>
+    <string name="quiz_10_q3_d">Convulsión</string>
+    <string name="quiz_10_q3_exp">Ri ITU (infecciones tracto urinario) ja jun chi ke ri yab\'il k\'ïy chi rij ri urinary system. Ri neumonía, hipertensión, chuqa\' convulsión man taq yab\'il urinary.</string>
+
+    <string name="quiz_10_q4">Achike yatikïr nib\'an ITU?</string>
+    <string name="quiz_10_q4_a">Ri nik\'ïy taq toxina pa tz\'ej</string>
+    <string name="quiz_10_q4_b">Nitij k\'ïy ya\'</string>
+    <string name="quiz_10_q4_c">Ri taq bacteria yeb\'e pa jun ruwäch ri tracto urinario</string>
+    <string name="quiz_10_q4_d">Katk\'oje\' pa junam ja achi\'el jun winäq k\'o ITU</string>
+    <string name="quiz_10_q4_exp">Ri ITU nik\'ul chi rij taq bacteria yeb\'e pa ri tracto urinario, k\'ïy E. coli chi ke ri digestivo. Ri ITU man nik\'iy ta chi rij ja o chi rij nitij ya\'.</string>
+
+    <string name="quiz_10_q5">Achike chi ke re taq re\' MAN jun ta retal ITU?</string>
+    <string name="quiz_10_q5_a">K\'axk\'ol chuqa\' nitz\'ub\' toq nik\'e\'ej</string>
+    <string name="quiz_10_q5_b">Ri tz\'ej nitz\'apïx chuqa\' k\'o tz\'ej</string>
+    <string name="quiz_10_q5_c">Nik\'ïy rajilab\'al chuqa\' aninäq nik\'atzin nik\'e\'ej</string>
+    <string name="quiz_10_q5_d">Nïm chuqa\' saq tz\'ej (descarga)</string>
+    <string name="quiz_10_q5_exp">Ri nïm chuqa\' saq descarga nik\'ul k\'ïy chi rij infección por hongos, man ITU ta. Ri k\'axk\'ol toq nik\'e\'ej, tz\'ej nitz\'apïx o k\'o tz\'ej, chuqa\' nik\'ïy rajilab\'al nik\'e\'ej ja ri taq retal ITU.</string>
+
+    <string name="quiz_10_q6">Ri ITU nik\'ul k\'ïy chi ke ixöq chi ke achijab\'.</string>
+    <string name="quiz_10_q6_a">Ütz (ja chi\')</string>
+    <string name="quiz_10_q6_b">Man ütz ta</string>
+    <string name="quiz_10_q6_exp">Ütz. Ri ixöq k\'o uretra ko\'öl, ri nik\'ajmaj chi ri taq bacteria yeb\'e pa vejiga aninäq, chuqa\' re\' ruma nik\'ul k\'ïy ITU pa ixöq.</string>
+
+    <string name="quiz_10_q7">Achike ja ri cálculos renales (kidney stones)?</string>
+    <string name="quiz_10_q7_a">Taq depósito toxina ácida nik\'ajmaj sachoj pa ri cápsula renal</string>
+    <string name="quiz_10_q7_b">Taq ruk\'ul k\'ax rik\'in atz\'am chuqa\' minerales</string>
+    <string name="quiz_10_q7_c">Taq ruwäch nik\'ajmaj nisüy ri taq toxina chi rij ri tz\'ej</string>
+    <string name="quiz_10_q7_d">Taq proteína nik\'ajmaj nib\'an ri tz\'ej</string>
+    <string name="quiz_10_q7_exp">Ri cálculos renales ja taq ruk\'ul k\'ax rik\'in atz\'am chuqa\' minerales nik\'ul pa ri riñones chuqa\' yatikïr nik\'ajmaj k\'ïy k\'axk\'ol toq yeb\'e pa ri tracto urinario.</string>
+
+    <string name="quiz_10_q8">Achike chi ke re taq re\' MAN jun ta retal cálculos renales?</string>
+    <string name="quiz_10_q8_a">Nïm migraña</string>
+    <string name="quiz_10_q8_b">Nïm k\'axk\'ol pa pamaj chuqa\' chi rij ri útero</string>
+    <string name="quiz_10_q8_c">Nïm tew</string>
+    <string name="quiz_10_q8_d">Nik\'el nipe</string>
+    <string name="quiz_10_q8_exp">Ri nïm migraña man jun ta retal k\'ïy richin cálculos renales. Ri taq retal k\'ïy: nïm k\'axk\'ol pa pamaj o chi rij útero, tew, chuqa\' nik\'el nipe.</string>
+
+    <string name="quiz_10_q9">Achike ja jun retal man k\'o ta ch\'ajch\'öj ya\' ütz?</string>
+    <string name="quiz_10_q9_a">Ri tz\'ej k\'o nïm b\'anon</string>
+    <string name="quiz_10_q9_b">Ri tz\'ej man k\'o ta rub\'onil</string>
+    <string name="quiz_10_q9_c">Nik\'ïy rajilab\'al nik\'e\'ej</string>
+    <string name="quiz_10_q9_d">A chuqa\' B</string>
+    <string name="quiz_10_q9_exp">Ri tz\'ej k\'o nïm b\'anon chuqa\' q\'eq nib\'ij chi man k\'o ta ch\'ajch\'öj ya\' ütz. Ri tz\'ej man k\'o ta rub\'onil nib\'ij chi ütz ri ch\'ajch\'öj ya\'.</string>
+
+    <string name="quiz_10_q10">Achike ja jun rub\'eyal richin nib\'an ütz ri urinary system?</string>
+    <string name="quiz_10_q10_a">Nach\'aj chi rij chi rij (back to front)</string>
+    <string name="quiz_10_q10_b">Nitij ya\' junelïk</string>
+    <string name="quiz_10_q10_c">Man nik\'e\'ej ta toq nik\'atzin</string>
+    <string name="quiz_10_q10_d">Katk\'oje\' k\'ïy ramaj pa ja</string>
+    <string name="quiz_10_q10_exp">Ri nitij ya\' junelïk nik\'ajmaj nelesäx ri taq bacteria chi rij ri tracto urinario. Ri ch\'aqa\' chik rub\'eyal yatikïr nik\'ajmaj sachoj urinary.</string>
+</resources>

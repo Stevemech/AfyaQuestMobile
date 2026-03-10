@@ -172,8 +172,8 @@ fun LessonCard(
         Difficulty.HARD -> stringResource(R.string.difficulty_hard)
     }
     val difficultyColor = when (lesson.difficulty) {
-        Difficulty.EASY -> Color(0xFF4CAF50)
-        Difficulty.MEDIUM -> Color(0xFFFF9800)
+        Difficulty.EASY -> Color(0xFF438894)
+        Difficulty.MEDIUM -> Color(0xFFEFA03F)
         Difficulty.HARD -> Color(0xFFF44336)
     }
 
@@ -199,7 +199,7 @@ fun LessonCard(
 
                 if (lesson.completed) {
                     Badge(
-                        containerColor = Color(0xFF4CAF50)
+                        containerColor = Color(0xFF438894)
                     ) {
                         Text(
                             text = "✓",
@@ -328,8 +328,8 @@ fun LessonDetailScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val difficultyColor = when (lesson.difficulty) {
-                    Difficulty.EASY -> Color(0xFF4CAF50)
-                    Difficulty.MEDIUM -> Color(0xFFFF9800)
+                    Difficulty.EASY -> Color(0xFF438894)
+                    Difficulty.MEDIUM -> Color(0xFFEFA03F)
                     Difficulty.HARD -> Color(0xFFF44336)
                 }
                 val difficultyLabel = when (lesson.difficulty) {
@@ -369,7 +369,7 @@ fun LessonDetailScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFF4CAF50).copy(alpha = 0.1f)
+                        containerColor = Color(0xFF438894).copy(alpha = 0.1f)
                     )
                 ) {
                     Row(

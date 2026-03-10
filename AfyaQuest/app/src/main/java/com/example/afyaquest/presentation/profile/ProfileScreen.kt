@@ -17,10 +17,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.afyaquest.R
 import com.example.afyaquest.domain.model.Achievement
+import com.example.afyaquest.presentation.dashboard.translatedRank
 
 /**
  * Profile screen with tabs for Overview, Achievements, and Reflections
@@ -40,10 +43,10 @@ fun ProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Profile", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.profile), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -59,17 +62,17 @@ fun ProfileScreen(
                 Tab(
                     selected = selectedTab == 0,
                     onClick = { viewModel.setSelectedTab(0) },
-                    text = { Text("Overview") }
+                    text = { Text(stringResource(R.string.overview)) }
                 )
                 Tab(
                     selected = selectedTab == 1,
                     onClick = { viewModel.setSelectedTab(1) },
-                    text = { Text("Achievements") }
+                    text = { Text(stringResource(R.string.achievements)) }
                 )
                 Tab(
                     selected = selectedTab == 2,
                     onClick = { viewModel.setSelectedTab(2) },
-                    text = { Text("Reflections") }
+                    text = { Text(stringResource(R.string.reflections)) }
                 )
             }
 
@@ -131,7 +134,7 @@ fun OverviewTab(xpData: com.example.afyaquest.util.XpData, quickStats: com.examp
                     }
 
                     Text(
-                        text = "Level ${xpData.level} - ${xpData.rank}",
+                        text = "${stringResource(R.string.level_value, xpData.level)} - ${translatedRank(xpData.rank)}",
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
@@ -157,13 +160,13 @@ fun OverviewTab(xpData: com.example.afyaquest.util.XpData, quickStats: com.examp
                     modifier = Modifier.weight(1f),
                     icon = "💎",
                     value = "${xpData.totalXP}",
-                    label = "Total XP"
+                    label = stringResource(R.string.total_xp)
                 )
                 StatCard(
                     modifier = Modifier.weight(1f),
                     icon = "🔥",
                     value = "${xpData.streak}",
-                    label = "Day Streak"
+                    label = stringResource(R.string.day_streak)
                 )
             }
         }
@@ -177,13 +180,13 @@ fun OverviewTab(xpData: com.example.afyaquest.util.XpData, quickStats: com.examp
                     modifier = Modifier.weight(1f),
                     icon = "❤️",
                     value = "${xpData.lives}",
-                    label = "Lives"
+                    label = stringResource(R.string.lives)
                 )
                 StatCard(
                     modifier = Modifier.weight(1f),
                     icon = "🎯",
                     value = "${xpData.level}",
-                    label = "Level"
+                    label = stringResource(R.string.level)
                 )
             }
         }
@@ -204,15 +207,15 @@ fun OverviewTab(xpData: com.example.afyaquest.util.XpData, quickStats: com.examp
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Status",
+                        text = stringResource(R.string.status_label),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Badge(
-                        containerColor = Color(0xFF4CAF50)
+                        containerColor = Color(0xFF438894)
                     ) {
                         Text(
-                            text = "Active",
+                            text = stringResource(R.string.status_active),
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                             color = Color.White,
                             fontWeight = FontWeight.Bold
@@ -230,15 +233,15 @@ fun OverviewTab(xpData: com.example.afyaquest.util.XpData, quickStats: com.examp
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Quick Stats",
+                        text = stringResource(R.string.quick_stats),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
 
-                    StatRow(label = "Lessons Completed", value = "${quickStats.lessonsCompleted}")
-                    StatRow(label = "Videos Watched", value = "${quickStats.videosWatched}")
-                    StatRow(label = "Quizzes Completed", value = "${quickStats.quizzesCompleted}")
-                    StatRow(label = "Reports Submitted", value = "${quickStats.reportsSubmitted}")
+                    StatRow(label = stringResource(R.string.stat_lessons_completed), value = "${quickStats.lessonsCompleted}")
+                    StatRow(label = stringResource(R.string.stat_videos_watched), value = "${quickStats.videosWatched}")
+                    StatRow(label = stringResource(R.string.stat_quizzes_completed), value = "${quickStats.quizzesCompleted}")
+                    StatRow(label = stringResource(R.string.stat_reports_submitted), value = "${quickStats.reportsSubmitted}")
                 }
             }
         }
@@ -311,7 +314,7 @@ fun AchievementsTab(achievements: List<Achievement>) {
         // Unlocked achievements
         item {
             Text(
-                text = "Unlocked (${unlockedAchievements.size})",
+                text = stringResource(R.string.unlocked_count, unlockedAchievements.size),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -325,7 +328,7 @@ fun AchievementsTab(achievements: List<Achievement>) {
         item {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Locked (${lockedAchievements.size})",
+                text = stringResource(R.string.locked_count, lockedAchievements.size),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -410,7 +413,7 @@ fun AchievementCard(achievement: Achievement) {
                 if (achievement.unlocked && achievement.unlockedDate != null) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Unlocked on ${achievement.unlockedDate}",
+                        text = stringResource(R.string.unlocked_on_format, achievement.unlockedDate ?: ""),
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -439,7 +442,7 @@ fun ReflectionsTab(viewModel: ProfileViewModel) {
     ) {
         item {
             Text(
-                text = "Weekly Reflections",
+                text = stringResource(R.string.weekly_reflections_title),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -449,7 +452,7 @@ fun ReflectionsTab(viewModel: ProfileViewModel) {
             item {
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "No reflections yet. Start submitting weekly reflections to track your progress!",
+                        text = stringResource(R.string.no_reflections_yet),
                         modifier = Modifier.padding(16.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -476,7 +479,7 @@ fun ReflectionCard(reflection: com.example.afyaquest.domain.model.WeeklyReflecti
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Week of ${reflection.weekStartDate}",
+                    text = stringResource(R.string.week_of_format, reflection.weekStartDate),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -491,11 +494,11 @@ fun ReflectionCard(reflection: com.example.afyaquest.domain.model.WeeklyReflecti
             }
 
             Text(
-                text = "Success: ${reflection.successStory}",
+                text = stringResource(R.string.success_format, reflection.successStory),
                 fontSize = 14.sp
             )
             Text(
-                text = "Submitted: ${reflection.submittedDate}",
+                text = stringResource(R.string.submitted_format, reflection.submittedDate),
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

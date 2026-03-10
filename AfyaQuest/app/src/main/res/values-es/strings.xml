@@ -43,11 +43,18 @@
     <!-- Dashboard -->
     <string name="dashboard">Panel</string>
     <string name="welcome">Bienvenido</string>
-    <string name="streak">Racha</string>
+    <string name="streak">Días de Racha</string>
     <string name="total_xp">XP Total</string>
     <string name="lives">Vidas</string>
     <string name="level">Nivel</string>
     <string name="rank">Rango</string>
+    <string name="rank_beginner">Principiante</string>
+    <string name="rank_novice">Novato</string>
+    <string name="rank_apprentice">Aprendiz</string>
+    <string name="rank_practitioner">Practicante</string>
+    <string name="rank_expert">Experto</string>
+    <string name="rank_master">Maestro</string>
+    <string name="rank_grand_master">Gran Maestro</string>
     <string name="daily_todo">Tareas Diarias</string>
     <string name="learning_center">Centro de Aprendizaje</string>
     <string name="xp_value_format">%d XP</string>
@@ -362,4 +369,270 @@
     <string name="error_network">Error de red. Por favor, intenta de nuevo.</string>
     <string name="error_generic">Ocurrió un error. Por favor, intenta de nuevo.</string>
     <string name="error_login_failed">Error al iniciar sesión. Verifica tus credenciales.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_general">General</string>
+    <string name="settings_profile_info">Información del Perfil</string>
+    <string name="settings_view_profile">Ver los detalles de tu perfil</string>
+    <string name="settings_change_password">Cambiar Contraseña</string>
+    <string name="settings_update_password">Actualizar tu contraseña</string>
+    <string name="settings_about_app">Acerca de AfyaQuest</string>
+    <string name="settings_version">Versión 1.0.0</string>
+    <string name="settings_danger_zone">Zona de Peligro</string>
+    <string name="settings_sign_out_desc">Cerrar sesión de tu cuenta</string>
+    <string name="settings_select_language">Seleccionar Idioma</string>
+    <string name="logout_confirm">¿Estás seguro de que quieres cerrar sesión?</string>
+    <string name="settings_name">Nombre</string>
+    <string name="settings_phone">Teléfono</string>
+    <string name="settings_organization">Organización</string>
+    <string name="settings_role">Rol</string>
+    <string name="password_changed">Contraseña Cambiada</string>
+    <string name="reset_password">Restablecer Contraseña</string>
+    <string name="enter_code">Ingresar Código</string>
+    <string name="password_changed_success">¡Tu contraseña ha sido cambiada exitosamente!</string>
+    <string name="send_code_email_desc">Enviaremos un código de verificación a tu correo:</string>
+    <string name="enter_code_instructions">Ingresa el código de verificación enviado a %s y tu nueva contraseña.</string>
+    <string name="verification_code">Código de Verificación</string>
+    <string name="new_password">Nueva Contraseña</string>
+    <string name="confirm_new_password">Confirmar Nueva Contraseña</string>
+    <string name="send_code">Enviar Código</string>
+    <string name="no_email_found">No se encontró correo electrónico para tu cuenta</string>
+    <string name="enter_verification_code_error">Ingresa el código de verificación</string>
+    <string name="password_min_length">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="passwords_dont_match">Las contraseñas no coinciden</string>
+
+    <!-- Profile Screen -->
+    <string name="status_label">Estado</string>
+    <string name="quick_stats">Estadísticas Rápidas</string>
+    <string name="day_streak">Días de Racha</string>
+    <string name="stat_lessons_completed">Lecciones Completadas</string>
+    <string name="stat_videos_watched">Videos Vistos</string>
+    <string name="stat_quizzes_completed">Cuestionarios Completados</string>
+    <string name="stat_reports_submitted">Reportes Enviados</string>
+    <string name="unlocked_count">Desbloqueados (%d)</string>
+    <string name="locked_count">Bloqueados (%d)</string>
+    <string name="unlocked_on_format">Desbloqueado el %s</string>
+    <string name="weekly_reflections_title">Reflexiones Semanales</string>
+    <string name="no_reflections_yet">Aún no hay reflexiones. ¡Comienza a enviar reflexiones semanales para seguir tu progreso!</string>
+    <string name="week_of_format">Semana del %s</string>
+    <string name="success_format">Éxito: %s</string>
+    <string name="submitted_format">Enviado: %s</string>
+
+    <!-- Quiz -->
+    <string name="score_label">Puntaje</string>
+    <string name="percentage_label">Porcentaje</string>
+    <string name="quiz_title_8">Sistema Reproductor Masculino</string>
+    <string name="quiz_title_9">Sistema Reproductor Femenino</string>
+    <string name="quiz_title_10">Sistema Urinario</string>
+
+    <!-- Module 8 Quiz: Male Reproductive System -->
+    <string name="quiz_8_q1">¿Cuál es la función principal del sistema reproductor masculino?</string>
+    <string name="quiz_8_q1_a">Regular la temperatura corporal</string>
+    <string name="quiz_8_q1_b">Producir solo hormonas</string>
+    <string name="quiz_8_q1_c">Crear y transportar espermatozoides y producir hormonas sexuales masculinas</string>
+    <string name="quiz_8_q1_d">Filtrar la sangre</string>
+    <string name="quiz_8_q1_exp">La función principal del sistema reproductor masculino es crear y transportar espermatozoides y producir hormonas sexuales masculinas como la testosterona.</string>
+
+    <string name="quiz_8_q2">¿Qué estructura permite que tanto la orina como el semen salgan del cuerpo?</string>
+    <string name="quiz_8_q2_a">Conducto deferente</string>
+    <string name="quiz_8_q2_b">Próstata</string>
+    <string name="quiz_8_q2_c">Uretra</string>
+    <string name="quiz_8_q2_d">Vesícula seminal</string>
+    <string name="quiz_8_q2_exp">La uretra es un conducto compartido por el cual tanto la orina como el semen salen del cuerpo.</string>
+
+    <string name="quiz_8_q3">El pene consta de cuáles dos partes principales?</string>
+    <string name="quiz_8_q3_a">Cuerpo y escroto</string>
+    <string name="quiz_8_q3_b">Cuerpo y glande</string>
+    <string name="quiz_8_q3_c">Glande y uretra</string>
+    <string name="quiz_8_q3_d">Cuerpo y conducto deferente</string>
+    <string name="quiz_8_q3_exp">El pene está formado por el cuerpo (la parte principal) y el glande (la punta redondeada).</string>
+
+    <string name="quiz_8_q4">¿Cuál es la función principal de los testículos?</string>
+    <string name="quiz_8_q4_a">Producir orina</string>
+    <string name="quiz_8_q4_b">Almacenar líquido seminal</string>
+    <string name="quiz_8_q4_c">Producir espermatozoides y testosterona</string>
+    <string name="quiz_8_q4_d">Regular la presión arterial</string>
+    <string name="quiz_8_q4_exp">Los testículos son responsables de producir espermatozoides y la hormona testosterona.</string>
+
+    <string name="quiz_8_q5">El conducto deferente conecta los testículos con:</string>
+    <string name="quiz_8_q5_a">La próstata</string>
+    <string name="quiz_8_q5_b">La uretra</string>
+    <string name="quiz_8_q5_c">La vejiga</string>
+    <string name="quiz_8_q5_d">La vesícula seminal</string>
+    <string name="quiz_8_q5_exp">El conducto deferente es un tubo que transporta los espermatozoides desde los testículos hacia la uretra para la eyaculación.</string>
+
+    <string name="quiz_8_q6">Las vesículas seminales producen principalmente:</string>
+    <string name="quiz_8_q6_a">Testosterona</string>
+    <string name="quiz_8_q6_b">Orina</string>
+    <string name="quiz_8_q6_c">Líquido que nutre y forma el semen</string>
+    <string name="quiz_8_q6_d">Células espermáticas</string>
+    <string name="quiz_8_q6_exp">Las vesículas seminales producen un líquido rico en nutrientes que constituye la mayor parte del semen y ayuda a nutrir los espermatozoides.</string>
+
+    <string name="quiz_8_q7">La glándula prostática contribuye al semen produciendo:</string>
+    <string name="quiz_8_q7_a">Espermatozoides</string>
+    <string name="quiz_8_q7_b">El líquido seminal restante</string>
+    <string name="quiz_8_q7_c">Orina</string>
+    <string name="quiz_8_q7_d">Solo hormonas</string>
+    <string name="quiz_8_q7_exp">La glándula prostática produce un líquido lechoso que se mezcla con los espermatozoides y el líquido de las vesículas seminales para formar el semen.</string>
+
+    <string name="quiz_8_q8">¿Cuál hormona se considera el andrógeno más importante?</string>
+    <string name="quiz_8_q8_a">Estrógeno</string>
+    <string name="quiz_8_q8_b">Progesterona</string>
+    <string name="quiz_8_q8_c">Testosterona</string>
+    <string name="quiz_8_q8_d">Insulina</string>
+    <string name="quiz_8_q8_exp">La testosterona es la principal hormona sexual masculina y el andrógeno más importante, responsable de las características masculinas y la función reproductiva.</string>
+
+    <string name="quiz_8_q9">¿De cuál de las siguientes es responsable la testosterona?</string>
+    <string name="quiz_8_q9_a">Voz grave y aumento de masa muscular</string>
+    <string name="quiz_8_q9_b">Coagulación de la sangre</string>
+    <string name="quiz_8_q9_c">Filtración renal</string>
+    <string name="quiz_8_q9_d">Producción de enzimas digestivas</string>
+    <string name="quiz_8_q9_exp">La testosterona impulsa las características sexuales secundarias masculinas, incluyendo una voz más grave y un aumento de la masa muscular.</string>
+
+    <string name="quiz_8_q10">¿Cuál de las siguientes se define como dificultad para lograr o mantener una erección?</string>
+    <string name="quiz_8_q10_a">Infertilidad</string>
+    <string name="quiz_8_q10_b">ITS</string>
+    <string name="quiz_8_q10_c">Disfunción eréctil (impotencia)</string>
+    <string name="quiz_8_q10_d">Baja motilidad espermática</string>
+    <string name="quiz_8_q10_exp">La disfunción eréctil (también llamada impotencia) es la incapacidad de lograr o mantener una erección suficiente para la actividad sexual.</string>
+
+    <!-- Module 9 Quiz: Female Reproductive System -->
+    <string name="quiz_9_q1">¿Cuál de los siguientes es un componente principal del sistema reproductor femenino?</string>
+    <string name="quiz_9_q1_a">Próstata</string>
+    <string name="quiz_9_q1_b">Ovarios</string>
+    <string name="quiz_9_q1_c">Testículos</string>
+    <string name="quiz_9_q1_d">Conducto deferente</string>
+    <string name="quiz_9_q1_exp">Los ovarios son un componente principal del sistema reproductor femenino. La próstata, los testículos y el conducto deferente son parte del sistema reproductor masculino.</string>
+
+    <string name="quiz_9_q2">¿Cuál es la función principal de los ovarios?</string>
+    <string name="quiz_9_q2_a">Proteger las aberturas externas</string>
+    <string name="quiz_9_q2_b">Producir óvulos</string>
+    <string name="quiz_9_q2_c">Dar a luz al bebé</string>
+    <string name="quiz_9_q2_d">Almacenar espermatozoides</string>
+    <string name="quiz_9_q2_exp">Los ovarios producen óvulos y también producen hormonas como el estrógeno y la progesterona.</string>
+
+    <string name="quiz_9_q3">Las trompas de Falopio conectan los ovarios con:</string>
+    <string name="quiz_9_q3_a">La vagina</string>
+    <string name="quiz_9_q3_b">La vulva</string>
+    <string name="quiz_9_q3_c">El útero</string>
+    <string name="quiz_9_q3_d">La glándula pituitaria</string>
+    <string name="quiz_9_q3_exp">Las trompas de Falopio transportan los óvulos desde los ovarios hasta el útero, y es donde generalmente ocurre la fertilización.</string>
+
+    <string name="quiz_9_q4">¿Dónde se desarrolla el feto durante el embarazo?</string>
+    <string name="quiz_9_q4_a">Vagina</string>
+    <string name="quiz_9_q4_b">Ovarios</string>
+    <string name="quiz_9_q4_c">Trompas de Falopio</string>
+    <string name="quiz_9_q4_d">Útero</string>
+    <string name="quiz_9_q4_exp">El útero (matriz) es el órgano donde el óvulo fertilizado se implanta y el feto se desarrolla durante todo el embarazo.</string>
+
+    <string name="quiz_9_q5">¿Cuál de las siguientes funciones cumple la vagina?</string>
+    <string name="quiz_9_q5_a">Produce óvulos</string>
+    <string name="quiz_9_q5_b">Protege las aberturas externas</string>
+    <string name="quiz_9_q5_c">Conecta el útero con el exterior y permite la entrada de espermatozoides</string>
+    <string name="quiz_9_q5_d">Produce hormonas</string>
+    <string name="quiz_9_q5_exp">La vagina es el canal que conecta el útero con el exterior del cuerpo. Permite la entrada de espermatozoides, sirve como canal de parto y permite la salida del flujo menstrual.</string>
+
+    <string name="quiz_9_q6">La vulva es principalmente responsable de:</string>
+    <string name="quiz_9_q6_a">Producir hormonas</string>
+    <string name="quiz_9_q6_b">Proteger las aberturas externas de daños</string>
+    <string name="quiz_9_q6_c">Transportar óvulos</string>
+    <string name="quiz_9_q6_d">Apoyar el desarrollo fetal</string>
+    <string name="quiz_9_q6_exp">La vulva comprende los genitales externos y su función principal es proteger las aberturas vaginal y uretral de daños e infecciones.</string>
+
+    <string name="quiz_9_q7">¿Qué glándulas controlan el ciclo menstrual?</string>
+    <string name="quiz_9_q7_a">Glándulas tiroides y suprarrenales</string>
+    <string name="quiz_9_q7_b">Ovarios y glándula pituitaria</string>
+    <string name="quiz_9_q7_c">Páncreas y ovarios</string>
+    <string name="quiz_9_q7_d">Útero e hígado</string>
+    <string name="quiz_9_q7_exp">El ciclo menstrual está regulado por hormonas de los ovarios (estrógeno y progesterona) y la glándula pituitaria (FSH y LH).</string>
+
+    <string name="quiz_9_q8">El ciclo menstrual promedio dura aproximadamente:</string>
+    <string name="quiz_9_q8_a">14 días</string>
+    <string name="quiz_9_q8_b">21 días</string>
+    <string name="quiz_9_q8_c">28 días</string>
+    <string name="quiz_9_q8_d">35 días</string>
+    <string name="quiz_9_q8_exp">El ciclo menstrual promedio dura aproximadamente 28 días, aunque ciclos entre 21 y 35 días se consideran normales.</string>
+
+    <string name="quiz_9_q9">Un embarazo ectópico ocurre más comúnmente en:</string>
+    <string name="quiz_9_q9_a">El útero</string>
+    <string name="quiz_9_q9_b">La vagina</string>
+    <string name="quiz_9_q9_c">La trompa de Falopio</string>
+    <string name="quiz_9_q9_d">La vulva</string>
+    <string name="quiz_9_q9_exp">Un embarazo ectópico ocurre cuando un óvulo fertilizado se implanta fuera del útero. La trompa de Falopio es el sitio más común.</string>
+
+    <string name="quiz_9_q10">La placenta previa es una condición en la cual:</string>
+    <string name="quiz_9_q10_a">La placenta se separa del útero antes del parto</string>
+    <string name="quiz_9_q10_b">La placenta bloquea el cuello del útero</string>
+    <string name="quiz_9_q10_c">El feto se desarrolla fuera del útero</string>
+    <string name="quiz_9_q10_d">El tejido endometrial crece fuera del útero</string>
+    <string name="quiz_9_q10_exp">La placenta previa ocurre cuando la placenta cubre parcial o totalmente el cuello uterino, lo que puede causar complicaciones durante el parto.</string>
+
+    <!-- Module 10 Quiz: Urinary System -->
+    <string name="quiz_10_q1">¿Cuál de los siguientes NO es un órgano asociado con el sistema urinario?</string>
+    <string name="quiz_10_q1_a">Riñón</string>
+    <string name="quiz_10_q1_b">Uréter</string>
+    <string name="quiz_10_q1_c">Hígado</string>
+    <string name="quiz_10_q1_d">Uretra</string>
+    <string name="quiz_10_q1_exp">El hígado es un órgano digestivo, no forma parte del sistema urinario. Los riñones, uréteres y la uretra son todos órganos clave del sistema urinario.</string>
+
+    <string name="quiz_10_q2">¿Cuál es la importancia del cerebro en la micción?</string>
+    <string name="quiz_10_q2_a">Señala la secreción de hormonas que inician la filtración de toxinas de la sangre</string>
+    <string name="quiz_10_q2_b">Coordina el vaciado y llenado de la vejiga</string>
+    <string name="quiz_10_q2_c">Ayuda al movimiento de la orina hacia la vejiga</string>
+    <string name="quiz_10_q2_d">Detecta la acumulación de toxinas en el torrente sanguíneo</string>
+    <string name="quiz_10_q2_exp">El cerebro recibe señales de la vejiga y coordina cuándo vaciar o retener la orina controlando los músculos involucrados en la micción.</string>
+
+    <string name="quiz_10_q3">¿Cuál de las siguientes es una condición común que surge de complicaciones en el sistema urinario?</string>
+    <string name="quiz_10_q3_a">Infecciones del tracto urinario</string>
+    <string name="quiz_10_q3_b">Neumonía</string>
+    <string name="quiz_10_q3_c">Hipertensión</string>
+    <string name="quiz_10_q3_d">Convulsiones</string>
+    <string name="quiz_10_q3_exp">Las infecciones del tracto urinario (ITU) son una de las condiciones más comunes que afectan el sistema urinario. La neumonía, la hipertensión y las convulsiones no son condiciones urinarias.</string>
+
+    <string name="quiz_10_q4">¿Qué puede causar una infección del tracto urinario?</string>
+    <string name="quiz_10_q4_a">Una acumulación de toxinas en el torrente sanguíneo</string>
+    <string name="quiz_10_q4_b">Beber demasiada agua</string>
+    <string name="quiz_10_q4_c">Bacterias que ingresan a cualquier parte del tracto urinario</string>
+    <string name="quiz_10_q4_d">Sentarse en el mismo inodoro que alguien con una infección urinaria</string>
+    <string name="quiz_10_q4_exp">Las ITU son causadas por bacterias que ingresan al tracto urinario, más comúnmente E. coli del tracto digestivo. Las ITU no se transmiten por asientos de inodoro ni por beber agua.</string>
+
+    <string name="quiz_10_q5">¿Cuál de los siguientes NO es un síntoma asociado con infecciones del tracto urinario?</string>
+    <string name="quiz_10_q5_a">Sensaciones dolorosas y ardor al orinar</string>
+    <string name="quiz_10_q5_b">Orina turbia y con sangre</string>
+    <string name="quiz_10_q5_c">Urgencias más frecuentes y repentinas de orinar</string>
+    <string name="quiz_10_q5_d">Flujo espeso y blanco</string>
+    <string name="quiz_10_q5_exp">El flujo espeso y blanco se asocia típicamente con una infección por hongos, no con una ITU. El ardor al orinar, la orina turbia o con sangre y la urgencia frecuente son síntomas clásicos de ITU.</string>
+
+    <string name="quiz_10_q6">Las infecciones del tracto urinario son más frecuentes en mujeres que en hombres.</string>
+    <string name="quiz_10_q6_a">Verdadero</string>
+    <string name="quiz_10_q6_b">Falso</string>
+    <string name="quiz_10_q6_exp">Verdadero. Las mujeres tienen una uretra más corta, lo que facilita que las bacterias lleguen a la vejiga, haciendo que las ITU sean significativamente más comunes en mujeres.</string>
+
+    <string name="quiz_10_q7">¿Qué son los cálculos renales?</string>
+    <string name="quiz_10_q7_a">Depósitos de toxinas ácidas que dañan la cápsula renal del riñón</string>
+    <string name="quiz_10_q7_b">Masas duras de sales y minerales</string>
+    <string name="quiz_10_q7_c">Estructuras que ayudan en la filtración de toxinas de la sangre</string>
+    <string name="quiz_10_q7_d">Proteínas que ayudan en la formación de orina</string>
+    <string name="quiz_10_q7_exp">Los cálculos renales son depósitos duros de sales y minerales que se forman dentro de los riñones y pueden causar dolor significativo al pasar por el tracto urinario.</string>
+
+    <string name="quiz_10_q8">¿Cuál de los siguientes NO es un síntoma asociado con cálculos renales?</string>
+    <string name="quiz_10_q8_a">Migrañas severas</string>
+    <string name="quiz_10_q8_b">Dolor extremo en la espalda baja y abdomen</string>
+    <string name="quiz_10_q8_c">Fiebre alta</string>
+    <string name="quiz_10_q8_d">Vómitos</string>
+    <string name="quiz_10_q8_exp">Las migrañas severas no son un síntoma típico de cálculos renales. Los síntomas comunes incluyen dolor intenso en la espalda baja o abdomen, fiebre y vómitos.</string>
+
+    <string name="quiz_10_q9">¿Cuál es una señal de mala hidratación?</string>
+    <string name="quiz_10_q9_a">Orina con olor fuerte</string>
+    <string name="quiz_10_q9_b">Orina relativamente incolora</string>
+    <string name="quiz_10_q9_c">Urgencias frecuentes de orinar</string>
+    <string name="quiz_10_q9_d">A y B</string>
+    <string name="quiz_10_q9_exp">La orina con olor fuerte y color oscuro es señal de deshidratación. La orina relativamente incolora indica buena hidratación.</string>
+
+    <string name="quiz_10_q10">¿Cuál es una forma de mantener un sistema urinario saludable?</string>
+    <string name="quiz_10_q10_a">Limpiarse de atrás hacia adelante</string>
+    <string name="quiz_10_q10_b">Beber agua regularmente</string>
+    <string name="quiz_10_q10_c">Resistir las ganas de orinar</string>
+    <string name="quiz_10_q10_d">Pasar períodos prolongados en el inodoro</string>
+    <string name="quiz_10_q10_exp">Beber agua regularmente elimina las bacterias del tracto urinario. Las otras opciones pueden contribuir a problemas urinarios.</string>
 </resources>

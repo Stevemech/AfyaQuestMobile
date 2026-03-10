@@ -279,7 +279,7 @@ fun VideoModuleCard(
                         // Watched indicator
                         if (video.watched) {
                             Badge(
-                                containerColor = Color(0xFF4CAF50),
+                                containerColor = Color(0xFF438894),
                                 modifier = Modifier.padding(0.dp)
                             ) {
                                 Text(

@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Daily Question Categories -->
+    <string name="cat_hygiene">Hygiene</string>
+    <string name="cat_nutrition">Nutrition</string>
+    <string name="cat_maternal_health">Maternal Health</string>
+    <string name="cat_immunization">Immunization</string>
+    <string name="cat_disease_prevention">Disease Prevention</string>
+    <string name="cat_first_aid">First Aid</string>
+    <string name="cat_child_care">Child Care</string>
+    <string name="cat_community_health">Community Health</string>
+    <string name="cat_reproductive_health">Reproductive Health</string>
+    <string name="cat_emergency">Emergency</string>
+
+    <!-- Daily Questions -->
+
+    <!-- Hygiene -->
+    <string name="dq_local_hyg_1">How long should you wash your hands with soap to effectively remove germs?</string>
+    <string name="dq_local_hyg_1_a">5 seconds</string>
+    <string name="dq_local_hyg_1_b">10 seconds</string>
+    <string name="dq_local_hyg_1_c">At least 20 seconds</string>
+    <string name="dq_local_hyg_1_d">1 minute</string>
+    <string name="dq_local_hyg_1_exp">The WHO recommends washing hands with soap for at least 20 seconds to effectively remove germs and prevent disease transmission.</string>
+
+    <string name="dq_local_hyg_2">Which of these is NOT one of the critical moments for handwashing?</string>
+    <string name="dq_local_hyg_2_a">Before preparing food</string>
+    <string name="dq_local_hyg_2_b">After using the toilet</string>
+    <string name="dq_local_hyg_2_c">After watching television</string>
+    <string name="dq_local_hyg_2_d">Before eating</string>
+    <string name="dq_local_hyg_2_exp">Critical moments for handwashing include before preparing/eating food, after using the toilet, after coughing/sneezing, and after touching animals. Watching television is not a critical moment.</string>
+
+    <string name="dq_local_hyg_3">What is the most effective way to make water safe for drinking in a household?</string>
+    <string name="dq_local_hyg_3_a">Letting it settle overnight</string>
+    <string name="dq_local_hyg_3_b">Boiling it for at least 1 minute</string>
+    <string name="dq_local_hyg_3_c">Adding sugar</string>
+    <string name="dq_local_hyg_3_d">Filtering through cloth only</string>
+    <string name="dq_local_hyg_3_exp">Boiling water for at least 1 minute (3 minutes at high altitude) kills most disease-causing organisms and is the most reliable household method for making water safe.</string>
+
+    <string name="dq_local_hyg_4">What is the correct way to dispose of a child\'s feces?</string>
+    <string name="dq_local_hyg_4_a">Leave it in the open</string>
+    <string name="dq_local_hyg_4_b">Throw it in the river</string>
+    <string name="dq_local_hyg_4_c">Dispose of it in a latrine or toilet</string>
+    <string name="dq_local_hyg_4_d">Bury it in the garden</string>
+    <string name="dq_local_hyg_4_exp">A child\'s feces should always be disposed of in a latrine or toilet. Open defecation contaminates water sources and spreads diseases like cholera and typhoid.</string>
+
+    <string name="dq_local_hyg_5">Which disease is most commonly spread through contaminated water?</string>
+    <string name="dq_local_hyg_5_a">Malaria</string>
+    <string name="dq_local_hyg_5_b">Cholera</string>
+    <string name="dq_local_hyg_5_c">Tuberculosis</string>
+    <string name="dq_local_hyg_5_d">HIV</string>
+    <string name="dq_local_hyg_5_exp">Cholera is primarily spread through contaminated water and food. It causes severe diarrhea and dehydration and can be fatal if untreated.</string>
+
+    <!-- Nutrition -->
+    <string name="dq_local_nut_1">What is the recommended duration for exclusive breastfeeding?</string>
+    <string name="dq_local_nut_1_a">2 months</string>
+    <string name="dq_local_nut_1_b">4 months</string>
+    <string name="dq_local_nut_1_c">6 months</string>
+    <string name="dq_local_nut_1_d">12 months</string>
+    <string name="dq_local_nut_1_exp">The WHO recommends exclusive breastfeeding for the first 6 months of life. After 6 months, complementary foods should be introduced while continuing breastfeeding up to 2 years or beyond.</string>
+
+    <string name="dq_local_nut_2">Which nutrient deficiency causes night blindness in children?</string>
+    <string name="dq_local_nut_2_a">Iron</string>
+    <string name="dq_local_nut_2_b">Vitamin A</string>
+    <string name="dq_local_nut_2_c">Calcium</string>
+    <string name="dq_local_nut_2_d">Vitamin C</string>
+    <string name="dq_local_nut_2_exp">Vitamin A deficiency is the leading cause of preventable childhood blindness. Foods rich in Vitamin A include orange and yellow fruits/vegetables, dark leafy greens, liver, and eggs.</string>
+
+    <string name="dq_local_nut_3">What is a sign of severe acute malnutrition in children?</string>
+    <string name="dq_local_nut_3_a">Being very tall</string>
+    <string name="dq_local_nut_3_b">Edema (swelling) of both feet</string>
+    <string name="dq_local_nut_3_c">Having a large appetite</string>
+    <string name="dq_local_nut_3_d">Gaining weight rapidly</string>
+    <string name="dq_local_nut_3_exp">Bilateral pitting edema (swelling in both feet) is a sign of kwashiorkor, a form of severe acute malnutrition. Other signs include wasting, very low MUAC, and visible severe wasting.</string>
+
+    <string name="dq_local_nut_4">At what age should complementary foods be introduced to a breastfed infant?</string>
+    <string name="dq_local_nut_4_a">2 months</string>
+    <string name="dq_local_nut_4_b">4 months</string>
+    <string name="dq_local_nut_4_c">6 months</string>
+    <string name="dq_local_nut_4_d">9 months</string>
+    <string name="dq_local_nut_4_exp">Complementary foods should be introduced at 6 months of age while continuing breastfeeding. Before 6 months, breast milk alone provides all the nutrients a baby needs.</string>
+
+    <string name="dq_local_nut_5">Which of these is the best source of iron for preventing anemia?</string>
+    <string name="dq_local_nut_5_a">White rice</string>
+    <string name="dq_local_nut_5_b">Dark leafy greens and liver</string>
+    <string name="dq_local_nut_5_c">Bananas</string>
+    <string name="dq_local_nut_5_d">Milk</string>
+    <string name="dq_local_nut_5_exp">Dark leafy greens (such as spinach and kale) and organ meats like liver are excellent sources of iron. Iron deficiency anemia is one of the most common nutritional deficiencies worldwide.</string>
+
+    <!-- Maternal Health -->
+    <string name="dq_local_mat_1">How many antenatal care visits does the WHO recommend during pregnancy?</string>
+    <string name="dq_local_mat_1_a">2 visits</string>
+    <string name="dq_local_mat_1_b">4 visits</string>
+    <string name="dq_local_mat_1_c">At least 8 visits</string>
+    <string name="dq_local_mat_1_d">1 visit</string>
+    <string name="dq_local_mat_1_exp">The WHO recommends at least 8 antenatal care contacts during pregnancy to reduce perinatal mortality and improve women\'s experience of care.</string>
+
+    <string name="dq_local_mat_2">Which of these is a danger sign during pregnancy that requires immediate medical attention?</string>
+    <string name="dq_local_mat_2_a">Mild nausea in the morning</string>
+    <string name="dq_local_mat_2_b">Vaginal bleeding</string>
+    <string name="dq_local_mat_2_c">Increased appetite</string>
+    <string name="dq_local_mat_2_d">Mild back pain</string>
+    <string name="dq_local_mat_2_exp">Vaginal bleeding during pregnancy is a danger sign that could indicate placenta previa, placental abruption, or miscarriage. Other danger signs include severe headache, blurred vision, convulsions, and high fever.</string>
+
+    <string name="dq_local_mat_3">What supplement should pregnant women take to prevent neural tube defects?</string>
+    <string name="dq_local_mat_3_a">Vitamin C</string>
+    <string name="dq_local_mat_3_b">Calcium</string>
+    <string name="dq_local_mat_3_c">Folic acid</string>
+    <string name="dq_local_mat_3_d">Vitamin D</string>
+    <string name="dq_local_mat_3_exp">Folic acid (folate) supplementation before and during early pregnancy significantly reduces the risk of neural tube defects like spina bifida in newborns.</string>
+
+    <string name="dq_local_mat_4">What is the leading cause of maternal death globally?</string>
+    <string name="dq_local_mat_4_a">Malaria</string>
+    <string name="dq_local_mat_4_b">Postpartum hemorrhage (severe bleeding)</string>
+    <string name="dq_local_mat_4_c">HIV</string>
+    <string name="dq_local_mat_4_d">Tuberculosis</string>
+    <string name="dq_local_mat_4_exp">Postpartum hemorrhage (severe bleeding after childbirth) is the leading cause of maternal death worldwide. Active management of the third stage of labor helps prevent it.</string>
+
+    <string name="dq_local_mat_5">When should a newborn be put to the breast for the first time?</string>
+    <string name="dq_local_mat_5_a">Within the first hour after birth</string>
+    <string name="dq_local_mat_5_b">After 6 hours</string>
+    <string name="dq_local_mat_5_c">The next day</string>
+    <string name="dq_local_mat_5_d">When the mother feels ready</string>
+    <string name="dq_local_mat_5_exp">Early initiation of breastfeeding within the first hour of birth is crucial. Colostrum (first milk) is rich in antibodies and nutrients essential for the newborn\'s immune system.</string>
+
+    <!-- Immunization -->
+    <string name="dq_local_imm_1">At what age should a child receive the BCG vaccine?</string>
+    <string name="dq_local_imm_1_a">At birth</string>
+    <string name="dq_local_imm_1_b">6 weeks</string>
+    <string name="dq_local_imm_1_c">9 months</string>
+    <string name="dq_local_imm_1_d">5 years</string>
+    <string name="dq_local_imm_1_exp">The BCG (Bacillus Calmette-Guerin) vaccine against tuberculosis should be given at birth or as soon as possible after birth.</string>
+
+    <string name="dq_local_imm_2">What does the pentavalent vaccine protect against?</string>
+    <string name="dq_local_imm_2_a">Malaria, TB, cholera, typhoid, and polio</string>
+    <string name="dq_local_imm_2_b">Diphtheria, pertussis, tetanus, hepatitis B, and Hib</string>
+    <string name="dq_local_imm_2_c">Measles, mumps, rubella, chickenpox, and polio</string>
+    <string name="dq_local_imm_2_d">HIV, hepatitis A, hepatitis B, HPV, and meningitis</string>
+    <string name="dq_local_imm_2_exp">The pentavalent vaccine protects against 5 diseases: Diphtheria, Pertussis (whooping cough), Tetanus, Hepatitis B, and Haemophilus influenzae type b (Hib).</string>
+
+    <string name="dq_local_imm_3">At what age is the measles vaccine typically given?</string>
+    <string name="dq_local_imm_3_a">At birth</string>
+    <string name="dq_local_imm_3_b">6 weeks</string>
+    <string name="dq_local_imm_3_c">9 months</string>
+    <string name="dq_local_imm_3_d">2 years</string>
+    <string name="dq_local_imm_3_exp">The first dose of measles vaccine is typically given at 9 months of age. A second dose is given at 18 months in many countries to ensure full protection.</string>
+
+    <string name="dq_local_imm_4">What is the correct way to store most vaccines?</string>
+    <string name="dq_local_imm_4_a">At room temperature</string>
+    <string name="dq_local_imm_4_b">In a freezer at -20°C</string>
+    <string name="dq_local_imm_4_c">In a refrigerator at 2-8°C</string>
+    <string name="dq_local_imm_4_d">In direct sunlight</string>
+    <string name="dq_local_imm_4_exp">Most vaccines must be stored in a refrigerator at 2-8°C to maintain their effectiveness. This is known as the cold chain. Some vaccines must never be frozen.</string>
+
+    <string name="dq_local_imm_5">Which of these is a contraindication for vaccination?</string>
+    <string name="dq_local_imm_5_a">Mild fever</string>
+    <string name="dq_local_imm_5_b">Previous severe allergic reaction to the vaccine</string>
+    <string name="dq_local_imm_5_c">Mild diarrhea</string>
+    <string name="dq_local_imm_5_d">Being underweight</string>
+    <string name="dq_local_imm_5_exp">A previous severe allergic reaction (anaphylaxis) to a vaccine or its components is a true contraindication. Mild illness, diarrhea, or being underweight are NOT reasons to delay vaccination.</string>
+
+    <!-- Disease Prevention -->
+    <string name="dq_local_dis_1">What is the main way malaria is transmitted?</string>
+    <string name="dq_local_dis_1_a">Through contaminated water</string>
+    <string name="dq_local_dis_1_b">Through mosquito bites</string>
+    <string name="dq_local_dis_1_c">Through coughing</string>
+    <string name="dq_local_dis_1_d">Through physical contact</string>
+    <string name="dq_local_dis_1_exp">Malaria is transmitted through the bite of an infected female Anopheles mosquito. Prevention includes sleeping under insecticide-treated nets and removing standing water.</string>
+
+    <string name="dq_local_dis_2">Which of these is a symptom of tuberculosis (TB)?</string>
+    <string name="dq_local_dis_2_a">Persistent cough lasting more than 2 weeks</string>
+    <string name="dq_local_dis_2_b">Skin rash</string>
+    <string name="dq_local_dis_2_c">Swollen joints</string>
+    <string name="dq_local_dis_2_d">Blurred vision</string>
+    <string name="dq_local_dis_2_exp">A persistent cough lasting more than 2 weeks is the most common symptom of pulmonary TB. Other symptoms include night sweats, weight loss, fever, and coughing up blood.</string>
+
+    <string name="dq_local_dis_3">What is the most effective way to prevent mosquito-borne diseases?</string>
+    <string name="dq_local_dis_3_a">Drinking boiled water</string>
+    <string name="dq_local_dis_3_b">Sleeping under an insecticide-treated net</string>
+    <string name="dq_local_dis_3_c">Taking antibiotics</string>
+    <string name="dq_local_dis_3_d">Eating garlic</string>
+    <string name="dq_local_dis_3_exp">Sleeping under insecticide-treated bed nets (ITNs) is one of the most effective ways to prevent malaria and other mosquito-borne diseases. Nets should be retreated or replaced regularly.</string>
+
+    <string name="dq_local_dis_4">What is the oral rehydration solution (ORS) used for?</string>
+    <string name="dq_local_dis_4_a">Treating malaria</string>
+    <string name="dq_local_dis_4_b">Preventing dehydration from diarrhea</string>
+    <string name="dq_local_dis_4_c">Curing TB</string>
+    <string name="dq_local_dis_4_d">Treating pneumonia</string>
+    <string name="dq_local_dis_4_exp">ORS is a mixture of clean water, salt, and sugar used to prevent and treat dehydration caused by diarrhea. It replaces lost fluids and electrolytes and saves millions of lives annually.</string>
+
+    <string name="dq_local_dis_5">How is HIV primarily transmitted?</string>
+    <string name="dq_local_dis_5_a">Through mosquito bites</string>
+    <string name="dq_local_dis_5_b">Through sharing utensils</string>
+    <string name="dq_local_dis_5_c">Through unprotected sexual contact and contaminated blood</string>
+    <string name="dq_local_dis_5_d">Through coughing</string>
+    <string name="dq_local_dis_5_exp">HIV is primarily transmitted through unprotected sexual contact, contaminated blood (needles/transfusions), and from mother to child during pregnancy, birth, or breastfeeding.</string>
+
+    <!-- First Aid -->
+    <string name="dq_local_fa_1">What is the first step when encountering an unconscious person?</string>
+    <string name="dq_local_fa_1_a">Give them water</string>
+    <string name="dq_local_fa_1_b">Check for responsiveness and call for help</string>
+    <string name="dq_local_fa_1_c">Move them immediately</string>
+    <string name="dq_local_fa_1_d">Wait for them to wake up</string>
+    <string name="dq_local_fa_1_exp">The first step is to check for responsiveness by tapping and shouting, then call for help/emergency services. Check for breathing and begin CPR if needed.</string>
+
+    <string name="dq_local_fa_2">What is the correct compression rate for adult CPR?</string>
+    <string name="dq_local_fa_2_a">60 per minute</string>
+    <string name="dq_local_fa_2_b">80 per minute</string>
+    <string name="dq_local_fa_2_c">100-120 per minute</string>
+    <string name="dq_local_fa_2_d">150 per minute</string>
+    <string name="dq_local_fa_2_exp">The correct compression rate for CPR is 100-120 compressions per minute. Compressions should be at least 2 inches (5 cm) deep for adults.</string>
+
+    <string name="dq_local_fa_3">How should you treat a minor burn?</string>
+    <string name="dq_local_fa_3_a">Apply butter or oil</string>
+    <string name="dq_local_fa_3_b">Cool with clean running water for at least 20 minutes</string>
+    <string name="dq_local_fa_3_c">Pop any blisters</string>
+    <string name="dq_local_fa_3_d">Apply ice directly</string>
+    <string name="dq_local_fa_3_exp">Minor burns should be cooled with clean running water for at least 20 minutes. Do not apply butter, oil, toothpaste, or ice. Cover with a clean, non-stick dressing.</string>
+
+    <string name="dq_local_fa_4">What should you do if someone is choking and cannot cough, speak, or breathe?</string>
+    <string name="dq_local_fa_4_a">Give them water</string>
+    <string name="dq_local_fa_4_b">Perform abdominal thrusts (Heimlich maneuver)</string>
+    <string name="dq_local_fa_4_c">Slap them on the face</string>
+    <string name="dq_local_fa_4_d">Tell them to lie down</string>
+    <string name="dq_local_fa_4_exp">For a conscious choking adult, perform abdominal thrusts (Heimlich maneuver) by standing behind them and giving upward thrusts to the abdomen above the navel.</string>
+
+    <string name="dq_local_fa_5">How should you control severe bleeding from a wound?</string>
+    <string name="dq_local_fa_5_a">Remove the bandage frequently to check</string>
+    <string name="dq_local_fa_5_b">Apply firm, direct pressure with a clean cloth</string>
+    <string name="dq_local_fa_5_c">Apply a tourniquet as the first step</string>
+    <string name="dq_local_fa_5_d">Pour water on the wound</string>
+    <string name="dq_local_fa_5_exp">Apply firm, direct pressure to the wound using a clean cloth or dressing. Maintain pressure continuously. Elevate the injured limb if possible. Only use a tourniquet as a last resort.</string>
+
+    <!-- Child Care -->
+    <string name="dq_local_cc_1">What is a sign of pneumonia in a child under 5?</string>
+    <string name="dq_local_cc_1_a">Fast breathing or difficulty breathing</string>
+    <string name="dq_local_cc_1_b">Itchy skin</string>
+    <string name="dq_local_cc_1_c">Constipation</string>
+    <string name="dq_local_cc_1_d">Excessive thirst</string>
+    <string name="dq_local_cc_1_exp">Fast breathing or difficulty breathing is a key sign of pneumonia in children under 5. Other signs include chest in-drawing, inability to feed, and fever. Pneumonia is a leading killer of children under 5.</string>
+
+    <string name="dq_local_cc_2">What is the danger sign of dehydration in infants?</string>
+    <string name="dq_local_cc_2_a">Wet diapers</string>
+    <string name="dq_local_cc_2_b">Sunken fontanelle (soft spot on head)</string>
+    <string name="dq_local_cc_2_c">Good appetite</string>
+    <string name="dq_local_cc_2_d">Active and playful behavior</string>
+    <string name="dq_local_cc_2_exp">A sunken fontanelle (soft spot on the baby\'s head) is a sign of dehydration. Other signs include dry mouth, no tears when crying, decreased urination, and lethargy.</string>
+
+    <string name="dq_local_cc_3">At what age should a child start receiving vitamin A supplementation?</string>
+    <string name="dq_local_cc_3_a">At birth</string>
+    <string name="dq_local_cc_3_b">6 months</string>
+    <string name="dq_local_cc_3_c">1 year</string>
+    <string name="dq_local_cc_3_d">2 years</string>
+    <string name="dq_local_cc_3_exp">Vitamin A supplementation should begin at 6 months of age and continue every 6 months until age 5. Vitamin A is crucial for immune function and preventing blindness.</string>
+
+    <string name="dq_local_cc_4">What is the MUAC cutoff for severe acute malnutrition in children 6-59 months?</string>
+    <string name="dq_local_cc_4_a">Less than 11.5 cm</string>
+    <string name="dq_local_cc_4_b">Less than 13.5 cm</string>
+    <string name="dq_local_cc_4_c">Less than 15 cm</string>
+    <string name="dq_local_cc_4_d">Less than 17 cm</string>
+    <string name="dq_local_cc_4_exp">A MUAC less than 11.5 cm indicates severe acute malnutrition (SAM) in children aged 6-59 months. MUAC between 11.5-12.5 cm indicates moderate acute malnutrition (MAM).</string>
+
+    <string name="dq_local_cc_5">How should oral rehydration solution (ORS) be prepared?</string>
+    <string name="dq_local_cc_5_a">Mix the entire packet with 500 ml of water</string>
+    <string name="dq_local_cc_5_b">Mix the entire packet with 1 liter of clean water</string>
+    <string name="dq_local_cc_5_c">Mix half the packet with 2 liters of water</string>
+    <string name="dq_local_cc_5_d">Dissolve in hot tea</string>
+    <string name="dq_local_cc_5_exp">One ORS packet should be dissolved in 1 liter (1000 ml) of clean water. The solution should be used within 24 hours. Do not boil the solution or add sugar.</string>
+
+    <!-- Community Health -->
+    <string name="dq_local_ch_1">What is the purpose of a community health worker\'s home visit?</string>
+    <string name="dq_local_ch_1_a">To collect rent</string>
+    <string name="dq_local_ch_1_b">To assess health, provide education, and refer when needed</string>
+    <string name="dq_local_ch_1_c">To sell medicine</string>
+    <string name="dq_local_ch_1_d">To conduct surgery</string>
+    <string name="dq_local_ch_1_exp">Community health workers conduct home visits to assess the health of family members, provide health education, identify danger signs, make referrals, and follow up on treatments.</string>
+
+    <string name="dq_local_ch_2">What does the term \'referral\' mean in community health?</string>
+    <string name="dq_local_ch_2_a">Sending a patient home</string>
+    <string name="dq_local_ch_2_b">Directing a patient to a higher-level health facility for additional care</string>
+    <string name="dq_local_ch_2_c">Prescribing medication</string>
+    <string name="dq_local_ch_2_d">Performing surgery in the community</string>
+    <string name="dq_local_ch_2_exp">A referral means directing a patient to a higher-level health facility or specialist for care that cannot be provided at the community level. Timely referrals can save lives.</string>
+
+    <string name="dq_local_ch_3">Which of these is an important skill for a Community Health Volunteer?</string>
+    <string name="dq_local_ch_3_a">Surgery</string>
+    <string name="dq_local_ch_3_b">Active listening and health education</string>
+    <string name="dq_local_ch_3_c">Prescribing drugs</string>
+    <string name="dq_local_ch_3_d">Operating X-ray machines</string>
+    <string name="dq_local_ch_3_exp">Active listening and health education are essential skills for Community Health Volunteers. CHVs serve as the link between the community and the health system.</string>
+
+    <string name="dq_local_ch_4">What is the purpose of growth monitoring in children?</string>
+    <string name="dq_local_ch_4_a">To measure how tall a child will become as an adult</string>
+    <string name="dq_local_ch_4_b">To track a child\'s growth and detect malnutrition early</string>
+    <string name="dq_local_ch_4_c">To determine a child\'s intelligence</string>
+    <string name="dq_local_ch_4_d">To decide what school they should attend</string>
+    <string name="dq_local_ch_4_exp">Growth monitoring tracks a child\'s weight and height over time to detect growth faltering or malnutrition early. This allows for timely intervention and nutritional support.</string>
+
+    <string name="dq_local_ch_5">What should a CHV do when they identify a danger sign in a patient?</string>
+    <string name="dq_local_ch_5_a">Wait and observe for a week</string>
+    <string name="dq_local_ch_5_b">Refer the patient immediately to a health facility</string>
+    <string name="dq_local_ch_5_c">Prescribe medication</string>
+    <string name="dq_local_ch_5_d">Ignore it if the patient feels fine</string>
+    <string name="dq_local_ch_5_exp">When a CHV identifies danger signs, they should refer the patient immediately to the nearest health facility. Delay in referral can lead to complications or death.</string>
+
+    <!-- Reproductive Health -->
+    <string name="dq_local_rh_1">What is family planning?</string>
+    <string name="dq_local_rh_1_a">Deciding how many rooms a house should have</string>
+    <string name="dq_local_rh_1_b">The ability to decide the number and spacing of children using contraceptive methods</string>
+    <string name="dq_local_rh_1_c">Planning family reunions</string>
+    <string name="dq_local_rh_1_d">Deciding which school children attend</string>
+    <string name="dq_local_rh_1_exp">Family planning allows individuals and couples to decide the number and spacing of their children through the use of contraceptive methods and information.</string>
+
+    <string name="dq_local_rh_2">Which of these is a long-acting reversible contraceptive method?</string>
+    <string name="dq_local_rh_2_a">Condoms</string>
+    <string name="dq_local_rh_2_b">Birth control pills</string>
+    <string name="dq_local_rh_2_c">Intrauterine device (IUD)</string>
+    <string name="dq_local_rh_2_d">Emergency contraception</string>
+    <string name="dq_local_rh_2_exp">An IUD (intrauterine device) is a long-acting reversible contraceptive that can last 5-12 years depending on the type. Other long-acting methods include implants.</string>
+
+    <string name="dq_local_rh_3">What is the most effective way to prevent sexually transmitted infections (STIs)?</string>
+    <string name="dq_local_rh_3_a">Taking antibiotics regularly</string>
+    <string name="dq_local_rh_3_b">Correct and consistent use of condoms</string>
+    <string name="dq_local_rh_3_c">Washing after intercourse</string>
+    <string name="dq_local_rh_3_d">Using birth control pills</string>
+    <string name="dq_local_rh_3_exp">Correct and consistent use of condoms is the most effective way to prevent STIs besides abstinence. Birth control pills prevent pregnancy but do not protect against STIs.</string>
+
+    <!-- Emergency -->
+    <string name="dq_local_em_1">What is the recovery position used for?</string>
+    <string name="dq_local_em_1_a">A sleeping position for comfort</string>
+    <string name="dq_local_em_1_b">Placing an unconscious but breathing person on their side to keep their airway clear</string>
+    <string name="dq_local_em_1_c">A position for doing push-ups</string>
+    <string name="dq_local_em_1_d">A position for administering medication</string>
+    <string name="dq_local_em_1_exp">The recovery position is used for unconscious people who are breathing normally. It keeps the airway clear and prevents choking on vomit or fluids.</string>
+
+    <string name="dq_local_em_2">What are the signs of a stroke?</string>
+    <string name="dq_local_em_2_a">Itchy skin and sneezing</string>
+    <string name="dq_local_em_2_b">Face drooping, arm weakness, speech difficulty</string>
+    <string name="dq_local_em_2_c">Stomach pain and nausea</string>
+    <string name="dq_local_em_2_d">Joint pain and swelling</string>
+    <string name="dq_local_em_2_exp">Remember FAST: Face drooping, Arm weakness, Speech difficulty, Time to call emergency services. Stroke requires immediate medical attention to prevent brain damage.</string>
+
+    <string name="dq_local_em_3">What should you do if someone is having a seizure?</string>
+    <string name="dq_local_em_3_a">Put something in their mouth</string>
+    <string name="dq_local_em_3_b">Hold them down firmly</string>
+    <string name="dq_local_em_3_c">Clear the area of hard objects and protect their head</string>
+    <string name="dq_local_em_3_d">Pour water on their face</string>
+    <string name="dq_local_em_3_exp">During a seizure, clear the area of hard or sharp objects, protect the person\'s head, and do NOT put anything in their mouth or restrain them. Turn them on their side after the seizure stops.</string>
+</resources>

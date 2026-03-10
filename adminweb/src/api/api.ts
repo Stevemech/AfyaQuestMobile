@@ -46,15 +46,8 @@ function orgParams(extra?: Record<string, string>): string {
   return qs ? `?${qs}` : '';
 }
 
-// Video modules matching the mobile app (IDs 1-10)
+// Video modules matching the mobile app (only 8, 9, 10 are implemented)
 const VIDEO_MODULES = [
-  { id: 'video-1', name: 'Evaluaciones de Salud / Health Assessments', nameEs: 'Evaluaciones de Salud', nameEn: 'Health Assessments', type: 'video' as const },
-  { id: 'video-2', name: 'Saneamiento del Agua / Water Sanitation', nameEs: 'Prácticas de Saneamiento del Agua', nameEn: 'Water Sanitation Practices', type: 'video' as const },
-  { id: 'video-3', name: 'Salud Materno-Infantil / Maternal & Child Health', nameEs: 'Salud Materno-Infantil', nameEn: 'Maternal and Child Health', type: 'video' as const },
-  { id: 'video-4', name: 'Vacunación / Vaccination Programs', nameEs: 'Programas de Vacunación', nameEn: 'Vaccination Programs', type: 'video' as const },
-  { id: 'video-5', name: 'Primeros Auxilios / Emergency First Aid', nameEs: 'Primeros Auxilios de Emergencia', nameEn: 'Emergency First Aid', type: 'video' as const },
-  { id: 'video-6', name: 'Nutrición / Nutrition Basics', nameEs: 'Fundamentos de Nutrición', nameEn: 'Nutrition Basics', type: 'video' as const },
-  { id: 'video-7', name: 'Prevención de Enfermedades / Disease Prevention', nameEs: 'Prevención de Enfermedades', nameEn: 'Disease Prevention', type: 'video' as const },
   { id: 'video-8', name: 'Sistema Reproductor Masculino / Male Reproductive System', nameEs: 'Sistema Reproductor Masculino', nameEn: 'Male Reproductive System', type: 'video' as const },
   { id: 'video-9', name: 'Sistema Reproductor Femenino / Female Reproductive System', nameEs: 'Sistema Reproductor Femenino', nameEn: 'Female Reproductive System', type: 'video' as const },
   { id: 'video-10', name: 'Sistema Urinario / Urinary System', nameEs: 'Sistema Urinario', nameEn: 'Urinary System', type: 'video' as const },

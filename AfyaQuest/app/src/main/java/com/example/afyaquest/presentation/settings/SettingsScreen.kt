@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.compose.ui.res.stringResource
+import com.example.afyaquest.R
 import com.example.afyaquest.presentation.auth.AuthViewModel
 import com.example.afyaquest.presentation.navigation.Screen
 import com.example.afyaquest.presentation.profile.ProfileViewModel
@@ -41,10 +43,10 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.settings), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -58,12 +60,12 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // General Section
-            item { SectionHeader(text = "General") }
+            item { SectionHeader(text = stringResource(R.string.settings_general)) }
 
             item {
                 SettingsItem(
                     icon = Icons.Default.Language,
-                    title = "Language",
+                    title = stringResource(R.string.language),
                     subtitle = when (currentLanguage) {
                         LanguageManager.LANGUAGE_SPANISH -> "Español"
                         LanguageManager.LANGUAGE_KAQCHIKEL -> "Kaqchikel"
@@ -76,14 +78,14 @@ fun SettingsScreen(
             // Account Section
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                SectionHeader(text = "Account")
+                SectionHeader(text = stringResource(R.string.account))
             }
 
             item {
                 SettingsItem(
                     icon = Icons.Default.Person,
-                    title = "Profile Information",
-                    subtitle = userProfile?.name ?: "View your profile details",
+                    title = stringResource(R.string.settings_profile_info),
+                    subtitle = userProfile?.name ?: stringResource(R.string.settings_view_profile),
                     onClick = { showProfileDialog = true }
                 )
             }
@@ -91,8 +93,8 @@ fun SettingsScreen(
             item {
                 SettingsItem(
                     icon = Icons.Default.Lock,
-                    title = "Change Password",
-                    subtitle = "Update your password",
+                    title = stringResource(R.string.settings_change_password),
+                    subtitle = stringResource(R.string.settings_update_password),
                     onClick = { showPasswordDialog = true }
                 )
             }
@@ -100,14 +102,14 @@ fun SettingsScreen(
             // About Section
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                SectionHeader(text = "About")
+                SectionHeader(text = stringResource(R.string.about))
             }
 
             item {
                 SettingsItem(
                     icon = Icons.Default.Info,
-                    title = "About AfyaQuest",
-                    subtitle = "Version 1.0.0",
+                    title = stringResource(R.string.settings_about_app),
+                    subtitle = stringResource(R.string.settings_version),
                     onClick = { }
                 )
             }
@@ -115,14 +117,14 @@ fun SettingsScreen(
             // Logout
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                SectionHeader(text = "Danger Zone")
+                SectionHeader(text = stringResource(R.string.settings_danger_zone))
             }
 
             item {
                 SettingsItem(
                     icon = Icons.Default.Logout,
-                    title = "Logout",
-                    subtitle = "Sign out of your account",
+                    title = stringResource(R.string.logout),
+                    subtitle = stringResource(R.string.settings_sign_out_desc),
                     onClick = { showLogoutDialog = true },
                     isDestructive = true
                 )
@@ -148,21 +150,21 @@ fun SettingsScreen(
     if (showProfileDialog) {
         AlertDialog(
             onDismissRequest = { showProfileDialog = false },
-            title = { Text("Profile Information") },
+            title = { Text(stringResource(R.string.settings_profile_info)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    ProfileInfoRow("Name", userProfile?.name ?: "—")
-                    ProfileInfoRow("Email", userProfile?.email ?: "—")
-                    ProfileInfoRow("Phone", userProfile?.phone ?: "—")
-                    ProfileInfoRow("Organization", userProfile?.organization ?: "—")
-                    ProfileInfoRow("Role", userProfile?.role ?: "—")
-                    ProfileInfoRow("Level", "${userProfile?.level ?: 0}")
-                    ProfileInfoRow("Total XP", "${userProfile?.totalPoints ?: 0}")
+                    ProfileInfoRow(stringResource(R.string.settings_name), userProfile?.name ?: "—")
+                    ProfileInfoRow(stringResource(R.string.email), userProfile?.email ?: "—")
+                    ProfileInfoRow(stringResource(R.string.settings_phone), userProfile?.phone ?: "—")
+                    ProfileInfoRow(stringResource(R.string.settings_organization), userProfile?.organization ?: "—")
+                    ProfileInfoRow(stringResource(R.string.settings_role), userProfile?.role ?: "—")
+                    ProfileInfoRow(stringResource(R.string.level), "${userProfile?.level ?: 0}")
+                    ProfileInfoRow(stringResource(R.string.total_xp), "${userProfile?.totalPoints ?: 0}")
                 }
             },
             confirmButton = {
                 TextButton(onClick = { showProfileDialog = false }) {
-                    Text("Close")
+                    Text(stringResource(R.string.close))
                 }
             }
         )
@@ -178,36 +180,40 @@ fun SettingsScreen(
         var isLoading by remember { mutableStateOf(false) }
         var success by remember { mutableStateOf(false) }
         val userEmail = userProfile?.email ?: ""
+        val noEmailFoundMsg = stringResource(R.string.no_email_found)
+        val enterVerificationCodeMsg = stringResource(R.string.enter_verification_code_error)
+        val passwordMinLengthMsg = stringResource(R.string.password_min_length)
+        val passwordsDontMatchMsg = stringResource(R.string.passwords_dont_match)
 
         AlertDialog(
             onDismissRequest = { if (!isLoading) showPasswordDialog = false },
-            title = { Text(if (success) "Password Changed" else if (step == 1) "Reset Password" else "Enter Code") },
+            title = { Text(if (success) stringResource(R.string.password_changed) else if (step == 1) stringResource(R.string.reset_password) else stringResource(R.string.enter_code)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     when {
                         success -> {
-                            Text("Your password has been changed successfully!",
+                            Text(stringResource(R.string.password_changed_success),
                                 color = MaterialTheme.colorScheme.primary)
                         }
                         step == 1 -> {
-                            Text("We'll send a verification code to your email:",
+                            Text(stringResource(R.string.send_code_email_desc),
                                 fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             Text(userEmail, fontSize = 14.sp, fontWeight = FontWeight.Medium)
                         }
                         step == 2 -> {
-                            Text("Enter the verification code sent to $userEmail and your new password.",
+                            Text(stringResource(R.string.enter_code_instructions, userEmail),
                                 fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             OutlinedTextField(
                                 value = verificationCode,
                                 onValueChange = { verificationCode = it; errorMessage = null },
-                                label = { Text("Verification Code") },
+                                label = { Text(stringResource(R.string.verification_code)) },
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth()
                             )
                             OutlinedTextField(
                                 value = newPassword,
                                 onValueChange = { newPassword = it; errorMessage = null },
-                                label = { Text("New Password") },
+                                label = { Text(stringResource(R.string.new_password)) },
                                 visualTransformation = PasswordVisualTransformation(),
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth()
@@ -215,7 +221,7 @@ fun SettingsScreen(
                             OutlinedTextField(
                                 value = confirmPassword,
                                 onValueChange = { confirmPassword = it; errorMessage = null },
-                                label = { Text("Confirm New Password") },
+                                label = { Text(stringResource(R.string.confirm_new_password)) },
                                 visualTransformation = PasswordVisualTransformation(),
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth()
@@ -230,13 +236,13 @@ fun SettingsScreen(
             confirmButton = {
                 when {
                     success -> {
-                        TextButton(onClick = { showPasswordDialog = false }) { Text("Done") }
+                        TextButton(onClick = { showPasswordDialog = false }) { Text(stringResource(R.string.done)) }
                     }
                     step == 1 -> {
                         TextButton(
                             onClick = {
                                 if (userEmail.isBlank()) {
-                                    errorMessage = "No email found for your account"
+                                    errorMessage = noEmailFoundMsg
                                 } else {
                                     isLoading = true
                                     scope.launch {
@@ -250,16 +256,16 @@ fun SettingsScreen(
                             enabled = !isLoading
                         ) {
                             if (isLoading) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
-                            else Text("Send Code")
+                            else Text(stringResource(R.string.send_code))
                         }
                     }
                     step == 2 -> {
                         TextButton(
                             onClick = {
                                 when {
-                                    verificationCode.isBlank() -> errorMessage = "Enter the verification code"
-                                    newPassword.length < 8 -> errorMessage = "Password must be at least 8 characters"
-                                    newPassword != confirmPassword -> errorMessage = "Passwords don't match"
+                                    verificationCode.isBlank() -> errorMessage = enterVerificationCodeMsg
+                                    newPassword.length < 8 -> errorMessage = passwordMinLengthMsg
+                                    newPassword != confirmPassword -> errorMessage = passwordsDontMatchMsg
                                     else -> {
                                         isLoading = true
                                         scope.launch {
@@ -274,7 +280,7 @@ fun SettingsScreen(
                             enabled = !isLoading
                         ) {
                             if (isLoading) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
-                            else Text("Reset Password")
+                            else Text(stringResource(R.string.reset_password))
                         }
                     }
                 }
@@ -282,7 +288,7 @@ fun SettingsScreen(
             dismissButton = {
                 if (!success) {
                     TextButton(onClick = { showPasswordDialog = false }, enabled = !isLoading) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             }
@@ -293,8 +299,8 @@ fun SettingsScreen(
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
-            title = { Text("Logout") },
-            text = { Text("Are you sure you want to log out?") },
+            title = { Text(stringResource(R.string.logout)) },
+            text = { Text(stringResource(R.string.logout_confirm)) },
             confirmButton = {
                 TextButton(onClick = {
                     showLogoutDialog = false
@@ -303,12 +309,12 @@ fun SettingsScreen(
                         popUpTo(0) { inclusive = true }
                     }
                 }) {
-                    Text("Logout", color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.logout), color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showLogoutDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -392,7 +398,7 @@ fun LanguageDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Select Language") },
+        title = { Text(stringResource(R.string.settings_select_language)) },
         text = {
             Column {
                 LanguageOption(LanguageManager.LANGUAGE_ENGLISH, "English", currentLanguage == LanguageManager.LANGUAGE_ENGLISH) { onLanguageSelected(LanguageManager.LANGUAGE_ENGLISH) }
@@ -402,7 +408,7 @@ fun LanguageDialog(
                 LanguageOption(LanguageManager.LANGUAGE_KAQCHIKEL, "Kaqchikel", currentLanguage == LanguageManager.LANGUAGE_KAQCHIKEL) { onLanguageSelected(LanguageManager.LANGUAGE_KAQCHIKEL) }
             }
         },
-        confirmButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } }
     )
 }
 

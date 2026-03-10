@@ -48,6 +48,13 @@
     <string name="lives">Lives</string>
     <string name="level">Level</string>
     <string name="rank">Rank</string>
+    <string name="rank_beginner">Beginner</string>
+    <string name="rank_novice">Novice</string>
+    <string name="rank_apprentice">Apprentice</string>
+    <string name="rank_practitioner">Practitioner</string>
+    <string name="rank_expert">Expert</string>
+    <string name="rank_master">Master</string>
+    <string name="rank_grand_master">Grand Master</string>
     <string name="daily_todo">Daily To-Do</string>
     <string name="learning_center">Learning Center</string>
     <string name="xp_value_format">%d XP</string>
@@ -362,4 +369,270 @@
     <string name="error_network">Network error. Please try again.</string>
     <string name="error_generic">An error occurred. Please try again.</string>
     <string name="error_login_failed">Login failed. Please check your credentials.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_general">General</string>
+    <string name="settings_profile_info">Profile Information</string>
+    <string name="settings_view_profile">View your profile details</string>
+    <string name="settings_change_password">Change Password</string>
+    <string name="settings_update_password">Update your password</string>
+    <string name="settings_about_app">About AfyaQuest</string>
+    <string name="settings_version">Version 1.0.0</string>
+    <string name="settings_danger_zone">Danger Zone</string>
+    <string name="settings_sign_out_desc">Sign out of your account</string>
+    <string name="settings_select_language">Select Language</string>
+    <string name="logout_confirm">Are you sure you want to log out?</string>
+    <string name="settings_name">Name</string>
+    <string name="settings_phone">Phone</string>
+    <string name="settings_organization">Organization</string>
+    <string name="settings_role">Role</string>
+    <string name="password_changed">Password Changed</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="enter_code">Enter Code</string>
+    <string name="password_changed_success">Your password has been changed successfully!</string>
+    <string name="send_code_email_desc">We\'ll send a verification code to your email:</string>
+    <string name="enter_code_instructions">Enter the verification code sent to %s and your new password.</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="send_code">Send Code</string>
+    <string name="no_email_found">No email found for your account</string>
+    <string name="enter_verification_code_error">Enter the verification code</string>
+    <string name="password_min_length">Password must be at least 8 characters</string>
+    <string name="passwords_dont_match">Passwords don\'t match</string>
+
+    <!-- Profile Screen -->
+    <string name="status_label">Status</string>
+    <string name="quick_stats">Quick Stats</string>
+    <string name="day_streak">Day Streak</string>
+    <string name="stat_lessons_completed">Lessons Completed</string>
+    <string name="stat_videos_watched">Videos Watched</string>
+    <string name="stat_quizzes_completed">Quizzes Completed</string>
+    <string name="stat_reports_submitted">Reports Submitted</string>
+    <string name="unlocked_count">Unlocked (%d)</string>
+    <string name="locked_count">Locked (%d)</string>
+    <string name="unlocked_on_format">Unlocked on %s</string>
+    <string name="weekly_reflections_title">Weekly Reflections</string>
+    <string name="no_reflections_yet">No reflections yet. Start submitting weekly reflections to track your progress!</string>
+    <string name="week_of_format">Week of %s</string>
+    <string name="success_format">Success: %s</string>
+    <string name="submitted_format">Submitted: %s</string>
+
+    <!-- Quiz -->
+    <string name="score_label">Score</string>
+    <string name="percentage_label">Percentage</string>
+    <string name="quiz_title_8">Male Reproductive System</string>
+    <string name="quiz_title_9">Female Reproductive System</string>
+    <string name="quiz_title_10">Urinary System</string>
+
+    <!-- Module 8 Quiz: Male Reproductive System -->
+    <string name="quiz_8_q1">What is the primary function of the male reproductive system?</string>
+    <string name="quiz_8_q1_a">To regulate body temperature</string>
+    <string name="quiz_8_q1_b">To produce hormones only</string>
+    <string name="quiz_8_q1_c">To create and deliver sperm and produce male sex hormones</string>
+    <string name="quiz_8_q1_d">To filter blood</string>
+    <string name="quiz_8_q1_exp">The male reproductive system\'s primary function is to create and deliver sperm and to produce male sex hormones such as testosterone.</string>
+
+    <string name="quiz_8_q2">Which structure allows both urine and semen to exit the body?</string>
+    <string name="quiz_8_q2_a">Vas deferens</string>
+    <string name="quiz_8_q2_b">Prostate</string>
+    <string name="quiz_8_q2_c">Urethra</string>
+    <string name="quiz_8_q2_d">Seminal vesicle</string>
+    <string name="quiz_8_q2_exp">The urethra is a shared passageway for both urine and semen to exit the body.</string>
+
+    <string name="quiz_8_q3">The penis consists of which two main parts?</string>
+    <string name="quiz_8_q3_a">Shaft and scrotum</string>
+    <string name="quiz_8_q3_b">Shaft and glans penis</string>
+    <string name="quiz_8_q3_c">Glans and urethra</string>
+    <string name="quiz_8_q3_d">Shaft and vas deferens</string>
+    <string name="quiz_8_q3_exp">The penis is made up of the shaft (the main body) and the glans penis (the rounded tip).</string>
+
+    <string name="quiz_8_q4">What is the primary role of the testicles?</string>
+    <string name="quiz_8_q4_a">Produce urine</string>
+    <string name="quiz_8_q4_b">Store seminal fluid</string>
+    <string name="quiz_8_q4_c">Produce sperm and testosterone</string>
+    <string name="quiz_8_q4_d">Regulate blood pressure</string>
+    <string name="quiz_8_q4_exp">The testicles are responsible for producing sperm and the hormone testosterone.</string>
+
+    <string name="quiz_8_q5">The vas deferens connects the testicles to the:</string>
+    <string name="quiz_8_q5_a">Prostate</string>
+    <string name="quiz_8_q5_b">Urethra</string>
+    <string name="quiz_8_q5_c">Bladder</string>
+    <string name="quiz_8_q5_d">Seminal vesicle</string>
+    <string name="quiz_8_q5_exp">The vas deferens is a tube that carries sperm from the testicles toward the urethra for ejaculation.</string>
+
+    <string name="quiz_8_q6">The seminal vesicles mainly produce:</string>
+    <string name="quiz_8_q6_a">Testosterone</string>
+    <string name="quiz_8_q6_b">Urine</string>
+    <string name="quiz_8_q6_c">Fluid that nourishes and makes up semen</string>
+    <string name="quiz_8_q6_d">Sperm cells</string>
+    <string name="quiz_8_q6_exp">The seminal vesicles produce a nutrient-rich fluid that makes up the bulk of semen and helps nourish sperm.</string>
+
+    <string name="quiz_8_q7">The prostate gland contributes to semen by producing:</string>
+    <string name="quiz_8_q7_a">Sperm</string>
+    <string name="quiz_8_q7_b">The remaining seminal fluid</string>
+    <string name="quiz_8_q7_c">Urine</string>
+    <string name="quiz_8_q7_d">Hormones only</string>
+    <string name="quiz_8_q7_exp">The prostate gland produces a milky fluid that mixes with sperm and seminal vesicle fluid to form semen.</string>
+
+    <string name="quiz_8_q8">Which hormone is considered the most important androgen?</string>
+    <string name="quiz_8_q8_a">Estrogen</string>
+    <string name="quiz_8_q8_b">Progesterone</string>
+    <string name="quiz_8_q8_c">Testosterone</string>
+    <string name="quiz_8_q8_d">Insulin</string>
+    <string name="quiz_8_q8_exp">Testosterone is the primary male sex hormone and the most important androgen, responsible for male characteristics and reproductive function.</string>
+
+    <string name="quiz_8_q9">Testosterone is responsible for which of the following?</string>
+    <string name="quiz_8_q9_a">Deep voice and increased muscle mass</string>
+    <string name="quiz_8_q9_b">Blood clotting</string>
+    <string name="quiz_8_q9_c">Kidney filtration</string>
+    <string name="quiz_8_q9_d">Digestive enzyme production</string>
+    <string name="quiz_8_q9_exp">Testosterone drives male secondary sex characteristics including a deeper voice and increased muscle mass.</string>
+
+    <string name="quiz_8_q10">Which of the following is defined as difficulty getting or keeping an erection?</string>
+    <string name="quiz_8_q10_a">Infertility</string>
+    <string name="quiz_8_q10_b">STI</string>
+    <string name="quiz_8_q10_c">Erectile dysfunction (impotence)</string>
+    <string name="quiz_8_q10_d">Low sperm motility</string>
+    <string name="quiz_8_q10_exp">Erectile dysfunction (also called impotence) is the inability to get or maintain an erection sufficient for sexual activity.</string>
+
+    <!-- Module 9 Quiz: Female Reproductive System -->
+    <string name="quiz_9_q1">Which of the following is a main component of the female reproductive system?</string>
+    <string name="quiz_9_q1_a">Prostate</string>
+    <string name="quiz_9_q1_b">Ovaries</string>
+    <string name="quiz_9_q1_c">Testes</string>
+    <string name="quiz_9_q1_d">Vas deferens</string>
+    <string name="quiz_9_q1_exp">The ovaries are a main component of the female reproductive system. The prostate, testes, and vas deferens are all part of the male reproductive system.</string>
+
+    <string name="quiz_9_q2">What is the primary function of the ovaries?</string>
+    <string name="quiz_9_q2_a">Protect external openings</string>
+    <string name="quiz_9_q2_b">Produce eggs</string>
+    <string name="quiz_9_q2_c">Deliver the baby</string>
+    <string name="quiz_9_q2_d">Store sperm</string>
+    <string name="quiz_9_q2_exp">The ovaries produce eggs (ova) and also produce hormones such as estrogen and progesterone.</string>
+
+    <string name="quiz_9_q3">The fallopian tubes connect the ovaries to the:</string>
+    <string name="quiz_9_q3_a">Vagina</string>
+    <string name="quiz_9_q3_b">Vulva</string>
+    <string name="quiz_9_q3_c">Uterus</string>
+    <string name="quiz_9_q3_d">Pituitary gland</string>
+    <string name="quiz_9_q3_exp">The fallopian tubes transport eggs from the ovaries to the uterus, and are where fertilization typically occurs.</string>
+
+    <string name="quiz_9_q4">Where does a fetus develop during pregnancy?</string>
+    <string name="quiz_9_q4_a">Vagina</string>
+    <string name="quiz_9_q4_b">Ovaries</string>
+    <string name="quiz_9_q4_c">Fallopian tubes</string>
+    <string name="quiz_9_q4_d">Uterus</string>
+    <string name="quiz_9_q4_exp">The uterus (womb) is the organ where a fertilized egg implants and the fetus develops throughout pregnancy.</string>
+
+    <string name="quiz_9_q5">The vagina serves which of the following functions?</string>
+    <string name="quiz_9_q5_a">Produces eggs</string>
+    <string name="quiz_9_q5_b">Protects external openings</string>
+    <string name="quiz_9_q5_c">Connects the uterus to the outside and allows sperm entry</string>
+    <string name="quiz_9_q5_d">Produces hormones</string>
+    <string name="quiz_9_q5_exp">The vagina is the canal that connects the uterus to the outside of the body. It allows sperm entry, serves as the birth canal, and allows menstrual flow to exit.</string>
+
+    <string name="quiz_9_q6">The vulva is primarily responsible for:</string>
+    <string name="quiz_9_q6_a">Producing hormones</string>
+    <string name="quiz_9_q6_b">Protecting external openings from damage</string>
+    <string name="quiz_9_q6_c">Transporting eggs</string>
+    <string name="quiz_9_q6_d">Supporting fetal development</string>
+    <string name="quiz_9_q6_exp">The vulva comprises the external genitalia and its primary role is to protect the vaginal and urethral openings from damage and infection.</string>
+
+    <string name="quiz_9_q7">Which glands control the menstrual cycle?</string>
+    <string name="quiz_9_q7_a">Thyroid and adrenal glands</string>
+    <string name="quiz_9_q7_b">Ovaries and pituitary gland</string>
+    <string name="quiz_9_q7_c">Pancreas and ovaries</string>
+    <string name="quiz_9_q7_d">Uterus and liver</string>
+    <string name="quiz_9_q7_exp">The menstrual cycle is regulated by hormones from the ovaries (estrogen and progesterone) and the pituitary gland (FSH and LH).</string>
+
+    <string name="quiz_9_q8">The average menstrual cycle lasts approximately:</string>
+    <string name="quiz_9_q8_a">14 days</string>
+    <string name="quiz_9_q8_b">21 days</string>
+    <string name="quiz_9_q8_c">28 days</string>
+    <string name="quiz_9_q8_d">35 days</string>
+    <string name="quiz_9_q8_exp">The average menstrual cycle is approximately 28 days, though cycles between 21–35 days are considered normal.</string>
+
+    <string name="quiz_9_q9">An ectopic pregnancy most commonly occurs in the:</string>
+    <string name="quiz_9_q9_a">Uterus</string>
+    <string name="quiz_9_q9_b">Vagina</string>
+    <string name="quiz_9_q9_c">Fallopian tube</string>
+    <string name="quiz_9_q9_d">Vulva</string>
+    <string name="quiz_9_q9_exp">An ectopic pregnancy occurs when a fertilized egg implants outside the uterus. The fallopian tube is the most common site.</string>
+
+    <string name="quiz_9_q10">Placenta previa is a condition in which:</string>
+    <string name="quiz_9_q10_a">The placenta separates from the uterus before delivery</string>
+    <string name="quiz_9_q10_b">The placenta blocks the neck of the uterus</string>
+    <string name="quiz_9_q10_c">The fetus develops outside the uterus</string>
+    <string name="quiz_9_q10_d">Endometrial tissue grows outside the uterus</string>
+    <string name="quiz_9_q10_exp">Placenta previa occurs when the placenta partially or fully covers the cervix (neck of the uterus), which can cause complications during delivery.</string>
+
+    <!-- Module 10 Quiz: Urinary System -->
+    <string name="quiz_10_q1">Which of the following is NOT an organ associated with the urinary system?</string>
+    <string name="quiz_10_q1_a">Kidney</string>
+    <string name="quiz_10_q1_b">Ureter</string>
+    <string name="quiz_10_q1_c">Liver</string>
+    <string name="quiz_10_q1_d">Urethra</string>
+    <string name="quiz_10_q1_exp">The liver is a digestive organ, not part of the urinary system. The kidneys, ureters, and urethra are all key urinary system organs.</string>
+
+    <string name="quiz_10_q2">What is the significance of the brain in urination?</string>
+    <string name="quiz_10_q2_a">Signals the secretion of hormones that initiate the filtration of toxins from the blood</string>
+    <string name="quiz_10_q2_b">Coordinates the emptying and filling of the bladder</string>
+    <string name="quiz_10_q2_c">Aids the movement of urine into the bladder</string>
+    <string name="quiz_10_q2_d">Detects the buildup of toxins in the bloodstream</string>
+    <string name="quiz_10_q2_exp">The brain receives signals from the bladder and coordinates when to empty or hold urine by controlling the muscles involved in urination.</string>
+
+    <string name="quiz_10_q3">Which of the following is a common condition arising from complications in the urinary system?</string>
+    <string name="quiz_10_q3_a">UTIs</string>
+    <string name="quiz_10_q3_b">Pneumonia</string>
+    <string name="quiz_10_q3_c">Hypertension</string>
+    <string name="quiz_10_q3_d">Seizure</string>
+    <string name="quiz_10_q3_exp">Urinary tract infections (UTIs) are one of the most common conditions affecting the urinary system. Pneumonia, hypertension, and seizures are not urinary conditions.</string>
+
+    <string name="quiz_10_q4">What can cause a urinary tract infection?</string>
+    <string name="quiz_10_q4_a">A buildup of toxins in the bloodstream</string>
+    <string name="quiz_10_q4_b">Drinking too much water</string>
+    <string name="quiz_10_q4_c">Bacteria entering any part of the urinary tract</string>
+    <string name="quiz_10_q4_d">Sitting on the same toilet as someone with a urinary tract infection</string>
+    <string name="quiz_10_q4_exp">UTIs are caused by bacteria entering the urinary tract, most commonly E. coli from the digestive tract. UTIs are not spread through toilet seats or caused by drinking water.</string>
+
+    <string name="quiz_10_q5">Which of the following is NOT a symptom associated with urinary tract infections?</string>
+    <string name="quiz_10_q5_a">Painful and burning sensations when urinating</string>
+    <string name="quiz_10_q5_b">Cloudy and bloody urine</string>
+    <string name="quiz_10_q5_c">More frequent and sudden urges to urinate</string>
+    <string name="quiz_10_q5_d">Thick and white discharge</string>
+    <string name="quiz_10_q5_exp">Thick and white discharge is typically associated with a yeast infection, not a UTI. Burning urination, cloudy or bloody urine, and frequent urgency are classic UTI symptoms.</string>
+
+    <string name="quiz_10_q6">Urinary tract infections are more prevalent in females compared to males.</string>
+    <string name="quiz_10_q6_a">True</string>
+    <string name="quiz_10_q6_b">False</string>
+    <string name="quiz_10_q6_exp">True. Females have a shorter urethra, which makes it easier for bacteria to reach the bladder, making UTIs significantly more common in women.</string>
+
+    <string name="quiz_10_q7">What are kidney stones?</string>
+    <string name="quiz_10_q7_a">Deposits of acidic toxins that damage the renal capsule of the kidney</string>
+    <string name="quiz_10_q7_b">Hard clumps of salts and minerals</string>
+    <string name="quiz_10_q7_c">Structures that aid in the filtering of toxins from the blood</string>
+    <string name="quiz_10_q7_d">Proteins that aid the formation of urine</string>
+    <string name="quiz_10_q7_exp">Kidney stones are hard deposits made of salts and minerals that form inside the kidneys and can cause significant pain when passing through the urinary tract.</string>
+
+    <string name="quiz_10_q8">Which of the following is NOT a symptom associated with kidney stones?</string>
+    <string name="quiz_10_q8_a">Severe migraines</string>
+    <string name="quiz_10_q8_b">Extreme lower back and abdominal pain</string>
+    <string name="quiz_10_q8_c">High fever</string>
+    <string name="quiz_10_q8_d">Vomiting</string>
+    <string name="quiz_10_q8_exp">Severe migraines are not a typical symptom of kidney stones. Common symptoms include intense lower back or abdominal pain, fever, and vomiting.</string>
+
+    <string name="quiz_10_q9">What is a sign of poor hydration?</string>
+    <string name="quiz_10_q9_a">Strong-smelling urine</string>
+    <string name="quiz_10_q9_b">Relatively colorless urine</string>
+    <string name="quiz_10_q9_c">Frequent urges to urinate</string>
+    <string name="quiz_10_q9_d">A &amp; B</string>
+    <string name="quiz_10_q9_exp">Strong-smelling, dark-colored urine is a sign of dehydration. Relatively colorless urine indicates good hydration.</string>
+
+    <string name="quiz_10_q10">What is a way of maintaining a healthy urinary system?</string>
+    <string name="quiz_10_q10_a">Wiping from back to front</string>
+    <string name="quiz_10_q10_b">Regularly drinking water</string>
+    <string name="quiz_10_q10_c">Resisting urges to urinate</string>
+    <string name="quiz_10_q10_d">Spending prolonged periods on the toilet</string>
+    <string name="quiz_10_q10_exp">Drinking water regularly flushes bacteria from the urinary tract. The other options can all contribute to urinary problems.</string>
 </resources>

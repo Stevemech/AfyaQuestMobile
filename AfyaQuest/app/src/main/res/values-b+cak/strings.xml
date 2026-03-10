@@ -48,6 +48,13 @@
     <string name="lives">K\'aslemal</string>
     <string name="level">Ruk\'aslem</string>
     <string name="rank">Ruk\'oj</string>
+    <string name="rank_beginner">Tikirisanel</string>
+    <string name="rank_novice">K\'ak\'a\'</string>
+    <string name="rank_apprentice">Tijoxel</string>
+    <string name="rank_practitioner">Samajinel</string>
+    <string name="rank_expert">Etamanel</string>
+    <string name="rank_master">Ajtij</string>
+    <string name="rank_grand_master">Nimaläj Ajtij</string>
     <string name="daily_todo">Rusamaj Jujun Q\'ij</string>
     <string name="learning_center">K\'olib\'äl Tijonik</string>
     <string name="xp_value_format">%d XP</string>

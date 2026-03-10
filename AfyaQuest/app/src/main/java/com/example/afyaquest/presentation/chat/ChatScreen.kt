@@ -79,7 +79,7 @@ fun ChatScreen(
                             Text(
                                 text = stringResource(R.string.online),
                                 fontSize = 12.sp,
-                                color = Color(0xFF4CAF50)
+                                color = Color(0xFF438894)
                             )
                         }
                     }

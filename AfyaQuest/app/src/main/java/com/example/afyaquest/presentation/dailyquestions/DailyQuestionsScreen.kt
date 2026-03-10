@@ -165,8 +165,9 @@ fun DailyQuestionsScreen(
 
                         // Question card
                         if (currentQuestion != null) {
+                            val translatedQuestion = translateDailyQuestion(currentQuestion)
                             QuestionCard(
-                                question = currentQuestion,
+                                question = translatedQuestion,
                                 selectedAnswer = selectedAnswer,
                                 showExplanation = showExplanation,
                                 onAnswerSelect = { answerIndex ->
@@ -274,8 +275,8 @@ fun QuestionCard(
             ) {
                 // Difficulty badge
                 val difficultyColor = when (question.difficulty) {
-                    Difficulty.EASY -> Color(0xFF4CAF50)
-                    Difficulty.MEDIUM -> Color(0xFFFF9800)
+                    Difficulty.EASY -> Color(0xFF438894)
+                    Difficulty.MEDIUM -> Color(0xFFEFA03F)
                     Difficulty.HARD -> Color(0xFFF44336)
                 }
                 Badge(
@@ -387,14 +388,14 @@ fun OptionButton(
     enabled: Boolean
 ) {
     val backgroundColor = when {
-        showResult && isCorrect -> Color(0xFF4CAF50)
+        showResult && isCorrect -> Color(0xFF438894)
         showResult && isSelected && !isCorrect -> Color(0xFFF44336)
         isSelected && !showResult -> MaterialTheme.colorScheme.primaryContainer
         else -> MaterialTheme.colorScheme.surface
     }
 
     val borderColor = when {
-        showResult && isCorrect -> Color(0xFF4CAF50)
+        showResult && isCorrect -> Color(0xFF438894)
         showResult && isSelected && !isCorrect -> Color(0xFFF44336)
         else -> MaterialTheme.colorScheme.outline
     }
@@ -519,3 +520,96 @@ fun QuizSummaryCard(
         }
     }
 }
+
+@Composable
+fun translateDailyQuestion(question: Question): Question {
+    val qRes = dailyQuestionResources[question.id] ?: return question
+
+    val translatedQ = stringResource(qRes.question)
+    val translatedOptions = listOf(
+        stringResource(qRes.optionA),
+        stringResource(qRes.optionB),
+        stringResource(qRes.optionC),
+        stringResource(qRes.optionD)
+    )
+    val translatedExp = stringResource(qRes.explanation)
+    val translatedCat = categoryResources[question.category]?.let { stringResource(it) } ?: question.category
+
+    return question.copy(
+        question = translatedQ,
+        options = translatedOptions,
+        explanation = translatedExp,
+        category = translatedCat
+    )
+}
+
+private data class DQRes(
+    val question: Int,
+    val optionA: Int,
+    val optionB: Int,
+    val optionC: Int,
+    val optionD: Int,
+    val explanation: Int
+)
+
+private val categoryResources = mapOf(
+    "Hygiene" to R.string.cat_hygiene,
+    "Nutrition" to R.string.cat_nutrition,
+    "Maternal Health" to R.string.cat_maternal_health,
+    "Immunization" to R.string.cat_immunization,
+    "Disease Prevention" to R.string.cat_disease_prevention,
+    "First Aid" to R.string.cat_first_aid,
+    "Child Care" to R.string.cat_child_care,
+    "Community Health" to R.string.cat_community_health,
+    "Reproductive Health" to R.string.cat_reproductive_health,
+    "Emergency" to R.string.cat_emergency
+)
+
+private val dailyQuestionResources = mapOf(
+    "local_hyg_1" to DQRes(R.string.dq_local_hyg_1, R.string.dq_local_hyg_1_a, R.string.dq_local_hyg_1_b, R.string.dq_local_hyg_1_c, R.string.dq_local_hyg_1_d, R.string.dq_local_hyg_1_exp),
+    "local_hyg_2" to DQRes(R.string.dq_local_hyg_2, R.string.dq_local_hyg_2_a, R.string.dq_local_hyg_2_b, R.string.dq_local_hyg_2_c, R.string.dq_local_hyg_2_d, R.string.dq_local_hyg_2_exp),
+    "local_hyg_3" to DQRes(R.string.dq_local_hyg_3, R.string.dq_local_hyg_3_a, R.string.dq_local_hyg_3_b, R.string.dq_local_hyg_3_c, R.string.dq_local_hyg_3_d, R.string.dq_local_hyg_3_exp),
+    "local_hyg_4" to DQRes(R.string.dq_local_hyg_4, R.string.dq_local_hyg_4_a, R.string.dq_local_hyg_4_b, R.string.dq_local_hyg_4_c, R.string.dq_local_hyg_4_d, R.string.dq_local_hyg_4_exp),
+    "local_hyg_5" to DQRes(R.string.dq_local_hyg_5, R.string.dq_local_hyg_5_a, R.string.dq_local_hyg_5_b, R.string.dq_local_hyg_5_c, R.string.dq_local_hyg_5_d, R.string.dq_local_hyg_5_exp),
+    "local_nut_1" to DQRes(R.string.dq_local_nut_1, R.string.dq_local_nut_1_a, R.string.dq_local_nut_1_b, R.string.dq_local_nut_1_c, R.string.dq_local_nut_1_d, R.string.dq_local_nut_1_exp),
+    "local_nut_2" to DQRes(R.string.dq_local_nut_2, R.string.dq_local_nut_2_a, R.string.dq_local_nut_2_b, R.string.dq_local_nut_2_c, R.string.dq_local_nut_2_d, R.string.dq_local_nut_2_exp),
+    "local_nut_3" to DQRes(R.string.dq_local_nut_3, R.string.dq_local_nut_3_a, R.string.dq_local_nut_3_b, R.string.dq_local_nut_3_c, R.string.dq_local_nut_3_d, R.string.dq_local_nut_3_exp),
+    "local_nut_4" to DQRes(R.string.dq_local_nut_4, R.string.dq_local_nut_4_a, R.string.dq_local_nut_4_b, R.string.dq_local_nut_4_c, R.string.dq_local_nut_4_d, R.string.dq_local_nut_4_exp),
+    "local_nut_5" to DQRes(R.string.dq_local_nut_5, R.string.dq_local_nut_5_a, R.string.dq_local_nut_5_b, R.string.dq_local_nut_5_c, R.string.dq_local_nut_5_d, R.string.dq_local_nut_5_exp),
+    "local_mat_1" to DQRes(R.string.dq_local_mat_1, R.string.dq_local_mat_1_a, R.string.dq_local_mat_1_b, R.string.dq_local_mat_1_c, R.string.dq_local_mat_1_d, R.string.dq_local_mat_1_exp),
+    "local_mat_2" to DQRes(R.string.dq_local_mat_2, R.string.dq_local_mat_2_a, R.string.dq_local_mat_2_b, R.string.dq_local_mat_2_c, R.string.dq_local_mat_2_d, R.string.dq_local_mat_2_exp),
+    "local_mat_3" to DQRes(R.string.dq_local_mat_3, R.string.dq_local_mat_3_a, R.string.dq_local_mat_3_b, R.string.dq_local_mat_3_c, R.string.dq_local_mat_3_d, R.string.dq_local_mat_3_exp),
+    "local_mat_4" to DQRes(R.string.dq_local_mat_4, R.string.dq_local_mat_4_a, R.string.dq_local_mat_4_b, R.string.dq_local_mat_4_c, R.string.dq_local_mat_4_d, R.string.dq_local_mat_4_exp),
+    "local_mat_5" to DQRes(R.string.dq_local_mat_5, R.string.dq_local_mat_5_a, R.string.dq_local_mat_5_b, R.string.dq_local_mat_5_c, R.string.dq_local_mat_5_d, R.string.dq_local_mat_5_exp),
+    "local_imm_1" to DQRes(R.string.dq_local_imm_1, R.string.dq_local_imm_1_a, R.string.dq_local_imm_1_b, R.string.dq_local_imm_1_c, R.string.dq_local_imm_1_d, R.string.dq_local_imm_1_exp),
+    "local_imm_2" to DQRes(R.string.dq_local_imm_2, R.string.dq_local_imm_2_a, R.string.dq_local_imm_2_b, R.string.dq_local_imm_2_c, R.string.dq_local_imm_2_d, R.string.dq_local_imm_2_exp),
+    "local_imm_3" to DQRes(R.string.dq_local_imm_3, R.string.dq_local_imm_3_a, R.string.dq_local_imm_3_b, R.string.dq_local_imm_3_c, R.string.dq_local_imm_3_d, R.string.dq_local_imm_3_exp),
+    "local_imm_4" to DQRes(R.string.dq_local_imm_4, R.string.dq_local_imm_4_a, R.string.dq_local_imm_4_b, R.string.dq_local_imm_4_c, R.string.dq_local_imm_4_d, R.string.dq_local_imm_4_exp),
+    "local_imm_5" to DQRes(R.string.dq_local_imm_5, R.string.dq_local_imm_5_a, R.string.dq_local_imm_5_b, R.string.dq_local_imm_5_c, R.string.dq_local_imm_5_d, R.string.dq_local_imm_5_exp),
+    "local_dis_1" to DQRes(R.string.dq_local_dis_1, R.string.dq_local_dis_1_a, R.string.dq_local_dis_1_b, R.string.dq_local_dis_1_c, R.string.dq_local_dis_1_d, R.string.dq_local_dis_1_exp),
+    "local_dis_2" to DQRes(R.string.dq_local_dis_2, R.string.dq_local_dis_2_a, R.string.dq_local_dis_2_b, R.string.dq_local_dis_2_c, R.string.dq_local_dis_2_d, R.string.dq_local_dis_2_exp),
+    "local_dis_3" to DQRes(R.string.dq_local_dis_3, R.string.dq_local_dis_3_a, R.string.dq_local_dis_3_b, R.string.dq_local_dis_3_c, R.string.dq_local_dis_3_d, R.string.dq_local_dis_3_exp),
+    "local_dis_4" to DQRes(R.string.dq_local_dis_4, R.string.dq_local_dis_4_a, R.string.dq_local_dis_4_b, R.string.dq_local_dis_4_c, R.string.dq_local_dis_4_d, R.string.dq_local_dis_4_exp),
+    "local_dis_5" to DQRes(R.string.dq_local_dis_5, R.string.dq_local_dis_5_a, R.string.dq_local_dis_5_b, R.string.dq_local_dis_5_c, R.string.dq_local_dis_5_d, R.string.dq_local_dis_5_exp),
+    "local_fa_1" to DQRes(R.string.dq_local_fa_1, R.string.dq_local_fa_1_a, R.string.dq_local_fa_1_b, R.string.dq_local_fa_1_c, R.string.dq_local_fa_1_d, R.string.dq_local_fa_1_exp),
+    "local_fa_2" to DQRes(R.string.dq_local_fa_2, R.string.dq_local_fa_2_a, R.string.dq_local_fa_2_b, R.string.dq_local_fa_2_c, R.string.dq_local_fa_2_d, R.string.dq_local_fa_2_exp),
+    "local_fa_3" to DQRes(R.string.dq_local_fa_3, R.string.dq_local_fa_3_a, R.string.dq_local_fa_3_b, R.string.dq_local_fa_3_c, R.string.dq_local_fa_3_d, R.string.dq_local_fa_3_exp),
+    "local_fa_4" to DQRes(R.string.dq_local_fa_4, R.string.dq_local_fa_4_a, R.string.dq_local_fa_4_b, R.string.dq_local_fa_4_c, R.string.dq_local_fa_4_d, R.string.dq_local_fa_4_exp),
+    "local_fa_5" to DQRes(R.string.dq_local_fa_5, R.string.dq_local_fa_5_a, R.string.dq_local_fa_5_b, R.string.dq_local_fa_5_c, R.string.dq_local_fa_5_d, R.string.dq_local_fa_5_exp),
+    "local_cc_1" to DQRes(R.string.dq_local_cc_1, R.string.dq_local_cc_1_a, R.string.dq_local_cc_1_b, R.string.dq_local_cc_1_c, R.string.dq_local_cc_1_d, R.string.dq_local_cc_1_exp),
+    "local_cc_2" to DQRes(R.string.dq_local_cc_2, R.string.dq_local_cc_2_a, R.string.dq_local_cc_2_b, R.string.dq_local_cc_2_c, R.string.dq_local_cc_2_d, R.string.dq_local_cc_2_exp),
+    "local_cc_3" to DQRes(R.string.dq_local_cc_3, R.string.dq_local_cc_3_a, R.string.dq_local_cc_3_b, R.string.dq_local_cc_3_c, R.string.dq_local_cc_3_d, R.string.dq_local_cc_3_exp),
+    "local_cc_4" to DQRes(R.string.dq_local_cc_4, R.string.dq_local_cc_4_a, R.string.dq_local_cc_4_b, R.string.dq_local_cc_4_c, R.string.dq_local_cc_4_d, R.string.dq_local_cc_4_exp),
+    "local_cc_5" to DQRes(R.string.dq_local_cc_5, R.string.dq_local_cc_5_a, R.string.dq_local_cc_5_b, R.string.dq_local_cc_5_c, R.string.dq_local_cc_5_d, R.string.dq_local_cc_5_exp),
+    "local_ch_1" to DQRes(R.string.dq_local_ch_1, R.string.dq_local_ch_1_a, R.string.dq_local_ch_1_b, R.string.dq_local_ch_1_c, R.string.dq_local_ch_1_d, R.string.dq_local_ch_1_exp),
+    "local_ch_2" to DQRes(R.string.dq_local_ch_2, R.string.dq_local_ch_2_a, R.string.dq_local_ch_2_b, R.string.dq_local_ch_2_c, R.string.dq_local_ch_2_d, R.string.dq_local_ch_2_exp),
+    "local_ch_3" to DQRes(R.string.dq_local_ch_3, R.string.dq_local_ch_3_a, R.string.dq_local_ch_3_b, R.string.dq_local_ch_3_c, R.string.dq_local_ch_3_d, R.string.dq_local_ch_3_exp),
+    "local_ch_4" to DQRes(R.string.dq_local_ch_4, R.string.dq_local_ch_4_a, R.string.dq_local_ch_4_b, R.string.dq_local_ch_4_c, R.string.dq_local_ch_4_d, R.string.dq_local_ch_4_exp),
+    "local_ch_5" to DQRes(R.string.dq_local_ch_5, R.string.dq_local_ch_5_a, R.string.dq_local_ch_5_b, R.string.dq_local_ch_5_c, R.string.dq_local_ch_5_d, R.string.dq_local_ch_5_exp),
+    "local_rh_1" to DQRes(R.string.dq_local_rh_1, R.string.dq_local_rh_1_a, R.string.dq_local_rh_1_b, R.string.dq_local_rh_1_c, R.string.dq_local_rh_1_d, R.string.dq_local_rh_1_exp),
+    "local_rh_2" to DQRes(R.string.dq_local_rh_2, R.string.dq_local_rh_2_a, R.string.dq_local_rh_2_b, R.string.dq_local_rh_2_c, R.string.dq_local_rh_2_d, R.string.dq_local_rh_2_exp),
+    "local_rh_3" to DQRes(R.string.dq_local_rh_3, R.string.dq_local_rh_3_a, R.string.dq_local_rh_3_b, R.string.dq_local_rh_3_c, R.string.dq_local_rh_3_d, R.string.dq_local_rh_3_exp),
+    "local_em_1" to DQRes(R.string.dq_local_em_1, R.string.dq_local_em_1_a, R.string.dq_local_em_1_b, R.string.dq_local_em_1_c, R.string.dq_local_em_1_d, R.string.dq_local_em_1_exp),
+    "local_em_2" to DQRes(R.string.dq_local_em_2, R.string.dq_local_em_2_a, R.string.dq_local_em_2_b, R.string.dq_local_em_2_c, R.string.dq_local_em_2_d, R.string.dq_local_em_2_exp),
+    "local_em_3" to DQRes(R.string.dq_local_em_3, R.string.dq_local_em_3_a, R.string.dq_local_em_3_b, R.string.dq_local_em_3_c, R.string.dq_local_em_3_d, R.string.dq_local_em_3_exp),
+)

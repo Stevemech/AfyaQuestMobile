@@ -19,7 +19,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -263,7 +262,7 @@ fun DashboardScreen(
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
             title = { Text(stringResource(R.string.logout)) },
-            text = { Text("Are you sure you want to log out?") },
+            text = { Text(stringResource(R.string.logout_confirm)) },
             confirmButton = {
                 TextButton(onClick = {
                     showLogoutDialog = false
@@ -293,14 +292,7 @@ fun StatsHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                brush = Brush.horizontalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.primaryContainer
-                    )
-                )
-            )
+            .background(MaterialTheme.colorScheme.primary)
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -355,6 +347,20 @@ fun StatItem(
 }
 
 @Composable
+fun translatedRank(rank: String): String {
+    return when (rank) {
+        "Beginner" -> stringResource(R.string.rank_beginner)
+        "Novice" -> stringResource(R.string.rank_novice)
+        "Apprentice" -> stringResource(R.string.rank_apprentice)
+        "Practitioner" -> stringResource(R.string.rank_practitioner)
+        "Expert" -> stringResource(R.string.rank_expert)
+        "Master" -> stringResource(R.string.rank_master)
+        "Grand Master" -> stringResource(R.string.rank_grand_master)
+        else -> rank
+    }
+}
+
+@Composable
 fun UserLevelCard(
     level: Int,
     rank: String,
@@ -386,7 +392,7 @@ fun UserLevelCard(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = rank,
+                        text = translatedRank(rank),
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -851,7 +857,7 @@ fun ClockStatusBanner(
     isLoading: Boolean,
     onToggle: () -> Unit
 ) {
-    val activeGreen = Color(0xFF22C55E)
+    val activeGreen = Color(0xFF438894)
     val inactiveGray = Color(0xFF94A3B8)
     val bgColor by animateColorAsState(
         targetValue = if (isActive) activeGreen.copy(alpha = 0.1f) else inactiveGray.copy(alpha = 0.08f),

@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Categories -->
+    <string name="cat_hygiene">Higiene</string>
+    <string name="cat_nutrition">Nutrición</string>
+    <string name="cat_maternal_health">Salud Materna</string>
+    <string name="cat_immunization">Inmunización</string>
+    <string name="cat_disease_prevention">Prevención de Enfermedades</string>
+    <string name="cat_first_aid">Primeros Auxilios</string>
+    <string name="cat_child_care">Cuidado Infantil</string>
+    <string name="cat_community_health">Salud Comunitaria</string>
+    <string name="cat_reproductive_health">Salud Reproductiva</string>
+    <string name="cat_emergency">Emergencia</string>
+
+    <!-- Hygiene -->
+    <string name="dq_local_hyg_1">¿Cuánto tiempo debe lavarse las manos con jabón para eliminar eficazmente los gérmenes?</string>
+    <string name="dq_local_hyg_1_a">5 segundos</string>
+    <string name="dq_local_hyg_1_b">10 segundos</string>
+    <string name="dq_local_hyg_1_c">Al menos 20 segundos</string>
+    <string name="dq_local_hyg_1_d">1 minuto</string>
+    <string name="dq_local_hyg_1_exp">La OMS recomienda lavarse las manos con jabón durante al menos 20 segundos para eliminar eficazmente los gérmenes.</string>
+
+    <string name="dq_local_hyg_2">¿Cuál de estos NO es uno de los momentos críticos para lavarse las manos?</string>
+    <string name="dq_local_hyg_2_a">Antes de preparar alimentos</string>
+    <string name="dq_local_hyg_2_b">Después de usar el baño</string>
+    <string name="dq_local_hyg_2_c">Después de ver televisión</string>
+    <string name="dq_local_hyg_2_d">Antes de comer</string>
+    <string name="dq_local_hyg_2_exp">Los momentos críticos para lavarse las manos incluyen antes de preparar alimentos, después de usar el baño y antes de comer. Ver televisión no es un momento crítico.</string>
+
+    <string name="dq_local_hyg_3">¿Cuál es la forma más eficaz de hacer que el agua sea segura para beber?</string>
+    <string name="dq_local_hyg_3_a">Dejarla reposar toda la noche</string>
+    <string name="dq_local_hyg_3_b">Hervirla durante al menos 1 minuto</string>
+    <string name="dq_local_hyg_3_c">Añadir azúcar</string>
+    <string name="dq_local_hyg_3_d">Filtrarla solo con tela</string>
+    <string name="dq_local_hyg_3_exp">Hervir el agua durante al menos 1 minuto es la forma más eficaz de eliminar bacterias y parásitos que causan enfermedades.</string>
+
+    <string name="dq_local_hyg_4">¿Cuál es la forma correcta de desechar las heces de un niño?</string>
+    <string name="dq_local_hyg_4_a">Dejarlas al aire libre</string>
+    <string name="dq_local_hyg_4_b">Arrojarlas al río</string>
+    <string name="dq_local_hyg_4_c">Desecharlas en una letrina o inodoro</string>
+    <string name="dq_local_hyg_4_d">Enterrarlas en el jardín</string>
+    <string name="dq_local_hyg_4_exp">Las heces deben desecharse en una letrina o inodoro para prevenir la contaminación del agua y la propagación de enfermedades.</string>
+
+    <string name="dq_local_hyg_5">¿Qué enfermedad se transmite más comúnmente a través del agua contaminada?</string>
+    <string name="dq_local_hyg_5_a">Malaria</string>
+    <string name="dq_local_hyg_5_b">Cólera</string>
+    <string name="dq_local_hyg_5_c">Tuberculosis</string>
+    <string name="dq_local_hyg_5_d">VIH</string>
+    <string name="dq_local_hyg_5_exp">El cólera es una enfermedad diarreica aguda causada por la ingestión de agua o alimentos contaminados con la bacteria Vibrio cholerae.</string>
+
+    <!-- Nutrition -->
+    <string name="dq_local_nut_1">¿Cuál es la duración recomendada para la lactancia materna exclusiva?</string>
+    <string name="dq_local_nut_1_a">2 meses</string>
+    <string name="dq_local_nut_1_b">4 meses</string>
+    <string name="dq_local_nut_1_c">6 meses</string>
+    <string name="dq_local_nut_1_d">12 meses</string>
+    <string name="dq_local_nut_1_exp">La OMS recomienda la lactancia materna exclusiva durante los primeros 6 meses de vida.</string>
+
+    <string name="dq_local_nut_2">¿Qué deficiencia de nutrientes causa ceguera nocturna en los niños?</string>
+    <string name="dq_local_nut_2_a">Hierro</string>
+    <string name="dq_local_nut_2_b">Vitamina A</string>
+    <string name="dq_local_nut_2_c">Calcio</string>
+    <string name="dq_local_nut_2_d">Vitamina C</string>
+    <string name="dq_local_nut_2_exp">La deficiencia de vitamina A es una causa principal de ceguera nocturna y puede llevar a la ceguera permanente.</string>
+
+    <string name="dq_local_nut_3">¿Cuál es un signo de desnutrición aguda severa en niños?</string>
+    <string name="dq_local_nut_3_a">Ser muy alto</string>
+    <string name="dq_local_nut_3_b">Edema (hinchazón) de ambos pies</string>
+    <string name="dq_local_nut_3_c">Tener mucho apetito</string>
+    <string name="dq_local_nut_3_d">Aumentar de peso rápidamente</string>
+    <string name="dq_local_nut_3_exp">El edema con fóvea bilateral (hinchazón de ambos pies) es un signo característico de kwashiorkor, una forma de desnutrición aguda severa.</string>
+
+    <string name="dq_local_nut_4">¿A qué edad se deben introducir los alimentos complementarios a un lactante?</string>
+    <string name="dq_local_nut_4_a">2 meses</string>
+    <string name="dq_local_nut_4_b">4 meses</string>
+    <string name="dq_local_nut_4_c">6 meses</string>
+    <string name="dq_local_nut_4_d">9 meses</string>
+    <string name="dq_local_nut_4_exp">Los alimentos complementarios deben introducirse a los 6 meses de edad, manteniendo la lactancia materna.</string>
+
+    <string name="dq_local_nut_5">¿Cuál de estos es la mejor fuente de hierro para prevenir la anemia?</string>
+    <string name="dq_local_nut_5_a">Arroz blanco</string>
+    <string name="dq_local_nut_5_b">Verduras de hoja verde oscuro e hígado</string>
+    <string name="dq_local_nut_5_c">Plátanos</string>
+    <string name="dq_local_nut_5_d">Leche</string>
+    <string name="dq_local_nut_5_exp">Las verduras de hoja verde oscuro y el hígado son ricos en hierro biodisponible, esencial para prevenir la anemia.</string>
+
+    <!-- Maternal Health -->
+    <string name="dq_local_mat_1">¿Cuántas visitas de atención prenatal recomienda la OMS durante el embarazo?</string>
+    <string name="dq_local_mat_1_a">2 visitas</string>
+    <string name="dq_local_mat_1_b">4 visitas</string>
+    <string name="dq_local_mat_1_c">Al menos 8 visitas</string>
+    <string name="dq_local_mat_1_d">1 visita</string>
+    <string name="dq_local_mat_1_exp">La OMS recomienda un mínimo de 8 contactos de atención prenatal para reducir la mortalidad materna y perinatal.</string>
+
+    <string name="dq_local_mat_2">¿Cuál de estos es un signo de peligro durante el embarazo?</string>
+    <string name="dq_local_mat_2_a">Náuseas leves</string>
+    <string name="dq_local_mat_2_b">Sangrado vaginal</string>
+    <string name="dq_local_mat_2_c">Aumento del apetito</string>
+    <string name="dq_local_mat_2_d">Dolor de espalda leve</string>
+    <string name="dq_local_mat_2_exp">El sangrado vaginal durante el embarazo es un signo de peligro que requiere atención médica inmediata.</string>
+
+    <string name="dq_local_mat_3">¿Qué suplemento deben tomar las mujeres embarazadas para prevenir defectos del tubo neural?</string>
+    <string name="dq_local_mat_3_a">Vitamina C</string>
+    <string name="dq_local_mat_3_b">Calcio</string>
+    <string name="dq_local_mat_3_c">Ácido fólico</string>
+    <string name="dq_local_mat_3_d">Vitamina D</string>
+    <string name="dq_local_mat_3_exp">El ácido fólico antes y durante el embarazo reduce significativamente el riesgo de defectos del tubo neural en el bebé.</string>
+
+    <string name="dq_local_mat_4">¿Cuál es la principal causa de muerte materna a nivel mundial?</string>
+    <string name="dq_local_mat_4_a">Malaria</string>
+    <string name="dq_local_mat_4_b">Hemorragia posparto</string>
+    <string name="dq_local_mat_4_c">VIH</string>
+    <string name="dq_local_mat_4_d">Tuberculosis</string>
+    <string name="dq_local_mat_4_exp">La hemorragia posparto (sangrado excesivo después del parto) es la principal causa de muerte materna en todo el mundo.</string>
+
+    <string name="dq_local_mat_5">¿Cuándo debe ponerse un recién nacido al pecho por primera vez?</string>
+    <string name="dq_local_mat_5_a">Durante la primera hora</string>
+    <string name="dq_local_mat_5_b">Después de 6 horas</string>
+    <string name="dq_local_mat_5_c">Al día siguiente</string>
+    <string name="dq_local_mat_5_d">Cuando la madre se sienta lista</string>
+    <string name="dq_local_mat_5_exp">El recién nacido debe ponerse al pecho durante la primera hora de vida para recibir el calostro, rico en anticuerpos y nutrientes.</string>
+
+    <!-- Immunization -->
+    <string name="dq_local_imm_1">¿A qué edad debe un niño recibir la vacuna BCG?</string>
+    <string name="dq_local_imm_1_a">Al nacer</string>
+    <string name="dq_local_imm_1_b">6 semanas</string>
+    <string name="dq_local_imm_1_c">9 meses</string>
+    <string name="dq_local_imm_1_d">5 años</string>
+    <string name="dq_local_imm_1_exp">La vacuna BCG contra la tuberculosis se administra al nacer o lo antes posible después del nacimiento.</string>
+
+    <string name="dq_local_imm_2">¿Contra qué protege la vacuna pentavalente?</string>
+    <string name="dq_local_imm_2_a">Solo difteria y tétanos</string>
+    <string name="dq_local_imm_2_b">Solo sarampión y polio</string>
+    <string name="dq_local_imm_2_c">Difteria, tos ferina, tétanos, hepatitis B e Hib</string>
+    <string name="dq_local_imm_2_d">Solo tuberculosis</string>
+    <string name="dq_local_imm_2_exp">La vacuna pentavalente protege contra cinco enfermedades: difteria, tos ferina, tétanos, hepatitis B e infecciones por Haemophilus influenzae tipo b (Hib).</string>
+
+    <string name="dq_local_imm_3">¿A qué edad se administra típicamente la vacuna contra el sarampión?</string>
+    <string name="dq_local_imm_3_a">Al nacer</string>
+    <string name="dq_local_imm_3_b">6 semanas</string>
+    <string name="dq_local_imm_3_c">9 meses</string>
+    <string name="dq_local_imm_3_d">2 años</string>
+    <string name="dq_local_imm_3_exp">La primera dosis de la vacuna contra el sarampión se administra típicamente a los 9 meses de edad.</string>
+
+    <string name="dq_local_imm_4">¿Cuál es la forma correcta de almacenar la mayoría de las vacunas?</string>
+    <string name="dq_local_imm_4_a">Temperatura ambiente</string>
+    <string name="dq_local_imm_4_b">Congelador -20°C</string>
+    <string name="dq_local_imm_4_c">Refrigerador 2-8°C</string>
+    <string name="dq_local_imm_4_d">Luz solar directa</string>
+    <string name="dq_local_imm_4_exp">La mayoría de las vacunas deben almacenarse en refrigerador entre 2°C y 8°C para mantener su eficacia.</string>
+
+    <string name="dq_local_imm_5">¿Cuál de estos es una contraindicación para la vacunación?</string>
+    <string name="dq_local_imm_5_a">Fiebre leve</string>
+    <string name="dq_local_imm_5_b">Reacción alérgica severa previa</string>
+    <string name="dq_local_imm_5_c">Diarrea leve</string>
+    <string name="dq_local_imm_5_d">Bajo peso</string>
+    <string name="dq_local_imm_5_exp">Una reacción alérgica severa previa a una vacuna o sus componentes es una contraindicación para recibir esa vacuna nuevamente.</string>
+
+    <!-- Disease Prevention -->
+    <string name="dq_local_dis_1">¿Cuál es la principal forma de transmisión de la malaria?</string>
+    <string name="dq_local_dis_1_a">Agua contaminada</string>
+    <string name="dq_local_dis_1_b">Picaduras de mosquito</string>
+    <string name="dq_local_dis_1_c">Tos</string>
+    <string name="dq_local_dis_1_d">Contacto físico</string>
+    <string name="dq_local_dis_1_exp">La malaria se transmite principalmente a través de la picadura de mosquitos Anopheles infectados.</string>
+
+    <string name="dq_local_dis_2">¿Cuál de estos es un síntoma de tuberculosis?</string>
+    <string name="dq_local_dis_2_a">Tos persistente más de 2 semanas</string>
+    <string name="dq_local_dis_2_b">Erupción cutánea</string>
+    <string name="dq_local_dis_2_c">Articulaciones hinchadas</string>
+    <string name="dq_local_dis_2_d">Visión borrosa</string>
+    <string name="dq_local_dis_2_exp">La tos persistente durante más de 2 semanas es uno de los síntomas principales de la tuberculosis pulmonar.</string>
+
+    <string name="dq_local_dis_3">¿Cuál es la forma más eficaz de prevenir enfermedades transmitidas por mosquitos?</string>
+    <string name="dq_local_dis_3_a">Agua hervida</string>
+    <string name="dq_local_dis_3_b">Mosquitero tratado con insecticida</string>
+    <string name="dq_local_dis_3_c">Antibióticos</string>
+    <string name="dq_local_dis_3_d">Ajo</string>
+    <string name="dq_local_dis_3_exp">Dormir bajo un mosquitero tratado con insecticida es una de las formas más eficaces de prevenir la malaria y otras enfermedades transmitidas por mosquitos.</string>
+
+    <string name="dq_local_dis_4">¿Para qué se usa el SRO (solución de rehidratación oral)?</string>
+    <string name="dq_local_dis_4_a">Tratar la malaria</string>
+    <string name="dq_local_dis_4_b">Prevenir la deshidratación por diarrea</string>
+    <string name="dq_local_dis_4_c">Curar la TB</string>
+    <string name="dq_local_dis_4_d">Tratar la neumonía</string>
+    <string name="dq_local_dis_4_exp">El SRO reemplaza los líquidos y electrolitos perdidos por la diarrea, previniendo la deshidratación.</string>
+
+    <string name="dq_local_dis_5">¿Cómo se transmite principalmente el VIH?</string>
+    <string name="dq_local_dis_5_a">Picaduras de mosquito</string>
+    <string name="dq_local_dis_5_b">Compartir utensilios</string>
+    <string name="dq_local_dis_5_c">Contacto sexual sin protección y sangre contaminada</string>
+    <string name="dq_local_dis_5_d">Tos</string>
+    <string name="dq_local_dis_5_exp">El VIH se transmite principalmente por contacto sexual sin protección, sangre contaminada y de madre a hijo durante el embarazo, parto o lactancia.</string>
+
+    <!-- First Aid -->
+    <string name="dq_local_fa_1">¿Cuál es el primer paso al encontrar a una persona inconsciente?</string>
+    <string name="dq_local_fa_1_a">Dar agua</string>
+    <string name="dq_local_fa_1_b">Verificar la capacidad de respuesta y pedir ayuda</string>
+    <string name="dq_local_fa_1_c">Moverla</string>
+    <string name="dq_local_fa_1_d">Esperar</string>
+    <string name="dq_local_fa_1_exp">El primer paso es verificar si la persona responde y si está respirando, luego pedir ayuda de inmediato.</string>
+
+    <string name="dq_local_fa_2">¿Cuál es la frecuencia correcta de compresiones para RCP en adultos?</string>
+    <string name="dq_local_fa_2_a">60/min</string>
+    <string name="dq_local_fa_2_b">80/min</string>
+    <string name="dq_local_fa_2_c">100-120/min</string>
+    <string name="dq_local_fa_2_d">150/min</string>
+    <string name="dq_local_fa_2_exp">Las guías de RCP recomiendan realizar compresiones torácicas a una frecuencia de 100 a 120 por minuto.</string>
+
+    <string name="dq_local_fa_3">¿Cómo tratar una quemadura menor?</string>
+    <string name="dq_local_fa_3_a">Mantequilla o aceite</string>
+    <string name="dq_local_fa_3_b">Agua fría durante 20 minutos</string>
+    <string name="dq_local_fa_3_c">Reventar las ampollas</string>
+    <string name="dq_local_fa_3_d">Aplicar hielo</string>
+    <string name="dq_local_fa_3_exp">Enfríe la quemadura con agua corriente fría durante al menos 20 minutos. No use mantequilla, aceite ni hielo.</string>
+
+    <string name="dq_local_fa_4">¿Qué hacer con una persona que se está ahogando y no puede toser, hablar ni respirar?</string>
+    <string name="dq_local_fa_4_a">Dar agua</string>
+    <string name="dq_local_fa_4_b">Maniobra de Heimlich</string>
+    <string name="dq_local_fa_4_c">Dar palmadas en la cara</string>
+    <string name="dq_local_fa_4_d">Acostarla</string>
+    <string name="dq_local_fa_4_exp">Realice compresiones abdominales (maniobra de Heimlich) para desalojar el objeto que obstruye las vías respiratorias.</string>
+
+    <string name="dq_local_fa_5">¿Cómo controlar un sangrado severo?</string>
+    <string name="dq_local_fa_5_a">Quitar el vendaje para revisar</string>
+    <string name="dq_local_fa_5_b">Presión directa firme</string>
+    <string name="dq_local_fa_5_c">Torniquete primero</string>
+    <string name="dq_local_fa_5_d">Verter agua</string>
+    <string name="dq_local_fa_5_exp">Aplique presión directa y firme sobre la herida con un paño limpio hasta que pare el sangrado.</string>
+
+    <!-- Child Care -->
+    <string name="dq_local_cc_1">¿Cuál es un signo de neumonía en un niño menor de 5 años?</string>
+    <string name="dq_local_cc_1_a">Respiración rápida</string>
+    <string name="dq_local_cc_1_b">Piel con picazón</string>
+    <string name="dq_local_cc_1_c">Estreñimiento</string>
+    <string name="dq_local_cc_1_d">Sed excesiva</string>
+    <string name="dq_local_cc_1_exp">La respiración rápida es un signo clave de neumonía en niños pequeños y requiere atención médica urgente.</string>
+
+    <string name="dq_local_cc_2">¿Cuál es un signo de peligro de deshidratación en lactantes?</string>
+    <string name="dq_local_cc_2_a">Pañales húmedos</string>
+    <string name="dq_local_cc_2_b">Fontanela hundida</string>
+    <string name="dq_local_cc_2_c">Buen apetito</string>
+    <string name="dq_local_cc_2_d">Comportamiento activo</string>
+    <string name="dq_local_cc_2_exp">La fontanela hundida (punto blando de la cabeza) indica deshidratación severa en lactantes y requiere atención urgente.</string>
+
+    <string name="dq_local_cc_3">¿Cuándo debe comenzar la suplementación con vitamina A?</string>
+    <string name="dq_local_cc_3_a">Al nacer</string>
+    <string name="dq_local_cc_3_b">6 meses</string>
+    <string name="dq_local_cc_3_c">1 año</string>
+    <string name="dq_local_cc_3_d">2 años</string>
+    <string name="dq_local_cc_3_exp">La suplementación con vitamina A debe comenzar a los 6 meses de edad para prevenir la deficiencia y la ceguera nocturna.</string>
+
+    <string name="dq_local_cc_4">¿Cuál es el punto de corte de MUAC para desnutrición aguda severa en niños de 6-59 meses?</string>
+    <string name="dq_local_cc_4_a">Menos de 11,5 cm</string>
+    <string name="dq_local_cc_4_b">Menos de 13,5 cm</string>
+    <string name="dq_local_cc_4_c">Menos de 15 cm</string>
+    <string name="dq_local_cc_4_d">Menos de 17 cm</string>
+    <string name="dq_local_cc_4_exp">Un perímetro braquial (MUAC) menor a 11,5 cm en niños de 6-59 meses indica desnutrición aguda severa.</string>
+
+    <string name="dq_local_cc_5">¿Cómo preparar el SRO?</string>
+    <string name="dq_local_cc_5_a">500 ml</string>
+    <string name="dq_local_cc_5_b">1 litro de agua limpia</string>
+    <string name="dq_local_cc_5_c">Medio sobre en 2 litros</string>
+    <string name="dq_local_cc_5_d">Té caliente</string>
+    <string name="dq_local_cc_5_exp">Disuelva un sobre completo de SRO en 1 litro de agua limpia hervida o tratada.</string>
+
+    <!-- Community Health -->
+    <string name="dq_local_ch_1">¿Cuál es el propósito de la visita domiciliaria del agente de salud comunitario?</string>
+    <string name="dq_local_ch_1_a">Cobrar alquiler</string>
+    <string name="dq_local_ch_1_b">Evaluar la salud, educar y referir</string>
+    <string name="dq_local_ch_1_c">Vender medicinas</string>
+    <string name="dq_local_ch_1_d">Realizar cirugía</string>
+    <string name="dq_local_ch_1_exp">Los agentes de salud comunitarios evalúan el estado de salud, educan a las familias y refieren casos que requieren atención especializada.</string>
+
+    <string name="dq_local_ch_2">¿Qué significa referencia?</string>
+    <string name="dq_local_ch_2_a">Enviar a casa</string>
+    <string name="dq_local_ch_2_b">Dirigir a un establecimiento de mayor nivel</string>
+    <string name="dq_local_ch_2_c">Prescribir</string>
+    <string name="dq_local_ch_2_d">Cirugía</string>
+    <string name="dq_local_ch_2_exp">Referir significa dirigir al paciente a un establecimiento de salud de mayor nivel para recibir atención especializada.</string>
+
+    <string name="dq_local_ch_3">¿Qué habilidad es importante para el agente de salud voluntario?</string>
+    <string name="dq_local_ch_3_a">Cirugía</string>
+    <string name="dq_local_ch_3_b">Escucha activa y educación</string>
+    <string name="dq_local_ch_3_c">Prescribir medicamentos</string>
+    <string name="dq_local_ch_3_d">Radiografías</string>
+    <string name="dq_local_ch_3_exp">La escucha activa y la capacidad de educar son habilidades fundamentales para los agentes de salud comunitarios.</string>
+
+    <string name="dq_local_ch_4">¿Cuál es el propósito del monitoreo del crecimiento?</string>
+    <string name="dq_local_ch_4_a">Predecir la estatura adulta</string>
+    <string name="dq_local_ch_4_b">Seguir el crecimiento y detectar desnutrición</string>
+    <string name="dq_local_ch_4_c">Determinar la inteligencia</string>
+    <string name="dq_local_ch_4_d">Decisión escolar</string>
+    <string name="dq_local_ch_4_exp">El monitoreo del crecimiento permite detectar tempranamente problemas de desnutrición y tomar medidas preventivas.</string>
+
+    <string name="dq_local_ch_5">¿Qué hacer cuando el agente de salud identifica un signo de peligro?</string>
+    <string name="dq_local_ch_5_a">Esperar una semana</string>
+    <string name="dq_local_ch_5_b">Referir inmediatamente</string>
+    <string name="dq_local_ch_5_c">Prescribir</string>
+    <string name="dq_local_ch_5_d">Ignorar</string>
+    <string name="dq_local_ch_5_exp">Cuando se identifica un signo de peligro, el paciente debe ser referido inmediatamente a un centro de salud.</string>
+
+    <!-- Reproductive Health -->
+    <string name="dq_local_rh_1">¿Qué es la planificación familiar?</string>
+    <string name="dq_local_rh_1_a">Habitaciones de la casa</string>
+    <string name="dq_local_rh_1_b">Número y espaciamiento de los hijos</string>
+    <string name="dq_local_rh_1_c">Reuniones familiares</string>
+    <string name="dq_local_rh_1_d">Elección de escuela</string>
+    <string name="dq_local_rh_1_exp">La planificación familiar permite a las personas decidir el número de hijos que desean tener y el espaciamiento entre embarazos.</string>
+
+    <string name="dq_local_rh_2">¿Cuál es un método anticonceptivo reversible de larga duración?</string>
+    <string name="dq_local_rh_2_a">Condones</string>
+    <string name="dq_local_rh_2_b">Píldoras</string>
+    <string name="dq_local_rh_2_c">DIU</string>
+    <string name="dq_local_rh_2_d">Anticoncepción de emergencia</string>
+    <string name="dq_local_rh_2_exp">El DIU (dispositivo intrauterino) es un método anticonceptivo reversible de larga duración que puede durar varios años.</string>
+
+    <string name="dq_local_rh_3">¿Cuál es la prevención más efectiva de las ITS?</string>
+    <string name="dq_local_rh_3_a">Antibióticos regulares</string>
+    <string name="dq_local_rh_3_b">Condones</string>
+    <string name="dq_local_rh_3_c">Lavarse después</string>
+    <string name="dq_local_rh_3_d">Píldoras anticonceptivas</string>
+    <string name="dq_local_rh_3_exp">El uso correcto y consistente del condón es la forma más efectiva de prevenir la transmisión de infecciones de transmisión sexual.</string>
+
+    <!-- Emergency -->
+    <string name="dq_local_em_1">¿Para qué se usa la posición de recuperación?</string>
+    <string name="dq_local_em_1_a">Comodidad al dormir</string>
+    <string name="dq_local_em_1_b">Persona inconsciente que respira, de lado</string>
+    <string name="dq_local_em_1_c">Flexiones</string>
+    <string name="dq_local_em_1_d">Administrar medicación</string>
+    <string name="dq_local_em_1_exp">La posición de recuperación mantiene las vías respiratorias despejadas y permite el drenaje de fluidos en una persona inconsciente que respira.</string>
+
+    <string name="dq_local_em_2">¿Cuáles son los signos de un accidente cerebrovascular?</string>
+    <string name="dq_local_em_2_a">Piel con picazón o estornudos</string>
+    <string name="dq_local_em_2_b">Rostro caído, debilidad del brazo, dificultad para hablar</string>
+    <string name="dq_local_em_2_c">Dolor de estómago</string>
+    <string name="dq_local_em_2_d">Dolor articular</string>
+    <string name="dq_local_em_2_exp">Recuerde FAST: Rostro (Face) caído, Brazo (Arm) débil, Habla (Speech) dificultosa, Tiempo (Time) de llamar emergencias.</string>
+
+    <string name="dq_local_em_3">¿Qué hacer durante una convulsión?</string>
+    <string name="dq_local_em_3_a">Poner algo en la boca</string>
+    <string name="dq_local_em_3_b">Sujetarlos</string>
+    <string name="dq_local_em_3_c">Despejar el área y proteger la cabeza</string>
+    <string name="dq_local_em_3_d">Verter agua</string>
+    <string name="dq_local_em_3_exp">Despeje el área de objetos peligrosos, proteja la cabeza de la persona y no ponga nada en su boca. Nunca sujete a la persona durante la convulsión.</string>
+</resources>

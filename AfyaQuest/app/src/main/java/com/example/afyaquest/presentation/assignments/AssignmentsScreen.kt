@@ -265,8 +265,8 @@ fun AssignmentCard(
     }
 
     val statusColor = when (assignment.status) {
-        "completed" -> Color(0xFF4CAF50)
-        "in_progress" -> Color(0xFFFF9800)
+        "completed" -> Color(0xFF438894)
+        "in_progress" -> Color(0xFFEFA03F)
         else -> MaterialTheme.colorScheme.primary
     }
 
