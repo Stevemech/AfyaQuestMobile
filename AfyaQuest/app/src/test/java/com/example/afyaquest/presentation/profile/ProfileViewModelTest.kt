@@ -1,11 +1,17 @@
 package com.example.afyaquest.presentation.profile
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.afyaquest.data.remote.ApiService
+import com.example.afyaquest.data.repository.AuthRepository
 import com.example.afyaquest.domain.model.AchievementCategory
 import com.example.afyaquest.util.LanguageManager
+import com.example.afyaquest.util.ProgressDataStore
+import com.example.afyaquest.util.Resource
+import com.example.afyaquest.util.TokenManager
 import com.example.afyaquest.util.XpManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -17,7 +23,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.whenever
-import kotlinx.coroutines.flow.flowOf
 
 /**
  * Unit tests for ProfileViewModel
@@ -31,10 +36,22 @@ class ProfileViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
 
     @Mock
+    private lateinit var progressDataStore: ProgressDataStore
+
+    @Mock
+    private lateinit var apiService: ApiService
+
+    @Mock
+    private lateinit var tokenManager: TokenManager
+
+    @Mock
     private lateinit var xpManager: XpManager
 
     @Mock
     private lateinit var languageManager: LanguageManager
+
+    @Mock
+    private lateinit var authRepository: AuthRepository
 
     private lateinit var viewModel: ProfileViewModel
 
@@ -43,7 +60,6 @@ class ProfileViewModelTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(testDispatcher)
 
-        // Mock XP data flow
         whenever(xpManager.getXpDataFlow()).thenReturn(
             flowOf(com.example.afyaquest.util.XpData(
                 totalXP = 500,
@@ -55,12 +71,17 @@ class ProfileViewModelTest {
             ))
         )
 
-        // Mock language flow
         whenever(languageManager.getCurrentLanguageFlow()).thenReturn(
             flowOf(LanguageManager.LANGUAGE_ENGLISH)
         )
 
-        viewModel = ProfileViewModel(xpManager, languageManager)
+        whenever(progressDataStore.getWatchedVideos()).thenReturn(flowOf(emptySet()))
+        whenever(progressDataStore.getCompletedLessons()).thenReturn(flowOf(emptySet()))
+        whenever(progressDataStore.getCompletedQuizzes()).thenReturn(flowOf(emptySet()))
+
+        whenever(authRepository.getCurrentUser()).thenReturn(flowOf(Resource.Loading()))
+
+        viewModel = ProfileViewModel(progressDataStore, apiService, tokenManager, xpManager, languageManager, authRepository)
         testDispatcher.scheduler.advanceUntilIdle()
     }
 
