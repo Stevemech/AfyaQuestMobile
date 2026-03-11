@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.afyaquest.R
 import com.example.afyaquest.presentation.navigation.Screen
 import com.example.afyaquest.util.Resource
 
@@ -50,12 +52,15 @@ fun RegisterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
 
+    val registrationSuccessful = stringResource(R.string.registration_successful)
+    val registrationFailed = stringResource(R.string.registration_failed)
+
     // Handle registration state changes
     LaunchedEffect(registerState) {
         when (registerState) {
             is Resource.Success -> {
                 snackbarHostState.showSnackbar(
-                    message = "Registration successful! Please check your email to verify.",
+                    message = registrationSuccessful,
                     duration = SnackbarDuration.Long
                 )
                 navController.navigate(Screen.Login.route) {
@@ -65,7 +70,7 @@ fun RegisterScreen(
             }
             is Resource.Error -> {
                 snackbarHostState.showSnackbar(
-                    message = (registerState as Resource.Error).message ?: "Registration failed",
+                    message = (registerState as Resource.Error).message ?: registrationFailed,
                     duration = SnackbarDuration.Short
                 )
             }
@@ -77,10 +82,10 @@ fun RegisterScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Create Account") },
+                title = { Text(stringResource(R.string.create_account)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -98,7 +103,7 @@ fun RegisterScreen(
 
             // Title
             Text(
-                text = "Join AfyaQuest",
+                text = stringResource(R.string.join_afyaquest),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
@@ -107,7 +112,7 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Start your journey as a Community Health Assistant",
+                text = stringResource(R.string.start_journey_subtitle),
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
@@ -125,9 +130,9 @@ fun RegisterScreen(
                         value = organizations.find { it.id == selectedOrganization }?.name ?: "",
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Organization") },
+                        label = { Text(stringResource(R.string.organization)) },
                         leadingIcon = {
-                            Icon(Icons.Default.Business, contentDescription = "Organization")
+                            Icon(Icons.Default.Business, contentDescription = stringResource(R.string.organization))
                         },
                         trailingIcon = {
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = organizationExpanded)
@@ -159,9 +164,9 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Full Name") },
+                label = { Text(stringResource(R.string.full_name)) },
                 leadingIcon = {
-                    Icon(Icons.Default.Person, contentDescription = "Name")
+                    Icon(Icons.Default.Person, contentDescription = stringResource(R.string.full_name))
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -180,9 +185,9 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
+                label = { Text(stringResource(R.string.email)) },
                 leadingIcon = {
-                    Icon(Icons.Default.Email, contentDescription = "Email")
+                    Icon(Icons.Default.Email, contentDescription = stringResource(R.string.email))
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
@@ -201,9 +206,9 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = phone,
                 onValueChange = { phone = it },
-                label = { Text("Phone Number (Optional)") },
+                label = { Text(stringResource(R.string.phone_number_optional)) },
                 leadingIcon = {
-                    Icon(Icons.Default.Phone, contentDescription = "Phone")
+                    Icon(Icons.Default.Phone, contentDescription = stringResource(R.string.phone_number))
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Phone,
@@ -222,15 +227,15 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text(stringResource(R.string.password)) },
                 leadingIcon = {
-                    Icon(Icons.Default.Lock, contentDescription = "Password")
+                    Icon(Icons.Default.Lock, contentDescription = stringResource(R.string.password))
                 },
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                            contentDescription = if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
                         )
                     }
                 },
@@ -250,7 +255,7 @@ fun RegisterScreen(
 
             // Password requirement text
             Text(
-                text = "Password must be at least 6 characters with a symbol",
+                text = stringResource(R.string.password_requirement_hint),
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )
@@ -261,15 +266,15 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirm Password") },
+                label = { Text(stringResource(R.string.confirm_password)) },
                 leadingIcon = {
-                    Icon(Icons.Default.Lock, contentDescription = "Confirm Password")
+                    Icon(Icons.Default.Lock, contentDescription = stringResource(R.string.confirm_password))
                 },
                 trailingIcon = {
                     IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
                         Icon(
                             imageVector = if (confirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            contentDescription = if (confirmPasswordVisible) "Hide password" else "Show password"
+                            contentDescription = if (confirmPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
                         )
                     }
                 },
@@ -288,7 +293,7 @@ fun RegisterScreen(
 
             if (password.isNotEmpty() && confirmPassword.isNotEmpty() && password != confirmPassword) {
                 Text(
-                    text = "Passwords do not match",
+                    text = stringResource(R.string.passwords_do_not_match),
                     color = MaterialTheme.colorScheme.error,
                     fontSize = 12.sp,
                     modifier = Modifier
@@ -324,7 +329,7 @@ fun RegisterScreen(
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
-                    Text("Create Account", fontSize = 16.sp)
+                    Text(stringResource(R.string.create_account), fontSize = 16.sp)
                 }
             }
 
@@ -336,7 +341,7 @@ fun RegisterScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Already have an account? ",
+                    text = stringResource(R.string.already_have_account) + " ",
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
                 TextButton(
@@ -344,7 +349,7 @@ fun RegisterScreen(
                         navController.navigateUp()
                     }
                 ) {
-                    Text("Sign In")
+                    Text(stringResource(R.string.sign_in))
                 }
             }
 

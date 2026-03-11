@@ -35,6 +35,43 @@
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
 
+    <!-- Registration -->
+    <string name="create_account">Create Account</string>
+    <string name="join_afyaquest">Join AfyaQuest</string>
+    <string name="start_journey_subtitle">Start your journey as a Community Health Assistant</string>
+    <string name="organization">Organization</string>
+    <string name="phone_number_optional">Phone Number (Optional)</string>
+    <string name="password_requirement_hint">Password must be at least 6 characters with a symbol</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="registration_successful">Registration successful! Please check your email to verify.</string>
+    <string name="registration_failed">Registration failed</string>
+    <string name="already_have_account">Already have an account?</string>
+
+    <!-- Forgot Password Dialog -->
+    <string name="password_reset_title">Password Reset</string>
+    <string name="forgot_password_title">Forgot Password</string>
+    <string name="password_reset_success">Your password has been reset successfully. You can now log in with your new password.</string>
+    <string name="enter_email_for_code">Enter your email address and we\'ll send you a verification code.</string>
+    <string name="enter_code_and_password">Enter the verification code sent to %s and your new password.</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="login_failed">Login failed</string>
+
+    <!-- Splash -->
+    <string name="empowering_cha">Empowering Community Health Assistants</string>
+    <string name="afyaquest_logo">AfyaQuest Logo</string>
+
+    <!-- Map Actions -->
+    <string name="directions">Directions</string>
+    <string name="get_directions">Get Directions</string>
+    <string name="mark_visited">Mark Visited</string>
+
+    <!-- Video Player -->
+    <string name="video_not_available">Video not available</string>
+
+    <!-- Sync (additional) -->
+    <string name="items_pending_count">%d items pending</string>
+    <string name="sync">Sync</string>
+
     <!-- Language names (for picker) -->
     <string name="english">English</string>
     <string name="espanol">Español</string>

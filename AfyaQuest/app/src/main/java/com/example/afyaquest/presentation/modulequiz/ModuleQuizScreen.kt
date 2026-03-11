@@ -118,10 +118,8 @@ fun ModuleQuizScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             if (currentQuestion != null) {
-                val translatedQuestion = translateQuestion(currentQuestion)
-                // Question card
                 ModuleQuizQuestionCard(
-                    question = translatedQuestion,
+                    question = currentQuestion,
                     selectedAnswer = selectedAnswer,
                     showExplanation = showExplanation,
                     onAnswerSelect = { viewModel.selectAnswer(it) }
@@ -410,121 +408,14 @@ fun ModuleQuizSummaryCard(
 
 @Composable
 fun translatedModuleTitle(moduleId: String): String {
-    return when (moduleId) {
-        "video-8" -> stringResource(R.string.quiz_title_8)
-        "video-9" -> stringResource(R.string.quiz_title_9)
-        "video-10" -> stringResource(R.string.quiz_title_10)
+    return when {
+        moduleId.startsWith("mod") -> {
+            val title = moduleId
+                .substringAfter("-")
+                .replace("-", " ")
+                .replaceFirstChar { it.uppercase() }
+            "$title Quiz"
+        }
         else -> stringResource(R.string.take_quiz)
     }
-}
-
-@Composable
-fun translateQuestion(question: ModuleQuizQuestion): ModuleQuizQuestion {
-    val translatedQ = when (question.id) {
-        "8_q1" -> stringResource(R.string.quiz_8_q1)
-        "8_q2" -> stringResource(R.string.quiz_8_q2)
-        "8_q3" -> stringResource(R.string.quiz_8_q3)
-        "8_q4" -> stringResource(R.string.quiz_8_q4)
-        "8_q5" -> stringResource(R.string.quiz_8_q5)
-        "8_q6" -> stringResource(R.string.quiz_8_q6)
-        "8_q7" -> stringResource(R.string.quiz_8_q7)
-        "8_q8" -> stringResource(R.string.quiz_8_q8)
-        "8_q9" -> stringResource(R.string.quiz_8_q9)
-        "8_q10" -> stringResource(R.string.quiz_8_q10)
-        "9_q1" -> stringResource(R.string.quiz_9_q1)
-        "9_q2" -> stringResource(R.string.quiz_9_q2)
-        "9_q3" -> stringResource(R.string.quiz_9_q3)
-        "9_q4" -> stringResource(R.string.quiz_9_q4)
-        "9_q5" -> stringResource(R.string.quiz_9_q5)
-        "9_q6" -> stringResource(R.string.quiz_9_q6)
-        "9_q7" -> stringResource(R.string.quiz_9_q7)
-        "9_q8" -> stringResource(R.string.quiz_9_q8)
-        "9_q9" -> stringResource(R.string.quiz_9_q9)
-        "9_q10" -> stringResource(R.string.quiz_9_q10)
-        "10_q1" -> stringResource(R.string.quiz_10_q1)
-        "10_q2" -> stringResource(R.string.quiz_10_q2)
-        "10_q3" -> stringResource(R.string.quiz_10_q3)
-        "10_q4" -> stringResource(R.string.quiz_10_q4)
-        "10_q5" -> stringResource(R.string.quiz_10_q5)
-        "10_q6" -> stringResource(R.string.quiz_10_q6)
-        "10_q7" -> stringResource(R.string.quiz_10_q7)
-        "10_q8" -> stringResource(R.string.quiz_10_q8)
-        "10_q9" -> stringResource(R.string.quiz_10_q9)
-        "10_q10" -> stringResource(R.string.quiz_10_q10)
-        else -> question.question
-    }
-
-    val translatedOptions = when (question.id) {
-        "8_q1" -> listOf(stringResource(R.string.quiz_8_q1_a), stringResource(R.string.quiz_8_q1_b), stringResource(R.string.quiz_8_q1_c), stringResource(R.string.quiz_8_q1_d))
-        "8_q2" -> listOf(stringResource(R.string.quiz_8_q2_a), stringResource(R.string.quiz_8_q2_b), stringResource(R.string.quiz_8_q2_c), stringResource(R.string.quiz_8_q2_d))
-        "8_q3" -> listOf(stringResource(R.string.quiz_8_q3_a), stringResource(R.string.quiz_8_q3_b), stringResource(R.string.quiz_8_q3_c), stringResource(R.string.quiz_8_q3_d))
-        "8_q4" -> listOf(stringResource(R.string.quiz_8_q4_a), stringResource(R.string.quiz_8_q4_b), stringResource(R.string.quiz_8_q4_c), stringResource(R.string.quiz_8_q4_d))
-        "8_q5" -> listOf(stringResource(R.string.quiz_8_q5_a), stringResource(R.string.quiz_8_q5_b), stringResource(R.string.quiz_8_q5_c), stringResource(R.string.quiz_8_q5_d))
-        "8_q6" -> listOf(stringResource(R.string.quiz_8_q6_a), stringResource(R.string.quiz_8_q6_b), stringResource(R.string.quiz_8_q6_c), stringResource(R.string.quiz_8_q6_d))
-        "8_q7" -> listOf(stringResource(R.string.quiz_8_q7_a), stringResource(R.string.quiz_8_q7_b), stringResource(R.string.quiz_8_q7_c), stringResource(R.string.quiz_8_q7_d))
-        "8_q8" -> listOf(stringResource(R.string.quiz_8_q8_a), stringResource(R.string.quiz_8_q8_b), stringResource(R.string.quiz_8_q8_c), stringResource(R.string.quiz_8_q8_d))
-        "8_q9" -> listOf(stringResource(R.string.quiz_8_q9_a), stringResource(R.string.quiz_8_q9_b), stringResource(R.string.quiz_8_q9_c), stringResource(R.string.quiz_8_q9_d))
-        "8_q10" -> listOf(stringResource(R.string.quiz_8_q10_a), stringResource(R.string.quiz_8_q10_b), stringResource(R.string.quiz_8_q10_c), stringResource(R.string.quiz_8_q10_d))
-        "9_q1" -> listOf(stringResource(R.string.quiz_9_q1_a), stringResource(R.string.quiz_9_q1_b), stringResource(R.string.quiz_9_q1_c), stringResource(R.string.quiz_9_q1_d))
-        "9_q2" -> listOf(stringResource(R.string.quiz_9_q2_a), stringResource(R.string.quiz_9_q2_b), stringResource(R.string.quiz_9_q2_c), stringResource(R.string.quiz_9_q2_d))
-        "9_q3" -> listOf(stringResource(R.string.quiz_9_q3_a), stringResource(R.string.quiz_9_q3_b), stringResource(R.string.quiz_9_q3_c), stringResource(R.string.quiz_9_q3_d))
-        "9_q4" -> listOf(stringResource(R.string.quiz_9_q4_a), stringResource(R.string.quiz_9_q4_b), stringResource(R.string.quiz_9_q4_c), stringResource(R.string.quiz_9_q4_d))
-        "9_q5" -> listOf(stringResource(R.string.quiz_9_q5_a), stringResource(R.string.quiz_9_q5_b), stringResource(R.string.quiz_9_q5_c), stringResource(R.string.quiz_9_q5_d))
-        "9_q6" -> listOf(stringResource(R.string.quiz_9_q6_a), stringResource(R.string.quiz_9_q6_b), stringResource(R.string.quiz_9_q6_c), stringResource(R.string.quiz_9_q6_d))
-        "9_q7" -> listOf(stringResource(R.string.quiz_9_q7_a), stringResource(R.string.quiz_9_q7_b), stringResource(R.string.quiz_9_q7_c), stringResource(R.string.quiz_9_q7_d))
-        "9_q8" -> listOf(stringResource(R.string.quiz_9_q8_a), stringResource(R.string.quiz_9_q8_b), stringResource(R.string.quiz_9_q8_c), stringResource(R.string.quiz_9_q8_d))
-        "9_q9" -> listOf(stringResource(R.string.quiz_9_q9_a), stringResource(R.string.quiz_9_q9_b), stringResource(R.string.quiz_9_q9_c), stringResource(R.string.quiz_9_q9_d))
-        "9_q10" -> listOf(stringResource(R.string.quiz_9_q10_a), stringResource(R.string.quiz_9_q10_b), stringResource(R.string.quiz_9_q10_c), stringResource(R.string.quiz_9_q10_d))
-        "10_q1" -> listOf(stringResource(R.string.quiz_10_q1_a), stringResource(R.string.quiz_10_q1_b), stringResource(R.string.quiz_10_q1_c), stringResource(R.string.quiz_10_q1_d))
-        "10_q2" -> listOf(stringResource(R.string.quiz_10_q2_a), stringResource(R.string.quiz_10_q2_b), stringResource(R.string.quiz_10_q2_c), stringResource(R.string.quiz_10_q2_d))
-        "10_q3" -> listOf(stringResource(R.string.quiz_10_q3_a), stringResource(R.string.quiz_10_q3_b), stringResource(R.string.quiz_10_q3_c), stringResource(R.string.quiz_10_q3_d))
-        "10_q4" -> listOf(stringResource(R.string.quiz_10_q4_a), stringResource(R.string.quiz_10_q4_b), stringResource(R.string.quiz_10_q4_c), stringResource(R.string.quiz_10_q4_d))
-        "10_q5" -> listOf(stringResource(R.string.quiz_10_q5_a), stringResource(R.string.quiz_10_q5_b), stringResource(R.string.quiz_10_q5_c), stringResource(R.string.quiz_10_q5_d))
-        "10_q6" -> listOf(stringResource(R.string.quiz_10_q6_a), stringResource(R.string.quiz_10_q6_b))
-        "10_q7" -> listOf(stringResource(R.string.quiz_10_q7_a), stringResource(R.string.quiz_10_q7_b), stringResource(R.string.quiz_10_q7_c), stringResource(R.string.quiz_10_q7_d))
-        "10_q8" -> listOf(stringResource(R.string.quiz_10_q8_a), stringResource(R.string.quiz_10_q8_b), stringResource(R.string.quiz_10_q8_c), stringResource(R.string.quiz_10_q8_d))
-        "10_q9" -> listOf(stringResource(R.string.quiz_10_q9_a), stringResource(R.string.quiz_10_q9_b), stringResource(R.string.quiz_10_q9_c), stringResource(R.string.quiz_10_q9_d))
-        "10_q10" -> listOf(stringResource(R.string.quiz_10_q10_a), stringResource(R.string.quiz_10_q10_b), stringResource(R.string.quiz_10_q10_c), stringResource(R.string.quiz_10_q10_d))
-        else -> question.options
-    }
-
-    val translatedExp = when (question.id) {
-        "8_q1" -> stringResource(R.string.quiz_8_q1_exp)
-        "8_q2" -> stringResource(R.string.quiz_8_q2_exp)
-        "8_q3" -> stringResource(R.string.quiz_8_q3_exp)
-        "8_q4" -> stringResource(R.string.quiz_8_q4_exp)
-        "8_q5" -> stringResource(R.string.quiz_8_q5_exp)
-        "8_q6" -> stringResource(R.string.quiz_8_q6_exp)
-        "8_q7" -> stringResource(R.string.quiz_8_q7_exp)
-        "8_q8" -> stringResource(R.string.quiz_8_q8_exp)
-        "8_q9" -> stringResource(R.string.quiz_8_q9_exp)
-        "8_q10" -> stringResource(R.string.quiz_8_q10_exp)
-        "9_q1" -> stringResource(R.string.quiz_9_q1_exp)
-        "9_q2" -> stringResource(R.string.quiz_9_q2_exp)
-        "9_q3" -> stringResource(R.string.quiz_9_q3_exp)
-        "9_q4" -> stringResource(R.string.quiz_9_q4_exp)
-        "9_q5" -> stringResource(R.string.quiz_9_q5_exp)
-        "9_q6" -> stringResource(R.string.quiz_9_q6_exp)
-        "9_q7" -> stringResource(R.string.quiz_9_q7_exp)
-        "9_q8" -> stringResource(R.string.quiz_9_q8_exp)
-        "9_q9" -> stringResource(R.string.quiz_9_q9_exp)
-        "9_q10" -> stringResource(R.string.quiz_9_q10_exp)
-        "10_q1" -> stringResource(R.string.quiz_10_q1_exp)
-        "10_q2" -> stringResource(R.string.quiz_10_q2_exp)
-        "10_q3" -> stringResource(R.string.quiz_10_q3_exp)
-        "10_q4" -> stringResource(R.string.quiz_10_q4_exp)
-        "10_q5" -> stringResource(R.string.quiz_10_q5_exp)
-        "10_q6" -> stringResource(R.string.quiz_10_q6_exp)
-        "10_q7" -> stringResource(R.string.quiz_10_q7_exp)
-        "10_q8" -> stringResource(R.string.quiz_10_q8_exp)
-        "10_q9" -> stringResource(R.string.quiz_10_q9_exp)
-        "10_q10" -> stringResource(R.string.quiz_10_q10_exp)
-        else -> question.explanation
-    }
-
-    return question.copy(
-        question = translatedQ,
-        options = translatedOptions,
-        explanation = translatedExp
-    )
 }

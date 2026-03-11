@@ -35,6 +35,43 @@
     <string name="show_password">Mostrar contraseña</string>
     <string name="hide_password">Ocultar contraseña</string>
 
+    <!-- Registration -->
+    <string name="create_account">Crear Cuenta</string>
+    <string name="join_afyaquest">Únete a AfyaQuest</string>
+    <string name="start_journey_subtitle">Comienza tu camino como Asistente de Salud Comunitaria</string>
+    <string name="organization">Organización</string>
+    <string name="phone_number_optional">Número de Teléfono (Opcional)</string>
+    <string name="password_requirement_hint">La contraseña debe tener al menos 6 caracteres con un símbolo</string>
+    <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
+    <string name="registration_successful">¡Registro exitoso! Por favor revisa tu correo electrónico para verificar.</string>
+    <string name="registration_failed">Error en el registro</string>
+    <string name="already_have_account">¿Ya tienes una cuenta?</string>
+
+    <!-- Forgot Password Dialog -->
+    <string name="password_reset_title">Restablecimiento de Contraseña</string>
+    <string name="forgot_password_title">¿Olvidaste tu Contraseña?</string>
+    <string name="password_reset_success">Tu contraseña ha sido restablecida exitosamente. Ahora puedes iniciar sesión con tu nueva contraseña.</string>
+    <string name="enter_email_for_code">Ingresa tu correo electrónico y te enviaremos un código de verificación.</string>
+    <string name="enter_code_and_password">Ingresa el código de verificación enviado a %s y tu nueva contraseña.</string>
+    <string name="enter_your_email">Ingresa tu correo electrónico</string>
+    <string name="login_failed">Error al iniciar sesión</string>
+
+    <!-- Splash -->
+    <string name="empowering_cha">Empoderando a los Asistentes de Salud Comunitaria</string>
+    <string name="afyaquest_logo">Logo de AfyaQuest</string>
+
+    <!-- Map Actions -->
+    <string name="directions">Direcciones</string>
+    <string name="get_directions">Obtener Direcciones</string>
+    <string name="mark_visited">Marcar Visitado</string>
+
+    <!-- Video Player -->
+    <string name="video_not_available">Video no disponible</string>
+
+    <!-- Sync (additional) -->
+    <string name="items_pending_count">%d elementos pendientes</string>
+    <string name="sync">Sincronizar</string>
+
     <!-- Language names (for picker) -->
     <string name="english">English</string>
     <string name="espanol">Español</string>

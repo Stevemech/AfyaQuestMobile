@@ -1,18 +1,26 @@
 package com.example.afyaquest.domain.model
 
-/**
- * Video module for learning
- */
-data class VideoModule(
-    val id: String,
+data class VideoModuleFolder(
+    val moduleNumber: Int,
     val title: String,
     val description: String,
-    val thumbnail: String = "", // Emoji or URL
-    val duration: String, // e.g., "6:50"
+    val icon: String,
+    val videoCount: Int,
+    val watchedCount: Int = 0,
+    val quizzesCompleted: Int = 0
+)
+
+data class VideoModule(
+    val id: String,
+    val moduleNumber: Int,
+    val title: String,
+    val description: String,
+    val thumbnail: String = "",
+    val duration: String,
     val category: VideoCategory,
-    val videoUrl: String? = null, // CloudFront/S3 URL for streaming
+    val videoUrl: String? = null,
     val s3Key: String? = null,
-    val localFilePath: String? = null, // Path to downloaded file for offline playback
+    val localFilePath: String? = null,
     val hasQuiz: Boolean = false,
     val watched: Boolean = false,
     val quizComplete: Boolean = false,
@@ -29,16 +37,13 @@ enum class VideoCategory {
     DISEASE_PREVENTION
 }
 
-/**
- * Interactive lesson
- */
 data class Lesson(
     val id: String,
     val title: String,
     val description: String,
     val category: LessonCategory,
     val difficulty: Difficulty,
-    val content: String, // Markdown or HTML content
+    val content: String,
     val estimatedMinutes: Int,
     val points: Int,
     val completed: Boolean = false
@@ -55,9 +60,6 @@ enum class LessonCategory {
     HEALTH_EDUCATION
 }
 
-/**
- * Module quiz question
- */
 data class ModuleQuizQuestion(
     val id: String,
     val moduleId: String,
@@ -67,16 +69,10 @@ data class ModuleQuizQuestion(
     val explanation: String
 )
 
-/**
- * Video modules response
- */
 data class VideoModulesResponse(
     val videos: List<VideoModule>
 )
 
-/**
- * Lessons response
- */
 data class LessonsResponse(
     val lessons: List<Lesson>
 )

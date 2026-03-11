@@ -90,10 +90,10 @@ data class AssignmentsResponse(
 )
 
 data class AssignmentDto(
-    val type: String,
+    val type: String? = null,
     val moduleId: String? = null,
     val lessonId: String? = null,
-    val status: String,
+    val status: String? = null,
     val mandatory: Boolean = false,
     val dueDate: String? = null,
     val assignedAt: String? = null

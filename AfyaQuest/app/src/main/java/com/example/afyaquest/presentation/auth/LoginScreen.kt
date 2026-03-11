@@ -55,6 +55,8 @@ fun LoginScreen(
     val currentLanguage by viewModel.currentLanguage.collectAsState()
     val scope = rememberCoroutineScope()
 
+    val loginFailedText = stringResource(R.string.login_failed)
+
     // Handle login state changes
     LaunchedEffect(loginState) {
         when (loginState) {
@@ -66,7 +68,7 @@ fun LoginScreen(
             }
             is Resource.Error -> {
                 snackbarHostState.showSnackbar(
-                    message = (loginState as Resource.Error).message ?: "Login failed",
+                    message = (loginState as Resource.Error).message ?: loginFailedText,
                     duration = SnackbarDuration.Short
                 )
             }
@@ -259,35 +261,46 @@ private fun ForgotPasswordDialog(
     var success by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
+    val enterYourEmailText = stringResource(R.string.enter_your_email)
+    val enterVerificationCodeText = stringResource(R.string.enter_verification_code_error)
+    val passwordMinLengthText = stringResource(R.string.password_min_length)
+    val passwordsDontMatchText = stringResource(R.string.passwords_dont_match)
+
     AlertDialog(
         onDismissRequest = { if (!isLoading) onDismiss() },
-        title = { Text(if (success) "Password Reset" else if (step == 1) "Forgot Password" else "Reset Password") },
+        title = {
+            Text(
+                if (success) stringResource(R.string.password_reset_title)
+                else if (step == 1) stringResource(R.string.forgot_password_title)
+                else stringResource(R.string.reset_password)
+            )
+        },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 when {
                     success -> {
-                        Text("Your password has been reset successfully. You can now log in with your new password.",
+                        Text(stringResource(R.string.password_reset_success),
                             color = MaterialTheme.colorScheme.primary)
                     }
                     step == 1 -> {
-                        Text("Enter your email address and we'll send you a verification code.",
+                        Text(stringResource(R.string.enter_email_for_code),
                             fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         OutlinedTextField(
                             value = forgotEmail,
                             onValueChange = { forgotEmail = it; errorMessage = null },
-                            label = { Text("Email") },
+                            label = { Text(stringResource(R.string.email)) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                         )
                     }
                     step == 2 -> {
-                        Text("Enter the verification code sent to $forgotEmail and your new password.",
+                        Text(stringResource(R.string.enter_code_and_password, forgotEmail),
                             fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         OutlinedTextField(
                             value = verificationCode,
                             onValueChange = { verificationCode = it; errorMessage = null },
-                            label = { Text("Verification Code") },
+                            label = { Text(stringResource(R.string.verification_code)) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -295,7 +308,7 @@ private fun ForgotPasswordDialog(
                         OutlinedTextField(
                             value = newPassword,
                             onValueChange = { newPassword = it; errorMessage = null },
-                            label = { Text("New Password") },
+                            label = { Text(stringResource(R.string.new_password)) },
                             visualTransformation = PasswordVisualTransformation(),
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
@@ -303,7 +316,7 @@ private fun ForgotPasswordDialog(
                         OutlinedTextField(
                             value = confirmPassword,
                             onValueChange = { confirmPassword = it; errorMessage = null },
-                            label = { Text("Confirm Password") },
+                            label = { Text(stringResource(R.string.confirm_password)) },
                             visualTransformation = PasswordVisualTransformation(),
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
@@ -318,13 +331,13 @@ private fun ForgotPasswordDialog(
         confirmButton = {
             when {
                 success -> {
-                    TextButton(onClick = onDismiss) { Text("Done") }
+                    TextButton(onClick = onDismiss) { Text(stringResource(R.string.done)) }
                 }
                 step == 1 -> {
                     TextButton(
                         onClick = {
                             if (forgotEmail.isBlank()) {
-                                errorMessage = "Enter your email"
+                                errorMessage = enterYourEmailText
                             } else {
                                 isLoading = true
                                 scope.launch {
@@ -341,16 +354,16 @@ private fun ForgotPasswordDialog(
                         enabled = !isLoading
                     ) {
                         if (isLoading) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
-                        else Text("Send Code")
+                        else Text(stringResource(R.string.send_code))
                     }
                 }
                 step == 2 -> {
                     TextButton(
                         onClick = {
                             when {
-                                verificationCode.isBlank() -> errorMessage = "Enter the verification code"
-                                newPassword.length < 8 -> errorMessage = "Password must be at least 8 characters"
-                                newPassword != confirmPassword -> errorMessage = "Passwords don't match"
+                                verificationCode.isBlank() -> errorMessage = enterVerificationCodeText
+                                newPassword.length < 8 -> errorMessage = passwordMinLengthText
+                                newPassword != confirmPassword -> errorMessage = passwordsDontMatchText
                                 else -> {
                                     isLoading = true
                                     scope.launch {
@@ -368,14 +381,14 @@ private fun ForgotPasswordDialog(
                         enabled = !isLoading
                     ) {
                         if (isLoading) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
-                        else Text("Reset Password")
+                        else Text(stringResource(R.string.reset_password))
                     }
                 }
             }
         },
         dismissButton = {
             if (!success) {
-                TextButton(onClick = onDismiss, enabled = !isLoading) { Text("Cancel") }
+                TextButton(onClick = onDismiss, enabled = !isLoading) { Text(stringResource(R.string.cancel)) }
             }
         }
     )

@@ -13,8 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import com.example.afyaquest.R
 import com.example.afyaquest.presentation.videomodules.VideoModulesViewModel
 import com.example.afyaquest.sync.VideoDownloadManager
 import com.google.android.exoplayer2.C
@@ -87,7 +89,7 @@ fun VideoPlayerScreen(
                 title = { Text(viewModel.getVideoTitle(moduleId)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -112,7 +114,7 @@ fun VideoPlayerScreen(
                 )
             } else {
                 Text(
-                    text = "Video not available",
+                    text = stringResource(R.string.video_not_available),
                     color = Color.White
                 )
             }

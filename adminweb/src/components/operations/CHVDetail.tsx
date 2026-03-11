@@ -313,11 +313,16 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
     if (!assignModuleId) { setAssignError(t('itinerary.selectModuleError')); return; }
     setAssignLoading(true);
     try {
-      const selected = ALL_MODULES.find(m => m.id === assignModuleId);
-      if (selected?.type === 'lesson') {
-        await api.assignLesson(chv.id, assignModuleId);
+      if (assignModuleId.startsWith('full-module-')) {
+        const moduleNumber = parseInt(assignModuleId.replace('full-module-', ''), 10);
+        await api.assignFullModule(chv.id, moduleNumber);
       } else {
-        await api.assignModule(chv.id, assignModuleId);
+        const selected = ALL_MODULES.find(m => m.id === assignModuleId);
+        if (selected?.type === 'lesson') {
+          await api.assignLesson(chv.id, assignModuleId);
+        } else {
+          await api.assignModule(chv.id, assignModuleId);
+        }
       }
       showToast(t('settings.moduleAssigned'));
       setShowAssignModal(false);
@@ -876,11 +881,24 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
                 className="w-full px-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
               >
                 <option value="">{t('settings.selectModule')}</option>
-                <optgroup label={t('itinerary.videoModules')}>
-                  {ALL_MODULES.filter(m => m.type === 'video').map(m => (
-                    <option key={m.id} value={m.id}>{m.name}</option>
-                  ))}
+                <optgroup label="Assign Entire Module">
+                  {[1,2,3,4,5,6].map(n => {
+                    const modVideos = ALL_MODULES.filter(m => m.type === 'video' && 'module' in m && (m as any).module === n);
+                    const modName = modVideos.length > 0 ? (modVideos[0] as any).moduleName : `Module ${n}`;
+                    return <option key={`full-mod-${n}`} value={`full-module-${n}`}>Module {n}: {modName} ({modVideos.length} videos)</option>;
+                  })}
                 </optgroup>
+                {[1,2,3,4,5,6].map(n => {
+                  const modVideos = ALL_MODULES.filter(m => m.type === 'video' && 'module' in m && (m as any).module === n);
+                  const modName = modVideos.length > 0 ? (modVideos[0] as any).moduleName : `Module ${n}`;
+                  return (
+                    <optgroup key={`mod-${n}`} label={`Module ${n}: ${modName}`}>
+                      {modVideos.map(m => (
+                        <option key={m.id} value={m.id}>{m.name}</option>
+                      ))}
+                    </optgroup>
+                  );
+                })}
                 <optgroup label={t('itinerary.interactiveLessons')}>
                   {ALL_MODULES.filter(m => m.type === 'lesson').map(m => (
                     <option key={m.id} value={m.id}>{m.name}</option>

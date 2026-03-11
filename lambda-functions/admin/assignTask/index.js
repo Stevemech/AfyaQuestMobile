@@ -59,19 +59,23 @@ exports.handler = async (event) => {
 
     switch (type) {
       case 'module': {
-        await ddb.send(new PutCommand({
-          TableName: TABLE,
-          Item: {
-            PK: `USER#${chvId}`,
-            SK: `ASSIGNMENT#MODULE#${data.moduleId}`,
-            type: 'module',
-            moduleId: data.moduleId,
-            assignedAt: timestamp,
-            assignedBy: event.requestContext?.authorizer?.jwt?.claims?.sub || 'admin',
-            status: 'assigned',
-            dueDate: data.dueDate || null,
-          },
-        }));
+        const moduleIds = data.moduleIds || (data.moduleId ? [data.moduleId] : []);
+        for (const moduleId of moduleIds) {
+          await ddb.send(new PutCommand({
+            TableName: TABLE,
+            Item: {
+              PK: `USER#${chvId}`,
+              SK: `ASSIGNMENT#MODULE#${moduleId}`,
+              type: 'module',
+              moduleId: moduleId,
+              moduleNumber: data.moduleNumber || null,
+              assignedAt: timestamp,
+              assignedBy: event.requestContext?.authorizer?.jwt?.claims?.sub || 'admin',
+              status: 'assigned',
+              dueDate: data.dueDate || null,
+            },
+          }));
+        }
         break;
       }
       case 'lesson': {

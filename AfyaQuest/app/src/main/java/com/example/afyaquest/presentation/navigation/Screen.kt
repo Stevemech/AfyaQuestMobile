@@ -1,8 +1,5 @@
 package com.example.afyaquest.presentation.navigation
 
-/**
- * Sealed class representing app navigation destinations.
- */
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
     object Login : Screen("login")
@@ -11,6 +8,9 @@ sealed class Screen(val route: String) {
     object DailyQuestions : Screen("daily_questions")
     object DailyReport : Screen("daily_report")
     object VideoModules : Screen("video_modules")
+    object ModuleDetail : Screen("module_detail/{moduleNumber}") {
+        fun createRoute(moduleNumber: Int) = "module_detail/$moduleNumber"
+    }
     object Lessons : Screen("lessons")
     object Profile : Screen("profile")
     object Settings : Screen("settings")

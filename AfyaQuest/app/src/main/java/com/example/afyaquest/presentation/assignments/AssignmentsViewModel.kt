@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import android.util.Log
 import com.example.afyaquest.data.remote.dto.AssignmentDto
 import com.example.afyaquest.data.repository.AssignmentsRepository
+import com.example.afyaquest.presentation.videomodules.VideoModulesViewModel
 import com.example.afyaquest.sync.VideoDownloadManager
 import com.example.afyaquest.util.ProgressDataStore
 import com.example.afyaquest.util.Resource
@@ -12,12 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-private val moduleVideoUrls = mapOf(
-    "video-8" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Male+Reproductive+System+(1).mp4",
-    "video-9" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Female+Reproductive+System.mp4",
-    "video-10" to "https://afyaquest-module-videos.s3.af-south-1.amazonaws.com/Urinary+System.mov"
-)
 
 @HiltViewModel
 class AssignmentsViewModel @Inject constructor(
@@ -32,7 +27,6 @@ class AssignmentsViewModel @Inject constructor(
     private val _selectedFilter = MutableStateFlow(AssignmentFilter.ALL)
     val selectedFilter: StateFlow<AssignmentFilter> = _selectedFilter.asStateFlow()
 
-    // Local completion sets — used to override API status immediately
     private val _completedLessons = MutableStateFlow<Set<String>>(emptySet())
     private val _completedQuizzes = MutableStateFlow<Set<String>>(emptySet())
     private val _watchedVideos = MutableStateFlow<Set<String>>(emptySet())
@@ -79,27 +73,24 @@ class AssignmentsViewModel @Inject constructor(
     }
 
     private fun queueModuleDownloads(assignments: List<AssignmentDto>) {
+        val videoUrls = VideoModulesViewModel.allVideoUrls()
         val assignedModuleIds = assignments
-            .filter { it.type == "module" && it.moduleId != null }
+            .filter { (it.type == "module" || it.type == "video") && !it.moduleId.isNullOrBlank() }
             .mapNotNull { it.moduleId }
-        videoDownloadManager.queueAssignedModuleDownloads(assignedModuleIds, moduleVideoUrls)
+        videoDownloadManager.queueAssignedModuleDownloads(assignedModuleIds, videoUrls)
     }
 
     fun setFilter(filter: AssignmentFilter) {
         _selectedFilter.value = filter
     }
 
-    /**
-     * Get assignments with local completion status merged in.
-     * If the user completed a lesson/module locally, show it as "completed"
-     * even before the API re-fetches.
-     */
     fun getFilteredAssignments(): List<AssignmentDto> {
         val all = (_assignmentsState.value as? Resource.Success)?.data ?: emptyList()
         val merged = all.map { assignment ->
-            val locallyCompleted = when (assignment.type) {
-                "lesson" -> assignment.lessonId != null && _completedLessons.value.contains(assignment.lessonId)
-                "module" -> {
+            val t = assignment.type
+            val locallyCompleted = when {
+                t == "lesson" -> assignment.lessonId != null && _completedLessons.value.contains(assignment.lessonId)
+                t == "module" || t == "video" -> {
                     val mid = assignment.moduleId
                     mid != null && _completedQuizzes.value.contains(mid)
                 }
@@ -114,7 +105,7 @@ class AssignmentsViewModel @Inject constructor(
         return when (_selectedFilter.value) {
             AssignmentFilter.ALL -> merged
             AssignmentFilter.MANDATORY -> merged.filter { it.mandatory }
-            AssignmentFilter.MODULES -> merged.filter { it.type == "module" }
+            AssignmentFilter.MODULES -> merged.filter { it.type == "module" || it.type == "video" }
             AssignmentFilter.LESSONS -> merged.filter { it.type == "lesson" }
             AssignmentFilter.REPORTS -> merged.filter { it.type == "report" }
         }

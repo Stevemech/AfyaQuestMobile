@@ -46,11 +46,49 @@ function orgParams(extra?: Record<string, string>): string {
   return qs ? `?${qs}` : '';
 }
 
-// Video modules matching the mobile app (only 8, 9, 10 are implemented)
 const VIDEO_MODULES = [
-  { id: 'video-8', name: 'Sistema Reproductor Masculino / Male Reproductive System', nameEs: 'Sistema Reproductor Masculino', nameEn: 'Male Reproductive System', type: 'video' as const },
-  { id: 'video-9', name: 'Sistema Reproductor Femenino / Female Reproductive System', nameEs: 'Sistema Reproductor Femenino', nameEn: 'Female Reproductive System', type: 'video' as const },
-  { id: 'video-10', name: 'Sistema Urinario / Urinary System', nameEs: 'Sistema Urinario', nameEn: 'Urinary System', type: 'video' as const },
+  // Module 1: Body Systems
+  { id: 'mod1-nervous-system', name: 'Nervous System', module: 1, moduleName: 'Body Systems', type: 'video' as const },
+  { id: 'mod1-musculoskeletal', name: 'Musculoskeletal System', module: 1, moduleName: 'Body Systems', type: 'video' as const },
+  { id: 'mod1-lymphatic', name: 'Lymphatic System', module: 1, moduleName: 'Body Systems', type: 'video' as const },
+  { id: 'mod1-endocrine', name: 'The Endocrine System', module: 1, moduleName: 'Body Systems', type: 'video' as const },
+  { id: 'mod1-integumentary', name: 'The Integumentary System', module: 1, moduleName: 'Body Systems', type: 'video' as const },
+  { id: 'mod1-urinary', name: 'Urinary System', module: 1, moduleName: 'Body Systems', type: 'video' as const },
+  { id: 'mod1-male-reproductive', name: 'Male Reproductive System', module: 1, moduleName: 'Body Systems', type: 'video' as const },
+  { id: 'mod1-female-reproductive', name: 'Female Reproductive System', module: 1, moduleName: 'Body Systems', type: 'video' as const },
+  // Module 2: Common Childhood Illnesses
+  { id: 'mod2-warning-signs', name: 'Warning Signs', module: 2, moduleName: 'Common Childhood Illnesses', type: 'video' as const },
+  { id: 'mod2-diarrhea', name: 'Diarrhea', module: 2, moduleName: 'Common Childhood Illnesses', type: 'video' as const },
+  { id: 'mod2-respiratory-infections', name: 'Respiratory Infections', module: 2, moduleName: 'Common Childhood Illnesses', type: 'video' as const },
+  { id: 'mod2-asthma-pneumonia-tb', name: 'Asthma, Pneumonia & TB', module: 2, moduleName: 'Common Childhood Illnesses', type: 'video' as const },
+  { id: 'mod2-antibiotics', name: 'The Rules of Antibiotics', module: 2, moduleName: 'Common Childhood Illnesses', type: 'video' as const },
+  { id: 'mod2-malnutrition', name: 'Marasmus & Kwashiorkor', module: 2, moduleName: 'Common Childhood Illnesses', type: 'video' as const },
+  // Module 3: Chronic & Infectious Diseases
+  { id: 'mod3-chronic-illnesses', name: 'Understanding Chronic Illnesses', module: 3, moduleName: 'Chronic & Infectious Diseases', type: 'video' as const },
+  { id: 'mod3-diabetes', name: 'Diabetes', module: 3, moduleName: 'Chronic & Infectious Diseases', type: 'video' as const },
+  { id: 'mod3-heart-disease', name: 'Heart Disease, Hypertension & Strokes', module: 3, moduleName: 'Chronic & Infectious Diseases', type: 'video' as const },
+  { id: 'mod3-infectious-diseases', name: 'Introduction to Infectious Diseases', module: 3, moduleName: 'Chronic & Infectious Diseases', type: 'video' as const },
+  { id: 'mod3-reproductive-tract', name: 'Reproductive Tract Infections & Hepatitis B', module: 3, moduleName: 'Chronic & Infectious Diseases', type: 'video' as const },
+  { id: 'mod3-hiv-tb', name: 'HIV/AIDS and Tuberculosis', module: 3, moduleName: 'Chronic & Infectious Diseases', type: 'video' as const },
+  // Module 4: Maternal & Reproductive Health
+  { id: 'mod4-antenatal-care', name: 'Understanding Antenatal Care', module: 4, moduleName: 'Maternal & Reproductive Health', type: 'video' as const },
+  { id: 'mod4-pregnancy', name: 'Pregnancy: Normal or Not?', module: 4, moduleName: 'Maternal & Reproductive Health', type: 'video' as const },
+  { id: 'mod4-safe-delivery', name: 'Safe Delivery & Newborn Care', module: 4, moduleName: 'Maternal & Reproductive Health', type: 'video' as const },
+  { id: 'mod4-birth-spacing', name: 'Birth Spacing', module: 4, moduleName: 'Maternal & Reproductive Health', type: 'video' as const },
+  { id: 'mod4-short-term-contraception', name: 'Short-Term Contraception', module: 4, moduleName: 'Maternal & Reproductive Health', type: 'video' as const },
+  { id: 'mod4-long-term-contraception', name: 'Long-Term Contraception', module: 4, moduleName: 'Maternal & Reproductive Health', type: 'video' as const },
+  // Module 5: First Aid & Emergency Care
+  { id: 'mod5-abcde-method', name: 'The ABCDE Method', module: 5, moduleName: 'First Aid & Emergency Care', type: 'video' as const },
+  { id: 'mod5-treating-bleeding', name: 'Treating Bleeding', module: 5, moduleName: 'First Aid & Emergency Care', type: 'video' as const },
+  { id: 'mod5-splint-bone', name: 'How to Splint a Broken Bone', module: 5, moduleName: 'First Aid & Emergency Care', type: 'video' as const },
+  { id: 'mod5-choking', name: 'How to Help Someone Choking', module: 5, moduleName: 'First Aid & Emergency Care', type: 'video' as const },
+  { id: 'mod5-burns-stings', name: 'First Aid: Burns & Stings', module: 5, moduleName: 'First Aid & Emergency Care', type: 'video' as const },
+  // Module 6: Infection Prevention & Control
+  { id: 'mod6-chain-of-infection', name: 'The Chain of Infection', module: 6, moduleName: 'Infection Prevention & Control', type: 'video' as const },
+  { id: 'mod6-5fs-disease', name: "The 5 F's of Disease", module: 6, moduleName: 'Infection Prevention & Control', type: 'video' as const },
+  { id: 'mod6-standard-precautions', name: 'Standard Precautions', module: 6, moduleName: 'Infection Prevention & Control', type: 'video' as const },
+  { id: 'mod6-clinical-safety', name: 'Clinical Safety Rules', module: 6, moduleName: 'Infection Prevention & Control', type: 'video' as const },
+  { id: 'mod6-unseen-shield', name: 'An Unseen Shield', module: 6, moduleName: 'Infection Prevention & Control', type: 'video' as const },
 ];
 
 // Interactive lessons matching the mobile app (IDs 1-6)
@@ -121,6 +159,20 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ chvId, type: 'module', data: { moduleId } }),
     }),
+
+  assignVideos: (chvId: string, moduleIds: string[]) =>
+    request('/admin/assign', {
+      method: 'POST',
+      body: JSON.stringify({ chvId, type: 'module', data: { moduleIds } }),
+    }),
+
+  assignFullModule: (chvId: string, moduleNumber: number) => {
+    const moduleVideos = VIDEO_MODULES.filter(v => v.module === moduleNumber).map(v => v.id);
+    return request('/admin/assign', {
+      method: 'POST',
+      body: JSON.stringify({ chvId, type: 'module', data: { moduleIds: moduleVideos, moduleNumber } }),
+    });
+  },
 
   assignLesson: (chvId: string, lessonId: string, dueDate?: string) =>
     request('/admin/assign', {

@@ -261,7 +261,7 @@ fun AssignmentCard(
         "module" -> "🎬" to stringResource(R.string.video_modules)
         "lesson" -> "📚" to stringResource(R.string.interactive_lessons)
         "report" -> "📝" to stringResource(R.string.daily_report)
-        else -> "📋" to assignment.type
+        else -> "📋" to (assignment.type ?: "Task")
     }
 
     val statusColor = when (assignment.status) {
@@ -411,17 +411,9 @@ private fun formatDate(isoDate: String): String {
 }
 
 private fun getModuleDisplayName(id: String): String {
-    val names = mapOf(
-        "video-1" to "Health Assessments",
-        "video-2" to "Water Sanitation",
-        "video-3" to "Maternal & Child Health",
-        "video-4" to "Vaccination Programs",
-        "video-5" to "Emergency First Aid",
-        "video-6" to "Nutrition Basics",
-        "video-7" to "Disease Prevention",
-        "video-8" to "Male Reproductive System",
-        "video-9" to "Female Reproductive System",
-        "video-10" to "Urinary System",
+    val videoNames = com.example.afyaquest.presentation.videomodules.VideoModulesViewModel.allVideos()
+        .associate { it.id to it.title }
+    val lessonNames = mapOf(
         "lesson-1" to "Handwashing Techniques",
         "lesson-2" to "Balanced Diet for Children",
         "lesson-3" to "Prenatal Care Essentials",
@@ -429,5 +421,6 @@ private fun getModuleDisplayName(id: String): String {
         "lesson-5" to "Malaria Prevention",
         "lesson-6" to "CPR Basics"
     )
+    val names = videoNames + lessonNames
     return names[id] ?: id.replace("-", " ").replaceFirstChar { it.uppercase() }
 }

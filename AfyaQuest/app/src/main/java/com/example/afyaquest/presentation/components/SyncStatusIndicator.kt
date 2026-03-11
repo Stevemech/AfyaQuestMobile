@@ -14,9 +14,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.afyaquest.R
 
 /**
  * Sync status indicator showing connection state, pending items, and a force sync button.
@@ -83,11 +85,11 @@ fun SyncStatusIndicator(
                 Column {
                     Text(
                         text = when {
-                            isSyncing -> "Syncing..."
-                            !isConnected -> "Offline"
+                            isSyncing -> stringResource(R.string.syncing)
+                            !isConnected -> stringResource(R.string.offline)
                             errorMessage != null -> errorMessage
-                            unsyncedCount > 0 -> "$unsyncedCount item${if (unsyncedCount > 1) "s" else ""} pending"
-                            else -> "All synced"
+                            unsyncedCount > 0 -> stringResource(R.string.items_pending_count, unsyncedCount)
+                            else -> stringResource(R.string.all_synced)
                         },
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
@@ -100,7 +102,7 @@ fun SyncStatusIndicator(
 
                     if (!isConnected) {
                         Text(
-                            text = "Changes will sync when online",
+                            text = stringResource(R.string.changes_will_sync),
                             fontSize = 11.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -117,15 +119,15 @@ fun SyncStatusIndicator(
                 ) {
                     Icon(
                         Icons.Default.Sync,
-                        contentDescription = "Force Sync",
+                        contentDescription = stringResource(R.string.sync),
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = when {
-                            errorMessage != null -> "Retry"
-                            unsyncedCount > 0 -> "Sync Now"
-                            else -> "Sync"
+                            errorMessage != null -> stringResource(R.string.retry)
+                            unsyncedCount > 0 -> stringResource(R.string.sync_now)
+                            else -> stringResource(R.string.sync)
                         },
                         fontSize = 12.sp
                     )

@@ -35,6 +35,43 @@
     <string name="show_password">Tak\'ut ri ewan tzij</string>
     <string name="hide_password">Tawewaj ri ewan tzij</string>
 
+    <!-- Registration -->
+    <string name="create_account">Titz\'ib\'äx Ataqoya\'l</string>
+    <string name="join_afyaquest">Katok pa AfyaQuest</string>
+    <string name="start_journey_subtitle">Tatikirisaj ri ab\'ey achi\'el Ato\'onel pa K\'aslemal pa Tinamït</string>
+    <string name="organization">Moloj</string>
+    <string name="phone_number_optional">Rajilab\'al Oyonib\'äl (Man K\'atzinel ta)</string>
+    <string name="password_requirement_hint">Ri ewan tzij k\'atzinel man jun ta waqib\' tz\'ib\' rik\'in jun retal</string>
+    <string name="passwords_do_not_match">Ri taq ewan tzij man junam ta</string>
+    <string name="registration_successful">Ütz xtz\'ib\'äx ab\'i\'! Tajikib\'a\' ri ataqoya\'l.</string>
+    <string name="registration_failed">Man xtikirel ta xtz\'ib\'äx ab\'i\'</string>
+    <string name="already_have_account">La k\'o chik ataqoya\'l?</string>
+
+    <!-- Forgot Password Dialog -->
+    <string name="password_reset_title">Rutzolixik Ewan Tzij</string>
+    <string name="forgot_password_title">Xasäch ri Ewan Tzij</string>
+    <string name="password_reset_success">Ütz xtzolïx ri ewan tzij. Wakami yatikïr yatoka\' rik\'in ri k\'ak\'a\' ewan tzij.</string>
+    <string name="enter_email_for_code">Tatz\'ib\'aj ri ataqoya\'l chuqa\' xtiqatäq jun jikib\'anïk chawe.</string>
+    <string name="enter_code_and_password">Tatz\'ib\'aj ri jikib\'anïk xtaq pa %s chuqa\' ri k\'ak\'a\' ewan tzij.</string>
+    <string name="enter_your_email">Tatz\'ib\'aj ri ataqoya\'l</string>
+    <string name="login_failed">Man xtikirel ta ri tok</string>
+
+    <!-- Splash -->
+    <string name="empowering_cha">Nikiya\' Kuchuk\'ab\' ri Ajto\'onel pa K\'aslemal pa Tinamït</string>
+    <string name="afyaquest_logo">Ruwachib\'al AfyaQuest</string>
+
+    <!-- Map Actions -->
+    <string name="directions">Rub\'eyal</string>
+    <string name="get_directions">Tawila\' Rub\'eyal</string>
+    <string name="mark_visited">Tiya\' Retal Xb\'an</string>
+
+    <!-- Video Player -->
+    <string name="video_not_available">Man k\'o ta ri silowachib\'äl</string>
+
+    <!-- Sync (additional) -->
+    <string name="items_pending_count">%d taq wachinäq noyob\'en</string>
+    <string name="sync">Tiximon</string>
+
     <!-- Language names (for picker) -->
     <string name="english">English</string>
     <string name="espanol">Español</string>

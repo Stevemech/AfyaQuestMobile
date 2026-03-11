@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,7 +60,7 @@ fun SplashScreen(
                 // App logo
                 Image(
                     painter = painterResource(id = R.drawable.afyaquest_logo),
-                    contentDescription = "AfyaQuest Logo",
+                    contentDescription = stringResource(R.string.afyaquest_logo),
                     modifier = Modifier
                         .size(160.dp)
                         .clip(CircleShape)
@@ -69,7 +70,7 @@ fun SplashScreen(
 
                 // App name
                 Text(
-                    text = "AfyaQuest",
+                    text = stringResource(R.string.app_name),
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimary
@@ -78,7 +79,7 @@ fun SplashScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Empowering Community Health Assistants",
+                    text = stringResource(R.string.empowering_cha),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
                 )

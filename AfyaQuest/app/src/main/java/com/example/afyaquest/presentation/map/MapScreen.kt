@@ -207,7 +207,7 @@ private fun MapAndItineraryTab(
                     Marker(
                         state = MarkerState(position = LatLng(stop.latitude, stop.longitude)),
                         title = "${stop.order}. ${stop.label}",
-                        snippet = if (stop.completed) "Visited" else stop.address,
+                        snippet = if (stop.completed) context.getString(R.string.visited) else stop.address,
                         icon = com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(
                             if (stop.completed)
                                 com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_GREEN
@@ -345,7 +345,7 @@ private fun ItineraryStopRow(
             if (stop.completed) {
                 Badge(containerColor = Color(0xFF438894)) {
                     Text(
-                        text = "Visited",
+                        text = stringResource(R.string.visited),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         fontSize = 11.sp,
                         color = Color.White,
@@ -381,7 +381,7 @@ private fun ItineraryStopRow(
             ) {
                 Icon(Icons.Default.Map, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("Directions", fontSize = 12.sp)
+                Text(stringResource(R.string.directions), fontSize = 12.sp)
             }
 
             if (!stop.completed) {
@@ -390,7 +390,7 @@ private fun ItineraryStopRow(
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
                     modifier = Modifier.weight(1f).height(34.dp)
                 ) {
-                    Text("Mark Visited", fontSize = 12.sp)
+                    Text(stringResource(R.string.mark_visited), fontSize = 12.sp)
                 }
             }
         }
@@ -479,7 +479,7 @@ fun HealthFacilityCard(facility: HealthFacility) {
             ) {
                 Icon(Icons.Default.Map, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(6.dp))
-                Text("Get Directions", fontSize = 13.sp)
+                Text(stringResource(R.string.get_directions), fontSize = 13.sp)
             }
         }
     }
