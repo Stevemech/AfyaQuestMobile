@@ -45,6 +45,33 @@ const en = {
       forgotPassword: 'Forgot password?',
     },
 
+    // Forgot Password
+    forgotPassword: {
+      title: 'Reset Password',
+      heading: 'Forgot your password?',
+      emailPrompt: 'Enter your email address and we\'ll send you a verification code to reset your password.',
+      sendCode: 'Send verification code',
+      sending: 'Sending...',
+      sendFailed: 'Failed to send verification code',
+      resetHeading: 'Reset your password',
+      codePrompt: 'Enter the verification code sent to your email and choose a new password.',
+      verificationCode: 'Verification Code',
+      codePlaceholder: 'Enter 6-digit code',
+      newPassword: 'New Password',
+      newPasswordPlaceholder: 'Enter new password',
+      confirmPassword: 'Confirm Password',
+      confirmPasswordPlaceholder: 'Re-enter new password',
+      passwordRequirements: 'Min 8 characters, with uppercase, lowercase, and a number.',
+      passwordMismatch: 'Passwords do not match',
+      resetPassword: 'Reset password',
+      resetting: 'Resetting...',
+      resetFailed: 'Failed to reset password',
+      resendCode: 'Resend code',
+      successHeading: 'Password reset!',
+      successMessage: 'Your password has been reset successfully. You can now sign in with your new password.',
+      backToLogin: 'Back to sign in',
+    },
+
     // Operations
     operations: {
       loadingCHVs: 'Loading CHVs...',

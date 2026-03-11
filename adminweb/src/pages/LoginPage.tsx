@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import LanguageSwitcher from '../components/common/LanguageSwitcher';
 
@@ -86,9 +87,9 @@ export default function LoginPage() {
           </button>
 
           <p className="text-center mt-4">
-            <a href="mailto:afyaquest.rice@gmail.com" className="text-sm text-primary hover:underline">
+            <Link to="/forgot-password" className="text-sm text-primary hover:underline">
               {t('login.forgotPassword')}
-            </a>
+            </Link>
           </p>
         </form>
       </div>

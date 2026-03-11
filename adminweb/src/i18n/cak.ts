@@ -45,6 +45,33 @@ const cak = {
       forgotPassword: 'La xasach ri ewan atzij?',
     },
 
+    // Forgot Password
+    forgotPassword: {
+      title: 'Tik\'ex ri ewan tzij',
+      heading: 'La xasach ri ewan atzij?',
+      emailPrompt: 'Titz\'ib\'aj ri ataqoya\'l ruma xtiqataq jun rajilab\'al richin nak\'ex ri ewan atzij.',
+      sendCode: 'Titaq ri rajilab\'al',
+      sending: 'Tajin nitaq...',
+      sendFailed: 'Man xtikir ta xtaq ri rajilab\'al',
+      resetHeading: 'Tak\'exa\' ri ewan atzij',
+      codePrompt: 'Titz\'ib\'aj ri rajilab\'al xtaq pa ri ataqoya\'l chuqa\' ticha\' jun k\'ak\'a\' ewan tzij.',
+      verificationCode: 'Rajilab\'al',
+      codePlaceholder: 'Titz\'ib\'aj ri 6 rajilab\'al',
+      newPassword: 'K\'ak\'a\' ewan tzij',
+      newPasswordPlaceholder: 'Titz\'ib\'aj k\'ak\'a\' ewan tzij',
+      confirmPassword: 'Tijikib\'ax ri ewan tzij',
+      confirmPasswordPlaceholder: 'Titz\'ib\'aj chik ri k\'ak\'a\' ewan tzij',
+      passwordRequirements: 'Rajawaxik 8 tz\'ib\', rik\'in nimalaj, ch\'utinaqlaj, chuqa\' jun ajilab\'al.',
+      passwordMismatch: 'Ri ewan taq tzij man nikijun ta',
+      resetPassword: 'Tik\'ex ri ewan tzij',
+      resetting: 'Tajin nik\'ex...',
+      resetFailed: 'Man xtikir ta xk\'ex ri ewan tzij',
+      resendCode: 'Titaq chik ri rajilab\'al',
+      successHeading: 'Xk\'ex ri ewan tzij!',
+      successMessage: 'Ri ewan atzij xk\'ex. Wakami yatikir yatok rik\'in ri k\'ak\'a\' ewan atzij.',
+      backToLogin: 'Titzolin pa ri tokik',
+    },
+
     // Operations
     operations: {
       loadingCHVs: 'Tajin yesamajix CHV...',

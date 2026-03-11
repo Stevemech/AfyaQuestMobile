@@ -45,6 +45,33 @@ const es = {
       forgotPassword: 'Olvido su contrasena?',
     },
 
+    // Forgot Password
+    forgotPassword: {
+      title: 'Restablecer contrasena',
+      heading: 'Olvido su contrasena?',
+      emailPrompt: 'Ingrese su correo electronico y le enviaremos un codigo de verificacion para restablecer su contrasena.',
+      sendCode: 'Enviar codigo de verificacion',
+      sending: 'Enviando...',
+      sendFailed: 'Error al enviar el codigo de verificacion',
+      resetHeading: 'Restablezca su contrasena',
+      codePrompt: 'Ingrese el codigo de verificacion enviado a su correo y elija una nueva contrasena.',
+      verificationCode: 'Codigo de verificacion',
+      codePlaceholder: 'Ingrese el codigo de 6 digitos',
+      newPassword: 'Nueva contrasena',
+      newPasswordPlaceholder: 'Ingrese nueva contrasena',
+      confirmPassword: 'Confirmar contrasena',
+      confirmPasswordPlaceholder: 'Re-ingrese nueva contrasena',
+      passwordRequirements: 'Minimo 8 caracteres, con mayusculas, minusculas y un numero.',
+      passwordMismatch: 'Las contrasenas no coinciden',
+      resetPassword: 'Restablecer contrasena',
+      resetting: 'Restableciendo...',
+      resetFailed: 'Error al restablecer la contrasena',
+      resendCode: 'Reenviar codigo',
+      successHeading: 'Contrasena restablecida!',
+      successMessage: 'Su contrasena ha sido restablecida exitosamente. Ahora puede iniciar sesion con su nueva contrasena.',
+      backToLogin: 'Volver a iniciar sesion',
+    },
+
     // Operations
     operations: {
       loadingCHVs: 'Cargando CHVs...',
