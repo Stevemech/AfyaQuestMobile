@@ -1,9 +1,11 @@
 package com.example.afyaquest.presentation.auth
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -57,14 +59,18 @@ fun SplashScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // App logo
-                Image(
-                    painter = painterResource(id = R.drawable.afyaquest_logo),
-                    contentDescription = stringResource(R.string.afyaquest_logo),
+                Box(
                     modifier = Modifier
-                        .size(160.dp)
-                        .clip(CircleShape)
-                )
+                        .size(150.dp)
+                        .clip(CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.afyaquest_logo),
+                        contentDescription = stringResource(R.string.afyaquest_logo),
+                        modifier = Modifier.size(195.dp)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
