@@ -91,6 +91,12 @@ export default function LoginPage() {
               {t('login.forgotPassword')}
             </Link>
           </p>
+
+          <p className="text-center mt-2">
+            <Link to="/signup" className="text-sm text-text-secondary hover:text-primary hover:underline">
+              {t('login.noAccount')}
+            </Link>
+          </p>
         </form>
       </div>
     </div>

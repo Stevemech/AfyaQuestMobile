@@ -43,6 +43,31 @@ const en = {
       passwordPlaceholder: 'Enter your password',
       signingIn: 'Signing in...',
       forgotPassword: 'Forgot password?',
+      noAccount: 'Need an account? Sign up',
+    },
+
+    // Sign Up
+    signUp: {
+      heading: 'Request a new organization',
+      name: 'Full Name',
+      namePlaceholder: 'Enter your full name',
+      orgName: 'Organization Name',
+      orgNamePlaceholder: 'Name of your organization',
+      phone: 'Phone Number',
+      phonePlaceholder: '+1234567890',
+      optional: 'optional',
+      confirmPassword: 'Confirm Password',
+      confirmPasswordPlaceholder: 'Re-enter your password',
+      passwordRequirements: 'Min 8 characters, with uppercase, lowercase, and a number.',
+      passwordMismatch: 'Passwords do not match',
+      submit: 'Sign Up & Request New Org',
+      submitting: 'Signing up...',
+      failed: 'Registration failed',
+      successHeading: 'Request submitted!',
+      successVerify: 'A verification email has been sent to your inbox. Please click the link to verify your email.',
+      successApproval: 'An administrator will review your organization request and enable your account. You will be able to sign in once approved.',
+      backToLogin: 'Back to sign in',
+      haveAccount: 'Already have an account? Sign in',
     },
 
     // Forgot Password

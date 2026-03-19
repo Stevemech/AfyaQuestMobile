@@ -13,6 +13,7 @@
 -keep class com.example.afyaquest.domain.model.** { *; }
 -keep class com.example.afyaquest.data.local.entity.** { *; }
 -keep class com.example.afyaquest.data.remote.dto.** { *; }
+-keep class com.example.afyaquest.data.remote.TokenAuthenticator$* { *; }
 
 # Keep Hilt generated classes
 -keep class dagger.hilt.** { *; }
@@ -28,22 +29,32 @@
 -dontwarn androidx.room.paging.**
 
 # Keep Retrofit and OkHttp
--keepattributes Signature
+-keepattributes Signature,InnerClasses,EnclosingMethod
 -keepattributes *Annotation*
 -keep class retrofit2.** { *; }
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
 -dontwarn okhttp3.**
 -dontwarn okio.**
+
+# Keep the API service interface with full generic signatures (critical for R8 full mode)
+-keep interface com.example.afyaquest.data.remote.ApiService { *; }
 
 # Keep Gson
 -keep class com.google.gson.** { *; }
 -keepclassmembers,allowobfuscation class * {
     @com.google.gson.annotations.SerializedName <fields>;
 }
+
+# Gson TypeToken — R8 full mode strips generic signatures from anonymous TypeToken
+# subclasses unless explicitly kept
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep class * extends com.google.gson.reflect.TypeToken
 
 # Keep AWS SDK
 -keep class com.amazonaws.** { *; }

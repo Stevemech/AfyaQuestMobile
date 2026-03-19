@@ -43,6 +43,31 @@ const cak = {
       passwordPlaceholder: 'Titz\'ib\'aj ri ewan tzij',
       signingIn: 'Tajin nitikirisax...',
       forgotPassword: 'La xasach ri ewan atzij?',
+      noAccount: 'La man k\'o ta ataqoya\'l? Titz\'ib\'aj ab\'i\'',
+    },
+
+    // Sign Up
+    signUp: {
+      heading: 'Tik\'utüx jun k\'ak\'a\' moloj',
+      name: 'Tz\'aqat ab\'i\'',
+      namePlaceholder: 'Titz\'ib\'aj ri tz\'aqat ab\'i\'',
+      orgName: 'Rub\'i\' ri moloj',
+      orgNamePlaceholder: 'Rub\'i\' ri amoloj',
+      phone: 'Rajilab\'al oyonib\'al',
+      phonePlaceholder: '+1234567890',
+      optional: 'man rajawaxik ta',
+      confirmPassword: 'Tijikib\'ax ri ewan tzij',
+      confirmPasswordPlaceholder: 'Titz\'ib\'aj chik ri ewan atzij',
+      passwordRequirements: 'Rajawaxik 8 tz\'ib\', rik\'in nimalaj, ch\'utinaqlaj, chuqa\' jun ajilab\'al.',
+      passwordMismatch: 'Ri ewan taq tzij man nikijun ta',
+      submit: 'Titz\'ib\'aj ab\'i\' chuqa\' tik\'utüx k\'ak\'a\' moloj',
+      submitting: 'Tajin nitz\'ib\'ax...',
+      failed: 'Man xtikir ta ri tz\'ib\'axik',
+      successHeading: 'Xtaq ri k\'utunïk!',
+      successVerify: 'Xtaq jun taqoya\'l richin nijikib\'ax ri ataqoya\'l. Tapitz\'a\' ri ximonel richin nijikib\'ax.',
+      successApproval: 'Jun ajchakuy xtutz\'et ri ak\'utunïk chuqa\' xtutzij ri ataqoya\'l. Yatikir yatok toq xya\' q\'ij.',
+      backToLogin: 'Titzolin pa ri tokik',
+      haveAccount: 'La k\'o yan ataqoya\'l? Tok pa ri samaj',
     },
 
     // Forgot Password

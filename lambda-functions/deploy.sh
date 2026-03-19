@@ -22,6 +22,8 @@ COGNITO_CLIENT_ID="${COGNITO_CLIENT_ID:-3oj94klb6jejp4lbal9ninv870}"
 CLOUDFRONT_DOMAIN="${CLOUDFRONT_DOMAIN:-d2c7svayh8fll3.cloudfront.net}"
 S3_BUCKET="afyaquest-media-756401225362"
 BEDROCK_MODEL_ID="anthropic.claude-3-5-sonnet-20241022-v2:0"
+COGNITO_USER_POOL_ID="${COGNITO_USER_POOL_ID:-}"
+SNS_TOPIC_ARN="${SNS_TOPIC_ARN:-}"
 
 # Array of Lambda functions
 declare -A LAMBDAS=(
@@ -30,6 +32,9 @@ declare -A LAMBDAS=(
     ["auth/getCurrentUser"]="auth-getCurrentUser"
     ["auth/verify"]="auth-verify"
     ["auth/customMessage"]="auth-customMessage"
+    ["auth/forgotPassword"]="auth-forgotPassword"
+    ["auth/confirmForgotPassword"]="auth-confirmForgotPassword"
+    ["auth/registerAdmin"]="auth-registerAdmin"
     ["chat/sendMessage"]="chat-sendMessage"
     ["questions/getDaily"]="questions-getDaily"
     ["progress/getUser"]="progress-getUser"
@@ -74,6 +79,8 @@ deploy_lambda() {
             --environment "Variables={
                 DYNAMODB_TABLE=$TABLE_NAME,
                 COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID,
+                COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID,
+                SNS_TOPIC_ARN=$SNS_TOPIC_ARN,
                 S3_BUCKET=$S3_BUCKET,
                 CLOUDFRONT_DOMAIN=$CLOUDFRONT_DOMAIN,
                 BEDROCK_MODEL_ID=$BEDROCK_MODEL_ID,
@@ -95,6 +102,8 @@ deploy_lambda() {
             --environment "Variables={
                 DYNAMODB_TABLE=$TABLE_NAME,
                 COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID,
+                COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID,
+                SNS_TOPIC_ARN=$SNS_TOPIC_ARN,
                 S3_BUCKET=$S3_BUCKET,
                 CLOUDFRONT_DOMAIN=$CLOUDFRONT_DOMAIN,
                 BEDROCK_MODEL_ID=$BEDROCK_MODEL_ID,

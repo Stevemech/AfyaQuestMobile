@@ -126,6 +126,12 @@ export const api = {
 
   getCurrentUser: () => request<{ user: Record<string, string> }>('/auth/me'),
 
+  registerAdmin: (data: { email: string; password: string; name: string; organizationName: string; phone?: string }) =>
+    request<{ message: string; userId: string }>('/auth/register-admin', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
   forgotPassword: (email: string) =>
     request<{ message: string }>('/auth/forgot-password', {
       method: 'POST',

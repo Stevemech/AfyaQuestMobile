@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './auth/AuthContext';
 import Layout from './components/layout/Layout';
 import LoginPage from './pages/LoginPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import SignUpPage from './pages/SignUpPage';
 import OperationsPage from './pages/OperationsPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import ReportsPage from './pages/ReportsPage';
@@ -26,6 +27,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );

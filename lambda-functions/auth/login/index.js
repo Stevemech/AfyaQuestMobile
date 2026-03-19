@@ -101,7 +101,9 @@ exports.handler = async (event) => {
 
         if (error.name === 'NotAuthorizedException') {
             statusCode = 401;
-            errorMessage = 'Invalid email or password';
+            errorMessage = (error.message || '').includes('User is disabled')
+                ? 'Your account is pending approval. An administrator will enable your account shortly.'
+                : 'Invalid email or password';
         } else if (error.name === 'UserNotFoundException') {
             statusCode = 404;
             errorMessage = 'User not found';

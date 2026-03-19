@@ -43,6 +43,31 @@ const es = {
       passwordPlaceholder: 'Ingrese su contrasena',
       signingIn: 'Iniciando sesion...',
       forgotPassword: 'Olvido su contrasena?',
+      noAccount: 'Necesita una cuenta? Registrese',
+    },
+
+    // Sign Up
+    signUp: {
+      heading: 'Solicitar una nueva organizacion',
+      name: 'Nombre completo',
+      namePlaceholder: 'Ingrese su nombre completo',
+      orgName: 'Nombre de la organizacion',
+      orgNamePlaceholder: 'Nombre de su organizacion',
+      phone: 'Numero de telefono',
+      phonePlaceholder: '+1234567890',
+      optional: 'opcional',
+      confirmPassword: 'Confirmar contrasena',
+      confirmPasswordPlaceholder: 'Re-ingrese su contrasena',
+      passwordRequirements: 'Minimo 8 caracteres, con mayusculas, minusculas y un numero.',
+      passwordMismatch: 'Las contrasenas no coinciden',
+      submit: 'Registrarse y solicitar nueva org.',
+      submitting: 'Registrando...',
+      failed: 'Error en el registro',
+      successHeading: 'Solicitud enviada!',
+      successVerify: 'Se ha enviado un correo de verificacion a su bandeja de entrada. Haga clic en el enlace para verificar su correo.',
+      successApproval: 'Un administrador revisara su solicitud de organizacion y habilitara su cuenta. Podra iniciar sesion una vez aprobado.',
+      backToLogin: 'Volver a iniciar sesion',
+      haveAccount: 'Ya tiene cuenta? Inicie sesion',
     },
 
     // Forgot Password
