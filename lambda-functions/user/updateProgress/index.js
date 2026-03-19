@@ -39,16 +39,24 @@ exports.handler = async (event) => {
 
     switch (type) {
       case 'module_watched': {
-        await ddb.send(new UpdateCommand({
-          TableName: TABLE,
-          Key: { PK: `USER#${userId}`, SK: `ASSIGNMENT#MODULE#${itemId}` },
-          UpdateExpression: 'SET #status = :status, updatedAt = :updatedAt',
-          ExpressionAttributeNames: { '#status': 'status' },
-          ExpressionAttributeValues: {
-            ':status': 'in_progress',
-            ':updatedAt': timestamp,
-          },
-        }));
+        try {
+          await ddb.send(new UpdateCommand({
+            TableName: TABLE,
+            Key: { PK: `USER#${userId}`, SK: `ASSIGNMENT#MODULE#${itemId}` },
+            UpdateExpression: 'SET #status = :status, updatedAt = :updatedAt',
+            ConditionExpression: 'attribute_exists(PK)',
+            ExpressionAttributeNames: { '#status': 'status' },
+            ExpressionAttributeValues: {
+              ':status': 'in_progress',
+              ':updatedAt': timestamp,
+            },
+          }));
+        } catch (condErr) {
+          if (condErr.name === 'ConditionalCheckFailedException') {
+            break;
+          }
+          throw condErr;
+        }
         break;
       }
 
@@ -65,13 +73,21 @@ exports.handler = async (event) => {
           exprValues[':score'] = score;
         }
 
-        await ddb.send(new UpdateCommand({
-          TableName: TABLE,
-          Key: { PK: `USER#${userId}`, SK: `ASSIGNMENT#MODULE#${itemId}` },
-          UpdateExpression: updateExpr,
-          ExpressionAttributeNames: { '#status': 'status' },
-          ExpressionAttributeValues: exprValues,
-        }));
+        try {
+          await ddb.send(new UpdateCommand({
+            TableName: TABLE,
+            Key: { PK: `USER#${userId}`, SK: `ASSIGNMENT#MODULE#${itemId}` },
+            UpdateExpression: updateExpr,
+            ConditionExpression: 'attribute_exists(PK)',
+            ExpressionAttributeNames: { '#status': 'status' },
+            ExpressionAttributeValues: exprValues,
+          }));
+        } catch (condErr) {
+          if (condErr.name === 'ConditionalCheckFailedException') {
+            break;
+          }
+          throw condErr;
+        }
         break;
       }
 
