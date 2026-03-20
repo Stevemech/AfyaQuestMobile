@@ -30,6 +30,7 @@
 
 # Keep Retrofit and OkHttp
 -keepattributes Signature,InnerClasses,EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
 -keepattributes *Annotation*
 -keep class retrofit2.** { *; }
 -keepclasseswithmembers class * {
@@ -44,6 +45,10 @@
 
 # Keep the API service interface with full generic signatures (critical for R8 full mode)
 -keep interface com.example.afyaquest.data.remote.ApiService { *; }
+
+# Retrofit @suspend: response Type is carried on Continuation; R8 full mode can break the cast to
+# ParameterizedType inside Retrofit/Gson without this (release-only ClassCastException on login, etc.)
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
 # Keep Gson
 -keep class com.google.gson.** { *; }
