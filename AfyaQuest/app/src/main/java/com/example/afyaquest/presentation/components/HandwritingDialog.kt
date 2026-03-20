@@ -23,7 +23,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.afyaquest.R
 import com.example.afyaquest.util.HandwritingRecognitionHelper
-import com.google.mlkit.vision.digitalink.Ink
+import com.google.mlkit.vision.digitalink.recognition.Ink
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,8 +53,8 @@ fun HandwritingDialog(
     val paths = remember { mutableStateListOf<List<Offset>>() }
     val currentPath = remember { mutableStateListOf<Offset>() }
 
-    // Ink builder for ML Kit
-    val inkBuilder = remember { Ink.builder() }
+    // Ink builder for ML Kit (replace on clear — builder is consumed after build())
+    var inkBuilder by remember { mutableStateOf(Ink.builder()) }
     var strokeBuilder by remember { mutableStateOf<Ink.Stroke.Builder?>(null) }
 
     // Auto-recognize debounce
@@ -121,8 +121,8 @@ fun HandwritingDialog(
                             paths.clear()
                             currentPath.clear()
                             recognizedText = ""
-                            // Reset ink builder by creating fresh state
-                            inkBuilder.build() // consume current
+                            strokeBuilder = null
+                            inkBuilder = Ink.builder()
                         }) {
                             Text(stringResource(R.string.clear))
                         }
