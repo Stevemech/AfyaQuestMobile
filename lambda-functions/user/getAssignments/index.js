@@ -9,6 +9,11 @@ const client = new DynamoDBClient({ region: 'af-south-1' });
 const ddb = DynamoDBDocumentClient.from(client);
 const TABLE = 'AfyaQuestData';
 
+/** Ghost rows from old UpdateItem upserts lack assignedAt; real admin assigns always set it */
+function isValidAssignmentItem(item) {
+  return !!(item && item.assignedAt);
+}
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -31,16 +36,18 @@ exports.handler = async (event) => {
       },
     }));
 
-    const assignments = (result.Items || []).map(item => ({
-      type: item.type,
-      moduleId: item.moduleId || null,
-      lessonId: item.lessonId || null,
-      reportType: item.reportType || null,
-      status: item.status || 'assigned',
-      mandatory: item.mandatory || false,
-      dueDate: item.dueDate || null,
-      assignedAt: item.assignedAt,
-    }));
+    const assignments = (result.Items || [])
+      .filter(isValidAssignmentItem)
+      .map(item => ({
+        type: item.type,
+        moduleId: item.moduleId || null,
+        lessonId: item.lessonId || null,
+        reportType: item.reportType || null,
+        status: item.status || 'assigned',
+        mandatory: item.mandatory || false,
+        dueDate: item.dueDate || null,
+        assignedAt: item.assignedAt,
+      }));
 
     return { statusCode: 200, headers, body: JSON.stringify({ assignments }) };
   } catch (err) {

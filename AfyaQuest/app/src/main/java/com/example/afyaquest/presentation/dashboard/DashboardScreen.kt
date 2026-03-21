@@ -613,10 +613,17 @@ fun AssignedToYouSection(
                         assignment = assignment,
                         onClick = {
                             when (assignment.type) {
-                                "module" -> navController.navigate(Screen.VideoModules.route)
+                                "module", "video" -> navController.navigate(Screen.VideoModules.route)
                                 "lesson" -> navController.navigate(Screen.Lessons.route)
                                 "report" -> navController.navigate(Screen.DailyReport.route)
-                                else -> navController.navigate(Screen.Assignments.route)
+                                else -> when {
+                                    !assignment.moduleId.isNullOrBlank() ->
+                                        navController.navigate(Screen.VideoModules.route)
+                                    !assignment.lessonId.isNullOrBlank() ->
+                                        navController.navigate(Screen.Lessons.route)
+                                    else ->
+                                        navController.navigate(Screen.Assignments.route)
+                                }
                             }
                         }
                     )
@@ -642,14 +649,14 @@ fun AssignmentPreviewCard(
     onClick: () -> Unit
 ) {
     val icon = when (assignment.type) {
-        "module" -> "🎬"
+        "module", "video" -> "🎬"
         "lesson" -> "📚"
         "report" -> "📝"
         else -> "📋"
     }
 
     val typeLabel = when (assignment.type) {
-        "module" -> stringResource(R.string.video_modules)
+        "module", "video" -> stringResource(R.string.video_modules)
         "lesson" -> stringResource(R.string.interactive_lessons)
         "report" -> stringResource(R.string.daily_report)
         else -> assignment.type ?: "Task"

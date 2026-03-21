@@ -11,6 +11,15 @@ const TABLE = 'AfyaQuestData';
 
 const VALID_TYPES = ['module_watched', 'module_quiz_complete', 'lesson_complete', 'itinerary_stop_complete'];
 
+/** DynamoDB / SDK v3 conditional failure (avoid upsert ghost ASSIGNMENT rows) */
+function isConditionalCheckFailed(err) {
+  return (
+    err?.name === 'ConditionalCheckFailedException'
+    || err?.__type === 'com.amazonaws.dynamodb.v20120810#ConditionalCheckFailedException'
+    || (typeof err?.message === 'string' && err.message.includes('ConditionalCheckFailed'))
+  );
+}
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -44,7 +53,8 @@ exports.handler = async (event) => {
             TableName: TABLE,
             Key: { PK: `USER#${userId}`, SK: `ASSIGNMENT#MODULE#${itemId}` },
             UpdateExpression: 'SET #status = :status, updatedAt = :updatedAt',
-            ConditionExpression: 'attribute_exists(PK)',
+            // Only touch rows created by admin assign (Put); never upsert ghost tasks from video watch
+            ConditionExpression: 'attribute_exists(assignedAt)',
             ExpressionAttributeNames: { '#status': 'status' },
             ExpressionAttributeValues: {
               ':status': 'in_progress',
@@ -52,9 +62,7 @@ exports.handler = async (event) => {
             },
           }));
         } catch (condErr) {
-          if (condErr.name === 'ConditionalCheckFailedException') {
-            break;
-          }
+          if (isConditionalCheckFailed(condErr)) break;
           throw condErr;
         }
         break;
@@ -78,32 +86,35 @@ exports.handler = async (event) => {
             TableName: TABLE,
             Key: { PK: `USER#${userId}`, SK: `ASSIGNMENT#MODULE#${itemId}` },
             UpdateExpression: updateExpr,
-            ConditionExpression: 'attribute_exists(PK)',
+            ConditionExpression: 'attribute_exists(assignedAt)',
             ExpressionAttributeNames: { '#status': 'status' },
             ExpressionAttributeValues: exprValues,
           }));
         } catch (condErr) {
-          if (condErr.name === 'ConditionalCheckFailedException') {
-            break;
-          }
+          if (isConditionalCheckFailed(condErr)) break;
           throw condErr;
         }
         break;
       }
 
       case 'lesson_complete': {
-        // Update the assignment status
-        await ddb.send(new UpdateCommand({
-          TableName: TABLE,
-          Key: { PK: `USER#${userId}`, SK: `ASSIGNMENT#LESSON#${itemId}` },
-          UpdateExpression: 'SET #status = :status, updatedAt = :updatedAt, completedAt = :completedAt',
-          ExpressionAttributeNames: { '#status': 'status' },
-          ExpressionAttributeValues: {
-            ':status': 'completed',
-            ':updatedAt': timestamp,
-            ':completedAt': timestamp,
-          },
-        }));
+        // Update the assignment status (only if admin-assigned; no ghost lesson rows)
+        try {
+          await ddb.send(new UpdateCommand({
+            TableName: TABLE,
+            Key: { PK: `USER#${userId}`, SK: `ASSIGNMENT#LESSON#${itemId}` },
+            UpdateExpression: 'SET #status = :status, updatedAt = :updatedAt, completedAt = :completedAt',
+            ConditionExpression: 'attribute_exists(assignedAt)',
+            ExpressionAttributeNames: { '#status': 'status' },
+            ExpressionAttributeValues: {
+              ':status': 'completed',
+              ':updatedAt': timestamp,
+              ':completedAt': timestamp,
+            },
+          }));
+        } catch (condErr) {
+          if (!isConditionalCheckFailed(condErr)) throw condErr;
+        }
 
         // Upsert progress record
         await ddb.send(new UpdateCommand({

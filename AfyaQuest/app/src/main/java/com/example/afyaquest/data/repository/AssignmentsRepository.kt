@@ -31,8 +31,10 @@ class AssignmentsRepository @Inject constructor(
 
             if (response.isSuccessful && response.body() != null) {
                 val body = response.body()!!
-                Log.d("AssignmentsRepo", "Got ${body.assignments.size} assignments from API")
-                emit(Resource.Success(body))
+                // Drop ghost rows (old UpdateItem upserts) that lack assignedAt — even if API is not redeployed yet
+                val valid = body.assignments.filter { !it.assignedAt.isNullOrBlank() }
+                Log.d("AssignmentsRepo", "Got ${valid.size} valid assignments from API (${body.assignments.size} raw)")
+                emit(Resource.Success(AssignmentsResponse(valid)))
             } else {
                 val errorBody = response.errorBody()?.string()
                 Log.e("AssignmentsRepo", "API error: ${response.code()} - $errorBody")

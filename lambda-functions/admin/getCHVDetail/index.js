@@ -5,6 +5,10 @@ const client = new DynamoDBClient({ region: 'af-south-1' });
 const ddb = DynamoDBDocumentClient.from(client);
 const TABLE = 'AfyaQuestData';
 
+function isValidAssignmentItem(item) {
+  return !!(item && item.assignedAt);
+}
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -94,16 +98,18 @@ exports.handler = async (event) => {
       };
     });
 
-    const assignments = (assignmentsResult.Items || []).map(a => ({
-      type: a.type || 'module',
-      moduleId: a.moduleId || null,
-      lessonId: a.lessonId || null,
-      status: a.status || 'assigned',
-      mandatory: a.mandatory || false,
-      dueDate: a.dueDate || null,
-      assignedAt: a.assignedAt || '',
-      assignedBy: a.assignedBy || '',
-    }));
+    const assignments = (assignmentsResult.Items || [])
+      .filter(isValidAssignmentItem)
+      .map(a => ({
+        type: a.type || 'module',
+        moduleId: a.moduleId || null,
+        lessonId: a.lessonId || null,
+        status: a.status || 'assigned',
+        mandatory: a.mandatory || false,
+        dueDate: a.dueDate || null,
+        assignedAt: a.assignedAt || '',
+        assignedBy: a.assignedBy || '',
+      }));
 
     const clockHistory = (clockResult.Items || []).map(c => ({
       action: c.action,

@@ -42,7 +42,9 @@ exports.handler = async (event) => {
       FilterExpression: 'begins_with(SK, :sk)',
       ExpressionAttributeValues: { ':sk': 'ASSIGNMENT#' },
     }));
-    const allAssignments = (assignResult.Items || []).filter(a => userPKs.has(a.PK));
+    const allAssignments = (assignResult.Items || []).filter(
+      a => userPKs.has(a.PK) && a.assignedAt
+    );
 
     // Compute stats
     const atRiskCHVs = users.filter(u => {

@@ -152,9 +152,17 @@ fun AssignmentsScreen(
                                     assignment = assignment,
                                     onNavigate = {
                                         when (assignment.type) {
-                                            "module" -> navController.navigate(Screen.VideoModules.route)
+                                            "module", "video" -> navController.navigate(Screen.VideoModules.route)
                                             "lesson" -> navController.navigate(Screen.Lessons.route)
                                             "report" -> navController.navigate(Screen.DailyReport.route)
+                                            else -> when {
+                                                !assignment.moduleId.isNullOrBlank() ->
+                                                    navController.navigate(Screen.VideoModules.route)
+                                                !assignment.lessonId.isNullOrBlank() ->
+                                                    navController.navigate(Screen.Lessons.route)
+                                                else ->
+                                                    navController.navigate(Screen.Assignments.route)
+                                            }
                                         }
                                     }
                                 )
@@ -258,7 +266,7 @@ fun AssignmentCard(
     onNavigate: () -> Unit
 ) {
     val (icon, typeLabel) = when (assignment.type) {
-        "module" -> "🎬" to stringResource(R.string.video_modules)
+        "module", "video" -> "🎬" to stringResource(R.string.video_modules)
         "lesson" -> "📚" to stringResource(R.string.interactive_lessons)
         "report" -> "📝" to stringResource(R.string.daily_report)
         else -> "📋" to (assignment.type ?: "Task")
@@ -377,10 +385,16 @@ fun AssignmentCard(
                 ) {
                     Text(
                         text = when (assignment.type) {
-                            "module" -> stringResource(R.string.go_to_modules)
+                            "module", "video" -> stringResource(R.string.go_to_modules)
                             "lesson" -> stringResource(R.string.go_to_lessons)
                             "report" -> stringResource(R.string.go_to_report)
-                            else -> stringResource(R.string.open)
+                            else -> when {
+                                !assignment.moduleId.isNullOrBlank() ->
+                                    stringResource(R.string.go_to_modules)
+                                !assignment.lessonId.isNullOrBlank() ->
+                                    stringResource(R.string.go_to_lessons)
+                                else -> stringResource(R.string.open)
+                            }
                         }
                     )
                 }
