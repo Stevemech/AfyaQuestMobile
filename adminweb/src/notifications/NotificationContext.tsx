@@ -61,7 +61,7 @@ export function NotificationProvider({
     setLoading(true);
     setError(null);
     try {
-      const res = await api.getNotifications();
+      const res = await api.getNotifications(organization);
       const list = res.notifications || [];
       setNotifications(list);
       setUnreadCount(res.unreadCount ?? list.filter(n => !n.read).length);
@@ -103,7 +103,7 @@ export function NotificationProvider({
   const markRead = useCallback(
     async (sks: string[]) => {
       if (!sks.length) return;
-      await api.markNotificationsRead(sks);
+      await api.markNotificationsRead(sks, organization);
       await fetchNotifications();
     },
     [fetchNotifications]
@@ -112,7 +112,7 @@ export function NotificationProvider({
   const markAllRead = useCallback(async () => {
     const unread = notifications.filter(n => !n.read).map(n => n.sk);
     if (!unread.length) return;
-    await api.markNotificationsRead(unread);
+    await api.markNotificationsRead(unread, organization);
     await fetchNotifications();
   }, [notifications, fetchNotifications]);
 

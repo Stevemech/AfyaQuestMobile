@@ -28,7 +28,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem('adminToken');
     const savedUser = localStorage.getItem('adminUser');
     if (token && savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        const u = JSON.parse(savedUser) as AdminUser;
+        if (u.organization) {
+          localStorage.setItem('adminOrg', u.organization);
+        }
+        setUser(u);
+      } catch {
+        setIsLoading(false);
+        return;
+      }
     }
     setIsLoading(false);
   }, []);

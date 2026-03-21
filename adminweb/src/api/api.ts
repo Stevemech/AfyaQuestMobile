@@ -17,14 +17,27 @@ function isFailedLoginAttempt(path: string, options: RequestInit): boolean {
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken();
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options.headers,
-    },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
+    });
+  } catch (err) {
+    const isNetwork =
+      err instanceof TypeError && (err.message === 'Failed to fetch' || err.name === 'TypeError');
+    throw new Error(
+      isNetwork
+        ? 'Network error: could not reach the API. Check your connection, or ensure this endpoint is deployed in API Gateway (missing routes often show this error in the browser).'
+        : err instanceof Error
+          ? err.message
+          : 'Network error'
+    );
+  }
   if (!res.ok) {
     // Expired or invalid token: log out and go to login (not for wrong-password login)
     if (res.status === 401 && !isFailedLoginAttempt(path, options)) {
@@ -249,17 +262,21 @@ export const api = {
   getOrganizations: () =>
     request<{ organizations: { id: string; name: string; location?: string }[] }>('/organizations'),
 
-  getNotifications: () => {
-    if (!getOrganization()) {
+  /** Pass org from the layout when available so it matches the header even if adminOrg is missing from localStorage. */
+  getNotifications: (organizationOverride?: string | null) => {
+    const org = organizationOverride ?? getOrganization();
+    if (!org) {
       return Promise.resolve({ notifications: [], unreadCount: 0 });
     }
+    const params = new URLSearchParams();
+    params.set('organization', org);
     return request<{ notifications: import('../types').AdminNotification[]; unreadCount: number }>(
-      `/admin/notifications${orgParams()}`
+      `/admin/notifications?${params.toString()}`
     );
   },
 
-  markNotificationsRead: async (sks: string[]) => {
-    const org = getOrganization();
+  markNotificationsRead: async (sks: string[], organizationOverride?: string | null) => {
+    const org = organizationOverride ?? getOrganization();
     if (!org || sks.length === 0) return;
     await request('/admin/notifications/read', {
       method: 'POST',
