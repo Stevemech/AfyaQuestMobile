@@ -428,8 +428,6 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
               <h2 className="text-xl font-bold text-text-primary">{chv.name}</h2>
               <p className="text-sm text-text-secondary">
                 {chv.organization || chv.clinic}
-                {chv.level != null && <span className="ml-2">{t('chvList.level')} {chv.level}</span>}
-                {chv.totalPoints != null && <span className="ml-2">{chv.totalPoints} {t('chvList.points')}</span>}
               </p>
             </div>
           </div>
@@ -455,8 +453,33 @@ export default function CHVDetail({ chv, houses, itineraries = [], assignments =
           </div>
         </div>
 
-        {/* Stats bar */}
-        <div className="grid grid-cols-3 gap-4">
+        {/* Level, XP, lives, streak (from mobile app profile) */}
+        <div className="border-t border-border pt-4 mt-4">
+          <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">
+            {t('chvDetail.appProgress')}
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="rounded-lg border border-border bg-primary-light/20 p-4 text-center">
+              <p className="text-xs text-text-secondary mb-1">{t('chvDetail.statLevel')}</p>
+              <p className="text-2xl font-bold text-primary tabular-nums">{chv.level ?? 0}</p>
+            </div>
+            <div className="rounded-lg border border-border bg-primary-light/20 p-4 text-center">
+              <p className="text-xs text-text-secondary mb-1">{t('chvDetail.statTotalXP')}</p>
+              <p className="text-2xl font-bold text-primary tabular-nums">{chv.totalPoints ?? 0}</p>
+            </div>
+            <div className="rounded-lg border border-border bg-amber-50 p-4 text-center">
+              <p className="text-xs text-text-secondary mb-1">{t('chvDetail.statLives')}</p>
+              <p className="text-2xl font-bold text-amber-800 tabular-nums">{chv.lives ?? 0}</p>
+            </div>
+            <div className="rounded-lg border border-border bg-orange-50 p-4 text-center">
+              <p className="text-xs text-text-secondary mb-1">{t('chvDetail.statStreak')}</p>
+              <p className="text-2xl font-bold text-orange-800 tabular-nums">{chv.currentStreak ?? 0}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats bar — field visits */}
+        <div className="grid grid-cols-3 gap-4 mt-6">
           <div>
             <p className="text-sm text-text-secondary">{t('chvDetail.assignedHouses')}</p>
             <p className="text-xl font-bold">{chv.assignedHouses ?? houses.length}</p>

@@ -70,6 +70,8 @@ export interface ModuleProgress {
   chvName: string;
   level?: number;
   totalPoints?: number;
+  lives?: number;
+  currentStreak?: number;
   modules: { id?: string; moduleId?: string; type?: string; status?: string; completed: boolean; score?: number }[];
   overallProgress: number;
   flag?: { type: 'success' | 'warning' | 'danger'; value: string };

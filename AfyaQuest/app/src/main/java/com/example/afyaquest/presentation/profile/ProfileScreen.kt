@@ -8,7 +8,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -57,30 +60,52 @@ fun ProfileScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Tabs
+            // Icons avoid cramped text (e.g. "Achievements" wrapping); labels via contentDescription
             TabRow(selectedTabIndex = selectedTab) {
                 Tab(
                     selected = selectedTab == 0,
                     onClick = { viewModel.setSelectedTab(0) },
-                    text = { Text(stringResource(R.string.overview)) }
+                    icon = {
+                        Icon(
+                            Icons.Filled.Person,
+                            contentDescription = stringResource(R.string.overview)
+                        )
+                    }
                 )
                 Tab(
                     selected = selectedTab == 1,
                     onClick = { viewModel.setSelectedTab(1) },
-                    text = { Text(stringResource(R.string.achievements)) }
+                    icon = {
+                        Icon(
+                            Icons.Filled.EmojiEvents,
+                            contentDescription = stringResource(R.string.achievements)
+                        )
+                    }
                 )
                 Tab(
                     selected = selectedTab == 2,
                     onClick = { viewModel.setSelectedTab(2) },
-                    text = { Text(stringResource(R.string.reflections)) }
+                    icon = {
+                        Icon(
+                            Icons.Filled.AutoStories,
+                            contentDescription = stringResource(R.string.reflections)
+                        )
+                    }
                 )
             }
 
-            // Tab content
-            when (selectedTab) {
-                0 -> OverviewTab(xpData = xpData, quickStats = quickStats, userName = userProfile?.name, userOrg = userProfile?.organization)
-                1 -> AchievementsTab(achievements = achievements)
-                2 -> ReflectionsTab(viewModel = viewModel)
+            // Tab content — bottom inset so lists don’t sit under system nav bar (edge-to-edge)
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+            ) {
+                when (selectedTab) {
+                    0 -> OverviewTab(xpData = xpData, quickStats = quickStats, userName = userProfile?.name, userOrg = userProfile?.organization)
+                    1 -> AchievementsTab(achievements = achievements)
+                    2 -> ReflectionsTab(viewModel = viewModel)
+                }
             }
         }
     }

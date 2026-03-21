@@ -31,6 +31,10 @@ export default function CHVProgress({ progress, onAssign }: CHVProgressProps) {
         <thead>
           <tr className="border-b border-border">
             <th className="text-left py-2 px-3 text-text-secondary font-semibold">{t('chvProgress.chv')}</th>
+            <th className="text-right py-2 px-2 text-text-secondary font-semibold whitespace-nowrap">{t('chvProgress.colLevel')}</th>
+            <th className="text-right py-2 px-2 text-text-secondary font-semibold whitespace-nowrap">{t('chvProgress.colXP')}</th>
+            <th className="text-right py-2 px-2 text-text-secondary font-semibold whitespace-nowrap">{t('chvProgress.colLives')}</th>
+            <th className="text-right py-2 px-2 text-text-secondary font-semibold whitespace-nowrap">{t('chvProgress.colStreak')}</th>
             <th className="text-left py-2 px-3 text-text-secondary font-semibold">{t('chvProgress.module1')}</th>
             <th className="text-left py-2 px-3 text-text-secondary font-semibold">{t('chvProgress.module2')}</th>
             <th className="text-left py-2 px-3 text-text-secondary font-semibold">{t('chvProgress.riskFlag')}</th>
@@ -40,6 +44,10 @@ export default function CHVProgress({ progress, onAssign }: CHVProgressProps) {
           {displayedProgress.map(p => (
             <tr key={p.chvId} className="border-b border-border last:border-0 hover:bg-gray-50">
               <td className="py-3 px-3 font-semibold text-text-primary">{p.chvName}</td>
+              <td className="py-3 px-2 text-right tabular-nums text-text-primary">{p.level ?? 0}</td>
+              <td className="py-3 px-2 text-right tabular-nums text-text-primary">{p.totalPoints ?? 0}</td>
+              <td className="py-3 px-2 text-right tabular-nums text-text-primary">{p.lives ?? 0}</td>
+              <td className="py-3 px-2 text-right tabular-nums text-text-primary">{p.currentStreak ?? 0}</td>
               <td className="py-3 px-3">
                 <div className="flex items-center gap-2">
                   <span

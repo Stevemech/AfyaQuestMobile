@@ -289,7 +289,8 @@ fun LessonDetailScreen(
         bottomBar = {
             if (!hasCompleted) {
                 Surface(
-                    tonalElevation = 3.dp
+                    tonalElevation = 3.dp,
+                    modifier = Modifier.navigationBarsPadding()
                 ) {
                     Button(
                         onClick = {

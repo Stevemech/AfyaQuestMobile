@@ -93,7 +93,10 @@ fun ChatScreen(
         },
         bottomBar = {
             Surface(
-                tonalElevation = 3.dp
+                tonalElevation = 3.dp,
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .imePadding()
             ) {
                 Row(
                     modifier = Modifier

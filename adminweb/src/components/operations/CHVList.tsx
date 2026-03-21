@@ -33,7 +33,7 @@ function formatLastActive(lastActive: string, t: (key: string) => string): strin
 }
 
 type StatusFilter = 'all' | 'active' | 'inactive' | 'caution';
-type SortOption = 'name' | 'lastActive' | 'completionRate';
+type SortOption = 'name' | 'lastActive' | 'completionRate' | 'level' | 'xp' | 'streak';
 
 function Dropdown({ label, options, value, onChange }: {
   label: string;
@@ -95,6 +95,16 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
     .sort((a, b) => {
       if (sortBy === 'name') return a.name.localeCompare(b.name);
       if (sortBy === 'completionRate') return (b.completionRate ?? 0) - (a.completionRate ?? 0);
+      if (sortBy === 'level') return (b.level ?? 0) - (a.level ?? 0);
+      if (sortBy === 'xp') return (b.totalPoints ?? 0) - (a.totalPoints ?? 0);
+      if (sortBy === 'streak') return (b.currentStreak ?? 0) - (a.currentStreak ?? 0);
+      if (sortBy === 'lastActive') {
+        const ta = new Date(a.lastActive).getTime();
+        const tb = new Date(b.lastActive).getTime();
+        const sa = Number.isFinite(ta) ? ta : 0;
+        const sb = Number.isFinite(tb) ? tb : 0;
+        return sb - sa;
+      }
       return 0;
     });
 
@@ -107,6 +117,10 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
 
   const sortOptions = [
     { value: 'name', label: t('chvList.name') },
+    { value: 'level', label: t('chvList.sortLevel') },
+    { value: 'xp', label: t('chvList.sortXP') },
+    { value: 'streak', label: t('chvList.sortStreak') },
+    { value: 'lastActive', label: t('chvList.sortLastActive') },
     { value: 'completionRate', label: t('chvList.completionRate') },
   ];
 
@@ -197,23 +211,25 @@ export default function CHVList({ chvs, selectedCHV, onSelectCHV, searchQuery, o
                   />
                 </div>
                 <p className="text-xs text-text-secondary mt-0.5">{chv.clinic}</p>
-                <div className="flex items-center justify-between mt-1">
-                  <div className="text-xs text-text-secondary">
-                    {chv.level != null ? `${t('chvList.level')} ${chv.level}` : 'Progress'}
-                    <span className="ml-1">
-                      <span className="inline-block w-12 h-1.5 rounded bg-gray-200 relative overflow-hidden">
-                        <span
-                          className="absolute left-0 top-0 h-full bg-primary rounded"
-                          style={{ width: `${chv.completionRate ?? 0}%` }}
-                        />
-                      </span>
-                    </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mt-2">
+                  <div className="rounded-md bg-gray-50 border border-border px-2 py-1.5 text-left">
+                    <p className="text-[10px] uppercase tracking-wide text-text-secondary">{t('chvList.level')}</p>
+                    <p className="text-sm font-bold text-text-primary tabular-nums">{chv.level ?? 0}</p>
                   </div>
-                  <span className="text-lg font-bold text-text-primary">
-                    {chv.totalPoints != null ? `${chv.totalPoints} ${t('chvList.points')}` : `${chv.completionRate ?? 0}%`}
-                  </span>
+                  <div className="rounded-md bg-gray-50 border border-border px-2 py-1.5 text-left">
+                    <p className="text-[10px] uppercase tracking-wide text-text-secondary">{t('chvList.xpLabel')}</p>
+                    <p className="text-sm font-bold text-text-primary tabular-nums">{chv.totalPoints ?? 0}</p>
+                  </div>
+                  <div className="rounded-md bg-gray-50 border border-border px-2 py-1.5 text-left">
+                    <p className="text-[10px] uppercase tracking-wide text-text-secondary">{t('chvList.livesLabel')}</p>
+                    <p className="text-sm font-bold text-text-primary tabular-nums">{chv.lives ?? 0}</p>
+                  </div>
+                  <div className="rounded-md bg-gray-50 border border-border px-2 py-1.5 text-left">
+                    <p className="text-[10px] uppercase tracking-wide text-text-secondary">{t('chvList.streakLabel')}</p>
+                    <p className="text-sm font-bold text-text-primary tabular-nums">{chv.currentStreak ?? 0}</p>
+                  </div>
                 </div>
-                <p className="text-xs text-text-secondary mt-0.5">
+                <p className="text-xs text-text-secondary mt-1.5">
                   {t('chvList.lastActive')} {formatLastActive(chv.lastActive, t)}
                 </p>
               </div>

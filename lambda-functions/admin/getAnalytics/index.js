@@ -86,6 +86,8 @@ exports.handler = async (event) => {
         chvName: u.name || 'Unknown',
         level: u.level || 0,
         totalPoints: u.totalPoints || 0,
+        lives: u.lives ?? 0,
+        currentStreak: u.currentStreak ?? 0,
         modules,
         overallProgress,
       };
