@@ -1,3 +1,5 @@
+import { clearAdminSessionAndRedirectToLogin } from '../auth/sessionUtils';
+
 const API_BASE = 'https://gc6iib7ck2.execute-api.af-south-1.amazonaws.com/prod';
 
 function getToken(): string | null {
@@ -6,6 +8,11 @@ function getToken(): string | null {
 
 function getOrganization(): string | null {
   return localStorage.getItem('adminOrg');
+}
+
+/** 401 on /auth/login is wrong password — do not treat as session expiry */
+function isFailedLoginAttempt(path: string, options: RequestInit): boolean {
+  return path === '/auth/login' && (options.method === 'POST' || options.method === 'post');
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -19,6 +26,14 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     },
   });
   if (!res.ok) {
+    // Expired or invalid token: log out and go to login (not for wrong-password login)
+    if (res.status === 401 && !isFailedLoginAttempt(path, options)) {
+      clearAdminSessionAndRedirectToLogin();
+      return new Promise(() => {
+        /* never resolves — page navigates away */
+      }) as Promise<T>;
+    }
+
     const body = await res.text();
     // Parse JSON error responses to extract user-friendly message
     try {

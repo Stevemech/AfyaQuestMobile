@@ -35,6 +35,7 @@ const cak = {
 
     // Login
     login: {
+      sessionExpired: 'Xk\'is ri awokis. Tatokik chik.',
       adminPortal: 'Ruchi\' Ajchakuy',
       signIn: 'Tok pa ri samaj',
       email: 'Taqoya\'l',

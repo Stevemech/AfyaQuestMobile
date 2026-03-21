@@ -35,6 +35,7 @@ const en = {
 
     // Login
     login: {
+      sessionExpired: 'Your session timed out. Please sign in again.',
       adminPortal: 'Admin Portal',
       signIn: 'Sign in',
       email: 'Email',

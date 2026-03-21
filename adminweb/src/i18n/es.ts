@@ -35,6 +35,7 @@ const es = {
 
     // Login
     login: {
+      sessionExpired: 'Su sesion expiro. Por favor inicie sesion de nuevo.',
       adminPortal: 'Portal de Administracion',
       signIn: 'Iniciar sesion',
       email: 'Correo electronico',

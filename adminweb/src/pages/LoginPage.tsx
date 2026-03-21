@@ -1,16 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import LanguageSwitcher from '../components/common/LanguageSwitcher';
 
 export default function LoginPage() {
   const { login } = useAuth();
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sessionExpiredNotice, setSessionExpiredNotice] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get('session') === 'expired') {
+      setSessionExpiredNotice(true);
+      navigate('/login', { replace: true });
+    }
+  }, [searchParams, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +58,12 @@ export default function LoginPage() {
         {/* Login form */}
         <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-border p-8">
           <h2 className="text-xl font-semibold text-text-primary mb-6">{t('login.signIn')}</h2>
+
+          {sessionExpiredNotice && (
+            <div className="mb-4 p-3 bg-blue-50 text-blue-800 border border-blue-200 text-sm rounded-lg">
+              {t('login.sessionExpired')}
+            </div>
+          )}
 
           {error && (
             <div className="mb-4 p-3 bg-danger-light text-danger text-sm rounded-lg">{error}</div>
