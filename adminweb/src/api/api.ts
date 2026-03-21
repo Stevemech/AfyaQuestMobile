@@ -248,4 +248,22 @@ export const api = {
 
   getOrganizations: () =>
     request<{ organizations: { id: string; name: string; location?: string }[] }>('/organizations'),
+
+  getNotifications: () => {
+    if (!getOrganization()) {
+      return Promise.resolve({ notifications: [], unreadCount: 0 });
+    }
+    return request<{ notifications: import('../types').AdminNotification[]; unreadCount: number }>(
+      `/admin/notifications${orgParams()}`
+    );
+  },
+
+  markNotificationsRead: async (sks: string[]) => {
+    const org = getOrganization();
+    if (!org || sks.length === 0) return;
+    await request('/admin/notifications/read', {
+      method: 'POST',
+      body: JSON.stringify({ organization: org, sks }),
+    });
+  },
 };

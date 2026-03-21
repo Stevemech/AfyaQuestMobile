@@ -1,9 +1,40 @@
+const { randomUUID } = require('crypto');
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, UpdateCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, UpdateCommand, PutCommand, GetCommand } = require('@aws-sdk/lib-dynamodb');
 
 const client = new DynamoDBClient({ region: 'af-south-1' });
 const ddb = DynamoDBDocumentClient.from(client);
 const TABLE = 'AfyaQuestData';
+
+async function emitOrgNotification(userId, notifType, meta) {
+  try {
+    const prof = await ddb.send(new GetCommand({
+      TableName: TABLE,
+      Key: { PK: `USER#${userId}`, SK: 'PROFILE' },
+    }));
+    const org = prof.Item?.organization;
+    if (!org) return;
+    const ts = new Date().toISOString();
+    const id = randomUUID();
+    const sk = `NOTIF#${ts}#${id}`;
+    await ddb.send(new PutCommand({
+      TableName: TABLE,
+      Item: {
+        PK: `ORG#${org}`,
+        SK: sk,
+        id,
+        type: notifType,
+        meta: meta || {},
+        chvId: userId,
+        chvName: prof.Item?.name || 'Unknown',
+        createdAt: ts,
+        read: false,
+      },
+    }));
+  } catch (e) {
+    console.warn('emitOrgNotification failed (non-fatal):', e);
+  }
+}
 
 exports.handler = async (event) => {
   const headers = {
@@ -59,6 +90,8 @@ exports.handler = async (event) => {
         ':ts': timestamp,
       },
     }));
+
+    await emitOrgNotification(userId, action === 'clock_in' ? 'clock_in' : 'clock_out', { date: dateKey });
 
     return {
       statusCode: 200,

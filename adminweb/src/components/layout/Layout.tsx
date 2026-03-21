@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import { useAuth } from '../../auth/AuthContext';
+import { NotificationProvider } from '../../notifications/NotificationContext';
 
 export default function Layout() {
   const { user } = useAuth();
@@ -10,18 +11,20 @@ export default function Layout() {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0">
-        <Header
-          organization={organization}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
-        <main className="flex-1 p-6 overflow-auto">
-          <Outlet context={{ organization, searchQuery }} />
-        </main>
+    <NotificationProvider organization={organization}>
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <div className="flex-1 flex flex-col min-w-0">
+          <Header
+            organization={organization}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+          />
+          <main className="flex-1 p-6 overflow-auto">
+            <Outlet context={{ organization, searchQuery }} />
+          </main>
+        </div>
       </div>
-    </div>
+    </NotificationProvider>
   );
 }

@@ -33,6 +33,21 @@ const es = {
       noNotifications: 'Sin nuevas notificaciones',
     },
 
+    notifications: {
+      fallbackName: 'CHV',
+      tapToDismiss: 'Cerrar',
+      markAllRead: 'Marcar todo como leido',
+      refresh: 'Actualizar',
+      moduleQuizComplete: '{{name}} completo un modulo de video: {{label}}.',
+      moduleQuizCompleteScore: '{{name}} completo un modulo de video: {{label}} ({{score}}%).',
+      lessonComplete: '{{name}} completo la leccion interactiva: {{label}}.',
+      itineraryStop: '{{name}} completo una parada del itinerario ({{date}}).',
+      dailyReport: '{{name}} envio un reporte diario para {{date}}.',
+      clockIn: '{{name}} registro entrada.',
+      clockOut: '{{name}} registro salida.',
+      unknown: 'Nueva actividad de {{name}}.',
+    },
+
     // Login
     login: {
       sessionExpired: 'Su sesion expiro. Por favor inicie sesion de nuevo.',

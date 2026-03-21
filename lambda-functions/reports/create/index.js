@@ -10,6 +10,36 @@ const { randomUUID } = require("crypto");
 const dynamoClient = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(dynamoClient);
 
+async function emitOrgNotification(tableName, userId, notif) {
+    try {
+        const prof = await docClient.send(new GetCommand({
+            TableName: tableName,
+            Key: { PK: `USER#${userId}`, SK: 'PROFILE' },
+        }));
+        const org = prof.Item?.organization;
+        if (!org) return;
+        const ts = new Date().toISOString();
+        const id = randomUUID();
+        const sk = `NOTIF#${ts}#${id}`;
+        await docClient.send(new PutCommand({
+            TableName: tableName,
+            Item: {
+                PK: `ORG#${org}`,
+                SK: sk,
+                id,
+                type: notif.type,
+                meta: notif.meta || {},
+                chvId: userId,
+                chvName: prof.Item?.name || 'Unknown',
+                createdAt: ts,
+                read: false,
+            },
+        }));
+    } catch (e) {
+        console.warn('emitOrgNotification failed (non-fatal):', e);
+    }
+}
+
 exports.handler = async (event) => {
     console.log('Create report request:', JSON.stringify(event, null, 2));
 
@@ -63,6 +93,15 @@ exports.handler = async (event) => {
             TableName: process.env.DYNAMODB_TABLE,
             Item: reportItem
         }));
+
+        await emitOrgNotification(process.env.DYNAMODB_TABLE, userId, {
+            type: 'daily_report_submitted',
+            meta: {
+                date,
+                patientsVisited: Number(patientsVisited),
+                vaccinationsGiven: Number(vaccinationsGiven),
+            },
+        });
 
         // Mark any pending report assignments as completed
         try {

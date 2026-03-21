@@ -33,6 +33,21 @@ const en = {
       noNotifications: 'No new notifications',
     },
 
+    notifications: {
+      fallbackName: 'CHV',
+      tapToDismiss: 'Dismiss',
+      markAllRead: 'Mark all read',
+      refresh: 'Refresh',
+      moduleQuizComplete: '{{name}} completed a video module: {{label}}.',
+      moduleQuizCompleteScore: '{{name}} completed a video module: {{label}} ({{score}}%).',
+      lessonComplete: '{{name}} completed interactive lesson: {{label}}.',
+      itineraryStop: '{{name}} completed an itinerary stop ({{date}}).',
+      dailyReport: '{{name}} submitted a daily report for {{date}}.',
+      clockIn: '{{name}} clocked in.',
+      clockOut: '{{name}} clocked out.',
+      unknown: 'New activity from {{name}}.',
+    },
+
     // Login
     login: {
       sessionExpired: 'Your session timed out. Please sign in again.',

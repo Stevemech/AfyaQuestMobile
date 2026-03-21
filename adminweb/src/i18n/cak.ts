@@ -33,6 +33,21 @@ const cak = {
       noNotifications: 'Majun k\'ak\'a\' rutzijol',
     },
 
+    notifications: {
+      fallbackName: 'CHV',
+      tapToDismiss: 'Titz\'apix',
+      markAllRead: 'Rutz\'aqat ronojel',
+      refresh: 'Tik\'ex',
+      moduleQuizComplete: '{{name}} xutikirisaj jun video: {{label}}.',
+      moduleQuizCompleteScore: '{{name}} xutikirisaj jun video: {{label}} ({{score}}%).',
+      lessonComplete: '{{name}} xutikirisaj jun samaj: {{label}}.',
+      itineraryStop: '{{name}} xutikirisaj jun b\'e ({{date}}).',
+      dailyReport: '{{name}} xutaq ri rutzijol q\'ij pa {{date}}.',
+      clockIn: '{{name}} xok pa ri samaj.',
+      clockOut: '{{name}} xel pa ri samaj.',
+      unknown: 'K\'ak\'a\' samaj rech {{name}}.',
+    },
+
     // Login
     login: {
       sessionExpired: 'Xk\'is ri awokis. Tatokik chik.',

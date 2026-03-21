@@ -156,3 +156,14 @@ export interface AssignmentRequest {
   type: 'module' | 'report' | 'itinerary';
   data: Record<string, unknown>;
 }
+
+export interface AdminNotification {
+  id: string;
+  sk: string;
+  type: string;
+  meta: Record<string, unknown>;
+  chvId: string;
+  chvName: string;
+  createdAt: string;
+  read: boolean;
+}

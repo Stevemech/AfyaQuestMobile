@@ -2,12 +2,44 @@
  * Lambda Function: user-updateProgress
  * Updates user progress for modules, lessons, and itinerary stops
  */
+const { randomUUID } = require('crypto');
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, UpdateCommand, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
 
 const client = new DynamoDBClient({ region: 'af-south-1' });
 const ddb = DynamoDBDocumentClient.from(client);
 const TABLE = 'AfyaQuestData';
+
+/** Best-effort admin notification for the CHV's organization */
+async function emitOrgNotification(userId, type, meta) {
+  try {
+    const prof = await ddb.send(new GetCommand({
+      TableName: TABLE,
+      Key: { PK: `USER#${userId}`, SK: 'PROFILE' },
+    }));
+    const org = prof.Item?.organization;
+    if (!org) return;
+    const ts = new Date().toISOString();
+    const id = randomUUID();
+    const sk = `NOTIF#${ts}#${id}`;
+    await ddb.send(new PutCommand({
+      TableName: TABLE,
+      Item: {
+        PK: `ORG#${org}`,
+        SK: sk,
+        id,
+        type,
+        meta: meta || {},
+        chvId: userId,
+        chvName: prof.Item?.name || 'Unknown',
+        createdAt: ts,
+        read: false,
+      },
+    }));
+  } catch (e) {
+    console.warn('emitOrgNotification failed (non-fatal):', e);
+  }
+}
 
 const VALID_TYPES = ['module_watched', 'module_quiz_complete', 'lesson_complete', 'itinerary_stop_complete'];
 
@@ -45,6 +77,8 @@ exports.handler = async (event) => {
     }
 
     const timestamp = new Date().toISOString();
+    /** @type {{ type: string, meta: Record<string, unknown> } | null} */
+    let adminNotification = null;
 
     switch (type) {
       case 'module_watched': {
@@ -90,6 +124,10 @@ exports.handler = async (event) => {
             ExpressionAttributeNames: { '#status': 'status' },
             ExpressionAttributeValues: exprValues,
           }));
+          adminNotification = {
+            type: 'module_quiz_complete',
+            meta: score !== undefined ? { itemId, score } : { itemId },
+          };
         } catch (condErr) {
           if (isConditionalCheckFailed(condErr)) break;
           throw condErr;
@@ -98,6 +136,7 @@ exports.handler = async (event) => {
       }
 
       case 'lesson_complete': {
+        let assignmentOk = false;
         // Update the assignment status (only if admin-assigned; no ghost lesson rows)
         try {
           await ddb.send(new UpdateCommand({
@@ -112,6 +151,7 @@ exports.handler = async (event) => {
               ':completedAt': timestamp,
             },
           }));
+          assignmentOk = true;
         } catch (condErr) {
           if (!isConditionalCheckFailed(condErr)) throw condErr;
         }
@@ -127,6 +167,9 @@ exports.handler = async (event) => {
             ':updatedAt': timestamp,
           },
         }));
+        if (assignmentOk) {
+          adminNotification = { type: 'lesson_complete', meta: { itemId } };
+        }
         break;
       }
 
@@ -144,8 +187,13 @@ exports.handler = async (event) => {
             ':updatedAt': timestamp,
           },
         }));
+        adminNotification = { type: 'itinerary_stop_complete', meta: { itemId, date } };
         break;
       }
+    }
+
+    if (adminNotification) {
+      await emitOrgNotification(userId, adminNotification.type, adminNotification.meta);
     }
 
     return {
