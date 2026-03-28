@@ -1,0 +1,130 @@
+package com.afyaquest.app.data.remote
+
+import com.afyaquest.app.data.remote.dto.*
+import com.afyaquest.app.domain.model.DailyQuestionsResponse
+import com.afyaquest.app.domain.model.QuizSubmissionRequest
+import com.afyaquest.app.domain.model.QuizSubmissionResponse
+import retrofit2.Response
+import retrofit2.http.*
+
+/**
+ * Retrofit API service interface for AfyaQuest backend.
+ */
+interface ApiService {
+
+    // ==================== Authentication ====================
+
+    @POST("auth/register")
+    suspend fun register(
+        @Body request: Map<String, String>
+    ): Response<RegisterResponse>
+
+    @POST("auth/login")
+    suspend fun login(
+        @Body request: Map<String, String>
+    ): Response<LoginResponse>
+
+    @GET("auth/me")
+    suspend fun getCurrentUser(
+        @Header("Authorization") token: String
+    ): Response<UserDto>
+
+    @PUT("auth/change-password")
+    suspend fun changePassword(
+        @Header("Authorization") token: String,
+        @Body request: Map<String, String>
+    ): Response<Map<String, String>>
+
+    @POST("auth/forgot-password")
+    suspend fun forgotPassword(
+        @Body request: Map<String, String>
+    ): Response<Map<String, String>>
+
+    @POST("auth/confirm-forgot-password")
+    suspend fun confirmForgotPassword(
+        @Body request: Map<String, String>
+    ): Response<Map<String, String>>
+
+    // ==================== Questions ====================
+
+    @GET("questions/daily")
+    suspend fun getDailyQuestions(
+        @Header("Authorization") token: String
+    ): Response<DailyQuestionsResponse>
+
+    // ==================== Chat ====================
+
+    @POST("chat/message")
+    suspend fun sendChatMessage(
+        @Header("Authorization") token: String,
+        @Body request: Map<String, String>
+    ): Response<Map<String, String>>
+
+    @GET("chat/history")
+    suspend fun getChatHistory(
+        @Header("Authorization") token: String
+    ): Response<List<Map<String, Any>>>
+
+    // ==================== Progress ====================
+
+    @GET("progress")
+    suspend fun getUserProgress(
+        @Header("Authorization") token: String
+    ): Response<Map<String, Any>>
+
+    @POST("progress/quiz")
+    suspend fun submitQuiz(
+        @Header("Authorization") token: String,
+        @Body request: QuizSubmissionRequest
+    ): Response<QuizSubmissionResponse>
+
+    @POST("progress/updateLesson")
+    suspend fun updateLessonProgress(
+        @Header("Authorization") token: String,
+        @Body request: @JvmSuppressWildcards Map<String, Any>
+    ): Response<Map<String, Any>>
+
+    @POST("user/progress")
+    suspend fun updateUserProgress(
+        @Header("Authorization") token: String,
+        @Body request: @JvmSuppressWildcards Map<String, Any>
+    ): Response<Map<String, Any>>
+
+    // ==================== Organizations ====================
+
+    @GET("organizations")
+    suspend fun getOrganizations(): Response<OrganizationsResponse>
+
+    // ==================== Itineraries & Assignments ====================
+
+    @GET("user/itineraries")
+    suspend fun getItineraries(
+        @Header("Authorization") token: String
+    ): Response<ItinerariesResponse>
+
+    @GET("user/assignments")
+    suspend fun getAssignments(
+        @Header("Authorization") token: String
+    ): Response<AssignmentsResponse>
+
+    // ==================== Clock In/Out ====================
+
+    @POST("user/clock")
+    suspend fun clockAction(
+        @Header("Authorization") token: String,
+        @Body request: Map<String, String>
+    ): Response<ClockActionResponse>
+
+    // ==================== Reports ====================
+
+    @POST("reports")
+    suspend fun createReport(
+        @Header("Authorization") token: String,
+        @Body request: @JvmSuppressWildcards Map<String, Any>
+    ): Response<Map<String, Any>>
+
+    @GET("reports")
+    suspend fun getAllReports(
+        @Header("Authorization") token: String
+    ): Response<List<Map<String, Any>>>
+}

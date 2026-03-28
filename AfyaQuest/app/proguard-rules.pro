@@ -10,10 +10,10 @@
 -keep public class * extends java.lang.Exception
 
 # Keep all model classes (data classes for API and Room)
--keep class com.example.afyaquest.domain.model.** { *; }
--keep class com.example.afyaquest.data.local.entity.** { *; }
--keep class com.example.afyaquest.data.remote.dto.** { *; }
--keep class com.example.afyaquest.data.remote.TokenAuthenticator$* { *; }
+-keep class com.afyaquest.app.domain.model.** { *; }
+-keep class com.afyaquest.app.data.local.entity.** { *; }
+-keep class com.afyaquest.app.data.remote.dto.** { *; }
+-keep class com.afyaquest.app.data.remote.TokenAuthenticator$* { *; }
 
 # Keep Hilt generated classes
 -keep class dagger.hilt.** { *; }
@@ -44,7 +44,7 @@
 -dontwarn okio.**
 
 # Keep the API service interface with full generic signatures (critical for R8 full mode)
--keep interface com.example.afyaquest.data.remote.ApiService { *; }
+-keep interface com.afyaquest.app.data.remote.ApiService { *; }
 
 # Retrofit @suspend: response Type is carried on Continuation; R8 full mode can break the cast to
 # ParameterizedType inside Retrofit/Gson without this (release-only ClassCastException on login, etc.)

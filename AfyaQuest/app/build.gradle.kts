@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.afyaquest"
+    namespace = "com.afyaquest.app"
     compileSdk = 36
 
     val localProperties = Properties().apply {
@@ -17,7 +17,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.afyaquest"
+        applicationId = "com.afyaquest.app"
         minSdk = 27
         targetSdk = 36
         versionCode = 1
