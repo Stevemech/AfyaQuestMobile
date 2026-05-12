@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AfyaQuest x ALAS · Emergency care concept</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,30..100&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Reusable inline icons -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+        <symbol id="i-wings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4v16" />
+            <path d="M12 6c-1.5 1.5-4 2.5-7 3 .5 3 2 5.5 4 7 1-1.5 2.3-3 3-5" />
+            <path d="M12 6c1.5 1.5 4 2.5 7 3-.5 3-2 5.5-4 7-1-1.5-2.3-3-3-5" />
+            <circle cx="12" cy="3.5" r="1.2" fill="currentColor" stroke="none"/>
+        </symbol>
+        <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M3 12h18" />
+            <path d="M12 3a14 14 0 010 18M12 3a14 14 0 000 18" />
+        </symbol>
+        <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" />
+            <path d="M13 6l6 6-6 6" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12l5 5L20 7" />
+        </symbol>
+        <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5" />
+            <path d="M11 6l-6 6 6 6" />
+        </symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21s-7-4.5-9.5-9.5C.7 7.6 3.4 4 7.2 4c2 0 3.6 1 4.8 2.5C13.2 5 14.8 4 16.8 4c3.8 0 6.5 3.6 4.7 7.5C19 16.5 12 21 12 21z"/>
+        </symbol>
+        <symbol id="i-pill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)" />
+            <path d="M9 7l6 10" />
+        </symbol>
+        <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.9v3a2 2 0 01-2.2 2A19.8 19.8 0 012 4.2 2 2 0 014 2h3a2 2 0 012 1.7c.1 1 .3 2 .6 2.9a2 2 0 01-.5 2.1L7.9 9.9a16 16 0 006.2 6.2l1.2-1.2a2 2 0 012.1-.5c1 .3 1.9.5 2.9.6a2 2 0 011.7 2z"/>
+        </symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+        </symbol>
+        <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6" cy="19" r="3"/>
+            <circle cx="18" cy="5" r="3"/>
+            <path d="M9 19h7a3 3 0 003-3v0a3 3 0 00-3-3H8a3 3 0 01-3-3v0a3 3 0 013-3h6"/>
+        </symbol>
+        <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <path d="M14 2v6h6"/>
+            <path d="M9 13h6M9 17h4"/>
+        </symbol>
+        <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="2" width="6" height="12" rx="3"/>
+            <path d="M5 11a7 7 0 0014 0"/>
+            <path d="M12 19v3"/>
+        </symbol>
+        <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.7 21a2 2 0 01-3.4 0"/>
+        </symbol>
+        <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/>
+            <path d="M20 20l-3.5-3.5"/>
+        </symbol>
+        <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 11l9-7 9 7v9a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2z"/>
+        </symbol>
+        <symbol id="i-cases" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="6" width="18" height="14" rx="2"/>
+            <path d="M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2"/>
+            <path d="M3 12h18"/>
+        </symbol>
+        <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4.5A2.5 2.5 0 016.5 2H20v18H6.5A2.5 2.5 0 014 17.5z"/>
+            <path d="M4 17.5A2.5 2.5 0 016.5 15H20"/>
+        </symbol>
+        <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 7v5l3 2"/>
+        </symbol>
+        <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 2L11 13"/>
+            <path d="M22 2l-7 20-4-9-9-4z"/>
+        </symbol>
+        <symbol id="i-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12h4l2-7 4 14 2-7h6"/>
+        </symbol>
+        <symbol id="i-spark" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l1.6 5.6L19 9.2l-5.4 1.6L12 16l-1.6-5.2L5 9.2l5.4-1.6z"/>
+        </symbol>
+        <symbol id="i-cell-signal" viewBox="0 0 18 12" fill="currentColor">
+            <rect x="0" y="9" width="3" height="3" rx="0.5"/>
+            <rect x="5" y="6" width="3" height="6" rx="0.5"/>
+            <rect x="10" y="3" width="3" height="9" rx="0.5"/>
+            <rect x="15" y="0" width="3" height="12" rx="0.5"/>
+        </symbol>
+        <symbol id="i-wifi" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <path d="M2 5a11 11 0 0114 0"/>
+            <path d="M5 8a6 6 0 018 0"/>
+            <circle cx="9" cy="11" r="0.8" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-battery" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.4">
+            <rect x="0.5" y="0.5" width="19" height="11" rx="2.5"/>
+            <rect x="3" y="3" width="14" height="6" rx="1" fill="currentColor"/>
+            <rect x="20.5" y="3.5" width="2" height="5" rx="1" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 6l6 6-6 6"/>
+        </symbol>
+        <symbol id="i-bookmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+        </symbol>
+    </defs>
+</svg>
+
+<main class="stage">
+
+    <!-- ===========  SIDEBAR  =========== -->
+    <aside class="sidebar">
+        <div class="brand-lockup">
+            <div class="brand-lockup__mark">
+                <svg width="26" height="26"><use href="#i-wings"/></svg>
+            </div>
+            <div class="brand-lockup__text">
+                <div class="brand-lockup__name">AfyaQuest</div>
+                <div class="brand-lockup__partner">× Alas</div>
+            </div>
+        </div>
+
+        <p class="sidebar__caption">
+            <strong>Emergency care concept</strong> for the Tuesday demo.
+            A field-first response surface for pregnant women and women navigating
+            contraceptive complications. Tap a screen to walk through the flow.
+        </p>
+
+        <nav class="screen-nav">
+            <div class="screen-nav__label">Flow</div>
+            <button class="screen-nav__item screen-nav__item--active" data-screen-target="screen-welcome">
+                <span class="screen-nav__num">01</span>
+                <span>Welcome</span>
+                <span class="screen-nav__hint">Open</span>
+            </button>
+            <button class="screen-nav__item" data-screen-target="screen-hub">
+                <span class="screen-nav__num">02</span>
+                <span>Triage hub</span>
+                <span class="screen-nav__hint">Home</span>
+            </button>
+            <button class="screen-nav__item" data-screen-target="screen-triage">
+                <span class="screen-nav__num">03</span>
+                <span>Triage wizard</span>
+                <span class="screen-nav__hint">OB</span>
+            </button>
+            <button class="screen-nav__item" data-screen-target="screen-plan">
+                <span class="screen-nav__num">04</span>
+                <span>Action plan</span>
+                <span class="screen-nav__hint">High</span>
+            </button>
+            <button class="screen-nav__item" data-screen-target="screen-case">
+                <span class="screen-nav__num">05</span>
+                <span>Live case</span>
+                <span class="screen-nav__hint">Live</span>
+            </button>
+            <button class="screen-nav__item" data-screen-target="screen-library">
+                <span class="screen-nav__num">06</span>
+                <span>Care library</span>
+                <span class="screen-nav__hint">Ref</span>
+            </button>
+        </nav>
+
+        <div class="sidebar__controls">
+            <div class="lang-toggle">
+                <button class="lang-toggle__btn lang-toggle__btn--active">EN</button>
+                <button class="lang-toggle__btn">ES</button>
+                <button class="lang-toggle__btn">KAQ</button>
+            </div>
+            <button class="demo-btn" data-demo-toggle>
+                <svg width="16" height="16"><use href="#i-spark"/></svg>
+                <span class="demo-btn__label">Enter demo mode</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ===========  PHONE  =========== -->
+    <div class="phone-wrap">
+        <div class="phone">
+            <div class="phone__screen">
+                <div class="phone__notch"></div>
+
+                <!-- ============ SCREEN 1 — WELCOME ============ -->
+                <section class="screen screen--active" id="screen-welcome">
+                    <div class="phone__statusbar phone__statusbar--light">
+                        <span>9:41</span>
+                        <span class="phone__statusbar-icons">
+                            <svg><use href="#i-cell-signal"/></svg>
+                            <svg><use href="#i-wifi"/></svg>
+                            <svg><use href="#i-battery"/></svg>
+                        </span>
+                    </div>
+
+                    <div class="welcome">
+                        <div class="welcome__topbar">
+                            <button class="welcome__lang">
+                                <svg width="14" height="14"><use href="#i-globe"/></svg>
+                                Español
+                            </button>
+                            <button class="welcome__skip">Skip</button>
+                        </div>
+
+                        <div class="welcome__hero">
+                            <div class="welcome__lockup">
+                                <div class="welcome__mark">
+                                    <svg width="34" height="34" style="color:white"><use href="#i-wings"/></svg>
+                                </div>
+                                <div class="welcome__lockup-text">
+                                    <div class="welcome__lockup-name">AfyaQuest</div>
+                                    <div class="welcome__lockup-partner">× Alas</div>
+                                </div>
+                            </div>
+
+                            <h1 class="welcome__title">
+                                Emergency care, <em>on her side.</em>
+                            </h1>
+                            <p class="welcome__subtitle">
+                                A faster path from the field to the right facility — for pregnant women
+                                and anyone navigating reproductive care.
+                            </p>
+                        </div>
+
+                        <div class="welcome__chip-row">
+                            <span class="welcome__chip">Field-tested</span>
+                            <span class="welcome__chip">Offline-ready</span>
+                            <span class="welcome__chip">3 langs</span>
+                        </div>
+
+                        <div class="welcome__actions">
+                            <button class="welcome__btn welcome__btn--primary" data-jump="screen-hub">
+                                <span>
+                                    Start a triage
+                                    <span class="welcome__btn-meta">For CHVs and Alas teams</span>
+                                </span>
+                                <svg width="22" height="22"><use href="#i-arrow-right"/></svg>
+                            </button>
+                            <button class="welcome__btn welcome__btn--secondary">
+                                <span>
+                                    I'm in distress · Get help
+                                    <span class="welcome__btn-meta">Patient-facing flow</span>
+                                </span>
+                                <svg width="22" height="22"><use href="#i-arrow-right"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="welcome__signin">
+                            Already a CHV? <strong>Sign in</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ SCREEN 2 — TRIAGE HUB ============ -->
+                <section class="screen" id="screen-hub">
+                    <div class="phone__statusbar phone__statusbar--light">
+                        <span>9:41</span>
+                        <span class="phone__statusbar-icons">
+                            <svg><use href="#i-cell-signal"/></svg>
+                            <svg><use href="#i-wifi"/></svg>
+                            <svg><use href="#i-battery"/></svg>
+                        </span>
+                    </div>
+
+                    <div class="hub__topbar">
+                        <div class="hub__header">
+                            <div>
+                                <div class="hub__greeting">Buenas tardes,</div>
+                                <div class="hub__name">María Tzul</div>
+                            </div>
+                            <div class="hub__avatar">
+                                MT
+                                <span class="hub__avatar-dot"></span>
+                            </div>
+                        </div>
+
+                        <div class="hub__shift-strip">
+                            <div class="hub__shift-info">
+                                <span class="hub__shift-pulse"></span>
+                                <span>On shift · Sololá zone</span>
+                            </div>
+                            <button class="hub__shift-cta">2h 14m</button>
+                        </div>
+                    </div>
+
+                    <div class="hub__body">
+                        <!-- Triage cards -->
+                        <div>
+                            <div class="section-head">
+                                <span class="section-head__title">Start a triage</span>
+                            </div>
+                            <div class="triage-grid">
+                                <button class="triage-card triage-card--ob" data-jump="screen-triage">
+                                    <div class="triage-card__icon">
+                                        <svg width="24" height="24"><use href="#i-heart"/></svg>
+                                    </div>
+                                    <div>
+                                        <div class="triage-card__hint">Pregnancy</div>
+                                        <h3 class="triage-card__title">Obstetric<br/>emergency</h3>
+                                    </div>
+                                </button>
+                                <button class="triage-card triage-card--rh">
+                                    <div class="triage-card__icon">
+                                        <svg width="24" height="24"><use href="#i-pill"/></svg>
+                                    </div>
+                                    <div>
+                                        <div class="triage-card__hint">Contraception</div>
+                                        <h3 class="triage-card__title">Reproductive<br/>care</h3>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Stats strip -->
+                        <div class="stats-strip">
+                            <div class="stat-cell">
+                                <span class="stat-cell__value stat-cell__value--rose">3</span>
+                                <span class="stat-cell__label">Open cases</span>
+                            </div>
+                            <div class="stat-cell">
+                                <span class="stat-cell__value">11</span>
+                                <span class="stat-cell__label">This week</span>
+                            </div>
+                            <div class="stat-cell">
+                                <span class="stat-cell__value stat-cell__value--ok">9</span>
+                                <span class="stat-cell__label">Referred</span>
+                            </div>
+                        </div>
+
+                        <!-- Recent cases -->
+                        <div>
+                            <div class="section-head">
+                                <span class="section-head__title">Active cases</span>
+                                <button class="section-head__action">See all</button>
+                            </div>
+                            <div class="case-list">
+                                <button class="case-row" data-jump="screen-case">
+                                    <div class="case-row__avatar case-row__avatar--rose">AR</div>
+                                    <div class="case-row__info">
+                                        <div class="case-row__title">
+                                            Ana R., 24
+                                            <span class="case-row__chip case-row__chip--crit">High</span>
+                                        </div>
+                                        <div class="case-row__meta">Suspected pre-eclampsia · GA 32w</div>
+                                    </div>
+                                    <div class="case-row__time">3m ago</div>
+                                </button>
+                                <button class="case-row">
+                                    <div class="case-row__avatar">LS</div>
+                                    <div class="case-row__info">
+                                        <div class="case-row__title">
+                                            Lucía S., 19
+                                            <span class="case-row__chip case-row__chip--watch">Watch</span>
+                                        </div>
+                                        <div class="case-row__meta">Heavy bleeding on DMPA · day 4</div>
+                                    </div>
+                                    <div class="case-row__time">22m</div>
+                                </button>
+                                <button class="case-row">
+                                    <div class="case-row__avatar case-row__avatar--rose">EM</div>
+                                    <div class="case-row__info">
+                                        <div class="case-row__title">
+                                            Elena M., 31
+                                            <span class="case-row__chip case-row__chip--ok">Stable</span>
+                                        </div>
+                                        <div class="case-row__meta">Postpartum check · day 2</div>
+                                    </div>
+                                    <div class="case-row__time">1h</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quick library -->
+                        <div>
+                            <div class="section-head">
+                                <span class="section-head__title">Quick reference</span>
+                                <button class="section-head__action" data-jump="screen-library">Library</button>
+                            </div>
+                            <div class="quick-library">
+                                <button class="quick-library__item">
+                                    <div class="quick-library__icon">
+                                        <svg width="16" height="16"><use href="#i-pulse"/></svg>
+                                    </div>
+                                    <div class="quick-library__title">Recognizing pre-eclampsia</div>
+                                </button>
+                                <button class="quick-library__item">
+                                    <div class="quick-library__icon">
+                                        <svg width="16" height="16"><use href="#i-pill"/></svg>
+                                    </div>
+                                    <div class="quick-library__title">Side effects of DMPA</div>
+                                </button>
+                                <button class="quick-library__item">
+                                    <div class="quick-library__icon">
+                                        <svg width="16" height="16"><use href="#i-heart"/></svg>
+                                    </div>
+                                    <div class="quick-library__title">Postpartum hemorrhage</div>
+                                </button>
+                                <button class="quick-library__item">
+                                    <div class="quick-library__icon">
+                                        <svg width="16" height="16"><use href="#i-note"/></svg>
+                                    </div>
+                                    <div class="quick-library__title">Post-abortion care</div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom nav -->
+                    <nav class="bottom-nav">
+                        <button class="bottom-nav__item bottom-nav__item--active">
+                            <svg width="22" height="22"><use href="#i-home"/></svg>
+                            Home
+                        </button>
+                        <button class="bottom-nav__item">
+                            <svg width="22" height="22"><use href="#i-cases"/></svg>
+                            Cases
+                        </button>
+                        <button class="bottom-nav__sos">SOS</button>
+                        <button class="bottom-nav__item">
+                            <svg width="22" height="22"><use href="#i-book"/></svg>
+                            Library
+                        </button>
+                        <button class="bottom-nav__item">
+                            <svg width="22" height="22"><use href="#i-user"/></svg>
+                            Me
+                        </button>
+                    </nav>
+                </section>
+
+                <!-- ============ SCREEN 3 — TRIAGE WIZARD ============ -->
+                <section class="screen" id="screen-triage">
+                    <div class="phone__statusbar phone__statusbar--light">
+                        <span>9:41</span>
+                        <span class="phone__statusbar-icons">
+                            <svg><use href="#i-cell-signal"/></svg>
+                            <svg><use href="#i-wifi"/></svg>
+                            <svg><use href="#i-battery"/></svg>
+                        </span>
+                    </div>
+
+                    <div class="triage">
+                        <div class="triage__head">
+                            <div class="appbar" style="padding:0 0 4px;">
+                                <button class="appbar__back" data-jump="screen-hub">
+                                    <svg width="20" height="20"><use href="#i-back"/></svg>
+                                </button>
+                                <div class="appbar__title">Obstetric triage</div>
+                                <button class="appbar__action">
+                                    <svg width="20" height="20"><use href="#i-mic"/></svg>
+                                </button>
+                            </div>
+
+                            <div class="triage__progress">
+                                <span class="triage__progress-step triage__progress-step--active"></span>
+                                <span class="triage__progress-step triage__progress-step--active"></span>
+                                <span class="triage__progress-step"></span>
+                            </div>
+
+                            <div class="triage__step-label">Step 2 of 3 · Symptoms</div>
+                            <h1 class="triage__question">What is happening with her right now?</h1>
+                            <p class="triage__hint">Tap every symptom you observe. Severity updates live.</p>
+                        </div>
+
+                        <div class="triage__body">
+                            <!-- Symptoms -->
+                            <div>
+                                <div class="triage__field-label">Acute signs</div>
+                                <div class="symptom-list">
+                                    <button class="symptom symptom--checked symptom--crit">
+                                        <span class="symptom__check">
+                                            <svg width="14" height="14"><use href="#i-check"/></svg>
+                                        </span>
+                                        <div class="symptom__main">
+                                            <div class="symptom__title">Severe headache + vision changes</div>
+                                            <div class="symptom__sub">Could indicate pre-eclampsia</div>
+                                        </div>
+                                        <span class="symptom__flag">Red flag</span>
+                                    </button>
+                                    <button class="symptom symptom--checked">
+                                        <span class="symptom__check">
+                                            <svg width="14" height="14"><use href="#i-check"/></svg>
+                                        </span>
+                                        <div class="symptom__main">
+                                            <div class="symptom__title">Swelling in face or hands</div>
+                                            <div class="symptom__sub">Sudden, not gradual</div>
+                                        </div>
+                                    </button>
+                                    <button class="symptom">
+                                        <span class="symptom__check">
+                                            <svg width="14" height="14"><use href="#i-check"/></svg>
+                                        </span>
+                                        <div class="symptom__main">
+                                            <div class="symptom__title">Heavy vaginal bleeding</div>
+                                            <div class="symptom__sub">More than a heavy period</div>
+                                        </div>
+                                        <span class="symptom__flag">Red flag</span>
+                                    </button>
+                                    <button class="symptom">
+                                        <span class="symptom__check">
+                                            <svg width="14" height="14"><use href="#i-check"/></svg>
+                                        </span>
+                                        <div class="symptom__main">
+                                            <div class="symptom__title">Reduced fetal movement</div>
+                                            <div class="symptom__sub">Less than 10 movements / 2h</div>
+                                        </div>
+                                    </button>
+                                    <button class="symptom">
+                                        <span class="symptom__check">
+                                            <svg width="14" height="14"><use href="#i-check"/></svg>
+                                        </span>
+                                        <div class="symptom__main">
+                                            <div class="symptom__title">Contractions before 37 weeks</div>
+                                            <div class="symptom__sub">Regular &amp; increasing</div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Onset -->
+                            <div>
+                                <div class="triage__field-label">When did it start?</div>
+                                <div class="chip-row" data-chip-group>
+                                    <button class="chip chip--rose">&lt; 1 hour</button>
+                                    <button class="chip chip--rose chip--active">1 – 6 hours</button>
+                                    <button class="chip chip--rose">6 – 24 hours</button>
+                                    <button class="chip chip--rose">&gt; 24h</button>
+                                </div>
+                            </div>
+
+                            <!-- Gestational age -->
+                            <div>
+                                <div class="triage__field-label">Gestational age</div>
+                                <div class="weeks-display">
+                                    <div>
+                                        <span class="weeks-display__value">32</span>
+                                        <span class="weeks-display__label">weeks</span>
+                                    </div>
+                                    <span class="weeks-display__ga">3rd trimester</span>
+                                </div>
+                                <div class="range-track">
+                                    <div class="range-track__fill" style="width:80%;"></div>
+                                    <div class="range-track__handle" style="left:80%;"></div>
+                                </div>
+                                <div class="range-labels">
+                                    <span>4w</span>
+                                    <span>20w</span>
+                                    <span>40w</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="triage__footer">
+                            <div class="triage__severity">
+                                <div class="triage__severity-label">Severity</div>
+                                <div class="triage__severity-value">
+                                    <span class="severity-pulse"></span>
+                                    High · refer now
+                                </div>
+                            </div>
+                            <button class="btn-primary btn-primary--rose" data-jump="screen-plan">
+                                Continue
+                                <svg width="18" height="18"><use href="#i-arrow-right"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ SCREEN 4 — ACTION PLAN ============ -->
+                <section class="screen" id="screen-plan">
+                    <div class="phone__statusbar phone__statusbar--light">
+                        <span>9:41</span>
+                        <span class="phone__statusbar-icons">
+                            <svg><use href="#i-cell-signal"/></svg>
+                            <svg><use href="#i-wifi"/></svg>
+                            <svg><use href="#i-battery"/></svg>
+                        </span>
+                    </div>
+
+                    <div class="plan">
+                        <div class="plan__head">
+                            <div class="appbar" style="padding:0 0 4px;">
+                                <button class="appbar__back" data-jump="screen-triage">
+                                    <svg width="20" height="20"><use href="#i-back"/></svg>
+                                </button>
+                                <div class="appbar__title">Action plan</div>
+                                <button class="appbar__action">
+                                    <svg width="20" height="20"><use href="#i-bell"/></svg>
+                                </button>
+                            </div>
+
+                            <div class="plan__sev-row">
+                                <span class="plan__sev-badge">
+                                    <span class="severity-pulse"></span>
+                                    High severity
+                                </span>
+                                <span class="plan__sev-eta">Updated just now</span>
+                            </div>
+                            <h1 class="plan__directive">Get her to a hospital with magnesium sulfate. Now.</h1>
+                            <p class="plan__why">
+                                Symptoms suggest severe pre-eclampsia at 32 weeks. Eclamptic seizure is the immediate risk.
+                            </p>
+                        </div>
+
+                        <div class="plan__body">
+                            <!-- Map card -->
+                            <div class="map-card">
+                                <div class="map-card__map">
+                                    <div class="map-road map-road--h" style="top:55%;"></div>
+                                    <div class="map-road map-road--v" style="left:60%;"></div>
+                                    <div class="map-route"></div>
+                                    <div class="map-pin map-pin--user">
+                                        <span class="map-pin__dot"></span>
+                                        <span class="map-pin__label">You</span>
+                                    </div>
+                                    <div class="map-pin map-pin--clinic">
+                                        <span class="map-pin__dot"></span>
+                                        <span class="map-pin__label map-pin__label--rose">Clínica San Juan</span>
+                                    </div>
+                                </div>
+                                <div class="map-card__info">
+                                    <div class="map-card__facility">
+                                        <div class="map-card__facility-name">Clínica San Juan · 14 min</div>
+                                        <div class="map-card__facility-meta">
+                                            8.4 km · OB on call
+                                            <span class="map-card__capability">MgSO₄</span>
+                                        </div>
+                                    </div>
+                                    <button class="map-card__alt">Reroute</button>
+                                </div>
+                            </div>
+
+                            <!-- Action grid -->
+                            <div class="action-grid">
+                                <button class="action-tile action-tile--call">
+                                    <div class="action-tile__icon">
+                                        <svg width="20" height="20"><use href="#i-phone"/></svg>
+                                    </div>
+                                    <div>
+                                        <div class="action-tile__label">Call ambulance</div>
+                                        <div class="action-tile__sub">Bomberos · 122</div>
+                                    </div>
+                                </button>
+                                <button class="action-tile">
+                                    <div class="action-tile__icon">
+                                        <svg width="20" height="20"><use href="#i-bell"/></svg>
+                                    </div>
+                                    <div>
+                                        <div class="action-tile__label">Notify clinic</div>
+                                        <div class="action-tile__sub">Send vitals + ETA</div>
+                                    </div>
+                                </button>
+                                <button class="action-tile">
+                                    <div class="action-tile__icon">
+                                        <svg width="20" height="20"><use href="#i-route"/></svg>
+                                    </div>
+                                    <div>
+                                        <div class="action-tile__label">Get directions</div>
+                                        <div class="action-tile__sub">Open in maps</div>
+                                    </div>
+                                </button>
+                                <button class="action-tile">
+                                    <div class="action-tile__icon">
+                                        <svg width="20" height="20"><use href="#i-mic"/></svg>
+                                    </div>
+                                    <div>
+                                        <div class="action-tile__label">Voice note</div>
+                                        <div class="action-tile__sub">Add to record</div>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <!-- Steps -->
+                            <div class="step-list">
+                                <div class="step-list__head">
+                                    <div class="step-list__title">Until transport arrives</div>
+                                    <div class="step-list__count">5 steps · 1 done</div>
+                                </div>
+                                <div class="step step--done">
+                                    <div class="step__num">
+                                        <svg width="14" height="14"><use href="#i-check"/></svg>
+                                    </div>
+                                    <div class="step__main">
+                                        <div class="step__title">Position her on her left side</div>
+                                        <div class="step__hint">Improves placental blood flow.</div>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step__num">2</div>
+                                    <div class="step__main">
+                                        <div class="step__title">Take and record blood pressure</div>
+                                        <div class="step__hint">Re-check every 10 minutes.</div>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step__num">3</div>
+                                    <div class="step__main">
+                                        <div class="step__title">Keep room dim &amp; quiet</div>
+                                        <div class="step__hint">Bright light or noise can trigger a seizure.</div>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step__num">4</div>
+                                    <div class="step__main">
+                                        <div class="step__title">Do not give food or fluids by mouth</div>
+                                        <div class="step__hint">Aspiration risk if she seizes.</div>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step__num">5</div>
+                                    <div class="step__main">
+                                        <div class="step__title">Stay with her — talk her through it</div>
+                                        <div class="step__hint">Calm voice, eye contact, name what's happening.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="plan__footer">
+                            <div class="plan__footer-row">
+                                <button class="btn-secondary">Save draft</button>
+                                <button class="btn-secondary">Hand off</button>
+                            </div>
+                            <button class="btn-block" data-jump="screen-case">
+                                Start case &amp; track live
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ SCREEN 5 — LIVE CASE ============ -->
+                <section class="screen" id="screen-case">
+                    <div class="phone__statusbar phone__statusbar--light">
+                        <span>9:41</span>
+                        <span class="phone__statusbar-icons">
+                            <svg><use href="#i-cell-signal"/></svg>
+                            <svg><use href="#i-wifi"/></svg>
+                            <svg><use href="#i-battery"/></svg>
+                        </span>
+                    </div>
+
+                    <div class="case">
+                        <div class="case__head">
+                            <div class="appbar" style="padding:0 0 4px;">
+                                <button class="appbar__back" data-jump="screen-hub">
+                                    <svg width="20" height="20"><use href="#i-back"/></svg>
+                                </button>
+                                <div class="appbar__title">Active case</div>
+                                <button class="appbar__action">
+                                    <svg width="20" height="20"><use href="#i-bookmark"/></svg>
+                                </button>
+                            </div>
+
+                            <div class="case__patient-row">
+                                <div class="case__patient-avatar">AR</div>
+                                <div class="case__patient-info">
+                                    <div class="case__patient-name">Ana R., 24</div>
+                                    <div class="case__patient-meta">G2P1 · 32w + 4d · suspected pre-eclampsia</div>
+                                </div>
+                                <span class="case__patient-id">#A-1142</span>
+                            </div>
+
+                            <div class="case__progress">
+                                <div class="case__progress-head">
+                                    <span>En route to Clínica San Juan</span>
+                                    <span style="color:var(--rose-300)">8 min · ETA 9:53</span>
+                                </div>
+                                <div class="case__progress-bar">
+                                    <div class="case__progress-fill"></div>
+                                </div>
+                                <div class="case__progress-eta">
+                                    Triaged 9:32 · Transport dispatched 9:41 · Clinic notified 9:42
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="case__body">
+                            <!-- Vitals -->
+                            <div>
+                                <div class="section-head">
+                                    <span class="section-head__title">Latest vitals</span>
+                                    <button class="section-head__action">Update</button>
+                                </div>
+                                <div class="vitals-grid">
+                                    <div class="vital">
+                                        <div class="vital__label">BP</div>
+                                        <div class="vital__value">158/104</div>
+                                        <span class="vital__trend vital__trend--bad">↑ Elevated</span>
+                                    </div>
+                                    <div class="vital">
+                                        <div class="vital__label">Pulse</div>
+                                        <div class="vital__value">96<span class="vital__unit">bpm</span></div>
+                                        <span class="vital__trend">Watch</span>
+                                    </div>
+                                    <div class="vital">
+                                        <div class="vital__label">FHR</div>
+                                        <div class="vital__value">142<span class="vital__unit">bpm</span></div>
+                                        <span class="vital__trend vital__trend--ok">Normal</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Timeline -->
+                            <div class="timeline">
+                                <div class="timeline__head">
+                                    <span class="timeline__title">Care timeline</span>
+                                    <span class="timeline__live">Live</span>
+                                </div>
+                                <div class="timeline__list">
+                                    <div class="timeline-item timeline-item--current">
+                                        <div class="timeline-item__title">Ambulance 8 min out · driver: Carlos</div>
+                                        <div class="timeline-item__sub">Just now · auto-tracked</div>
+                                    </div>
+                                    <div class="timeline-item timeline-item--done">
+                                        <div class="timeline-item__title">Clinic acknowledged · Dr. Velásquez ready</div>
+                                        <div class="timeline-item__sub">9:42 · 2 min after notify</div>
+                                    </div>
+                                    <div class="timeline-item timeline-item--done">
+                                        <div class="timeline-item__title">BP rechecked · 158/104</div>
+                                        <div class="timeline-item__sub">9:38 · by María</div>
+                                    </div>
+                                    <div class="timeline-item timeline-item--done">
+                                        <div class="timeline-item__title">Triage complete · severity High</div>
+                                        <div class="timeline-item__sub">9:32 · Obstetric protocol</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chat -->
+                            <div class="chat">
+                                <div class="chat__head">
+                                    <div class="chat__avatar">DV</div>
+                                    <div class="chat__head-info">
+                                        <div class="chat__head-name">Dr. Velásquez · Clínica SJ</div>
+                                        <div class="chat__head-status">Online · MgSO₄ ready</div>
+                                    </div>
+                                </div>
+                                <div class="chat__messages">
+                                    <div class="chat__bubble chat__bubble--in">
+                                        Got it. Bay 3 prepped, MgSO₄ loaded. How is she now?
+                                    </div>
+                                    <div class="chat__bubble chat__bubble--out">
+                                        Lucid, lying on her left. BP up from 144/92 → 158/104 in 20 min.
+                                    </div>
+                                    <span class="chat__time">9:43</span>
+                                    <div class="chat__bubble chat__bubble--in">
+                                        Watch for hyperreflexia. Ping if she vomits or seizes.
+                                    </div>
+                                </div>
+                                <div class="chat__compose">
+                                    <div class="chat__input">Type a message…</div>
+                                    <button class="chat__send">
+                                        <svg width="16" height="16"><use href="#i-send"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ SCREEN 6 — CARE LIBRARY ============ -->
+                <section class="screen" id="screen-library">
+                    <div class="phone__statusbar phone__statusbar--light">
+                        <span>9:41</span>
+                        <span class="phone__statusbar-icons">
+                            <svg><use href="#i-cell-signal"/></svg>
+                            <svg><use href="#i-wifi"/></svg>
+                            <svg><use href="#i-battery"/></svg>
+                        </span>
+                    </div>
+
+                    <div class="library">
+                        <div class="library__head">
+                            <div class="appbar" style="padding:0 0 4px;">
+                                <button class="appbar__back" data-jump="screen-hub">
+                                    <svg width="20" height="20"><use href="#i-back"/></svg>
+                                </button>
+                                <div class="appbar__title">Care library</div>
+                                <button class="appbar__action">
+                                    <svg width="20" height="20"><use href="#i-bookmark"/></svg>
+                                </button>
+                            </div>
+
+                            <h1 class="library__title">Field-ready guides for the moments that matter.</h1>
+                            <p class="library__sub">Offline · plain language · with pictures.</p>
+
+                            <div class="search">
+                                <svg width="16" height="16"><use href="#i-search"/></svg>
+                                Search "post-abortion care"…
+                            </div>
+                        </div>
+
+                        <div class="library__body">
+                            <div class="library__chips">
+                                <button class="chip chip--active">All</button>
+                                <button class="chip">Pregnancy</button>
+                                <button class="chip">Contraception</button>
+                                <button class="chip">Postpartum</button>
+                                <button class="chip">Mental health</button>
+                                <button class="chip">Emergencies</button>
+                            </div>
+
+                            <button class="library-card">
+                                <div class="library-card__icon">
+                                    <svg width="26" height="26"><use href="#i-pulse"/></svg>
+                                </div>
+                                <div class="library-card__main">
+                                    <div class="library-card__category">Pregnancy · Red flag</div>
+                                    <div class="library-card__title">Recognizing severe pre-eclampsia</div>
+                                    <div class="library-card__meta">
+                                        4 min read
+                                        <span class="library-card__meta-dot"></span>
+                                        EN · ES · KAQ
+                                        <span class="library-card__meta-dot"></span>
+                                        Saved offline
+                                    </div>
+                                </div>
+                                <svg width="20" height="20" class="library-card__pin"><use href="#i-chevron-right"/></svg>
+                            </button>
+
+                            <button class="library-card">
+                                <div class="library-card__icon library-card__icon--teal">
+                                    <svg width="26" height="26"><use href="#i-pill"/></svg>
+                                </div>
+                                <div class="library-card__main">
+                                    <div class="library-card__category">Contraception · DMPA</div>
+                                    <div class="library-card__title">When heavy bleeding on the shot is an emergency</div>
+                                    <div class="library-card__meta">
+                                        3 min read
+                                        <span class="library-card__meta-dot"></span>
+                                        With illustrations
+                                    </div>
+                                </div>
+                                <svg width="20" height="20" class="library-card__pin"><use href="#i-chevron-right"/></svg>
+                            </button>
+
+                            <button class="library-card">
+                                <div class="library-card__icon library-card__icon--honey">
+                                    <svg width="26" height="26"><use href="#i-note"/></svg>
+                                </div>
+                                <div class="library-card__main">
+                                    <div class="library-card__category">Post-abortion care</div>
+                                    <div class="library-card__title">Counseling script: first 24 hours</div>
+                                    <div class="library-card__meta">
+                                        6 min read
+                                        <span class="library-card__meta-dot"></span>
+                                        Audio version
+                                    </div>
+                                </div>
+                                <svg width="20" height="20" class="library-card__pin"><use href="#i-chevron-right"/></svg>
+                            </button>
+
+                            <button class="library-card">
+                                <div class="library-card__icon">
+                                    <svg width="26" height="26"><use href="#i-heart"/></svg>
+                                </div>
+                                <div class="library-card__main">
+                                    <div class="library-card__category">Postpartum · Red flag</div>
+                                    <div class="library-card__title">Stopping postpartum hemorrhage in the field</div>
+                                    <div class="library-card__meta">
+                                        5 min read
+                                        <span class="library-card__meta-dot"></span>
+                                        Includes uterine massage video
+                                    </div>
+                                </div>
+                                <svg width="20" height="20" class="library-card__pin"><use href="#i-chevron-right"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div><!-- /phone__screen -->
+        </div><!-- /phone -->
+    </div><!-- /phone-wrap -->
+
+    <!-- ===========  NOTES PANEL  =========== -->
+    <aside class="notes">
+        <div>
+            <div class="notes__eyebrow">Demo cheat sheet</div>
+            <h2 class="notes__title">A 90-second story for Tuesday.</h2>
+        </div>
+
+        <div class="notes__body">
+            <p>
+                Open with the <strong>Welcome</strong> screen to lock in the
+                co-brand and tone — calm, but unmistakably urgent.
+                Then walk the room through one full save-the-life loop:
+                triage → action plan → live case.
+            </p>
+        </div>
+
+        <ul class="notes__list">
+            <li class="notes__list-item">
+                <span class="notes__list-icon notes__list-icon--rose">
+                    <svg width="14" height="14"><use href="#i-heart"/></svg>
+                </span>
+                <span><strong>Two emergencies, one platform.</strong> Pregnancy and contraception
+                    sit side by side on the hub — same triage rigor, different protocols.</span>
+            </li>
+            <li class="notes__list-item">
+                <span class="notes__list-icon">
+                    <svg width="14" height="14"><use href="#i-spark"/></svg>
+                </span>
+                <span><strong>Severity is computed live.</strong> Tap symptoms in the wizard and
+                    the meter at the bottom updates — that becomes the badge on the next screen.</span>
+            </li>
+            <li class="notes__list-item">
+                <span class="notes__list-icon notes__list-icon--honey">
+                    <svg width="14" height="14"><use href="#i-pin"/></svg>
+                </span>
+                <span><strong>The right facility, not the nearest.</strong> Map filters by capability —
+                    "MgSO₄" badge means the clinic can actually treat what we found.</span>
+            </li>
+            <li class="notes__list-item">
+                <span class="notes__list-icon">
+                    <svg width="14" height="14"><use href="#i-clock"/></svg>
+                </span>
+                <span><strong>The CHV is never alone.</strong> Live case keeps the receiving doctor
+                    in the loop — chat, vitals, ETA — until handoff.</span>
+            </li>
+        </ul>
+
+        <div class="notes__divider"></div>
+
+        <div>
+            <div class="notes__metric">
+                <span>Avg time, symptom → dispatch</span>
+                <strong>~ 90s</strong>
+            </div>
+            <div class="notes__metric">
+                <span>Languages at launch</span>
+                <strong>EN · ES · KAQ</strong>
+            </div>
+            <div class="notes__metric">
+                <span>Works without signal</span>
+                <strong>Yes</strong>
+            </div>
+            <div class="notes__metric">
+                <span>Built on AfyaQuest</span>
+                <strong>Reuses CHV auth, sync &amp; XP</strong>
+            </div>
+        </div>
+
+        <div class="notes__body" style="border-top:1px dashed var(--ink-50); padding-top:14px;">
+            <p style="font-size:12px; color:var(--ink-500);">
+                Tip: hit <strong>Enter demo mode</strong> (or press <kbd style="background:var(--ink-50);padding:2px 6px;border-radius:4px;font-family:inherit;font-size:11px;">←&nbsp;→</kbd>) to walk between
+                screens with just the phone visible — useful for screen-recording the
+                walkthrough or projecting on the wall.
+            </p>
+        </div>
+    </aside>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
