@@ -75,10 +75,18 @@ supports Kaqchikel). The runtime falls back to Spanish for cak in the meantime.
 
 - [x] **M1 — Tree authoring + engine.** Data-driven tree (EN/ES), generic
       `TriageEngine`, full structural + behavioral unit tests. ✅ *(this commit)*
-- [ ] **M2 — Compose visual flow** (voice deferred): `QuestionScreenScaffold`,
-      phase progress bar, large A/B/C/D + icon buttons, disposition screens,
-      EN/ES toggle mid-flow via `SavedStateHandle`, forced light + large type,
-      dashboard entry point.
+- [x] **M2 — Compose visual flow** (voice deferred): ✅ *(this commit)*
+      `presentation/emergencyguide/` — `EmergencyGuideScreen` (intro + big "Start
+      assessment"), `TriageFlowScreen` (one question per screen, large lettered
+      A/B/C/D buttons, phase progress bar, severity-colored disposition screen
+      with a pulsing critical header), `EmergencyTriageViewModel` (state in
+      `SavedStateHandle` via path replay), `TriageTreeRepository` (loads the
+      asset). EN/ES toggle works mid-flow without losing place (state is
+      language-independent; `LanguageManager` drives both content and chrome).
+      Forced light theme; severity colors added to `Color.kt`; dashboard entry
+      `EmergencyEntryCard`. *Pending polish:* per-node icons (the `icon` keys
+      exist in the JSON but aren't rendered yet) and large-type accessibility
+      scaling.
 - [ ] **M3 — Offline case logging:** `CaseLogEntity`/`PendingCaseLogEntity`, DAO,
       repository, `Migration(4→5)`, case history.
 - [ ] **M4 — Escalation + vitals:** tiered call/SMS dispatch, vitals thresholds,

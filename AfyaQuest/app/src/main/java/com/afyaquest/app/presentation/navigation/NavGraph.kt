@@ -23,6 +23,8 @@ import com.afyaquest.app.presentation.modulequiz.ModuleQuizScreen
 import com.afyaquest.app.presentation.assignments.AssignmentsScreen
 import com.afyaquest.app.presentation.settings.SettingsScreen
 import com.afyaquest.app.presentation.videoplayer.VideoPlayerScreen
+import com.afyaquest.app.presentation.emergencyguide.EmergencyGuideScreen
+import com.afyaquest.app.presentation.emergencyguide.TriageFlowScreen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -97,6 +99,14 @@ fun NavGraph(navController: NavHostController) {
 
         composable(route = Screen.ModuleQuiz.route) {
             ModuleQuizScreen(navController = navController)
+        }
+
+        composable(route = Screen.EmergencyGuide.route) {
+            EmergencyGuideScreen(navController = navController)
+        }
+
+        composable(route = Screen.TriageFlow.route) {
+            TriageFlowScreen(navController = navController)
         }
 
         composable(route = Screen.VideoPlayer.route) { backStackEntry ->

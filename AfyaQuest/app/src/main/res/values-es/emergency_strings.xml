@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- es-GT chrome strings (draft, pending native review — see CLINICAL-REVIEW.md). -->
+    <string name="emergency_response">Respuesta de emergencia</string>
+    <string name="emergency_response_subtitle">Ayuda paso a paso en una emergencia médica</string>
+    <string name="emergency_start_title">Guía de respuesta de emergencia</string>
+    <string name="emergency_start_subtitle">Responda una pregunta a la vez. La guía le dirá qué hacer.</string>
+    <string name="emergency_start_button">Iniciar evaluación</string>
+    <string name="emergency_disclaimer">Herramienta en borrador — no validada para uso clínico ni sustituye la atención médica capacitada. En una emergencia real, pida ayuda.</string>
+    <string name="emergency_phase_scene">Escena</string>
+    <string name="emergency_phase_primary">Primaria</string>
+    <string name="emergency_phase_secondary">Secundaria</string>
+    <string name="emergency_phase_disposition">Resultado</string>
+    <string name="emergency_new_assessment">Nueva evaluación</string>
+    <string name="emergency_done">Listo</string>
+</resources>

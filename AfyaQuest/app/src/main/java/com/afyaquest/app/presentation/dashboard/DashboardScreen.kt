@@ -34,6 +34,7 @@ import com.afyaquest.app.presentation.assignments.AssignmentsViewModel
 import com.afyaquest.app.presentation.auth.AuthViewModel
 import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.presentation.components.SyncStatusIndicator
+import com.afyaquest.app.presentation.emergencyguide.EmergencyEntryCard
 import com.afyaquest.app.util.Resource
 import kotlinx.coroutines.launch
 
@@ -201,6 +202,11 @@ fun DashboardScreen(
                 progress = dashboardViewModel.getLevelProgress(),
                 xpForNextLevel = dashboardViewModel.getXPForNextLevel()
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Emergency Response entry point
+            EmergencyEntryCard(onClick = { navController.navigate(Screen.EmergencyGuide.route) })
 
             Spacer(modifier = Modifier.height(24.dp))
 
