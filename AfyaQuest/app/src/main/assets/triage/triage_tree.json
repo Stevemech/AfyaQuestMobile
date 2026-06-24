@@ -1,0 +1,425 @@
+{
+  "version": "1.0.0-draft",
+  "validated": false,
+  "disclaimer": {
+    "en": "DRAFT — NOT VALIDATED FOR CLINICAL USE. Must be reviewed and approved by a licensed EMT/paramedic and a supervising physician before any field deployment. Spanish text is a plain-language draft pending native es-GT review. Kaqchikel text is intentionally absent until professionally translated and recorded — never machine-translate it.",
+    "es": "BORRADOR — NO VALIDADO PARA USO CLÍNICO. Debe ser revisado y aprobado por un técnico en emergencias (TEM/paramédico) y un médico supervisor antes de cualquier uso en campo. El texto en español es un borrador en lenguaje sencillo pendiente de revisión por hablante nativo de es-GT."
+  },
+  "startNodeId": "scene_safe",
+  "languages": ["en", "es"],
+  "phaseOrder": ["scene_size_up", "primary_survey", "secondary_survey", "disposition"],
+  "nodes": [
+    {
+      "id": "scene_safe",
+      "phase": "scene_size_up",
+      "kind": "question",
+      "icon": "shield",
+      "audioKey": "scene_safe",
+      "text": {
+        "en": "Look around. Is it safe for YOU to go in? (no fire, cars, fighting, electricity, water)",
+        "es": "Mire alrededor. ¿Es seguro para USTED entrar? (no fuego, carros, pelea, electricidad, agua)"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Yes, it is safe", "es": "Sí, es seguro" }, "audioKey": "scene_safe_a", "setFlags": {}, "next": "scene_ppe" },
+        { "letter": "B", "label": { "en": "No, there is danger", "es": "No, hay peligro" }, "audioKey": "scene_safe_b", "setFlags": {}, "next": "disp_unsafe" }
+      ]
+    },
+    {
+      "id": "scene_ppe",
+      "phase": "scene_size_up",
+      "kind": "question",
+      "icon": "gloves",
+      "audioKey": "scene_ppe",
+      "text": {
+        "en": "Put on gloves now. Do you have gloves on?",
+        "es": "Póngase guantes ahora. ¿Tiene los guantes puestos?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Yes, gloves on", "es": "Sí, con guantes" }, "audioKey": "scene_ppe_a", "setFlags": {}, "next": "scene_mechanism" },
+        { "letter": "B", "label": { "en": "No gloves — protect your hands (bag/cloth), then go on", "es": "No hay guantes — proteja sus manos (bolsa/tela) y siga" }, "audioKey": "scene_ppe_b", "setFlags": { "ppe": "improvised" }, "next": "scene_mechanism" }
+      ]
+    },
+    {
+      "id": "scene_mechanism",
+      "phase": "scene_size_up",
+      "kind": "question",
+      "icon": "question",
+      "audioKey": "scene_mechanism",
+      "text": {
+        "en": "What happened to this person?",
+        "es": "¿Qué le pasó a esta persona?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Injury or accident (fall, crash, hit, cut)", "es": "Lesión o accidente (caída, choque, golpe, corte)" }, "audioKey": "scene_mechanism_a", "setFlags": { "mechanism": "trauma" }, "next": "prim_responsive" },
+        { "letter": "B", "label": { "en": "Sickness, no injury (pain, fever, dizzy, fainted)", "es": "Enfermedad, sin lesión (dolor, fiebre, mareo, desmayo)" }, "audioKey": "scene_mechanism_b", "setFlags": { "mechanism": "medical" }, "next": "prim_responsive" },
+        { "letter": "C", "label": { "en": "I am not sure", "es": "No estoy seguro" }, "audioKey": "scene_mechanism_c", "setFlags": { "mechanism": "unknown" }, "next": "prim_responsive" }
+      ]
+    },
+    {
+      "id": "prim_responsive",
+      "phase": "primary_survey",
+      "kind": "question",
+      "icon": "person",
+      "audioKey": "prim_responsive",
+      "text": {
+        "en": "Tap the shoulder and shout: \"Are you okay?\" Does the person react?",
+        "es": "Toque el hombro y grite: \"¿Está bien?\" ¿Reacciona la persona?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Yes — moves, talks, or opens eyes", "es": "Sí — se mueve, habla o abre los ojos" }, "audioKey": "prim_responsive_a", "setFlags": { "responsive": "yes" }, "next": "prim_airway_aware" },
+        { "letter": "B", "label": { "en": "No reaction at all", "es": "No reacciona nada" }, "audioKey": "prim_responsive_b", "setFlags": { "responsive": "no" }, "next": "prim_airway_unresp" }
+      ]
+    },
+    {
+      "id": "prim_airway_aware",
+      "phase": "primary_survey",
+      "kind": "question",
+      "icon": "airway",
+      "audioKey": "prim_airway_aware",
+      "text": {
+        "en": "Can the person speak or cry clearly?",
+        "es": "¿Puede la persona hablar o llorar con claridad?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Yes, speaks clearly", "es": "Sí, habla claro" }, "audioKey": "prim_airway_aware_a", "setFlags": {}, "next": "prim_breathing" },
+        { "letter": "B", "label": { "en": "No — choking, gasping, or strange sounds", "es": "No — se ahoga, jadea o hace ruidos raros" }, "audioKey": "prim_airway_aware_b", "setFlags": { "airway": "obstructed" }, "next": "prim_airway_open" }
+      ]
+    },
+    {
+      "id": "prim_airway_unresp",
+      "phase": "primary_survey",
+      "kind": "question",
+      "icon": "airway",
+      "audioKey": "prim_airway_unresp",
+      "text": {
+        "en": "Person does not react. Tilt the head back gently to open the airway. Look in the mouth — is anything blocking it?",
+        "es": "La persona no reacciona. Incline la cabeza hacia atrás con suavidad para abrir la vía. Mire la boca — ¿hay algo que la tape?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Mouth is clear", "es": "La boca está libre" }, "audioKey": "prim_airway_unresp_a", "setFlags": {}, "next": "prim_breathing" },
+        { "letter": "B", "label": { "en": "Something is blocking (food, vomit, blood) — clear it if you can see it", "es": "Algo la tapa (comida, vómito, sangre) — sáquelo si lo ve" }, "audioKey": "prim_airway_unresp_b", "setFlags": { "airway": "cleared" }, "next": "prim_breathing" }
+      ]
+    },
+    {
+      "id": "prim_airway_open",
+      "phase": "primary_survey",
+      "kind": "question",
+      "icon": "airway",
+      "audioKey": "prim_airway_open",
+      "text": {
+        "en": "Help them lean forward. Are they still struggling to breathe after coughing?",
+        "es": "Ayúdelos a inclinarse hacia adelante. ¿Siguen luchando por respirar después de toser?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "No, they can breathe now", "es": "No, ya pueden respirar" }, "audioKey": "prim_airway_open_a", "setFlags": {}, "next": "prim_breathing" },
+        { "letter": "B", "label": { "en": "Yes, still cannot breathe", "es": "Sí, todavía no pueden respirar" }, "audioKey": "prim_airway_open_b", "setFlags": { "airway": "obstructed_severe" }, "next": "disp_immediate" }
+      ]
+    },
+    {
+      "id": "prim_breathing",
+      "phase": "primary_survey",
+      "kind": "question",
+      "icon": "lungs",
+      "audioKey": "prim_breathing",
+      "text": {
+        "en": "Watch the chest for 10 seconds. Is the person breathing? (chest rising, air felt)",
+        "es": "Observe el pecho por 10 segundos. ¿Está respirando? (el pecho sube, se siente aire)"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Yes, breathing normally", "es": "Sí, respira normal" }, "audioKey": "prim_breathing_a", "setFlags": {}, "next": "prim_circulation" },
+        { "letter": "B", "label": { "en": "Breathing is fast, slow, or hard", "es": "Respira rápido, lento o con dificultad" }, "audioKey": "prim_breathing_b", "setFlags": { "breathing_abnormal": "yes" }, "next": "prim_circulation" },
+        { "letter": "C", "label": { "en": "No breathing, or only gasping", "es": "No respira, o solo jadea" }, "audioKey": "prim_breathing_c", "setFlags": { "breathing": "absent" }, "next": "disp_cpr" }
+      ]
+    },
+    {
+      "id": "prim_circulation",
+      "phase": "primary_survey",
+      "kind": "question",
+      "icon": "blood",
+      "audioKey": "prim_circulation",
+      "text": {
+        "en": "Look fast over the whole body. Is there heavy bleeding (blood pooling or spurting)?",
+        "es": "Revise rápido todo el cuerpo. ¿Hay sangrado fuerte (sangre que se junta o salta)?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "No heavy bleeding", "es": "No hay sangrado fuerte" }, "audioKey": "prim_circulation_a", "setFlags": {}, "next": "prim_disability" },
+        { "letter": "B", "label": { "en": "Yes — press HARD on the wound with cloth, keep pressing", "es": "Sí — presione FUERTE la herida con tela, no deje de presionar" }, "audioKey": "prim_circulation_b", "setFlags": { "bleeding_major": "yes" }, "next": "prim_disability" }
+      ]
+    },
+    {
+      "id": "prim_disability",
+      "phase": "primary_survey",
+      "kind": "question",
+      "icon": "eye",
+      "audioKey": "prim_disability",
+      "text": {
+        "en": "Check how awake the person is. Which is true right now?",
+        "es": "Vea qué tan despierta está la persona. ¿Qué es cierto ahora?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Awake and talking normally", "es": "Despierta y habla normal" }, "audioKey": "prim_disability_a", "setFlags": { "avpu": "alert" }, "next": "sec_router" },
+        { "letter": "B", "label": { "en": "Wakes only when you talk loudly", "es": "Despierta solo si le habla fuerte" }, "audioKey": "prim_disability_b", "setFlags": { "avpu": "voice" }, "next": "sec_router" },
+        { "letter": "C", "label": { "en": "Reacts only to pain (pinch)", "es": "Reacciona solo al dolor (pellizco)" }, "audioKey": "prim_disability_c", "setFlags": { "avpu": "pain" }, "next": "sec_router" },
+        { "letter": "D", "label": { "en": "No reaction at all", "es": "No reacciona nada" }, "audioKey": "prim_disability_d", "setFlags": { "avpu": "unresponsive" }, "next": "disp_immediate" }
+      ]
+    },
+    {
+      "id": "sec_router",
+      "phase": "secondary_survey",
+      "kind": "auto",
+      "routing": [
+        { "if": { "mechanism": ["trauma", "unknown"] }, "next": "sec_t_head" },
+        { "if": { "mechanism": ["medical"] }, "next": "sec_m_conditions" }
+      ],
+      "default": "sec_t_head"
+    },
+    {
+      "id": "sec_t_head",
+      "phase": "secondary_survey",
+      "kind": "question",
+      "icon": "head",
+      "audioKey": "sec_t_head",
+      "text": {
+        "en": "Look and gently feel the head and neck. Any of these? (blood, big swelling, dent, neck pain)",
+        "es": "Mire y toque con suavidad la cabeza y el cuello. ¿Alguno de estos? (sangre, hinchazón grande, hundimiento, dolor de cuello)"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "No problems found", "es": "No encuentro problemas" }, "audioKey": "sec_t_head_a", "setFlags": {}, "next": "sec_t_chest" },
+        { "letter": "B", "label": { "en": "Yes, head or neck problem — do NOT move the neck", "es": "Sí, problema de cabeza o cuello — NO mueva el cuello" }, "audioKey": "sec_t_head_b", "setFlags": { "inj_head_neck": "yes" }, "next": "sec_t_chest" }
+      ]
+    },
+    {
+      "id": "sec_t_chest",
+      "phase": "secondary_survey",
+      "kind": "question",
+      "icon": "chest",
+      "audioKey": "sec_t_chest",
+      "text": {
+        "en": "Look and feel the chest. Does it look normal and move evenly when breathing?",
+        "es": "Mire y toque el pecho. ¿Se ve normal y se mueve parejo al respirar?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Yes, looks normal", "es": "Sí, se ve normal" }, "audioKey": "sec_t_chest_a", "setFlags": {}, "next": "sec_t_abdomen" },
+        { "letter": "B", "label": { "en": "No — wound, uneven movement, or hard to breathe", "es": "No — herida, movimiento disparejo o cuesta respirar" }, "audioKey": "sec_t_chest_b", "setFlags": { "inj_chest": "yes" }, "next": "sec_t_abdomen" }
+      ]
+    },
+    {
+      "id": "sec_t_abdomen",
+      "phase": "secondary_survey",
+      "kind": "question",
+      "icon": "abdomen",
+      "audioKey": "sec_t_abdomen",
+      "text": {
+        "en": "Press gently on the belly. Is it soft with no big pain?",
+        "es": "Presione suave la barriga. ¿Está blanda y sin dolor fuerte?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Yes, soft and no big pain", "es": "Sí, blanda y sin dolor fuerte" }, "audioKey": "sec_t_abdomen_a", "setFlags": {}, "next": "sec_t_extremities" },
+        { "letter": "B", "label": { "en": "No — hard, swollen, or very painful", "es": "No — dura, hinchada o con mucho dolor" }, "audioKey": "sec_t_abdomen_b", "setFlags": { "inj_abdomen": "yes" }, "next": "sec_t_extremities" }
+      ]
+    },
+    {
+      "id": "sec_t_extremities",
+      "phase": "secondary_survey",
+      "kind": "question",
+      "icon": "limb",
+      "audioKey": "sec_t_extremities",
+      "text": {
+        "en": "Look at the arms and legs. Any bent the wrong way, big wounds, or cannot move?",
+        "es": "Mire los brazos y piernas. ¿Alguno doblado al revés, herida grande o no se puede mover?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Arms and legs look okay", "es": "Brazos y piernas se ven bien" }, "audioKey": "sec_t_extremities_a", "setFlags": {}, "next": "sec_t_spine" },
+        { "letter": "B", "label": { "en": "Yes — broken look, big wound, or no movement", "es": "Sí — se ve roto, herida grande o no se mueve" }, "audioKey": "sec_t_extremities_b", "setFlags": { "inj_extremity": "yes" }, "next": "sec_t_spine" }
+      ]
+    },
+    {
+      "id": "sec_t_spine",
+      "phase": "secondary_survey",
+      "kind": "question",
+      "icon": "spine",
+      "audioKey": "sec_t_spine",
+      "text": {
+        "en": "Ask: can you feel and wiggle your fingers and toes? (or pinch gently and watch)",
+        "es": "Pregunte: ¿siente y puede mover los dedos de manos y pies? (o pellizque suave y observe)"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Yes, feels and moves all", "es": "Sí, siente y mueve todo" }, "audioKey": "sec_t_spine_a", "setFlags": {}, "next": "sec_eval_trauma" },
+        { "letter": "B", "label": { "en": "No feeling or no movement somewhere", "es": "Sin sensación o sin movimiento en algún lado" }, "audioKey": "sec_t_spine_b", "setFlags": { "inj_spine": "yes" }, "next": "disp_immediate" }
+      ]
+    },
+    {
+      "id": "sec_eval_trauma",
+      "phase": "secondary_survey",
+      "kind": "auto",
+      "routing": [
+        { "if": { "inj_head_neck": ["yes"] }, "next": "disp_priority" },
+        { "if": { "inj_chest": ["yes"] }, "next": "disp_priority" },
+        { "if": { "inj_abdomen": ["yes"] }, "next": "disp_priority" },
+        { "if": { "bleeding_major": ["yes"] }, "next": "disp_priority" },
+        { "if": { "breathing_abnormal": ["yes"] }, "next": "disp_priority" },
+        { "if": { "inj_extremity": ["yes"] }, "next": "disp_priority" }
+      ],
+      "default": "disp_stable"
+    },
+    {
+      "id": "sec_m_conditions",
+      "phase": "secondary_survey",
+      "kind": "question",
+      "icon": "history",
+      "audioKey": "sec_m_conditions",
+      "text": {
+        "en": "Ask the person or family: any known illness? (heart, diabetes/sugar, asthma, seizures, pregnancy)",
+        "es": "Pregunte a la persona o familia: ¿alguna enfermedad conocida? (corazón, diabetes/azúcar, asma, convulsiones, embarazo)"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "No known illness", "es": "Ninguna enfermedad conocida" }, "audioKey": "sec_m_conditions_a", "setFlags": {}, "next": "sec_m_onset" },
+        { "letter": "B", "label": { "en": "Yes, has a known illness", "es": "Sí, tiene una enfermedad conocida" }, "audioKey": "sec_m_conditions_b", "setFlags": { "history_known": "yes" }, "next": "sec_m_onset" }
+      ]
+    },
+    {
+      "id": "sec_m_onset",
+      "phase": "secondary_survey",
+      "kind": "question",
+      "icon": "clock",
+      "audioKey": "sec_m_onset",
+      "text": {
+        "en": "How did the sickness start?",
+        "es": "¿Cómo empezó la enfermedad?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Suddenly, all at once", "es": "De repente, todo de golpe" }, "audioKey": "sec_m_onset_a", "setFlags": { "onset": "sudden" }, "next": "sec_m_complaint" },
+        { "letter": "B", "label": { "en": "Slowly, over hours or days", "es": "Despacio, en horas o días" }, "audioKey": "sec_m_onset_b", "setFlags": { "onset": "gradual" }, "next": "sec_m_complaint" }
+      ]
+    },
+    {
+      "id": "sec_m_complaint",
+      "phase": "secondary_survey",
+      "kind": "question",
+      "icon": "complaint",
+      "audioKey": "sec_m_complaint",
+      "text": {
+        "en": "What is the MAIN problem the person feels?",
+        "es": "¿Cuál es el problema PRINCIPAL que siente la persona?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Chest pain or trouble breathing", "es": "Dolor de pecho o dificultad para respirar" }, "audioKey": "sec_m_complaint_a", "setFlags": { "complaint": "chest_breathing" }, "next": "sec_m_vitals_breath" },
+        { "letter": "B", "label": { "en": "Face droop, weak side, or confused speech", "es": "Cara caída, lado débil o habla confusa" }, "audioKey": "sec_m_complaint_b", "setFlags": { "complaint": "stroke_signs" }, "next": "sec_m_vitals_breath" },
+        { "letter": "C", "label": { "en": "Bad pain, fever, or vomiting", "es": "Dolor fuerte, fiebre o vómito" }, "audioKey": "sec_m_complaint_c", "setFlags": { "complaint": "pain_fever" }, "next": "sec_m_vitals_breath" },
+        { "letter": "D", "label": { "en": "Dizzy, weak, or fainted", "es": "Mareo, debilidad o desmayo" }, "audioKey": "sec_m_complaint_d", "setFlags": { "complaint": "weak_faint" }, "next": "sec_m_vitals_breath" }
+      ]
+    },
+    {
+      "id": "sec_m_vitals_breath",
+      "phase": "secondary_survey",
+      "kind": "question",
+      "icon": "lungs",
+      "audioKey": "sec_m_vitals_breath",
+      "text": {
+        "en": "Count breaths for 30 seconds, then double it. How is the breathing?",
+        "es": "Cuente las respiraciones por 30 segundos y multiplique por dos. ¿Cómo está la respiración?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Normal (about 12-20 per minute)", "es": "Normal (como 12-20 por minuto)" }, "audioKey": "sec_m_vitals_breath_a", "setFlags": { "resp": "normal" }, "next": "sec_m_vitals_pulse" },
+        { "letter": "B", "label": { "en": "Too fast or too slow, or very hard", "es": "Muy rápida o muy lenta, o muy difícil" }, "audioKey": "sec_m_vitals_breath_b", "setFlags": { "resp_abnormal": "yes" }, "next": "sec_m_vitals_pulse" }
+      ]
+    },
+    {
+      "id": "sec_m_vitals_pulse",
+      "phase": "secondary_survey",
+      "kind": "question",
+      "icon": "pulse",
+      "audioKey": "sec_m_vitals_pulse",
+      "text": {
+        "en": "Feel the wrist or neck pulse. Count for 30 seconds, then double it. How is the pulse?",
+        "es": "Sienta el pulso en la muñeca o el cuello. Cuente 30 segundos y multiplique por dos. ¿Cómo está el pulso?"
+      },
+      "options": [
+        { "letter": "A", "label": { "en": "Normal and steady (about 60-100)", "es": "Normal y firme (como 60-100)" }, "audioKey": "sec_m_vitals_pulse_a", "setFlags": { "pulse": "normal" }, "next": "sec_eval_medical" },
+        { "letter": "B", "label": { "en": "Too fast, too slow, or weak/irregular", "es": "Muy rápido, muy lento o débil/irregular" }, "audioKey": "sec_m_vitals_pulse_b", "setFlags": { "pulse_abnormal": "yes" }, "next": "sec_eval_medical" },
+        { "letter": "C", "label": { "en": "Cannot feel any pulse", "es": "No siento ningún pulso" }, "audioKey": "sec_m_vitals_pulse_c", "setFlags": { "pulse": "absent" }, "next": "disp_cpr" }
+      ]
+    },
+    {
+      "id": "sec_eval_medical",
+      "phase": "secondary_survey",
+      "kind": "auto",
+      "routing": [
+        { "if": { "complaint": ["chest_breathing"] }, "next": "disp_priority" },
+        { "if": { "complaint": ["stroke_signs"] }, "next": "disp_priority" },
+        { "if": { "resp_abnormal": ["yes"] }, "next": "disp_priority" },
+        { "if": { "pulse_abnormal": ["yes"] }, "next": "disp_priority" },
+        { "if": { "avpu": ["voice", "pain"] }, "next": "disp_priority" },
+        { "if": { "onset": ["sudden"], "history_known": ["yes"] }, "next": "disp_priority" }
+      ],
+      "default": "disp_stable"
+    }
+  ],
+  "dispositions": [
+    {
+      "id": "disp_unsafe",
+      "level": "early_exit",
+      "color": "crit",
+      "pulse": false,
+      "audioKey": "disp_unsafe",
+      "label": { "en": "UNSAFE SCENE — STOP", "es": "ESCENA INSEGURA — ALTO" },
+      "instructions": {
+        "en": "Do NOT enter. Move to a safe distance. Call for backup/emergency help now. Keep others away. Only approach when the danger is gone.",
+        "es": "NO entre. Aléjese a una distancia segura. Pida refuerzos o ayuda de emergencia ahora. Mantenga a los demás alejados. Solo acérquese cuando el peligro haya pasado."
+      },
+      "escalation": { "tier": "none", "action": "call_backup" }
+    },
+    {
+      "id": "disp_cpr",
+      "level": "immediate",
+      "color": "crit",
+      "pulse": true,
+      "audioKey": "disp_cpr",
+      "label": { "en": "NO BREATHING — START CPR NOW", "es": "NO RESPIRA — INICIE RCP YA" },
+      "instructions": {
+        "en": "Call for emergency help / extra hands immediately. Lay the person flat on their back on a hard surface. Push hard and fast in the center of the chest, about 2 per second. Do not stop until help arrives or the person breathes. If trained and available, use an AED.",
+        "es": "Pida ayuda de emergencia / más manos de inmediato. Acueste a la persona boca arriba sobre una superficie dura. Empuje fuerte y rápido en el centro del pecho, unas 2 veces por segundo. No se detenga hasta que llegue ayuda o la persona respire. Si está capacitado y hay un DEA, úselo."
+      },
+      "escalation": { "tier": "immediate", "action": "call_ems" }
+    },
+    {
+      "id": "disp_immediate",
+      "level": "immediate",
+      "color": "crit",
+      "pulse": true,
+      "audioKey": "disp_immediate",
+      "label": { "en": "IMMEDIATE — LIFE THREAT", "es": "INMEDIATO — PELIGRO DE VIDA" },
+      "instructions": {
+        "en": "This is life-threatening. Transport NOW — do not wait, do not finish other checks. Keep pressing any bleeding. If neck/spine injury, support the head and keep it still. Alert the receiving facility you are coming with a critical patient. Recheck breathing on the way.",
+        "es": "Esto pone en peligro la vida. Traslade YA — no espere, no termine otras revisiones. Siga presionando cualquier sangrado. Si hay lesión de cuello/columna, sostenga la cabeza y manténgala quieta. Avise al centro que recibe que llega con un paciente crítico. Revise la respiración en el camino."
+      },
+      "escalation": { "tier": "immediate", "action": "call_ems" }
+    },
+    {
+      "id": "disp_priority",
+      "level": "priority",
+      "color": "warn",
+      "pulse": false,
+      "audioKey": "disp_priority",
+      "label": { "en": "PRIORITY — MOVE QUICKLY", "es": "PRIORIDAD — MUÉVASE RÁPIDO" },
+      "instructions": {
+        "en": "Move quickly. Arrange transport now and call ahead so the facility is ready. Keep the person calm, lying down, and warm. Watch breathing and awakeness every few minutes — if it gets worse, treat as immediate.",
+        "es": "Muévase rápido. Organice el traslado ahora y llame antes para que el centro esté listo. Mantenga a la persona tranquila, acostada y abrigada. Vigile la respiración y el estado de alerta cada pocos minutos — si empeora, trate como inmediato."
+      },
+      "escalation": { "tier": "priority", "action": "call_facility" }
+    },
+    {
+      "id": "disp_stable",
+      "level": "stable",
+      "color": "ok",
+      "pulse": false,
+      "audioKey": "disp_stable",
+      "label": { "en": "STABLE — MONITOR", "es": "ESTABLE — VIGILAR" },
+      "instructions": {
+        "en": "Person is stable for now. Keep them comfortable and watch them. Recheck breathing, pulse, and awakeness every 5-10 minutes. Arrange routine transport or follow-up. If ANYTHING gets worse, move up to priority or immediate.",
+        "es": "La persona está estable por ahora. Manténgala cómoda y vigílela. Revise respiración, pulso y estado de alerta cada 5-10 minutos. Organice traslado o seguimiento de rutina. Si ALGO empeora, suba a prioridad o inmediato."
+      },
+      "escalation": { "tier": "none", "action": "monitor" }
+    }
+  ]
+}
