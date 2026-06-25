@@ -1,0 +1,8 @@
+{
+  "version": "0",
+  "_note": "Lists pre-recorded native-speaker clip keys available per language. Clips live at assets/audio/<language>/<audioKey>.mp3. Empty until recordings are produced — see docs/emergency-response/AUDIO.md. With no clips, en/es use device TTS as a fallback and Kaqchikel (cak) stays text-only (never synthesized).",
+  "clips": {
+    "es": [],
+    "cak": []
+  }
+}

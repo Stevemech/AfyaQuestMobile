@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -294,6 +295,26 @@ fun TriageOptionButton(letter: String, label: String, onClick: () -> Unit) {
             Spacer(Modifier.width(16.dp))
             Text(text = label, fontSize = 18.sp, textAlign = TextAlign.Start, lineHeight = 24.sp)
         }
+    }
+}
+
+/** Labeled "Tap to hear this step" control (a label, not just an icon). */
+@Composable
+fun HearStepButton(onClick: () -> Unit) {
+    FilledTonalButton(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 52.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null)
+        Spacer(Modifier.width(12.dp))
+        Text(
+            text = stringResource(R.string.emergency_hear_step),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 

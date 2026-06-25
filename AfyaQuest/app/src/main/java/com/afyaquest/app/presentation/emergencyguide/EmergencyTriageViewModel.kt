@@ -4,10 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afyaquest.app.data.triage.CaseLogRepository
+import com.afyaquest.app.data.triage.SpeakItem
 import com.afyaquest.app.data.triage.TriageTreeRepository
+import com.afyaquest.app.data.triage.TtsAudioManager
 import com.afyaquest.app.domain.triage.TriageEngine
 import com.afyaquest.app.domain.triage.TriageState
 import com.afyaquest.app.domain.triage.TriageTree
+import com.afyaquest.app.domain.triage.localized
 import com.afyaquest.app.util.LanguageManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -33,6 +36,7 @@ import javax.inject.Inject
 class EmergencyTriageViewModel @Inject constructor(
     repository: TriageTreeRepository,
     private val caseLogRepository: CaseLogRepository,
+    private val audioManager: TtsAudioManager,
     private val languageManager: LanguageManager,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -55,6 +59,7 @@ class EmergencyTriageViewModel @Inject constructor(
     fun answer(letter: String) {
         val current = _state.value
         if (current.isDisposition) return
+        audioManager.stop()
         val next = engine.answer(current, letter)
         _state.value = next
         persist()
@@ -65,6 +70,7 @@ class EmergencyTriageViewModel @Inject constructor(
     fun back() {
         val current = _state.value
         if (current.path.isEmpty()) return
+        audioManager.stop()
         var rebuilt = engine.start()
         for (step in current.path.dropLast(1)) rebuilt = engine.answer(rebuilt, step.optionLetter)
         _state.value = rebuilt
@@ -72,14 +78,56 @@ class EmergencyTriageViewModel @Inject constructor(
     }
 
     fun restart() {
+        audioManager.stop()
         sessionId = newSession()
         _state.value = engine.start()
         persist()
     }
 
     fun setLanguage(code: String) {
+        audioManager.stop()
         viewModelScope.launch { languageManager.setLanguage(code) }
     }
+
+    // ── Voice ("Tap to hear this step") ─────────────────────────────────
+
+    /** Whether the current step can be spoken in the active language. */
+    fun isAudioAvailableForCurrentStep(): Boolean =
+        audioManager.isAudioAvailable(currentLanguage.value, currentStepAudioKeys())
+
+    /** Read the current question + its options aloud, or the disposition guidance. */
+    fun speakCurrentStep() {
+        audioManager.speak(currentStepSpeakItems(), currentLanguage.value)
+    }
+
+    fun stopSpeaking() = audioManager.stop()
+
+    override fun onCleared() {
+        audioManager.stop()
+        super.onCleared()
+    }
+
+    private fun currentStepSpeakItems(): List<SpeakItem> {
+        val lang = currentLanguage.value
+        val s = _state.value
+        if (s.isDisposition) {
+            val d = engine.disposition(s.currentId) ?: return emptyList()
+            val key = d.audioKey ?: d.id
+            return listOf(
+                SpeakItem(key, d.label.localized(lang)),
+                SpeakItem("${key}_instructions", d.instructions.localized(lang))
+            )
+        }
+        val node = engine.node(s.currentId) ?: return emptyList()
+        return buildList {
+            add(SpeakItem(node.audioKey ?: node.id, node.text.localized(lang)))
+            node.options?.forEach { opt ->
+                add(SpeakItem(opt.audioKey ?: "${node.id}_${opt.letter}", "${opt.letter}. ${opt.label.localized(lang)}"))
+            }
+        }
+    }
+
+    private fun currentStepAudioKeys(): List<String> = currentStepSpeakItems().map { it.audioKey }
 
     private fun logCase(disposition: TriageState) {
         val level = engine.disposition(disposition.currentId)?.level ?: ""

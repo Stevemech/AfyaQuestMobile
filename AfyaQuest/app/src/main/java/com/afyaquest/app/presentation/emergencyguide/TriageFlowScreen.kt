@@ -14,8 +14,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -50,6 +52,11 @@ fun TriageFlowScreen(
 
     // Hardware back steps to the previous question until we're at the first one.
     BackHandler(enabled = state.path.isNotEmpty()) { viewModel.back() }
+
+    // Stop any audio when leaving the screen.
+    DisposableEffect(Unit) { onDispose { viewModel.stopSpeaking() } }
+
+    val canHear = remember(state, language) { viewModel.isAudioAvailableForCurrentStep() }
 
     val phaseLabels = listOf(
         stringResource(R.string.emergency_phase_scene),
@@ -98,7 +105,12 @@ fun TriageFlowScreen(
                     labels = phaseLabels
                 )
 
-                Spacer(Modifier.height(28.dp))
+                Spacer(Modifier.height(20.dp))
+
+                if (canHear) {
+                    HearStepButton(onClick = { viewModel.speakCurrentStep() })
+                    Spacer(Modifier.height(20.dp))
+                }
 
                 if (state.isDisposition) {
                     val disposition = engine.currentDisposition(state)

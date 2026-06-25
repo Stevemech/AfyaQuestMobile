@@ -98,8 +98,15 @@ supports Kaqchikel). The runtime falls back to Spanish for cak in the meantime.
       Backend `/cases` sync is deferred to M4 (`CaseLogDao.getUnsynced()` is ready).
 - [ ] **M4 — Escalation + vitals:** tiered call/SMS dispatch, vitals thresholds,
       `/cases` backend sync via existing `SyncWorker`.
-- [ ] **M5 — Voice layer:** `TtsAudioManager`, pre-recorded native clips keyed by
-      `audioKey`, es-only `TextToSpeech` fallback (never synthesize Kaqchikel).
+- [x] **M5 — Voice layer:** ✅ *(this commit)*
+      `data/triage/TtsAudioManager` sequences recorded clips (MediaPlayer) with
+      device `TextToSpeech` fallback; pure `domain/triage/AudioResolver` enforces
+      the rules (unit-tested). A labeled **"Tap to hear this step"** button reads
+      the question + every lettered option (or a disposition's guidance) and is
+      hidden when no audio is available. **Kaqchikel is never synthesized** — it
+      plays only from a recorded clip, else stays text-only; en/es use device TTS
+      as an interim. Recording the native clips is a content task — see
+      [AUDIO.md](AUDIO.md) (77 keys, manifest-gated, no code change needed).
 - [ ] **M6 — Accessibility & field hardening.**
 
 ## Open items needing input
