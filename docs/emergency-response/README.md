@@ -107,7 +107,13 @@ supports Kaqchikel). The runtime falls back to Spanish for cak in the meantime.
       plays only from a recorded clip, else stays text-only; en/es use device TTS
       as an interim. Recording the native clips is a content task — see
       [AUDIO.md](AUDIO.md) (77 keys, manifest-gated, no code change needed).
-- [ ] **M6 — Accessibility & field hardening.**
+- [x] **M6 — Accessibility & field hardening:** ✅ *(this commit)*
+      per-node pictographic icons (`TriageIcons.kt`, icon-first after safe+natal;
+      interim Material glyphs, swappable for custom pictographs), severity icons
+      on disposition headers, `heading()` semantics on questions/results for
+      TalkBack, and **keep-screen-on** during an assessment. Type uses scalable
+      `sp` and large touch targets throughout. *Remaining for a real field pass:*
+      custom field-tested pictographs and an on-device contrast/large-font audit.
 
 ## Open items needing input
 

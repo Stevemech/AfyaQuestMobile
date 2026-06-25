@@ -1,5 +1,9 @@
 package com.afyaquest.app.presentation.emergencyguide
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.view.WindowManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -22,7 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -53,8 +60,16 @@ fun TriageFlowScreen(
     // Hardware back steps to the previous question until we're at the first one.
     BackHandler(enabled = state.path.isNotEmpty()) { viewModel.back() }
 
-    // Stop any audio when leaving the screen.
-    DisposableEffect(Unit) { onDispose { viewModel.stopSpeaking() } }
+    // Keep the screen awake during an assessment; stop audio when leaving.
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        val window = context.findActivity()?.window
+        window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        onDispose {
+            window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            viewModel.stopSpeaking()
+        }
+    }
 
     val canHear = remember(state, language) { viewModel.isAudioAvailableForCurrentStep() }
 
@@ -125,11 +140,17 @@ fun TriageFlowScreen(
                 } else {
                     val node = engine.currentNode(state)
                     if (node != null) {
+                        TriageStepIcon(
+                            token = node.icon,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                        Spacer(Modifier.height(20.dp))
                         Text(
                             text = node.text.localized(language),
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold,
-                            lineHeight = 30.sp
+                            lineHeight = 30.sp,
+                            modifier = Modifier.semantics { heading() }
                         )
                         Spacer(Modifier.height(24.dp))
                         node.options?.forEach { option ->
@@ -181,13 +202,21 @@ private fun DispositionView(
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Icon(
+                    imageVector = dispositionIcon(disposition.level),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(40.dp)
+                )
+                Spacer(Modifier.height(12.dp))
                 Text(
                     text = disposition.label.localized(language),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     textAlign = TextAlign.Center,
-                    lineHeight = 30.sp
+                    lineHeight = 30.sp,
+                    modifier = Modifier.semantics { heading() }
                 )
             }
         }
@@ -230,4 +259,10 @@ private fun DispositionView(
         }
         Spacer(Modifier.height(16.dp))
     }
+}
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
