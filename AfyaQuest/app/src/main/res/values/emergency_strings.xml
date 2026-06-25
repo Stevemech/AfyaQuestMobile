@@ -14,4 +14,10 @@
     <string name="emergency_phase_disposition">Result</string>
     <string name="emergency_new_assessment">New assessment</string>
     <string name="emergency_done">Done</string>
+    <string name="emergency_history">Past cases</string>
+    <string name="emergency_history_empty">No past assessments yet.</string>
+    <string name="emergency_not_synced">Not synced</string>
+    <string name="emergency_mechanism_trauma">Injury</string>
+    <string name="emergency_mechanism_medical">Illness</string>
+    <string name="emergency_mechanism_unknown">Unknown cause</string>
 </resources>

@@ -8,6 +8,11 @@ plugins {
     alias(libs.plugins.hilt.android)
 }
 
+// Export Room schemas (enables migration verification + history).
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 android {
     namespace = "com.afyaquest.app"
     compileSdk = 36

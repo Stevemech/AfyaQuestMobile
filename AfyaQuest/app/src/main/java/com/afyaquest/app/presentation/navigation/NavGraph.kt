@@ -25,6 +25,7 @@ import com.afyaquest.app.presentation.settings.SettingsScreen
 import com.afyaquest.app.presentation.videoplayer.VideoPlayerScreen
 import com.afyaquest.app.presentation.emergencyguide.EmergencyGuideScreen
 import com.afyaquest.app.presentation.emergencyguide.TriageFlowScreen
+import com.afyaquest.app.presentation.emergencyguide.CaseHistoryScreen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -107,6 +108,10 @@ fun NavGraph(navController: NavHostController) {
 
         composable(route = Screen.TriageFlow.route) {
             TriageFlowScreen(navController = navController)
+        }
+
+        composable(route = Screen.CaseHistory.route) {
+            CaseHistoryScreen(navController = navController)
         }
 
         composable(route = Screen.VideoPlayer.route) { backStackEntry ->

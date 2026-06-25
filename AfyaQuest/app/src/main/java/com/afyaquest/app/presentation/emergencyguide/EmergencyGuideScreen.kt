@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -71,6 +72,12 @@ fun EmergencyGuideScreen(
                         }
                     },
                     actions = {
+                        IconButton(onClick = { navController.navigate(Screen.CaseHistory.route) }) {
+                            Icon(
+                                Icons.Default.History,
+                                contentDescription = stringResource(R.string.emergency_history)
+                            )
+                        }
                         EmergencyLanguageToggle(current = language, onSelect = viewModel::setLanguage)
                     }
                 )

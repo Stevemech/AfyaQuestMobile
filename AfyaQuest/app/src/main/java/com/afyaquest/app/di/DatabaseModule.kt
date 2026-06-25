@@ -26,6 +26,7 @@ object DatabaseModule {
             AfyaQuestDatabase::class.java,
             AfyaQuestDatabase.DATABASE_NAME
         )
+            .addMigrations(AfyaQuestDatabase.MIGRATION_4_5)
             .fallbackToDestructiveMigration()
             .build()
     }
@@ -94,5 +95,11 @@ object DatabaseModule {
     @Singleton
     fun providePendingSyncDao(database: AfyaQuestDatabase): PendingSyncDao {
         return database.pendingSyncDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCaseLogDao(database: AfyaQuestDatabase): CaseLogDao {
+        return database.caseLogDao()
     }
 }

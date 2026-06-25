@@ -87,8 +87,15 @@ supports Kaqchikel). The runtime falls back to Spanish for cak in the meantime.
       `EmergencyEntryCard`. *Pending polish:* per-node icons (the `icon` keys
       exist in the JSON but aren't rendered yet) and large-type accessibility
       scaling.
-- [ ] **M3 — Offline case logging:** `CaseLogEntity`/`PendingCaseLogEntity`, DAO,
-      repository, `Migration(4→5)`, case history.
+- [x] **M3 — Offline case logging:** ✅ *(this commit)*
+      `CaseLogEntity` (single table, `isSynced` flag — mirrors `ReportEntity`),
+      `CaseLogDao`, `CaseLogRepository`, a real non-destructive **`Migration(4→5)`**
+      (SQL verified byte-for-byte against Room's exported schema in `schemas/`),
+      and a `CaseHistoryScreen` (past cases, newest first, with disposition
+      color + sync badge). The ViewModel logs a case when an assessment reaches a
+      disposition, keyed by a stable session id so re-answering REPLACEs rather
+      than duplicates. Robolectric `CaseLogDaoTest` covers the round-trip.
+      Backend `/cases` sync is deferred to M4 (`CaseLogDao.getUnsynced()` is ready).
 - [ ] **M4 — Escalation + vitals:** tiered call/SMS dispatch, vitals thresholds,
       `/cases` backend sync via existing `SyncWorker`.
 - [ ] **M5 — Voice layer:** `TtsAudioManager`, pre-recorded native clips keyed by
