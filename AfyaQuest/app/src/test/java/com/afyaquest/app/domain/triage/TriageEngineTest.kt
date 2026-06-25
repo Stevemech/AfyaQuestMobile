@@ -234,11 +234,12 @@ class TriageEngineTest {
     }
 
     @Test
-    fun localized_falls_back_spanish_then_english() {
+    fun localized_falls_back_to_english_when_language_missing() {
         val text = mapOf("en" to "Hi", "es" to "Hola")
-        assertEquals("Hola", text.localized("es"))
         assertEquals("Hi", text.localized("en"))
-        assertEquals("Hola", text.localized("cak")) // missing -> Spanish for the GT context
+        assertEquals("Hola", text.localized("es"))
+        // Kaqchikel content not yet authored -> falls back to English (Spanish no longer offered).
+        assertEquals("Hi", text.localized("cak"))
         assertEquals("", (null as LocalizedText?).localized("en"))
     }
 

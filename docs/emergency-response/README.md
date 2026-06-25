@@ -65,11 +65,15 @@ driven by the `mechanism` flag, not by separate phases.
 
 ## Localization
 
-`text`, `label`, and `instructions` are `{ "en": …, "es": … }` maps. Fallback
-order is requested → Spanish → English. **Kaqchikel (`cak`) text is intentionally
-absent** until professionally translated and recorded — never machine-translate
-it (Wuqu' Kawoq treats linguistic fidelity as non-negotiable; no TTS engine
-supports Kaqchikel). The runtime falls back to Spanish for cak in the meantime.
+The offered languages are **English and Kaqchikel (`cak`)** — the CHWs' native
+language for the Wuqu' Kawoq deployment. `text`, `label`, and `instructions` are
+`{ "en": …, "cak": … }` maps; fallback order is requested → English.
+
+**Kaqchikel triage content is not yet authored** and must come from a native
+speaker — never machine-translate it (Wuqu' Kawoq treats linguistic fidelity as
+non-negotiable). Until then, selecting Kaqchikel falls back to English. The
+earlier draft Spanish (`es`) strings are kept in `triage_tree.json` as a
+reference for translators but are no longer offered in the app.
 
 ## Milestone status
 
@@ -107,6 +111,10 @@ supports Kaqchikel). The runtime falls back to Spanish for cak in the meantime.
       plays only from a recorded clip, else stays text-only; en/es use device TTS
       as an interim. Recording the native clips is a content task — see
       [AUDIO.md](AUDIO.md) (77 keys, manifest-gated, no code change needed).
+      **Update:** the "Tap to hear this step" button is currently **removed from
+      the flow** by product decision (speaking is slower in a real emergency).
+      The audio infrastructure (`TtsAudioManager`, `AudioResolver`, manifest) is
+      retained and dormant — re-show the button to revive it.
 - [x] **M6 — Accessibility & field hardening:** ✅ *(this commit)*
       per-node pictographic icons (`TriageIcons.kt`, icon-first after safe+natal;
       interim Material glyphs, swappable for custom pictographs), severity icons

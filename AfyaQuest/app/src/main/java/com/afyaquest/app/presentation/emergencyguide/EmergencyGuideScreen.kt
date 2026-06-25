@@ -214,7 +214,7 @@ fun EmergencyLanguageToggle(current: String, onSelect: (String) -> Unit) {
     ) {
         val options = listOf(
             LanguageManager.LANGUAGE_ENGLISH to "EN",
-            LanguageManager.LANGUAGE_SPANISH to "ES"
+            LanguageManager.LANGUAGE_KAQCHIKEL to "KAQ"
         )
         options.forEach { (code, label) ->
             val active = current == code

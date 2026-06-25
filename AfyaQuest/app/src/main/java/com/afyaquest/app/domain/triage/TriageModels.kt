@@ -103,10 +103,12 @@ object EscalationTier {
 
 /**
  * Resolve localized text with graceful fallback: requested language, then
- * Spanish (the regional lingua franca for the Guatemala deployment), then
  * English, then any available value. Returns "" if nothing is available.
+ *
+ * The offered languages are English and Kaqchikel (`cak`). Until the Kaqchikel
+ * triage content is authored by a native speaker, `cak` falls back to English.
  */
 fun LocalizedText?.localized(lang: String): String {
     if (this.isNullOrEmpty()) return ""
-    return this[lang] ?: this["es"] ?: this["en"] ?: values.first()
+    return this[lang] ?: this["en"] ?: values.first()
 }
