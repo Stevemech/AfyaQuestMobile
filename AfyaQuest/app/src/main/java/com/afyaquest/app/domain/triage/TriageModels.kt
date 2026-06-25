@@ -112,3 +112,33 @@ fun LocalizedText?.localized(lang: String): String {
     if (this.isNullOrEmpty()) return ""
     return this[lang] ?: this["en"] ?: values.first()
 }
+
+/**
+ * Merge a flat `audioKey -> Kaqchikel text` overlay into the tree as `cak` text on
+ * each node/option/disposition. Keys ignored if they don't match an audioKey
+ * (e.g. the overlay's `_README`/`_status` notes). Returns the tree unchanged if
+ * the overlay is empty. The Kaqchikel overlay is a draft pending native review.
+ */
+fun TriageTree.withCakOverlay(cak: Map<String, String>): TriageTree {
+    if (cak.isEmpty()) return this
+
+    fun add(map: LocalizedText?, key: String?): LocalizedText? {
+        val text = key?.let { cak[it] } ?: return map
+        return (map ?: emptyMap()) + ("cak" to text)
+    }
+
+    val newNodes = nodes.map { node ->
+        node.copy(
+            text = add(node.text, node.audioKey ?: node.id),
+            options = node.options?.map { opt -> opt.copy(label = add(opt.label, opt.audioKey)) }
+        )
+    }
+    val newDispositions = dispositions.map { d ->
+        val key = d.audioKey ?: d.id
+        d.copy(
+            label = add(d.label, key),
+            instructions = add(d.instructions, "${key}_instructions")
+        )
+    }
+    return copy(nodes = newNodes, dispositions = newDispositions)
+}

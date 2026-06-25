@@ -3,7 +3,9 @@ package com.afyaquest.app.data.triage
 import android.content.Context
 import com.afyaquest.app.domain.triage.TriageEngine
 import com.afyaquest.app.domain.triage.TriageTree
+import com.afyaquest.app.domain.triage.withCakOverlay
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,8 +28,19 @@ class TriageTreeRepository @Inject constructor(
         cachedTree ?: synchronized(this) {
             cachedTree ?: run {
                 val json = context.assets.open(ASSET_PATH).bufferedReader().use { it.readText() }
-                gson.fromJson(json, TriageTree::class.java).also { cachedTree = it }
+                val tree = gson.fromJson(json, TriageTree::class.java)
+                tree.withCakOverlay(loadCakOverlay()).also { cachedTree = it }
             }
+        }
+
+    /** Draft Kaqchikel overlay (audioKey -> text). Empty/missing is fine. */
+    private fun loadCakOverlay(): Map<String, String> =
+        try {
+            val json = context.assets.open(CAK_OVERLAY_PATH).bufferedReader().use { it.readText() }
+            val type = object : TypeToken<Map<String, String>>() {}.type
+            gson.fromJson<Map<String, String>>(json, type) ?: emptyMap()
+        } catch (e: Exception) {
+            emptyMap()
         }
 
     fun engine(): TriageEngine =
@@ -37,5 +50,6 @@ class TriageTreeRepository @Inject constructor(
 
     private companion object {
         const val ASSET_PATH = "triage/triage_tree.json"
+        const val CAK_OVERLAY_PATH = "triage/triage_tree.cak.draft.json"
     }
 }

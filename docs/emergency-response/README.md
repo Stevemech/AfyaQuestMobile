@@ -66,14 +66,20 @@ driven by the `mechanism` flag, not by separate phases.
 ## Localization
 
 The offered languages are **English and Kaqchikel (`cak`)** — the CHWs' native
-language for the Wuqu' Kawoq deployment. `text`, `label`, and `instructions` are
-`{ "en": …, "cak": … }` maps; fallback order is requested → English.
+language for the Wuqu' Kawoq deployment. Fallback order is requested → English.
 
-**Kaqchikel triage content is not yet authored** and must come from a native
-speaker — never machine-translate it (Wuqu' Kawoq treats linguistic fidelity as
-non-negotiable). Until then, selecting Kaqchikel falls back to English. The
-earlier draft Spanish (`es`) strings are kept in `triage_tree.json` as a
-reference for translators but are no longer offered in the app.
+Kaqchikel content lives in a separate overlay, `assets/triage/triage_tree.cak.draft.json`
+(a flat `audioKey → text` map), merged into the tree at load by
+`TriageTreeRepository` / `TriageTree.withCakOverlay`. This keeps the structural
+tree pristine and gives a translator one file to edit. `TriageEngineTest` checks
+the overlay covers every translatable string.
+
+> ⚠️ The current Kaqchikel is a **machine-generated DRAFT — unvalidated and
+> likely inaccurate.** It must be rewritten by a native Kaqchikel speaker (and
+> the clinical content re-approved) before any use. See CLINICAL-REVIEW.md.
+
+The older Spanish (`es`) draft strings are retained in `triage_tree.json` only as
+a translation reference and are no longer offered in the app.
 
 ## Milestone status
 

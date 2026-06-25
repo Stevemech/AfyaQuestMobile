@@ -2,7 +2,7 @@
   "version": "1.0.0-draft",
   "validated": false,
   "disclaimer": {
-    "en": "DRAFT — NOT VALIDATED FOR CLINICAL USE. Must be reviewed and approved by a licensed EMT/paramedic and a supervising physician before any field deployment. Spanish text is a plain-language draft pending native es-GT review. Kaqchikel text is intentionally absent until professionally translated and recorded — never machine-translate it.",
+    "en": "DRAFT — NOT VALIDATED FOR CLINICAL USE. Must be reviewed and approved by a licensed EMT/paramedic and a supervising physician before any field deployment. Kaqchikel text is a MACHINE-GENERATED DRAFT (triage_tree.cak.draft.json) — unvalidated and likely inaccurate; it MUST be rewritten by a native Kaqchikel speaker before use. English is the primary language; the older Spanish draft is retained in this file only as a translation reference and is no longer shown.",
     "es": "BORRADOR — NO VALIDADO PARA USO CLÍNICO. Debe ser revisado y aprobado por un técnico en emergencias (TEM/paramédico) y un médico supervisor antes de cualquier uso en campo. El texto en español es un borrador en lenguaje sencillo pendiente de revisión por hablante nativo de es-GT."
   },
   "startNodeId": "scene_safe",

@@ -296,4 +296,48 @@ class TriageEngineTest {
             ?: error("triage_tree.json not found from cwd=${File(".").absolutePath}")
         return Gson().fromJson(file.readText(), TriageTree::class.java)
     }
+
+    // --- Kaqchikel draft overlay ----------------------------------------------
+
+    @Test
+    fun cak_overlay_covers_every_translatable_string() {
+        val cak = loadCakOverlay()
+        val merged = TriageEngine(tree.withCakOverlay(cak))
+
+        for (node in merged.tree.nodes) {
+            if (node.kind != TriageKind.QUESTION) continue
+            assertFalse("missing cak for node '${node.id}'", node.text.localized("cak").isBlank())
+            node.options?.forEach { opt ->
+                assertFalse(
+                    "missing cak for option '${opt.letter}' on '${node.id}'",
+                    opt.label.localized("cak").isBlank()
+                )
+            }
+        }
+        for (d in merged.tree.dispositions) {
+            assertFalse("missing cak label for '${d.id}'", d.label.localized("cak").isBlank())
+            assertFalse("missing cak instructions for '${d.id}'", d.instructions.localized("cak").isBlank())
+        }
+    }
+
+    @Test
+    fun overlay_keeps_english_and_adds_cak() {
+        val merged = tree.withCakOverlay(loadCakOverlay())
+        val scene = merged.nodes.first { it.id == "scene_safe" }
+        // English is preserved; Kaqchikel is added as a distinct entry.
+        assertEquals(tree.nodes.first { it.id == "scene_safe" }.text!!["en"], scene.text!!["en"])
+        assertFalse(scene.text!!["cak"].isNullOrBlank())
+    }
+
+    private fun loadCakOverlay(): Map<String, String> {
+        val candidates = listOf(
+            "src/main/assets/triage/triage_tree.cak.draft.json",
+            "app/src/main/assets/triage/triage_tree.cak.draft.json",
+            "AfyaQuest/app/src/main/assets/triage/triage_tree.cak.draft.json"
+        )
+        val file = candidates.map { File(it) }.firstOrNull { it.exists() }
+            ?: error("cak overlay not found from cwd=${File(".").absolutePath}")
+        val type = object : com.google.gson.reflect.TypeToken<Map<String, String>>() {}.type
+        return Gson().fromJson(file.readText(), type)
+    }
 }

@@ -44,9 +44,13 @@ tests guard structural integrity after every change.
 - **es-GT (Guatemalan Spanish)** text is a plain-language draft, **not**
   professionally medically translated. Needs review by a native es-GT speaker
   familiar with local health terms and literacy levels.
-- **Kaqchikel (cak)** is intentionally absent from the data. It must be
-  professionally translated AND recorded by native speakers (for the voice
-  layer) — never machine-translated. Until then the app falls back to Spanish.
+- **Kaqchikel (cak)** content currently in the app
+  (`assets/triage/triage_tree.cak.draft.json`) is a **MACHINE-GENERATED DRAFT —
+  unvalidated and likely inaccurate** in grammar, orthography, and medical
+  terminology. It MUST be fully reviewed and rewritten by a native Kaqchikel
+  speaker, and the corrected clinical content re-approved, before any use. It is
+  a seed for translators, not usable text. (Spanish is no longer offered; English
+  is the fallback.)
 
 ## Proficiency validation (carry over from safe+natal)
 
