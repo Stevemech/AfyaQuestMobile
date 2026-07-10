@@ -89,7 +89,18 @@ class EmergencyTriageViewModel @Inject constructor(
         viewModelScope.launch { languageManager.setLanguage(code) }
     }
 
-    // ── Voice ("Tap to hear this step") ─────────────────────────────────
+    // ── Voice (conversational assistant reads each step) ────────────────
+
+    /** Whether the assistant speaks each question aloud. Persisted across restore. */
+    private val _voiceEnabled = MutableStateFlow(savedStateHandle.get<Boolean>(KEY_VOICE) ?: true)
+    val voiceEnabled: StateFlow<Boolean> = _voiceEnabled.asStateFlow()
+
+    fun toggleVoice() {
+        val next = !_voiceEnabled.value
+        _voiceEnabled.value = next
+        savedStateHandle[KEY_VOICE] = next
+        if (!next) audioManager.stop()
+    }
 
     /** Whether the current step can be spoken in the active language. */
     fun isAudioAvailableForCurrentStep(): Boolean =
@@ -98,6 +109,17 @@ class EmergencyTriageViewModel @Inject constructor(
     /** Read the current question + its options aloud, or the disposition guidance. */
     fun speakCurrentStep() {
         audioManager.speak(currentStepSpeakItems(), currentLanguage.value)
+    }
+
+    /**
+     * Conversational auto-speak: the question only (options are visible buttons),
+     * or the full label + instructions once a disposition is reached.
+     */
+    fun speakCurrentQuestion() {
+        if (!_voiceEnabled.value) return
+        val items = currentStepSpeakItems()
+        val toSpeak = if (_state.value.isDisposition) items else items.take(1)
+        audioManager.speak(toSpeak, currentLanguage.value)
     }
 
     fun stopSpeaking() = audioManager.stop()
@@ -168,5 +190,6 @@ class EmergencyTriageViewModel @Inject constructor(
     private companion object {
         const val KEY_PATH = "triage_path"
         const val KEY_SESSION = "triage_session"
+        const val KEY_VOICE = "triage_voice"
     }
 }

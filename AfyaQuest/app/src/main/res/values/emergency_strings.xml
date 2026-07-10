@@ -15,6 +15,9 @@
     <string name="emergency_new_assessment">New assessment</string>
     <string name="emergency_done">Done</string>
     <string name="emergency_hear_step">Tap to hear this step</string>
+    <string name="emergency_assistant">AfyaQuest Assistant</string>
+    <string name="emergency_voice_on">Voice on — tap to mute</string>
+    <string name="emergency_voice_off">Voice off — tap to unmute</string>
     <string name="emergency_history">Past cases</string>
     <string name="emergency_history_empty">No past assessments yet.</string>
     <string name="emergency_not_synced">Not synced</string>

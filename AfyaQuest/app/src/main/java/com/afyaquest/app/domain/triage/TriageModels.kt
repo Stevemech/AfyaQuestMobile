@@ -105,8 +105,8 @@ object EscalationTier {
  * Resolve localized text with graceful fallback: requested language, then
  * English, then any available value. Returns "" if nothing is available.
  *
- * The offered languages are English and Kaqchikel (`cak`). Until the Kaqchikel
- * triage content is authored by a native speaker, `cak` falls back to English.
+ * The offered languages are English and Spanish (`es`). The Kaqchikel (`cak`)
+ * overlay stays merged but hidden until a native speaker validates it.
  */
 fun LocalizedText?.localized(lang: String): String {
     if (this.isNullOrEmpty()) return ""

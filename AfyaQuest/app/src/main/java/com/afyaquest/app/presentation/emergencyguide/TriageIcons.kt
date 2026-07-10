@@ -1,5 +1,7 @@
 package com.afyaquest.app.presentation.emergencyguide
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -13,12 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.afyaquest.app.R
 
 /**
  * Maps a triage node's `icon` token to a visual cue (icon-first design, after
- * safe+natal's pictographic checklist). These are interim Material glyphs; custom
- * field-tested pictographs can replace them without touching the tree.
+ * safe+natal's pictographic checklist). Each token now has a full pictographic
+ * illustration (`emerg_pic_*`); the Material glyphs remain as a fallback for
+ * any token added to the tree before its artwork exists.
  */
 fun triageIcon(token: String?): ImageVector = when (token) {
     "shield" -> Icons.Filled.Shield
@@ -41,13 +47,65 @@ fun triageIcon(token: String?): ImageVector = when (token) {
     else -> Icons.Filled.MedicalServices
 }
 
+/** Pictographic illustration for a triage node's `icon` token, or null if none exists. */
+@DrawableRes
+fun triagePictureRes(token: String?): Int? = when (token) {
+    "shield" -> R.drawable.emerg_pic_shield
+    "gloves" -> R.drawable.emerg_pic_gloves
+    "question" -> R.drawable.emerg_pic_question
+    "person" -> R.drawable.emerg_pic_person
+    "airway" -> R.drawable.emerg_pic_airway
+    "lungs" -> R.drawable.emerg_pic_lungs
+    "blood" -> R.drawable.emerg_pic_blood
+    "eye" -> R.drawable.emerg_pic_eye
+    "head" -> R.drawable.emerg_pic_head
+    "chest" -> R.drawable.emerg_pic_chest
+    "abdomen" -> R.drawable.emerg_pic_abdomen
+    "limb" -> R.drawable.emerg_pic_limb
+    "spine" -> R.drawable.emerg_pic_spine
+    "history" -> R.drawable.emerg_pic_history
+    "clock" -> R.drawable.emerg_pic_clock
+    "complaint" -> R.drawable.emerg_pic_complaint
+    "pulse" -> R.drawable.emerg_pic_pulse
+    else -> null
+}
+
+/** Pictographic illustration for a disposition, keyed by its id. */
+@DrawableRes
+fun dispositionPictureRes(dispositionId: String): Int? = when (dispositionId) {
+    "disp_unsafe" -> R.drawable.emerg_pic_danger
+    "disp_cpr" -> R.drawable.emerg_pic_cpr
+    "disp_immediate", "disp_priority" -> R.drawable.emerg_pic_ambulance
+    "disp_stable" -> R.drawable.emerg_pic_check
+    else -> null
+}
+
 fun dispositionIcon(level: String): ImageVector = when (level) {
     "immediate", "early_exit" -> Icons.Filled.Warning
     "priority" -> Icons.Filled.PriorityHigh
     else -> Icons.Filled.CheckCircle
 }
 
-/** Circular icon badge shown above a triage question. Decorative — the question text carries meaning. */
+/**
+ * Illustration shown with a triage question: the pictograph when one exists,
+ * otherwise the circular Material-glyph badge. Decorative — the question text
+ * carries meaning.
+ */
+@Composable
+fun TriageStepPicture(token: String?, modifier: Modifier = Modifier, size: Dp = 150.dp) {
+    val pic = triagePictureRes(token)
+    if (pic != null) {
+        Image(
+            painter = painterResource(pic),
+            contentDescription = null,
+            modifier = modifier.size(size)
+        )
+    } else {
+        TriageStepIcon(token, modifier)
+    }
+}
+
+/** Circular icon badge fallback for tokens without artwork. */
 @Composable
 fun TriageStepIcon(token: String?, modifier: Modifier = Modifier) {
     Box(

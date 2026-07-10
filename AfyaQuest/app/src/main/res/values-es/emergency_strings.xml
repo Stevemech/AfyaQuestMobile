@@ -14,6 +14,9 @@
     <string name="emergency_new_assessment">Nueva evaluación</string>
     <string name="emergency_done">Listo</string>
     <string name="emergency_hear_step">Toque para escuchar este paso</string>
+    <string name="emergency_assistant">Asistente AfyaQuest</string>
+    <string name="emergency_voice_on">Voz activada — toque para silenciar</string>
+    <string name="emergency_voice_off">Voz desactivada — toque para activar</string>
     <string name="emergency_history">Casos anteriores</string>
     <string name="emergency_history_empty">Aún no hay evaluaciones.</string>
     <string name="emergency_not_synced">Sin sincronizar</string>

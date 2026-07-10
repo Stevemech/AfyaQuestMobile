@@ -1,6 +1,5 @@
 package com.afyaquest.app.presentation.emergencyguide
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -214,7 +212,7 @@ fun EmergencyLanguageToggle(current: String, onSelect: (String) -> Unit) {
     ) {
         val options = listOf(
             LanguageManager.LANGUAGE_ENGLISH to "EN",
-            LanguageManager.LANGUAGE_KAQCHIKEL to "KAQ"
+            LanguageManager.LANGUAGE_SPANISH to "ES"
         )
         options.forEach { (code, label) ->
             val active = current == code
@@ -229,92 +227,6 @@ fun EmergencyLanguageToggle(current: String, onSelect: (String) -> Unit) {
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             )
         }
-    }
-}
-
-/** Scene -> Primary -> Secondary -> Result progress bar. */
-@Composable
-fun TriagePhaseBar(currentIndex: Int, total: Int, labels: List<String>) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        for (i in 1..total) {
-            val active = i <= currentIndex
-            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                        .clip(RoundedCornerShape(3.dp))
-                        .background(
-                            if (active) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.surfaceVariant
-                        )
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = labels.getOrElse(i - 1) { "" },
-                    fontSize = 11.sp,
-                    maxLines = 1,
-                    fontWeight = if (i == currentIndex) FontWeight.Bold else FontWeight.Normal,
-                    color = if (i == currentIndex) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    }
-}
-
-/** Big lettered A/B/C/D answer button — consistent styling, large touch target. */
-@Composable
-fun TriageOptionButton(letter: String, label: String, onClick: () -> Unit) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = 72.dp),
-        shape = RoundedCornerShape(14.dp),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colorScheme.primary),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(letter, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
-            }
-            Spacer(Modifier.width(16.dp))
-            Text(text = label, fontSize = 18.sp, textAlign = TextAlign.Start, lineHeight = 24.sp)
-        }
-    }
-}
-
-/** Labeled "Tap to hear this step" control (a label, not just an icon). */
-@Composable
-fun HearStepButton(onClick: () -> Unit) {
-    FilledTonalButton(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = 52.dp),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null)
-        Spacer(Modifier.width(12.dp))
-        Text(
-            text = stringResource(R.string.emergency_hear_step),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
-        )
     }
 }
 
