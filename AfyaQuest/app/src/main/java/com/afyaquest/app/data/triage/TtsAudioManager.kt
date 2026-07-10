@@ -91,12 +91,20 @@ class TtsAudioManager @Inject constructor(
         tts = null
     }
 
-    private fun playFrom(index: Int) {
+    private fun playFrom(index: Int, initRetries: Int = TTS_INIT_RETRIES) {
         if (index >= steps.size) return
         val step = steps[index]
         when {
             step.clipPath != null -> playClip(step.clipPath, index)
             resolver.canSynthesize(language) && ttsReady -> speakTts(step.text, index)
+            // TTS engine still binding (first utterance after app start) — wait for it
+            // instead of silently dropping the step.
+            resolver.canSynthesize(language) && initRetries > 0 -> {
+                val myToken = token
+                mainHandler.postDelayed({
+                    if (myToken == token) playFrom(index, initRetries - 1)
+                }, TTS_INIT_RETRY_MS)
+            }
             else -> playFrom(index + 1) // Kaqchikel with no clip → skip, never synthesize
         }
     }
@@ -125,10 +133,10 @@ class TtsAudioManager @Inject constructor(
 
     private fun speakTts(text: String, index: Int) {
         val engine = tts ?: run { playFrom(index + 1); return }
-        val locale = Locale(language)
-        if (engine.isLanguageAvailable(locale) >= TextToSpeech.LANG_AVAILABLE) {
-            engine.language = locale
-        }
+        // setLanguage does its own availability check; on failure the engine keeps
+        // its current voice, and speaking with the wrong accent beats silence.
+        // (isLanguageAvailable pre-checks are unreliable on some engines.)
+        engine.setLanguage(Locale(language))
         engine.speak(text, TextToSpeech.QUEUE_FLUSH, null, "$token:$index")
     }
 
@@ -142,5 +150,9 @@ class TtsAudioManager @Inject constructor(
 
     private companion object {
         const val MANIFEST_PATH = "audio/audio_manifest.json"
+
+        /** How long to keep waiting for the TTS service to bind (10 × 300ms = 3s). */
+        const val TTS_INIT_RETRIES = 10
+        const val TTS_INIT_RETRY_MS = 300L
     }
 }

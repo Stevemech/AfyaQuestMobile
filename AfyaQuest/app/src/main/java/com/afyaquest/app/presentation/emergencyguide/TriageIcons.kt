@@ -75,7 +75,8 @@ fun triagePictureRes(token: String?): Int? = when (token) {
 fun dispositionPictureRes(dispositionId: String): Int? = when (dispositionId) {
     "disp_unsafe" -> R.drawable.emerg_pic_danger
     "disp_cpr" -> R.drawable.emerg_pic_cpr
-    "disp_immediate", "disp_priority" -> R.drawable.emerg_pic_ambulance
+    "disp_immediate" -> R.drawable.emerg_pic_ambulance
+    "disp_priority" -> R.drawable.emerg_pic_ambulance_warn
     "disp_stable" -> R.drawable.emerg_pic_check
     else -> null
 }
