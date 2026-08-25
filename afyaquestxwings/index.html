@@ -184,9 +184,9 @@
 
         <div class="sidebar__controls">
             <div class="lang-toggle">
-                <button class="lang-toggle__btn lang-toggle__btn--active">EN</button>
-                <button class="lang-toggle__btn">ES</button>
-                <button class="lang-toggle__btn">KAQ</button>
+                <button class="lang-toggle__btn lang-toggle__btn--active" data-lang="EN">EN</button>
+                <button class="lang-toggle__btn" data-lang="ES">ES</button>
+                <button class="lang-toggle__btn" data-lang="KAQ">KAQ</button>
             </div>
             <button class="demo-btn" data-demo-toggle>
                 <svg width="16" height="16"><use href="#i-spark"/></svg>
@@ -216,9 +216,9 @@
                         <div class="welcome__topbar">
                             <button class="welcome__lang">
                                 <svg width="14" height="14"><use href="#i-globe"/></svg>
-                                Español
+                                <span data-i18n="welcome.lang">Español</span>
                             </button>
-                            <button class="welcome__skip">Skip</button>
+                            <button class="welcome__skip" data-i18n="welcome.skip">Skip</button>
                         </div>
 
                         <div class="welcome__hero">
@@ -233,39 +233,40 @@
                             </div>
 
                             <h1 class="welcome__title">
-                                Emergency care, <em>on her side.</em>
+                                <span data-i18n="welcome.title.a">Emergency care,</span>
+                                <em data-i18n="welcome.title.b">on her side.</em>
                             </h1>
-                            <p class="welcome__subtitle">
+                            <p class="welcome__subtitle" data-i18n="welcome.sub">
                                 A faster path from the field to the right facility — for pregnant women
                                 and anyone navigating reproductive care.
                             </p>
                         </div>
 
                         <div class="welcome__chip-row">
-                            <span class="welcome__chip">Field-tested</span>
-                            <span class="welcome__chip">Offline-ready</span>
-                            <span class="welcome__chip">3 langs</span>
+                            <span class="welcome__chip" data-i18n="welcome.chip.1">Field-tested</span>
+                            <span class="welcome__chip" data-i18n="welcome.chip.2">Offline-ready</span>
+                            <span class="welcome__chip" data-i18n="welcome.chip.3">3 langs</span>
                         </div>
 
                         <div class="welcome__actions">
                             <button class="welcome__btn welcome__btn--primary" data-jump="screen-hub">
                                 <span>
-                                    Start a triage
-                                    <span class="welcome__btn-meta">For CHVs and Alas teams</span>
+                                    <span data-i18n="welcome.primary">Start a triage</span>
+                                    <span class="welcome__btn-meta" data-i18n="welcome.primary.meta">For CHVs and Alas teams</span>
                                 </span>
                                 <svg width="22" height="22"><use href="#i-arrow-right"/></svg>
                             </button>
                             <button class="welcome__btn welcome__btn--secondary">
                                 <span>
-                                    I'm in distress · Get help
-                                    <span class="welcome__btn-meta">Patient-facing flow</span>
+                                    <span data-i18n="welcome.secondary">I'm in distress · Get help</span>
+                                    <span class="welcome__btn-meta" data-i18n="welcome.secondary.meta">Patient-facing flow</span>
                                 </span>
                                 <svg width="22" height="22"><use href="#i-arrow-right"/></svg>
                             </button>
                         </div>
 
                         <div class="welcome__signin">
-                            Already a CHV? <strong>Sign in</strong>
+                            <span data-i18n="welcome.signin">Already a CHV?</span> <strong data-i18n="welcome.signin.link">Sign in</strong>
                         </div>
                     </div>
                 </section>
@@ -865,12 +866,12 @@
                                         Watch for hyperreflexia. Ping if she vomits or seizes.
                                     </div>
                                 </div>
-                                <div class="chat__compose">
-                                    <div class="chat__input">Type a message…</div>
-                                    <button class="chat__send">
+                                <form class="chat__compose" id="chat-form" autocomplete="off">
+                                    <input class="chat__input" id="chat-input" type="text" placeholder="Type a message…" />
+                                    <button class="chat__send" type="submit" aria-label="Send message">
                                         <svg width="16" height="16"><use href="#i-send"/></svg>
                                     </button>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -904,7 +905,7 @@
 
                             <div class="search">
                                 <svg width="16" height="16"><use href="#i-search"/></svg>
-                                Search "post-abortion care"…
+                                <input class="search__input" id="library-search" type="text" placeholder='Search "post-abortion care"…' />
                             </div>
                         </div>
 
@@ -987,8 +988,32 @@
                     </div>
                 </section>
 
+                <!-- Toast notifications -->
+                <div class="toast" id="toast" role="status" aria-live="polite">
+                    <span class="toast__icon" aria-hidden="true"></span>
+                    <span class="toast__text"></span>
+                </div>
+
+                <!-- Bottom sheet -->
+                <div class="sheet" id="sheet" hidden>
+                    <button class="sheet__backdrop" data-sheet-close aria-label="Close sheet"></button>
+                    <div class="sheet__panel" role="dialog" aria-modal="true">
+                        <div class="sheet__handle" aria-hidden="true"></div>
+                        <div class="sheet__content" id="sheet-content"></div>
+                    </div>
+                </div>
+
             </div><!-- /phone__screen -->
         </div><!-- /phone -->
+
+        <div class="demo-dots" id="demo-dots" aria-hidden="true">
+            <button class="demo-dots__dot demo-dots__dot--active" data-dot="screen-welcome" aria-label="Welcome"></button>
+            <button class="demo-dots__dot" data-dot="screen-hub" aria-label="Triage hub"></button>
+            <button class="demo-dots__dot" data-dot="screen-triage" aria-label="Triage wizard"></button>
+            <button class="demo-dots__dot" data-dot="screen-plan" aria-label="Action plan"></button>
+            <button class="demo-dots__dot" data-dot="screen-case" aria-label="Live case"></button>
+            <button class="demo-dots__dot" data-dot="screen-library" aria-label="Care library"></button>
+        </div>
     </div><!-- /phone-wrap -->
 
     <!-- ===========  NOTES PANEL  =========== -->
