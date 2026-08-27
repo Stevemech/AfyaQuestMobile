@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Lecciones interactivas: lista (pestaña Aprender) y detalle de lección -->
+    <string name="lesson_ui_progress_label">Lecciones completadas</string>
+    <string name="lesson_ui_number_format">Lección %1$d</string>
+    <string name="lesson_ui_next_lesson">Siguiente lección</string>
+    <string name="lesson_ui_back_to_lessons">Volver a lecciones</string>
+    <string name="lesson_ui_all_done_title">¡Completaste todas las lecciones!</string>
+    <string name="lesson_ui_all_done_message">Buen trabajo. Puedes volver a leer cualquier lección abajo.</string>
+    <string name="lesson_ui_not_found">No se encontró la lección</string>
+    <string name="lesson_ui_completed_message">¡Buen trabajo! Sigue así para ganar más XP.</string>
+    <string name="lesson_ui_reading_progress">Progreso de lectura</string>
+    <string name="lesson_ui_read_hint">Lee hasta el final y luego marca la lección como completada para ganar XP.</string>
+</resources>

@@ -12,7 +12,6 @@ import com.afyaquest.app.domain.model.LessonCategory
 import com.afyaquest.app.util.ProgressDataStore
 import com.afyaquest.app.util.TokenManager
 import com.afyaquest.app.util.XpManager
-import com.afyaquest.app.util.XpRewards
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,9 +42,6 @@ class LessonsViewModel @Inject constructor(
     private val _completedLessons = MutableStateFlow<Set<String>>(emptySet())
     val completedLessons: StateFlow<Set<String>> = _completedLessons.asStateFlow()
 
-    private val _selectedLesson = MutableStateFlow<Lesson?>(null)
-    val selectedLesson: StateFlow<Lesson?> = _selectedLesson.asStateFlow()
-
     val categories = listOf(
         LessonCategory.HYGIENE,
         LessonCategory.NUTRITION,
@@ -56,6 +52,11 @@ class LessonsViewModel @Inject constructor(
         LessonCategory.MEDICATION,
         LessonCategory.HEALTH_EDUCATION
     )
+
+    companion object {
+        /** Number of built-in lessons (referenced by the Learn hub and Dashboard). */
+        const val TOTAL_LESSONS = 6
+    }
 
     init {
         loadLessons()
@@ -153,8 +154,25 @@ class LessonsViewModel @Inject constructor(
         _selectedCategory.value = category
     }
 
-    fun selectLesson(lesson: Lesson?) {
-        _selectedLesson.value = lesson
+    /** A lesson by id, with its persisted completion state applied. */
+    fun lessonById(id: String): Lesson? =
+        _lessons.value.find { it.id == id }?.let { lesson ->
+            lesson.copy(completed = _completedLessons.value.contains(lesson.id))
+        }
+
+    /**
+     * The next lesson the user has not completed yet.
+     * With [afterId] the search starts after that lesson and wraps around, so the "Next lesson"
+     * action after completing lesson 3 suggests lesson 4 first, then any earlier one still open.
+     */
+    fun nextIncompleteLesson(afterId: String? = null): Lesson? {
+        val all = _lessons.value
+        if (all.isEmpty()) return null
+        val startIndex = all.indexOfFirst { it.id == afterId }
+        val ordered = if (startIndex < 0) all else all.drop(startIndex + 1) + all.take(startIndex)
+        return ordered
+            .firstOrNull { !_completedLessons.value.contains(it.id) }
+            ?.copy(completed = false)
     }
 
     /**
@@ -168,8 +186,9 @@ class LessonsViewModel @Inject constructor(
 
             val lesson = _lessons.value.find { it.id == lessonId }
             if (lesson != null) {
+                // Award exactly what the "Mark as complete (+N XP)" button promises
                 xpManager.addXP(
-                    XpRewards.MODULE_COMPLETED,
+                    lesson.points,
                     "Completed lesson: ${lesson.title}"
                 )
             }

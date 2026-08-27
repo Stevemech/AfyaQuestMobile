@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home hub (Dashboard) -->
+    <string name="home_todo_progress_label">Completed today</string>
+    <string name="home_score_format">Score %1$d/%2$d</string>
+    <string name="home_stops_visited_format">%1$d of %2$d stops visited</string>
+    <string name="home_due_format">Due %1$s</string>
+    <string name="home_task_label">Task</string>
+    <string name="home_no_assignments">No assignments right now</string>
+    <string name="home_clock_hint">Clock in when you start your field day</string>
+    <string name="home_open_settings">Open settings</string>
+</resources>

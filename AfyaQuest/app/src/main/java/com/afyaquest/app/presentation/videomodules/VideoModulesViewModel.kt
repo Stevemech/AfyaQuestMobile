@@ -2,8 +2,10 @@ package com.afyaquest.app.presentation.videomodules
 
 import android.content.Context
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.afyaquest.app.R
 import com.afyaquest.app.data.remote.ApiService
 import com.afyaquest.app.domain.model.VideoCategory
 import com.afyaquest.app.domain.model.VideoModule
@@ -29,23 +31,33 @@ class VideoModulesViewModel @Inject constructor(
     companion object {
         private const val S3_BASE = "https://afyaquest-media.s3.amazonaws.com/videos"
 
-        val MODULE_TITLES = mapOf(
-            1 to "Body Systems",
-            2 to "Common Childhood Illnesses",
-            3 to "Chronic & Infectious Diseases",
-            4 to "Maternal & Reproductive Health",
-            5 to "First Aid & Emergency Care",
-            6 to "Infection Prevention & Control"
-        )
+        const val MODULE_COUNT = 6
 
-        val MODULE_DESCRIPTIONS = mapOf(
-            1 to "Learn about the major systems of the human body",
-            2 to "Identify and manage common illnesses in children",
-            3 to "Understand chronic and infectious diseases",
-            4 to "Maternal health, pregnancy, and family planning",
-            5 to "Emergency response and first aid techniques",
-            6 to "Prevent and control the spread of infections"
-        )
+        /**
+         * Module titles / descriptions live in string resources (learn_module_N_title / _desc).
+         * Composables must resolve them with stringResource() so the per-app language (applied in
+         * MainActivity.attachBaseContext) is respected; [moduleTitleRes] / [moduleDescriptionRes]
+         * return the resource id for a module number.
+         */
+        @StringRes
+        fun moduleTitleRes(moduleNumber: Int): Int = when (moduleNumber) {
+            1 -> R.string.learn_module_1_title
+            2 -> R.string.learn_module_2_title
+            3 -> R.string.learn_module_3_title
+            4 -> R.string.learn_module_4_title
+            5 -> R.string.learn_module_5_title
+            else -> R.string.learn_module_6_title
+        }
+
+        @StringRes
+        fun moduleDescriptionRes(moduleNumber: Int): Int = when (moduleNumber) {
+            1 -> R.string.learn_module_1_desc
+            2 -> R.string.learn_module_2_desc
+            3 -> R.string.learn_module_3_desc
+            4 -> R.string.learn_module_4_desc
+            5 -> R.string.learn_module_5_desc
+            else -> R.string.learn_module_6_desc
+        }
 
         val MODULE_ICONS = mapOf(
             1 to "\uD83E\uDEC0", 2 to "\uD83E\uDE7A", 3 to "\uD83E\uDDA0",
@@ -132,6 +144,11 @@ class VideoModulesViewModel @Inject constructor(
     private val _completedQuizzes = MutableStateFlow<Set<String>>(emptySet())
     val completedQuizzes: StateFlow<Set<String>> = _completedQuizzes.asStateFlow()
 
+    /**
+     * XP awarded by the most recent first-time [markVideoWatched] call in this ViewModel
+     * (0 when the video had already been watched). Used by the player end card.
+     */
+
     init {
         _videos.value = allVideos()
         loadSavedProgress()
@@ -153,12 +170,13 @@ class VideoModulesViewModel @Inject constructor(
     fun getModuleFolders(): List<VideoModuleFolder> {
         val watched = _watchedVideos.value
         val quizzes = _completedQuizzes.value
-        return (1..6).map { modNum ->
+        return (1..MODULE_COUNT).map { modNum ->
             val modVideos = _videos.value.filter { it.moduleNumber == modNum }
+            // Fallback text only; composables re-resolve these via moduleTitleRes()/moduleDescriptionRes()
             VideoModuleFolder(
                 moduleNumber = modNum,
-                title = MODULE_TITLES[modNum] ?: "Module $modNum",
-                description = MODULE_DESCRIPTIONS[modNum] ?: "",
+                title = context.getString(moduleTitleRes(modNum)),
+                description = context.getString(moduleDescriptionRes(modNum)),
                 icon = MODULE_ICONS[modNum] ?: "",
                 videoCount = modVideos.size,
                 watchedCount = modVideos.count { watched.contains(it.id) },
@@ -180,6 +198,45 @@ class VideoModulesViewModel @Inject constructor(
             }
     }
 
+    /** First unwatched video across all modules, in module/video order; null when everything is watched. */
+    fun nextUnwatchedVideo(): VideoModule? {
+        val watched = _watchedVideos.value
+        return _videos.value.firstOrNull { !watched.contains(it.id) }
+    }
+
+    /**
+     * Next unwatched video inside [moduleNumber]. When [afterVideoId] is given, videos after it are
+     * preferred; if none remain after it, the first unwatched video before it is returned instead.
+     */
+    fun nextUnwatchedInModule(moduleNumber: Int, afterVideoId: String?): VideoModule? {
+        val watched = _watchedVideos.value
+        val modVideos = _videos.value.filter { it.moduleNumber == moduleNumber }
+        val unwatched = modVideos.filter { !watched.contains(it.id) && it.id != afterVideoId }
+        if (afterVideoId == null) return unwatched.firstOrNull()
+        val currentIndex = modVideos.indexOfFirst { it.id == afterVideoId }
+        if (currentIndex < 0) return unwatched.firstOrNull()
+        val after = modVideos.drop(currentIndex + 1).firstOrNull { !watched.contains(it.id) }
+        return after ?: unwatched.firstOrNull()
+    }
+
+    /** Module number that contains [videoId], or null for an unknown id. */
+    fun moduleNumberFor(videoId: String): Int? =
+        _videos.value.find { it.id == videoId }?.moduleNumber
+
+    fun isVideoWatched(videoId: String): Boolean = _watchedVideos.value.contains(videoId)
+
+    /** 1-based position of [videoId] inside its module (for "Video 2 of 8"), or null. */
+    fun videoIndexInModule(videoId: String): Int? {
+        val video = _videos.value.find { it.id == videoId } ?: return null
+        val modVideos = _videos.value.filter { it.moduleNumber == video.moduleNumber }
+        val index = modVideos.indexOfFirst { it.id == videoId }
+        return if (index >= 0) index + 1 else null
+    }
+
+    fun videoCountInModule(moduleNumber: Int): Int =
+        _videos.value.count { it.moduleNumber == moduleNumber }
+
+    /** Marks a video watched (idempotent) and syncs the progress event to the API. */
     fun markVideoWatched(videoId: String) {
         if (_watchedVideos.value.contains(videoId)) return
         _watchedVideos.value = _watchedVideos.value + videoId

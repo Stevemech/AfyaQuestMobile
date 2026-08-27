@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kaqchikel (cak). DRAFT: machine-drafted from existing app vocabulary; needs review by a native Kaqchikel speaker before release. -->
+<resources>
+    <!-- Kik'utunïk Jujun Q'ij -->
+    <string name="daily_questions_complete">Xetz\'aqät ri kik\'utunïk jujun q\'ij!</string>
+    <string name="daily_lives_gained_format">Xak\'ul %1$d k\'aslemal.</string>
+    <string name="daily_lives_lost_format">Xasäch %1$d k\'aslemal.</string>
+    <string name="daily_lives_unchanged">Man xjalatäj ta ri ak\'aslemal.</string>
+    <string name="daily_come_back_tomorrow">Katpe chik chuwäq richin k\'ak\'a\' taq k\'utunïk.</string>
+    <string name="daily_leave_quiz_title">La nawajo\' yatel pa ri moloj k\'utunïk?</string>
+    <string name="daily_leave_quiz_message">Xtisäch ri atzolin tzij chuqa\' man xtak\'ul ta ri XP richin xtz\'aqät.</string>
+
+    <!-- Rutzijol Jujun Q'ij -->
+    <string name="daily_report_saved_title">Xyak ri rutzijol</string>
+    <string name="daily_report_saved_message_format">Xyak ri atzijol richin %1$s.</string>
+    <string name="daily_view_history">Titz\'et ri runatab\'al</string>
+    <string name="daily_already_submitted_format">Xataq yan ri rutzijol wakami: %1$d yab\'il winäq, %2$d taq tz\'u\'.</string>
+    <string name="daily_second_report_title">La nataq jun chik rutzijol?</string>
+    <string name="daily_second_report_message">Xataq yan jun rutzijol wakami. Xtiyak ri ruka\'n rutzijol, po man xtak\'ul ta ch\'aqa\' chik XP.</string>
+    <string name="daily_submit_anyway">Titaq jun chik</string>
+    <string name="daily_discard_report_title">La nayuj re rutzijol re\'?</string>
+    <string name="daily_discard_report_message">Xtisäch ri xatz\'ib\'aj.</string>
+    <string name="daily_required_done_format">%1$d chi ke ri %2$d k\'atzinel taq k\'ojlib\'äl xetz\'aqät</string>
+    <string name="daily_field_required">K\'atzinel re k\'ojlib\'äl re\'</string>
+    <string name="daily_voice_spanish_hint">Ri ch\'ab\'äl chi tz\'ib\'anïk nusamajij pa Español.</string>
+</resources>

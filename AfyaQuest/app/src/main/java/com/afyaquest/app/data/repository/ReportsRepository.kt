@@ -5,10 +5,12 @@ import com.afyaquest.app.data.local.entity.PendingReportEntity
 import com.afyaquest.app.data.local.entity.ReportEntity
 import com.afyaquest.app.domain.model.DailyReport
 import com.afyaquest.app.sync.SyncManager
+import com.afyaquest.app.util.DateUtils
 import com.afyaquest.app.util.Resource
 import com.afyaquest.app.util.TokenManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import java.util.Date
 import javax.inject.Inject
@@ -83,6 +85,19 @@ class ReportsRepository @Inject constructor(
 
         return reportDao.getReportsByUserFlow(userId).map { entities ->
             Resource.Success(entities.map { it.toDailyReport() })
+        }
+    }
+
+    /**
+     * Emits true whenever a report dated today exists locally for the current user.
+     * Used by the Home hub to tick the "Daily Report" task. Emits false when nobody is logged in.
+     */
+    fun observeReportSubmittedToday(): Flow<Boolean> {
+        val userId = tokenManager.getUserId()
+        if (userId.isNullOrBlank()) return flowOf(false)
+        return reportDao.getReportsByUserFlow(userId).map { list ->
+            val today = DateUtils.todayIso()
+            list.any { it.date == today }
         }
     }
 

@@ -14,6 +14,22 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Screen model for the Tasks tab. Everything is derived from ONE merged list
+ * (API status + local completion) so the stats and the rows never disagree.
+ */
+data class AssignmentsUiState(
+    /** Merged, unfiltered list. */
+    val all: List<AssignmentDto> = emptyList(),
+    /** Merged list after the selected filter, sorted for display. */
+    val visible: List<AssignmentDto> = emptyList()
+) {
+    val total: Int get() = all.size
+    val completed: Int get() = all.count { it.status == "completed" }
+    val pending: Int get() = total - completed
+    val mandatory: Int get() = all.count { it.mandatory }
+}
+
 @HiltViewModel
 class AssignmentsViewModel @Inject constructor(
     private val assignmentsRepository: AssignmentsRepository,
@@ -30,6 +46,16 @@ class AssignmentsViewModel @Inject constructor(
     private val _completedLessons = MutableStateFlow<Set<String>>(emptySet())
     private val _completedQuizzes = MutableStateFlow<Set<String>>(emptySet())
     private val _watchedVideos = MutableStateFlow<Set<String>>(emptySet())
+
+    /**
+     * Reactive merged view: recomputed whenever the API result, the filter, or local
+     * lesson/quiz completion changes, so a task flips to "Completed" the moment it is done.
+     */
+    val uiState: StateFlow<AssignmentsUiState> =
+        combine(_assignmentsState, _selectedFilter, _completedLessons, _completedQuizzes) {
+                state, filter, lessons, quizzes ->
+            buildUiState(state, filter, lessons, quizzes)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AssignmentsUiState())
 
     init {
         videoDownloadManager.refreshDownloadedState()
@@ -84,32 +110,66 @@ class AssignmentsViewModel @Inject constructor(
         _selectedFilter.value = filter
     }
 
-    fun getFilteredAssignments(): List<AssignmentDto> {
-        val all = (_assignmentsState.value as? Resource.Success)?.data ?: emptyList()
-        val merged = all.map { assignment ->
-            val t = assignment.type
-            val locallyCompleted = when {
-                t == "lesson" -> assignment.lessonId != null && _completedLessons.value.contains(assignment.lessonId)
-                t == "module" || t == "video" -> {
-                    val mid = assignment.moduleId
-                    mid != null && _completedQuizzes.value.contains(mid)
-                }
-                else -> false
+    // ------------------------------------------------------------------
+    // Merge / filter / sort
+    // ------------------------------------------------------------------
+
+    private fun mergeWithLocalProgress(
+        all: List<AssignmentDto>,
+        lessons: Set<String>,
+        quizzes: Set<String>
+    ): List<AssignmentDto> = all.map { assignment ->
+        val t = assignment.type
+        val locallyCompleted = when {
+            t == "lesson" -> assignment.lessonId != null && lessons.contains(assignment.lessonId)
+            t == "module" || t == "video" -> {
+                val mid = assignment.moduleId
+                mid != null && quizzes.contains(mid)
             }
-            if (locallyCompleted && assignment.status != "completed") {
-                assignment.copy(status = "completed")
-            } else {
-                assignment
-            }
+            else -> false
         }
-        return when (_selectedFilter.value) {
+        if (locallyCompleted && assignment.status != "completed") {
+            assignment.copy(status = "completed")
+        } else {
+            assignment
+        }
+    }
+
+    private fun applyFilter(merged: List<AssignmentDto>, filter: AssignmentFilter): List<AssignmentDto> =
+        when (filter) {
             AssignmentFilter.ALL -> merged
             AssignmentFilter.MANDATORY -> merged.filter { it.mandatory }
             AssignmentFilter.MODULES -> merged.filter { it.type == "module" || it.type == "video" }
             AssignmentFilter.LESSONS -> merged.filter { it.type == "lesson" }
             AssignmentFilter.REPORTS -> merged.filter { it.type == "report" }
         }
+
+    private fun buildUiState(
+        state: Resource<List<AssignmentDto>>?,
+        filter: AssignmentFilter,
+        lessons: Set<String>,
+        quizzes: Set<String>
+    ): AssignmentsUiState {
+        val raw = (state as? Resource.Success)?.data ?: emptyList()
+        val merged = mergeWithLocalProgress(raw, lessons, quizzes)
+        return AssignmentsUiState(
+            all = merged,
+            visible = applyFilter(merged, filter).sortedWith(displayOrder)
+        )
     }
+
+    // ------------------------------------------------------------------
+    // Snapshot helpers kept for callers outside this screen (e.g. Dashboard)
+    // ------------------------------------------------------------------
+
+    /** Merged + filtered snapshot of the current state (non-reactive). */
+    fun getFilteredAssignments(): List<AssignmentDto> =
+        buildUiState(
+            _assignmentsState.value,
+            _selectedFilter.value,
+            _completedLessons.value,
+            _completedQuizzes.value
+        ).visible
 
     fun getMandatoryCount(): Int {
         val all = (_assignmentsState.value as? Resource.Success)?.data ?: emptyList()
@@ -121,6 +181,12 @@ class AssignmentsViewModel @Inject constructor(
         return all.count { it.status != "completed" }
     }
 }
+
+/** Pending before completed; among pending, mandatory first, then earliest due date. */
+private val displayOrder: Comparator<AssignmentDto> =
+    compareBy<AssignmentDto> { it.status == "completed" }
+        .thenByDescending { it.mandatory }
+        .thenBy { it.dueDate ?: "9999-12-31" }
 
 enum class AssignmentFilter {
     ALL, MANDATORY, MODULES, LESSONS, REPORTS

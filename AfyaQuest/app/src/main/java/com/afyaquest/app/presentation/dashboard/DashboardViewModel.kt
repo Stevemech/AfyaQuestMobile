@@ -4,8 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afyaquest.app.data.repository.AuthRepository
+import com.afyaquest.app.presentation.lessons.LessonsViewModel
+import com.afyaquest.app.data.repository.ReportsRepository
+import com.afyaquest.app.presentation.videomodules.VideoModulesViewModel
 import com.afyaquest.app.sync.SyncManager
 import com.afyaquest.app.util.NetworkMonitor
+import com.afyaquest.app.util.ProgressDataStore
 import com.afyaquest.app.util.Resource
 import com.afyaquest.app.util.XpData
 import com.afyaquest.app.util.XpManager
@@ -15,10 +19,41 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+/**
+ * "What do I still need to do today?" for the three daily tasks shown on the Home hub.
+ */
+data class DailyProgress(
+    val questionsDone: Boolean = false,
+    /** Correct answers of today's daily-questions session, null until finished today. */
+    val questionsCorrect: Int? = null,
+    val questionsTotal: Int? = null,
+    val stopsVisited: Int = 0,
+    /** 0 until today's itinerary has been loaded once. */
+    val stopsTotal: Int = 0,
+    val reportDone: Boolean = false
+) {
+    val itineraryDone: Boolean get() = stopsTotal > 0 && stopsVisited >= stopsTotal
+    val doneCount: Int get() = listOf(questionsDone, itineraryDone, reportDone).count { it }
+    val allDone: Boolean get() = doneCount >= TOTAL_TASKS
+
+    companion object {
+        const val TOTAL_TASKS = 3
+    }
+}
+
+/** Overall learning progress shown on the Learning Center cards. */
+data class LearningProgress(
+    val videosWatched: Int = 0,
+    val videosTotal: Int = 0,
+    val lessonsCompleted: Int = 0,
+    val lessonsTotal: Int = 0
+)
 
 /**
  * ViewModel for Dashboard screen
@@ -28,8 +63,56 @@ class DashboardViewModel @Inject constructor(
     private val xpManager: XpManager,
     private val networkMonitor: NetworkMonitor,
     private val syncManager: SyncManager,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val progressDataStore: ProgressDataStore,
+    private val reportsRepository: ReportsRepository
 ) : ViewModel() {
+
+    companion object {
+        private const val TOTAL_LESSONS = LessonsViewModel.TOTAL_LESSONS
+    }
+
+    // Daily To-Do progress (questions / itinerary / report), all date-scoped to today
+    val dailyProgress: StateFlow<DailyProgress> = combine(
+        progressDataStore.isDailyQuestionsDoneToday(),
+        progressDataStore.getDailyQuestionsResult(),
+        progressDataStore.getItineraryProgressToday(),
+        reportsRepository.observeReportSubmittedToday()
+    ) { questionsDone, questionsResult, itinerary, reportDone ->
+        DailyProgress(
+            questionsDone = questionsDone,
+            questionsCorrect = if (questionsDone) questionsResult?.correctAnswers else null,
+            questionsTotal = if (questionsDone) questionsResult?.totalQuestions else null,
+            stopsVisited = itinerary.visited,
+            stopsTotal = itinerary.total,
+            reportDone = reportDone
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = DailyProgress()
+    )
+
+    // Learning Center progress (videos watched / lessons completed)
+    val learningProgress: StateFlow<LearningProgress> = combine(
+        progressDataStore.getWatchedVideos(),
+        progressDataStore.getCompletedLessons()
+    ) { watched, lessons ->
+        val videosTotal = VideoModulesViewModel.allVideos().size
+        LearningProgress(
+            videosWatched = watched.size.coerceAtMost(videosTotal),
+            videosTotal = videosTotal,
+            lessonsCompleted = lessons.size.coerceAtMost(TOTAL_LESSONS),
+            lessonsTotal = TOTAL_LESSONS
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = LearningProgress(
+            videosTotal = VideoModulesViewModel.allVideos().size,
+            lessonsTotal = TOTAL_LESSONS
+        )
+    )
 
     // XP data flow
     val xpData: StateFlow<XpData> = xpManager.getXpDataFlow()

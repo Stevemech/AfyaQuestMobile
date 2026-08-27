@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kaqchikel (cak). DRAFT: machine-drafted from existing app vocabulary; needs review by a native Kaqchikel speaker before release. -->
+<resources>
+    <!-- Tijonik: taq silowachib'äl (ch'akulal -> silowachib'äl -> moloj k'utunïk) -->
+
+    <!-- Kib'i' chuqa' kitzijol ri taq ch'akulal -->
+    <string name="learn_module_1_title">Rusamaj ri Ch\'akul</string>
+    <string name="learn_module_1_desc">Tawetamaj ri nimaläj taq rusamaj ri ch\'akul</string>
+    <string name="learn_module_2_title">Kiyab\'il Ak\'wala\'</string>
+    <string name="learn_module_2_desc">Tawetamaj chuqa\' takunaj ri jutaqil taq yab\'il chi ke ri ak\'wala\'</string>
+    <string name="learn_module_3_title">Yab\'il Man Nik\'is ta chuqa\' Yab\'il Niq\'ax</string>
+    <string name="learn_module_3_desc">Tawetamaj ri taq yab\'il man yek\'is ta chuqa\' ri yeq\'ax chi kikojol winäq</string>
+    <string name="learn_module_4_title">Ruk\'aslemal Nan chuqa\' Aläxik</string>
+    <string name="learn_module_4_desc">Ruk\'aslemal nan, toq k\'o ak\'wal, chuqa\' runuk\'ulem ach\'alalri\'ïl</string>
+    <string name="learn_module_5_title">Nab\'ey To\'ïk chuqa\' Sachoj</string>
+    <string name="learn_module_5_desc">Achike nab\'än toq k\'o jun sachoj chuqa\' ri nab\'ey to\'ïk</string>
+    <string name="learn_module_6_title">Richajixik Yab\'il</string>
+    <string name="learn_module_6_desc">Tachajij chuqa\' taq\'ata\' ruq\'axik ri yab\'il</string>
+
+    <!-- Kicholajem ri taq ch'akulal -->
+    <string name="learn_module_number_format">Ch\'akulal %1$d</string>
+    <string name="learn_continue_learning">Titikïr chik ri tijonik</string>
+    <string name="learn_all_videos_done">Xe\'atz\'ët ronojel ri taq silowachib\'äl!</string>
+    <string name="learn_all_videos_done_hint">Ke\'atz\'aqatisaj ri taq moloj k\'utunïk k\'a k\'o na richin yetz\'aqät ri taq ch\'akulal.</string>
+    <string name="learn_videos_count_format">%1$d/%2$d silowachib\'äl</string>
+    <string name="learn_quizzes_count_format">%1$d/%2$d moloj k\'utunïk</string>
+    <string name="learn_module_complete">Xtz\'aqät ri ch\'akulal</string>
+
+    <!-- Rutzijol ri ch'akulal -->
+    <string name="learn_video_number_format">Silowachib\'äl %1$d</string>
+    <string name="learn_video_of_format">Silowachib\'äl %1$d chi ke ri %2$d</string>
+    <string name="learn_watched">Xtz\'et</string>
+    <string name="learn_quiz_done">Xtz\'aqät ri moloj k\'utunïk</string>
+    <string name="learn_quiz_locked_hint">Tatzu\' ri silowachib\'äl richin nijaq ri moloj k\'utunïk</string>
+
+    <!-- Rutz'etik silowachib'äl -->
+    <string name="learn_video_error">Man xtikïr ta xtz\'et ri silowachib\'äl. Tatz\'eta\' ri internet chuqa\' tatojtob\'ej chik.</string>
+    <string name="learn_video_complete">Xtz\'aqät ri silowachib\'äl</string>
+    <string name="learn_next_video">Jun chik silowachib\'äl</string>
+    <string name="learn_back_to_module">Titzolïx pa ch\'akulal</string>
+</resources>

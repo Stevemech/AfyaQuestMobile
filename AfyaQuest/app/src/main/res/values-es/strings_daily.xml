@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Preguntas diarias -->
+    <string name="daily_questions_complete">¡Preguntas diarias completadas!</string>
+    <string name="daily_lives_gained_format">Ganaste %1$d vidas.</string>
+    <string name="daily_lives_lost_format">Perdiste %1$d vidas.</string>
+    <string name="daily_lives_unchanged">Tus vidas no cambiaron.</string>
+    <string name="daily_come_back_tomorrow">Regresa mañana para nuevas preguntas.</string>
+    <string name="daily_leave_quiz_title">¿Salir del cuestionario?</string>
+    <string name="daily_leave_quiz_message">Se perderán tus respuestas y no recibirás el bono por completar.</string>
+
+    <!-- Reporte diario -->
+    <string name="daily_report_saved_title">Reporte guardado</string>
+    <string name="daily_report_saved_message_format">Tu reporte del %1$s se guardó.</string>
+    <string name="daily_view_history">Ver historial</string>
+    <string name="daily_already_submitted_format">Ya enviaste el reporte de hoy: %1$d pacientes, %2$d vacunas.</string>
+    <string name="daily_second_report_title">¿Enviar otro reporte?</string>
+    <string name="daily_second_report_message">Ya enviaste un reporte hoy. El segundo reporte se guardará, pero no ganarás XP extra.</string>
+    <string name="daily_submit_anyway">Enviar de todos modos</string>
+    <string name="daily_discard_report_title">¿Descartar este reporte?</string>
+    <string name="daily_discard_report_message">Se perderá lo que escribiste.</string>
+    <string name="daily_required_done_format">%1$d de %2$d campos obligatorios listos</string>
+    <string name="daily_field_required">Este campo es obligatorio</string>
+    <string name="daily_voice_spanish_hint">La entrada por voz entiende español.</string>
+</resources>

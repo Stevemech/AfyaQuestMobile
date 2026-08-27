@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Daily Questions -->
+    <string name="daily_questions_complete">Daily questions complete!</string>
+    <string name="daily_lives_gained_format">You gained %1$d lives.</string>
+    <string name="daily_lives_lost_format">You lost %1$d lives.</string>
+    <string name="daily_lives_unchanged">Your lives did not change.</string>
+    <string name="daily_come_back_tomorrow">Come back tomorrow for new questions.</string>
+    <string name="daily_leave_quiz_title">Leave the quiz?</string>
+    <string name="daily_leave_quiz_message">Your answers will be lost and you will not get the completion bonus.</string>
+
+    <!-- Daily Report -->
+    <string name="daily_report_saved_title">Report saved</string>
+    <string name="daily_report_saved_message_format">Your report for %1$s has been saved.</string>
+    <string name="daily_view_history">View history</string>
+    <string name="daily_already_submitted_format">You already submitted today\'s report: %1$d patients, %2$d vaccinations.</string>
+    <string name="daily_second_report_title">Submit another report?</string>
+    <string name="daily_second_report_message">You already submitted a report today. A second report will be saved, but it will not earn extra XP.</string>
+    <string name="daily_submit_anyway">Submit anyway</string>
+    <string name="daily_discard_report_title">Discard this report?</string>
+    <string name="daily_discard_report_message">What you typed will be lost.</string>
+    <string name="daily_required_done_format">%1$d of %2$d required fields done</string>
+    <string name="daily_field_required">This field is required</string>
+    <string name="daily_voice_spanish_hint">Voice input understands Spanish.</string>
+</resources>

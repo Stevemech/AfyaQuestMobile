@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Daily itinerary (map) -->
+    <string name="field_map_progress_label">Stops visited</string>
+    <string name="field_map_load_error">Could not load today\'s route.</string>
+    <string name="field_map_confirm_visited_title">Mark %1$s as visited?</string>
+    <string name="field_map_confirm_visited_message">It will count as done for today.</string>
+    <string name="field_map_confirm_visited_yes">Yes, mark visited</string>
+    <string name="field_map_legend_facility">Health facility</string>
+    <string name="field_map_location_title">Turn on location to see your route</string>
+    <string name="field_map_location_body">The route starts from where you are. Your location stays on this phone.</string>
+    <string name="field_map_location_button">Turn on location</string>
+    <string name="field_map_all_visited_subtitle">You visited every stop. Finish with your daily report.</string>
+    <string name="field_map_fill_report">Fill in daily report</string>
+
+    <!-- Tasks (assignments) -->
+    <string name="field_tasks_overdue">Overdue</string>
+    <string name="field_tasks_review">Review</string>
+    <string name="field_tasks_no_link_hint">Nothing to open for this task. Ask your supervisor.</string>
+    <string name="field_tasks_type_generic">Task</string>
+    <string name="field_tasks_open_video">Watch video</string>
+    <string name="field_tasks_open_lesson">Open lesson</string>
+    <string name="field_tasks_open_report">Open report</string>
+
+    <!-- Chat with Fred -->
+    <string name="field_chat_suggestions_title">Try asking Fred:</string>
+    <string name="field_chat_suggest_dehydration">Signs of dehydration in a child</string>
+    <string name="field_chat_suggest_report">How do I fill in the daily report?</string>
+    <string name="field_chat_suggest_pregnancy">When should I refer a pregnant woman?</string>
+    <string name="field_chat_suggest_handwashing">Steps for proper handwashing</string>
+    <string name="field_chat_resend">Resend</string>
+</resources>

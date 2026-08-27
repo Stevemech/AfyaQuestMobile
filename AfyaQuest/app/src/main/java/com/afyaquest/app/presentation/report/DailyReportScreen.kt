@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.speech.RecognizerIntent
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -15,10 +16,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,8 +35,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.afyaquest.app.R
 import com.afyaquest.app.domain.model.DailyReport
+import com.afyaquest.app.presentation.components.CompletionDialog
+import com.afyaquest.app.presentation.components.ConfirmLeaveDialog
 import com.afyaquest.app.presentation.components.HandwritingDialog
+import com.afyaquest.app.presentation.components.HintRow
 import com.afyaquest.app.presentation.components.InputAssistRow
+import com.afyaquest.app.presentation.navigation.goHome
+import com.afyaquest.app.ui.theme.AfyaSuccess
+import com.afyaquest.app.util.DateUtils
 import com.afyaquest.app.util.LanguageManager
 import com.afyaquest.app.util.Resource
 import androidx.compose.material.icons.filled.Delete
@@ -57,23 +68,25 @@ fun DailyReportScreen(
     val selectedTab by viewModel.selectedTab.collectAsState()
     val reportHistory by viewModel.reportHistory.collectAsState()
     val historyLoading by viewModel.historyLoading.collectAsState()
+    val todayReport by viewModel.todayReport.collectAsState()
+    val hasDraft by viewModel.hasDraft.collectAsState()
+    val requiredFieldsDone by viewModel.requiredFieldsDone.collectAsState()
+    val validationAttempted by viewModel.validationAttempted.collectAsState()
+    val lastSubmission by viewModel.lastSubmission.collectAsState()
 
     val snackbarHostState = remember { SnackbarHostState() }
+    var showLeaveDialog by remember { mutableStateOf(false) }
+    var showSecondReportDialog by remember { mutableStateOf(false) }
 
-    val reportSubmittedMsg = stringResource(R.string.report_submitted)
     val submissionFailedMsg = stringResource(R.string.submission_failed)
 
-    // Handle submission state
+    // Draft protection: leaving with unsaved text asks first.
+    val draftGuardActive = selectedTab == 0 && hasDraft
+    BackHandler(enabled = draftGuardActive) { showLeaveDialog = true }
+
+    // Errors (including "fill required fields") surface as a snackbar; success shows a dialog.
     LaunchedEffect(submissionState) {
         when (submissionState) {
-            is Resource.Success -> {
-                snackbarHostState.showSnackbar(
-                    (submissionState as Resource.Success).data ?: reportSubmittedMsg,
-                    duration = SnackbarDuration.Short
-                )
-                viewModel.resetSubmissionState()
-                viewModel.selectTab(1) // Switch to History tab
-            }
             is Resource.Error -> {
                 snackbarHostState.showSnackbar(
                     (submissionState as Resource.Error).message ?: submissionFailedMsg,
@@ -81,8 +94,64 @@ fun DailyReportScreen(
                 )
                 viewModel.resetSubmissionState()
             }
+            is Resource.Success -> viewModel.resetSubmissionState()
             else -> {}
         }
+    }
+
+    if (showLeaveDialog) {
+        ConfirmLeaveDialog(
+            title = stringResource(R.string.daily_discard_report_title),
+            message = stringResource(R.string.daily_discard_report_message),
+            onStay = { showLeaveDialog = false },
+            onLeave = {
+                showLeaveDialog = false
+                navController.popBackStack()
+            }
+        )
+    }
+
+    if (showSecondReportDialog) {
+        AlertDialog(
+            onDismissRequest = { showSecondReportDialog = false },
+            title = { Text(stringResource(R.string.daily_second_report_title)) },
+            text = { Text(stringResource(R.string.daily_second_report_message)) },
+            confirmButton = {
+                Button(onClick = {
+                    showSecondReportDialog = false
+                    viewModel.submitReport()
+                }) {
+                    Text(stringResource(R.string.daily_submit_anyway))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSecondReportDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
+    lastSubmission?.let { info ->
+        CompletionDialog(
+            title = stringResource(R.string.daily_report_saved_title),
+            message = stringResource(
+                R.string.daily_report_saved_message_format,
+                DateUtils.formatLocalized(info.date)
+            ),
+            primaryText = stringResource(R.string.back_to_home),
+            onPrimary = {
+                viewModel.clearLastSubmission()
+                navController.goHome()
+            },
+            xpEarned = info.xpAwarded,
+            secondaryText = stringResource(R.string.daily_view_history),
+            onSecondary = {
+                viewModel.clearLastSubmission()
+                viewModel.selectTab(1)
+            },
+            onDismiss = { viewModel.clearLastSubmission() }
+        )
     }
 
     val tabs = listOf(stringResource(R.string.new_report), stringResource(R.string.report_history))
@@ -93,14 +162,15 @@ fun DailyReportScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.daily_report), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = {
+                        if (draftGuardActive) showLeaveDialog = true else navController.popBackStack()
+                    }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
-                    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                     Text(
-                        text = dateFormat.format(Date()),
+                        text = DateUtils.formatLocalized(DateUtils.todayIso()),
                         modifier = Modifier.padding(end = 16.dp),
                         fontSize = 14.sp
                     )
@@ -132,14 +202,23 @@ fun DailyReportScreen(
                     notes = notes,
                     submissionState = submissionState,
                     healthEducationTopics = viewModel.healthEducationTopics,
-                    isFormValid = viewModel.isFormValid(),
                     currentLanguage = viewModel.getCurrentLanguage(),
+                    todayReport = todayReport,
+                    requiredFieldsDone = requiredFieldsDone,
+                    showErrors = validationAttempted,
                     onPatientsVisitedChange = viewModel::setPatientsVisited,
                     onVaccinationsGivenChange = viewModel::setVaccinationsGiven,
                     onHealthEducationChange = viewModel::setHealthEducation,
                     onChallengesChange = viewModel::setChallenges,
                     onNotesChange = viewModel::setNotes,
-                    onSubmit = viewModel::submitReport
+                    onViewHistory = { viewModel.selectTab(1) },
+                    onSubmit = {
+                        if (viewModel.isFormValid() && todayReport != null) {
+                            showSecondReportDialog = true
+                        } else {
+                            viewModel.submitReport()
+                        }
+                    }
                 )
                 1 -> ReportHistoryContent(
                     reports = reportHistory,
@@ -192,13 +271,16 @@ private fun ReportFormContent(
     notes: String,
     submissionState: Resource<String>?,
     healthEducationTopics: List<String>,
-    isFormValid: Boolean,
     currentLanguage: String,
+    todayReport: DailyReport?,
+    requiredFieldsDone: Int,
+    showErrors: Boolean,
     onPatientsVisitedChange: (String) -> Unit,
     onVaccinationsGivenChange: (String) -> Unit,
     onHealthEducationChange: (String) -> Unit,
     onChallengesChange: (String) -> Unit,
     onNotesChange: (String) -> Unit,
+    onViewHistory: () -> Unit,
     onSubmit: () -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -208,6 +290,12 @@ private fun ReportFormContent(
 
     val locale = speechLocale(currentLanguage)
     val hwLocale = handwritingLocale(currentLanguage)
+    // Kaqchikel has no speech model; the mic listens in Spanish, so say so once.
+    val isKaqchikel = currentLanguage == LanguageManager.LANGUAGE_KAQCHIKEL
+
+    val patientsMissing = showErrors && patientsVisited.isEmpty()
+    val vaccinationsMissing = showErrors && vaccinationsGiven.isEmpty()
+    val educationMissing = showErrors && healthEducation.isEmpty()
 
     // ── Handwriting dialog state ────────────────────────────────────────
     var handwritingTarget by remember { mutableStateOf<String?>(null) }
@@ -309,6 +397,12 @@ private fun ReportFormContent(
             .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
+        // Already-submitted-today banner
+        if (todayReport != null) {
+            AlreadySubmittedBanner(report = todayReport, onViewHistory = onViewHistory)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
         // Intro card
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -317,18 +411,40 @@ private fun ReportFormContent(
             )
         ) {
             Row(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "\uD83D\uDCDD ", fontSize = 24.sp)
+                Icon(
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(28.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = stringResource(R.string.daily_report_intro),
                     fontSize = 14.sp,
-                    lineHeight = 20.sp
+                    lineHeight = 20.sp,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Required-field guidance sits ABOVE the form so the user knows what to expect
+        Text(
+            text = stringResource(R.string.required_fields_note),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        RequiredFieldsProgress(
+            done = requiredFieldsDone,
+            total = DailyReportViewModel.REQUIRED_FIELD_COUNT
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Patients Visited field (mic + pen)
         OutlinedTextField(
@@ -338,6 +454,10 @@ private fun ReportFormContent(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
+            isError = patientsMissing,
+            supportingText = if (patientsMissing) {
+                { Text(stringResource(R.string.daily_field_required)) }
+            } else null,
             trailingIcon = {
                 InputAssistRow(
                     onMicClick = { launchSpeech(patientsVisitedSpeechLauncher) },
@@ -345,6 +465,14 @@ private fun ReportFormContent(
                 )
             }
         )
+
+        if (isKaqchikel) {
+            Spacer(modifier = Modifier.height(4.dp))
+            HintRow(
+                text = stringResource(R.string.daily_voice_spanish_hint),
+                icon = Icons.Filled.Mic
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -356,6 +484,10 @@ private fun ReportFormContent(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
+            isError = vaccinationsMissing,
+            supportingText = if (vaccinationsMissing) {
+                { Text(stringResource(R.string.daily_field_required)) }
+            } else null,
             trailingIcon = {
                 InputAssistRow(
                     onMicClick = { launchSpeech(vaccinationsSpeechLauncher) },
@@ -376,6 +508,10 @@ private fun ReportFormContent(
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(stringResource(R.string.health_education_topics_label)) },
+                isError = educationMissing,
+                supportingText = if (educationMissing) {
+                    { Text(stringResource(R.string.daily_field_required)) }
+                } else null,
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = showEducationDropdown)
                 },
@@ -441,13 +577,13 @@ private fun ReportFormContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Submit button
+        // Submit button: always tappable so a tap can point at what is missing
         Button(
             onClick = onSubmit,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            enabled = isFormValid && submissionState !is Resource.Loading
+            enabled = submissionState !is Resource.Loading
         ) {
             if (submissionState is Resource.Loading) {
                 CircularProgressIndicator(
@@ -459,16 +595,80 @@ private fun ReportFormContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Required fields note
-        Text(
-            text = stringResource(R.string.required_fields_note),
-            fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
         Spacer(modifier = Modifier.height(24.dp))
+    }
+}
+
+/** "N of 3 required fields done" caption with a thin progress bar. */
+@Composable
+private fun RequiredFieldsProgress(done: Int, total: Int) {
+    val complete = total > 0 && done >= total
+    val fraction = if (total <= 0) 0f else (done.toFloat() / total).coerceIn(0f, 1f)
+    val color = if (complete) AfyaSuccess else MaterialTheme.colorScheme.primary
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = Icons.Filled.CheckCircle,
+                contentDescription = null,
+                tint = if (complete) AfyaSuccess else MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = stringResource(R.string.daily_required_done_format, done, total),
+                style = MaterialTheme.typography.labelLarge,
+                color = if (complete) AfyaSuccess else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        LinearProgressIndicator(
+            progress = { fraction },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp)
+                .clip(RoundedCornerShape(3.dp)),
+            color = color,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    }
+}
+
+/** Banner shown on the New Report tab when a report already exists for today. */
+@Composable
+private fun AlreadySubmittedBanner(report: DailyReport, onViewHistory: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        )
+    ) {
+        Column(modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Filled.CheckCircle,
+                    contentDescription = stringResource(R.string.completed),
+                    tint = AfyaSuccess,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = stringResource(
+                        R.string.daily_already_submitted_format,
+                        report.patientsVisited,
+                        report.vaccinationsGiven
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            TextButton(
+                onClick = onViewHistory,
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text(stringResource(R.string.daily_view_history))
+            }
+        }
     }
 }
 

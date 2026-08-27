@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,6 +47,17 @@ class ModuleQuizViewModel @Inject constructor(
 
     private val _isFinished = MutableStateFlow(false)
     val isFinished: StateFlow<Boolean> = _isFinished.asStateFlow()
+
+    /** True while the result is being saved locally; guards against double taps on Finish. */
+    private val _isSubmitting = MutableStateFlow(false)
+    val isSubmitting: StateFlow<Boolean> = _isSubmitting.asStateFlow()
+
+    /** XP awarded by this run: non-null only on the FIRST completion of this quiz, null on a retake. */
+    private val _completionXp = MutableStateFlow<Int?>(null)
+    val completionXp: StateFlow<Int?> = _completionXp.asStateFlow()
+
+    /** Every answer given in this run, keyed by question id, sent to the API on finish. */
+    private val answerRecords = mutableMapOf<String, QuizAnswer>()
 
     private val moduleTitles = mapOf(
         "mod1-nervous-system" to "Nervous System",
@@ -2780,10 +2792,17 @@ class ModuleQuizViewModel @Inject constructor(
 
     fun selectAnswer(index: Int) {
         if (_showExplanation.value) return
+        val question = getCurrentQuestion() ?: return
         _selectedAnswer.value = index
-        if (index == getCurrentQuestion()?.correctAnswerIndex) {
+        val isCorrect = index == question.correctAnswerIndex
+        if (isCorrect) {
             _correctAnswers.value = _correctAnswers.value + 1
         }
+        answerRecords[question.id] = QuizAnswer(
+            questionId = question.id,
+            selectedAnswer = index,
+            isCorrect = isCorrect
+        )
         _showExplanation.value = true
     }
 
@@ -2793,20 +2812,47 @@ class ModuleQuizViewModel @Inject constructor(
         _showExplanation.value = false
     }
 
-    fun finishQuiz() {
-        viewModelScope.launch {
-            try {
-                progressDataStore.markQuizCompleted(moduleId)
+    /** Start the quiz over ("Try again" on the results dialog). */
+    fun restart() {
+        if (_isSubmitting.value) return
+        answerRecords.clear()
+        _currentQuestionIndex.value = 0
+        _selectedAnswer.value = null
+        _showExplanation.value = false
+        _correctAnswers.value = 0
+        _completionXp.value = null
+        _isFinished.value = false
+    }
 
-                xpManager.addXP(
-                    XpRewards.MODULE_COMPLETED,
-                    "Completed quiz for module $moduleId"
-                )
+    /**
+     * Save the result. Safe to call repeatedly: returns immediately while a save is in flight or
+     * once finished. XP and the local "completed" mark are only granted on the first completion;
+     * the API sync always runs, after [isFinished] is raised, without blocking the UI.
+     */
+    fun finishQuiz() {
+        if (_isSubmitting.value || _isFinished.value) return
+        _isSubmitting.value = true
+        viewModelScope.launch {
+            var xpAwarded: Int? = null
+            try {
+                val alreadyCompleted = progressDataStore.getCompletedQuizzes().first().contains(moduleId)
+                if (!alreadyCompleted) {
+                    progressDataStore.markQuizCompleted(moduleId)
+                    xpManager.addXP(
+                        XpRewards.MODULE_COMPLETED,
+                        "Completed quiz for module $moduleId"
+                    )
+                    xpAwarded = XpRewards.MODULE_COMPLETED
+                }
 
                 videoDownloadManager.scheduleOffload(moduleId)
             } catch (e: Exception) {
                 Log.d("ModuleQuizVM", "Local progress save failed: ${e.message}")
             }
+
+            _completionXp.value = xpAwarded
+            _isFinished.value = true
+            _isSubmitting.value = false
 
             try {
                 val token = tokenManager.getIdToken()
@@ -2816,10 +2862,10 @@ class ModuleQuizViewModel @Inject constructor(
                         totalQuestions = getTotalQuestions(),
                         correctAnswers = _correctAnswers.value,
                         incorrectAnswers = getTotalQuestions() - _correctAnswers.value,
-                        answers = questions.mapIndexed { index, q ->
-                            QuizAnswer(
+                        answers = questions.map { q ->
+                            answerRecords[q.id] ?: QuizAnswer(
                                 questionId = q.id,
-                                selectedAnswer = if (index == _currentQuestionIndex.value) _selectedAnswer.value ?: -1 else -1,
+                                selectedAnswer = -1,
                                 isCorrect = false
                             )
                         }
@@ -2836,8 +2882,6 @@ class ModuleQuizViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.d("ModuleQuizVM", "Quiz sync failed (progress saved locally): ${e.message}")
             }
-
-            _isFinished.value = true
         }
     }
 }

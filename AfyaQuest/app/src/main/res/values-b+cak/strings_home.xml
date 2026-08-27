@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kaqchikel (cak). DRAFT: machine-drafted from existing app vocabulary; needs review by a native Kaqchikel speaker before release. -->
+<resources>
+    <!-- Home hub (Dashboard) -->
+    <string name="home_todo_progress_label">Xtz\'aqät wakami</string>
+    <string name="home_score_format">Ütz: %1$d chi ke ri %2$d</string>
+    <string name="home_stops_visited_format">%1$d chi ke ri %2$d k\'olib\'äl xetz\'et</string>
+    <string name="home_due_format">Q\'ij richin: %1$s</string>
+    <string name="home_task_label">Samaj</string>
+    <string name="home_no_assignments">Majun samaj ya\'on wakami</string>
+    <string name="home_clock_hint">Tatz\'ib\'aj ri okisaxïk toq natikirisaj ri asamaj</string>
+    <string name="home_open_settings">Tijaq ri Nuk\'ulem</string>
+</resources>

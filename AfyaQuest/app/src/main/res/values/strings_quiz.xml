@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Module quiz -->
+    <string name="quiz_title_format">%1$s Quiz</string>
+    <string name="quiz_complete_title">Quiz complete!</string>
+    <string name="quiz_complete_retake_title">Quiz finished again!</string>
+    <string name="quiz_result_format">You got %1$d of %2$d correct (%3$d%%)</string>
+    <string name="quiz_back_to_module">Back to module</string>
+    <string name="quiz_try_again">Try again</string>
+    <string name="quiz_leave_title">Leave the quiz?</string>
+    <string name="quiz_leave_message">Your answers will be lost.</string>
+    <string name="quiz_correct_count_desc">Correct answers so far</string>
+    <string name="quiz_saving_desc">Saving your result</string>
+    <string name="quiz_score_label">Score</string>
+    <string name="quiz_percentage_label">Percentage</string>
+</resources>

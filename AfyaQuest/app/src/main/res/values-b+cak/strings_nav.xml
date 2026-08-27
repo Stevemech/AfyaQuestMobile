@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Kaqchikel (cak).
+  DRAFT: these strings were machine-drafted from the vocabulary already used in
+  values-b+cak/strings.xml and need review by a native Kaqchikel speaker before release.
+-->
+<resources>
+    <!-- Bottom navigation -->
+    <string name="nav_home">Tikirib\'äl</string>
+    <string name="nav_learn">Tijonik</string>
+    <string name="nav_tasks">Taq Samaj</string>
+    <string name="nav_me">Ruwäch</string>
+
+    <!-- Learn hub -->
+    <string name="learn_title">Tijonik</string>
+    <string name="learn_tab_videos">Taq Silowachib\'äl</string>
+    <string name="learn_tab_lessons">Taq Tijonik</string>
+    <string name="ask_fred">Tak\'utuj chi re Fred</string>
+
+    <!-- Shared guidance -->
+    <string name="continue_label">Titikïr chik</string>
+    <string name="next_up">Ri jun chik</string>
+    <string name="done_today">Xtz\'aqät wakami</string>
+    <string name="tasks_done_today_format">%1$d chi ke ri %2$d xetz\'aqät wakami</string>
+    <string name="all_done_today">Ronojel xtz\'aqät wakami!</string>
+    <string name="xp_earned_format">+%1$d XP</string>
+    <string name="back_to_home">Titzolïx pa Tikirib\'äl</string>
+    <string name="step_of_format">Ruxaq %1$d chi ke ri %2$d</string>
+    <string name="required_label">K\'atzinel</string>
+    <string name="not_started">Man tikirinäq ta</string>
+    <string name="stay">Tik\'oje\'</string>
+    <string name="leave">Tel</string>
+    <string name="something_went_wrong">K\'o jun sachoj. Tatojtob\'ej chik.</string>
+</resources>

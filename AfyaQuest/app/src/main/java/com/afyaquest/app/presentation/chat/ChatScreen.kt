@@ -7,24 +7,30 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.afyaquest.app.R
 import com.afyaquest.app.domain.model.ChatMessage
-import kotlinx.coroutines.launch
+import com.afyaquest.app.ui.theme.AfyaSuccess
 
 /**
  * AI Chat screen with Fred
@@ -37,14 +43,28 @@ fun ChatScreen(
 ) {
     val messages by viewModel.messages.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    var inputText by remember { mutableStateOf("") }
+    val failedMessage by viewModel.failedMessage.collectAsState()
+    var inputText by rememberSaveable { mutableStateOf("") }
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
+    val showSuggestions = messages.none { it.isUser }
 
-    // Scroll to bottom when new messages arrive
-    LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty()) {
-            listState.animateScrollToItem(messages.size - 1)
+    val send: () -> Unit = {
+        if (inputText.isNotBlank() && !isLoading) {
+            viewModel.sendMessage(inputText)
+            inputText = ""
+        }
+    }
+
+    // Scroll to bottom when new messages arrive or Fred starts typing.
+    // Extra rows (suggestions / resend / typing) are counted so the last row is always visible.
+    val showResend = failedMessage != null && !isLoading
+    val totalRows = messages.size +
+        (if (showSuggestions) 1 else 0) +
+        (if (showResend) 1 else 0) +
+        (if (isLoading) 1 else 0)
+    LaunchedEffect(totalRows) {
+        if (totalRows > 0) {
+            listState.animateScrollToItem(totalRows - 1)
         }
     }
 
@@ -56,20 +76,7 @@ fun ChatScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        // Fred's avatar
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primaryContainer),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "👨‍⚕️",
-                                fontSize = 24.sp
-                            )
-                        }
-
+                        FredAvatar(size = 40.dp, emojiSize = 24.sp)
                         Column {
                             Text(
                                 text = stringResource(R.string.fred_ai_assistant),
@@ -79,14 +86,17 @@ fun ChatScreen(
                             Text(
                                 text = stringResource(R.string.online),
                                 fontSize = 12.sp,
-                                color = Color(0xFF438894)
+                                color = AfyaSuccess
                             )
                         }
                     }
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 }
             )
@@ -105,7 +115,7 @@ fun ChatScreen(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Input field
+                    // Input field stays enabled while Fred replies; only Send is gated.
                     OutlinedTextField(
                         value = inputText,
                         onValueChange = { inputText = it },
@@ -113,8 +123,9 @@ fun ChatScreen(
                             .weight(1f)
                             .heightIn(min = 56.dp, max = 120.dp),
                         placeholder = { Text(stringResource(R.string.type_message)) },
-                        enabled = !isLoading,
                         shape = RoundedCornerShape(28.dp),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+                        keyboardActions = KeyboardActions(onSend = { send() }),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
                             unfocusedBorderColor = MaterialTheme.colorScheme.outline
@@ -123,12 +134,7 @@ fun ChatScreen(
 
                     // Send button
                     FilledIconButton(
-                        onClick = {
-                            if (inputText.isNotBlank()) {
-                                viewModel.sendMessage(inputText)
-                                inputText = ""
-                            }
-                        },
+                        onClick = send,
                         enabled = inputText.isNotBlank() && !isLoading,
                         modifier = Modifier.size(56.dp),
                         colors = IconButtonDefaults.filledIconButtonColors(
@@ -167,6 +173,20 @@ fun ChatScreen(
                     )
                 }
 
+                // Suggested questions under Fred's greeting, until the user sends something
+                if (showSuggestions) {
+                    item {
+                        SuggestedQuestions(onAsk = { viewModel.sendMessage(it) })
+                    }
+                }
+
+                // Resend affordance after a failed send
+                if (showResend) {
+                    item {
+                        ResendRow(onResend = { viewModel.retryFailedMessage() })
+                    }
+                }
+
                 // Typing indicator
                 if (isLoading) {
                     item {
@@ -175,6 +195,87 @@ fun ChatScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun SuggestedQuestions(onAsk: (String) -> Unit) {
+    val suggestions = listOf(
+        stringResource(R.string.field_chat_suggest_dehydration),
+        stringResource(R.string.field_chat_suggest_report),
+        stringResource(R.string.field_chat_suggest_pregnancy),
+        stringResource(R.string.field_chat_suggest_handwashing)
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 40.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = Icons.Outlined.Lightbulb,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = stringResource(R.string.field_chat_suggestions_title),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        suggestions.forEach { question ->
+            SuggestionChip(
+                onClick = { onAsk(question) },
+                label = { Text(question) },
+                modifier = Modifier.heightIn(min = 44.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ResendRow(onResend: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 40.dp),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        OutlinedButton(
+            onClick = onResend,
+            modifier = Modifier.heightIn(min = 44.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Refresh,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(stringResource(R.string.field_chat_resend))
+        }
+    }
+}
+
+@Composable
+private fun FredAvatar(
+    size: androidx.compose.ui.unit.Dp,
+    emojiSize: androidx.compose.ui.unit.TextUnit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .size(size)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.primaryContainer),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "👨‍⚕️",
+            fontSize = emojiSize
+        )
     }
 }
 
@@ -189,19 +290,11 @@ fun MessageBubble(
     ) {
         if (!message.isUser) {
             // Fred's avatar for AI messages
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .align(Alignment.Bottom),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "👨‍⚕️",
-                    fontSize = 18.sp
-                )
-            }
+            FredAvatar(
+                size = 32.dp,
+                emojiSize = 18.sp,
+                modifier = Modifier.align(Alignment.Bottom)
+            )
             Spacer(modifier = Modifier.width(8.dp))
         }
 
@@ -273,19 +366,11 @@ fun TypingIndicator() {
         horizontalArrangement = Arrangement.Start
     ) {
         // Fred's avatar
-        Box(
-            modifier = Modifier
-                .size(32.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .align(Alignment.Bottom),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "👨‍⚕️",
-                fontSize = 18.sp
-            )
-        }
+        FredAvatar(
+            size = 32.dp,
+            emojiSize = 18.sp,
+            modifier = Modifier.align(Alignment.Bottom)
+        )
 
         Spacer(modifier = Modifier.width(8.dp))
 

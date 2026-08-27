@@ -1,31 +1,57 @@
 package com.afyaquest.app.presentation.assignments
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.Checklist
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.afyaquest.app.R
 import com.afyaquest.app.data.remote.dto.AssignmentDto
+import com.afyaquest.app.presentation.components.DoneBadge
+import com.afyaquest.app.presentation.components.EmptyState
+import com.afyaquest.app.presentation.components.ErrorState
+import com.afyaquest.app.presentation.components.HintRow
+import com.afyaquest.app.presentation.components.LoadingState
+import com.afyaquest.app.presentation.components.ProgressSummary
 import com.afyaquest.app.presentation.navigation.Screen
+import com.afyaquest.app.presentation.navigation.navigateSingle
+import com.afyaquest.app.presentation.navigation.openLearn
+import com.afyaquest.app.presentation.navigation.openLesson
+import com.afyaquest.app.presentation.navigation.openVideo
+import com.afyaquest.app.presentation.videomodules.VideoModulesViewModel
+import com.afyaquest.app.ui.theme.AfyaSuccess
+import com.afyaquest.app.ui.theme.AfyaWarning
+import com.afyaquest.app.util.DateUtils
 import com.afyaquest.app.util.Resource
 
+/**
+ * "Tasks" bottom tab: everything the admin assigned to this CHV.
+ * Top-level destination, so no back arrow; the bottom bar handles navigation.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssignmentsScreen(
@@ -34,21 +60,12 @@ fun AssignmentsScreen(
 ) {
     val assignmentsState by viewModel.assignmentsState.collectAsState()
     val selectedFilter by viewModel.selectedFilter.collectAsState()
-
-    // Re-fetch every time the screen appears
-    LaunchedEffect(Unit) {
-        viewModel.loadAssignments()
-    }
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.assignments), fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                },
+                title = { Text(stringResource(R.string.nav_tasks), fontWeight = FontWeight.Bold) },
                 actions = {
                     IconButton(onClick = { viewModel.loadAssignments() }) {
                         Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.refresh))
@@ -64,107 +81,51 @@ fun AssignmentsScreen(
         ) {
             when (assignmentsState) {
                 is Resource.Loading, null -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        LoadingState()
                     }
                 }
                 is Resource.Error -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(24.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = stringResource(R.string.failed_to_load_assignments),
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.error
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = (assignmentsState as Resource.Error).message ?: "",
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = { viewModel.loadAssignments() }) {
-                                Text(stringResource(R.string.retry))
-                            }
-                        }
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        ErrorState(
+                            message = stringResource(R.string.failed_to_load_assignments),
+                            onRetry = { viewModel.loadAssignments() }
+                        )
                     }
                 }
                 is Resource.Success -> {
-                    val allAssignments = (assignmentsState as Resource.Success).data ?: emptyList()
-
-                    if (allAssignments.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(24.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "📋", fontSize = 48.sp)
-                                Spacer(modifier = Modifier.height(12.dp))
-                                Text(
-                                    text = stringResource(R.string.no_assignments),
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = stringResource(R.string.no_assignments_desc),
-                                    fontSize = 14.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
+                    if (uiState.all.isEmpty()) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            EmptyState(
+                                title = stringResource(R.string.no_assignments),
+                                message = stringResource(R.string.no_assignments_desc),
+                                icon = Icons.Outlined.Checklist,
+                                actionText = stringResource(R.string.refresh),
+                                onAction = { viewModel.loadAssignments() }
+                            )
                         }
                     } else {
-                        // Stats summary
                         AssignmentStatsCard(
-                            total = allAssignments.size,
-                            mandatory = viewModel.getMandatoryCount(),
-                            pending = viewModel.getPendingCount()
+                            total = uiState.total,
+                            mandatory = uiState.mandatory,
+                            pending = uiState.pending,
+                            completed = uiState.completed
                         )
 
-                        // Filter chips
                         FilterChips(
                             selectedFilter = selectedFilter,
                             onFilterSelected = { viewModel.setFilter(it) }
                         )
 
-                        // Assignments list
-                        val filtered = viewModel.getFilteredAssignments()
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            items(filtered) { assignment ->
+                            items(uiState.visible) { assignment ->
                                 AssignmentCard(
                                     assignment = assignment,
-                                    onNavigate = {
-                                        when (assignment.type) {
-                                            "module", "video" -> navController.navigate(Screen.VideoModules.route)
-                                            "lesson" -> navController.navigate(Screen.Lessons.route)
-                                            "report" -> navController.navigate(Screen.DailyReport.route)
-                                            else -> when {
-                                                !assignment.moduleId.isNullOrBlank() ->
-                                                    navController.navigate(Screen.VideoModules.route)
-                                                !assignment.lessonId.isNullOrBlank() ->
-                                                    navController.navigate(Screen.Lessons.route)
-                                                else ->
-                                                    navController.navigate(Screen.Assignments.route)
-                                            }
-                                        }
-                                    }
+                                    onOpen = openActionFor(assignment, navController)
                                 )
                             }
                             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -176,11 +137,36 @@ fun AssignmentsScreen(
     }
 }
 
+/**
+ * The one place that decides where a task opens. Returns null when there is nothing to open,
+ * so the card shows a hint instead of a dead-end button. Never navigates back to this screen.
+ */
+private fun openActionFor(a: AssignmentDto, navController: NavController): (() -> Unit)? {
+    val moduleAction: (() -> Unit)? = a.moduleId?.takeIf { it.isNotBlank() }?.let { moduleId ->
+        {
+            val n = VideoModulesViewModel.allVideos().find { it.id == moduleId }?.moduleNumber
+            if (n != null) navController.openVideo(n, moduleId) else navController.openLearn(Screen.Learn.TAB_VIDEOS)
+        }
+    }
+    val lessonAction: (() -> Unit)? = a.lessonId?.takeIf { it.isNotBlank() }?.let { lessonId ->
+        { navController.openLesson(lessonId) }
+    }
+    return when (a.type) {
+        "module", "video" -> moduleAction ?: { navController.openLearn(Screen.Learn.TAB_VIDEOS) }
+        "lesson" -> lessonAction
+        "report" -> {
+            { navController.navigateSingle(Screen.DailyReport.route) }
+        }
+        else -> moduleAction ?: lessonAction
+    }
+}
+
 @Composable
 fun AssignmentStatsCard(
     total: Int,
     mandatory: Int,
-    pending: Int
+    pending: Int,
+    completed: Int = total - pending
 ) {
     Card(
         modifier = Modifier
@@ -191,23 +177,29 @@ fun AssignmentStatsCard(
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            StatColumn(
-                value = total.toString(),
-                label = stringResource(R.string.total_assigned)
-            )
-            StatColumn(
-                value = mandatory.toString(),
-                label = stringResource(R.string.mandatory)
-            )
-            StatColumn(
-                value = pending.toString(),
-                label = stringResource(R.string.pending)
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                StatColumn(
+                    value = total.toString(),
+                    label = stringResource(R.string.total_assigned)
+                )
+                StatColumn(
+                    value = mandatory.toString(),
+                    label = stringResource(R.string.mandatory)
+                )
+                StatColumn(
+                    value = pending.toString(),
+                    label = stringResource(R.string.pending)
+                )
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            ProgressSummary(
+                label = stringResource(R.string.completed),
+                done = completed,
+                total = total
             )
         }
     }
@@ -260,24 +252,55 @@ fun FilterChips(
     Spacer(modifier = Modifier.height(8.dp))
 }
 
+/** Localized display name of the linked lesson / video, falling back to a humanized id. */
+@Composable
+private fun assignmentItemName(assignment: AssignmentDto): String? {
+    val lessonId = assignment.lessonId
+    val moduleId = assignment.moduleId
+    return when {
+        !lessonId.isNullOrBlank() -> when (lessonId) {
+            "lesson-1" -> stringResource(R.string.lesson_1_title)
+            "lesson-2" -> stringResource(R.string.lesson_2_title)
+            "lesson-3" -> stringResource(R.string.lesson_3_title)
+            "lesson-4" -> stringResource(R.string.lesson_4_title)
+            "lesson-5" -> stringResource(R.string.lesson_5_title)
+            "lesson-6" -> stringResource(R.string.lesson_6_title)
+            else -> humanizeId(lessonId)
+        }
+        !moduleId.isNullOrBlank() ->
+            VideoModulesViewModel.allVideos().find { it.id == moduleId }?.title ?: humanizeId(moduleId)
+        else -> null
+    }
+}
+
+private fun humanizeId(id: String): String =
+    id.replace("-", " ").replaceFirstChar { it.uppercase() }
+
+private data class TaskTypeVisual(val icon: ImageVector, val label: String)
+
+@Composable
+private fun taskTypeVisual(assignment: AssignmentDto): TaskTypeVisual = when (assignment.type) {
+    "module", "video" -> TaskTypeVisual(Icons.Filled.PlayCircle, stringResource(R.string.video_modules))
+    "lesson" -> TaskTypeVisual(Icons.AutoMirrored.Filled.MenuBook, stringResource(R.string.interactive_lessons))
+    "report" -> TaskTypeVisual(Icons.Filled.Description, stringResource(R.string.daily_report))
+    else -> TaskTypeVisual(Icons.Filled.Checklist, stringResource(R.string.field_tasks_type_generic))
+}
+
 @Composable
 fun AssignmentCard(
     assignment: AssignmentDto,
-    onNavigate: () -> Unit
+    onOpen: (() -> Unit)?
 ) {
-    val (icon, typeLabel) = when (assignment.type) {
-        "module", "video" -> "🎬" to stringResource(R.string.video_modules)
-        "lesson" -> "📚" to stringResource(R.string.interactive_lessons)
-        "report" -> "📝" to stringResource(R.string.daily_report)
-        else -> "📋" to (assignment.type ?: "Task")
-    }
+    val isCompleted = assignment.status == "completed"
+    val isOverdue = !isCompleted && DateUtils.isBeforeToday(assignment.dueDate)
+    val visual = taskTypeVisual(assignment)
+    val itemName = assignmentItemName(assignment)
 
     val statusColor = when (assignment.status) {
-        "completed" -> Color(0xFF438894)
-        "in_progress" -> Color(0xFFEFA03F)
+        "completed" -> AfyaSuccess
+        "in_progress" -> AfyaWarning
         else -> MaterialTheme.colorScheme.primary
     }
-
     val statusLabel = when (assignment.status) {
         "completed" -> stringResource(R.string.completed)
         "in_progress" -> stringResource(R.string.in_progress)
@@ -285,33 +308,46 @@ fun AssignmentCard(
     }
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(if (onOpen != null) Modifier.clickable(onClick = onOpen) else Modifier),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            // Header row: icon + type + mandatory badge
+        Column(modifier = Modifier.padding(16.dp)) {
+            // Header row: type icon + type + item name + mandatory badge
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = icon, fontSize = 28.sp)
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primaryContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = visual.icon,
+                            contentDescription = visual.label,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = typeLabel,
+                            text = visual.label,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        // Show module/lesson name
-                        val itemId = assignment.moduleId ?: assignment.lessonId
-                        if (itemId != null) {
+                        if (itemName != null) {
                             Text(
-                                text = getModuleDisplayName(itemId),
+                                text = itemName,
                                 fontSize = 13.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -320,9 +356,8 @@ fun AssignmentCard(
                 }
 
                 if (assignment.mandatory) {
-                    Badge(
-                        containerColor = MaterialTheme.colorScheme.error
-                    ) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Badge(containerColor = MaterialTheme.colorScheme.error) {
                         Text(
                             text = stringResource(R.string.mandatory),
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
@@ -342,27 +377,28 @@ fun AssignmentCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Status badge
-                Box(
-                    modifier = Modifier
-                        .background(statusColor.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
-                        .padding(horizontal = 10.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = statusLabel,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = statusColor
-                    )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (isCompleted) {
+                        DoneBadge(size = 20.dp)
+                        Spacer(modifier = Modifier.width(6.dp))
+                    }
+                    Box(
+                        modifier = Modifier
+                            .background(statusColor.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = statusLabel,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = statusColor
+                        )
+                    }
                 }
 
-                // Due date
-                if (assignment.dueDate != null) {
-                    Text(
-                        text = stringResource(R.string.due_date_label, formatDate(assignment.dueDate)),
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                val dueDate = assignment.dueDate
+                if (dueDate != null) {
+                    DueDateText(dueDate = dueDate, isOverdue = isOverdue)
                 }
             }
 
@@ -370,71 +406,84 @@ fun AssignmentCard(
             if (assignment.assignedAt != null) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = stringResource(R.string.assigned_on, formatDate(assignment.assignedAt)),
+                    text = stringResource(R.string.assigned_on, DateUtils.formatLocalized(assignment.assignedAt)),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
-            // Action button for non-completed
-            if (assignment.status != "completed") {
-                Spacer(modifier = Modifier.height(12.dp))
-                Button(
-                    onClick = onNavigate,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = when (assignment.type) {
-                            "module", "video" -> stringResource(R.string.go_to_modules)
-                            "lesson" -> stringResource(R.string.go_to_lessons)
-                            "report" -> stringResource(R.string.go_to_report)
-                            else -> when {
-                                !assignment.moduleId.isNullOrBlank() ->
-                                    stringResource(R.string.go_to_modules)
-                                !assignment.lessonId.isNullOrBlank() ->
-                                    stringResource(R.string.go_to_lessons)
-                                else -> stringResource(R.string.open)
-                            }
-                        }
-                    )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            when {
+                onOpen == null -> HintRow(text = stringResource(R.string.field_tasks_no_link_hint))
+                isCompleted -> {
+                    TextButton(
+                        onClick = onOpen,
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .heightIn(min = 44.dp)
+                    ) {
+                        Text(stringResource(R.string.field_tasks_review))
+                    }
+                }
+                else -> {
+                    Button(
+                        onClick = onOpen,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 44.dp)
+                    ) {
+                        Text(text = openButtonLabel(assignment))
+                    }
                 }
             }
         }
     }
 }
 
-private fun formatDate(isoDate: String): String {
-    return try {
-        // "2026-03-07T10:30:00.000Z" -> "Mar 7, 2026"
-        val parts = isoDate.take(10).split("-")
-        if (parts.size == 3) {
-            val months = listOf(
-                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-            )
-            val month = months.getOrElse(parts[1].toInt() - 1) { parts[1] }
-            val day = parts[2].toInt()
-            val year = parts[0]
-            "$month $day, $year"
-        } else {
-            isoDate.take(10)
-        }
-    } catch (e: Exception) {
-        isoDate.take(10)
+@Composable
+private fun openButtonLabel(assignment: AssignmentDto): String = when (assignment.type) {
+    "module", "video" -> stringResource(R.string.field_tasks_open_video)
+    "lesson" -> stringResource(R.string.field_tasks_open_lesson)
+    "report" -> stringResource(R.string.field_tasks_open_report)
+    else -> when {
+        !assignment.moduleId.isNullOrBlank() -> stringResource(R.string.field_tasks_open_video)
+        !assignment.lessonId.isNullOrBlank() -> stringResource(R.string.field_tasks_open_lesson)
+        else -> stringResource(R.string.open)
     }
 }
 
-private fun getModuleDisplayName(id: String): String {
-    val videoNames = com.afyaquest.app.presentation.videomodules.VideoModulesViewModel.allVideos()
-        .associate { it.id to it.title }
-    val lessonNames = mapOf(
-        "lesson-1" to "Handwashing Techniques",
-        "lesson-2" to "Balanced Diet for Children",
-        "lesson-3" to "Prenatal Care Essentials",
-        "lesson-4" to "Child Vaccination Schedule",
-        "lesson-5" to "Malaria Prevention",
-        "lesson-6" to "CPR Basics"
-    )
-    val names = videoNames + lessonNames
-    return names[id] ?: id.replace("-", " ").replaceFirstChar { it.uppercase() }
+@Composable
+private fun DueDateText(dueDate: String, isOverdue: Boolean) {
+    val formatted = DateUtils.formatLocalized(dueDate)
+    if (isOverdue) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = Icons.Outlined.Warning,
+                contentDescription = stringResource(R.string.field_tasks_overdue),
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = stringResource(R.string.due_date_label, formatted),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error
+                )
+                Text(
+                    text = stringResource(R.string.field_tasks_overdue),
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    } else {
+        Text(
+            text = stringResource(R.string.due_date_label, formatted),
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
 }

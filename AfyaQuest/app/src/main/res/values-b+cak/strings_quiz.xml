@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kaqchikel (cak). DRAFT: machine-drafted from existing app vocabulary; needs review by a native Kaqchikel speaker before release. -->
+<resources>
+    <!-- Moloj K'utunïk (module quiz) -->
+    <string name="quiz_title_format">Moloj K\'utunïk: %1$s</string>
+    <string name="quiz_complete_title">Xtz\'aqät ri Moloj K\'utunïk!</string>
+    <string name="quiz_complete_retake_title">Xtz\'aqät chik ri Moloj K\'utunïk!</string>
+    <string name="quiz_result_format">Xe\'awila\' %1$d chi ke ri %2$d (%3$d%%)</string>
+    <string name="quiz_back_to_module">Titzolïx pa ri moloj</string>
+    <string name="quiz_try_again">Tab\'ana\' Jun Chik</string>
+    <string name="quiz_leave_title">La natel pa ri Moloj K\'utunïk?</string>
+    <string name="quiz_leave_message">Xkesäch ri taq atzolin tzij.</string>
+    <string name="quiz_correct_count_desc">Ütz taq tzolin tzij wakami</string>
+    <string name="quiz_saving_desc">Niyak ri awajilab\'al</string>
+    <string name="quiz_score_label">Rajilab\'al</string>
+    <string name="quiz_percentage_label">Porcentaje</string>
+</resources>

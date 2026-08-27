@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home hub (Dashboard) -->
+    <string name="home_todo_progress_label">Completadas hoy</string>
+    <string name="home_score_format">Puntaje %1$d/%2$d</string>
+    <string name="home_stops_visited_format">%1$d de %2$d paradas visitadas</string>
+    <string name="home_due_format">Vence %1$s</string>
+    <string name="home_task_label">Tarea</string>
+    <string name="home_no_assignments">No tienes asignaciones por ahora</string>
+    <string name="home_clock_hint">Registra tu entrada cuando empieces tu día de campo</string>
+    <string name="home_open_settings">Abrir configuración</string>
+</resources>

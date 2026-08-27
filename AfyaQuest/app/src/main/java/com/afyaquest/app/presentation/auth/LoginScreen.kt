@@ -35,6 +35,9 @@ import com.afyaquest.app.util.LanguageManager
 import com.afyaquest.app.util.Resource
 import kotlinx.coroutines.launch
 
+/** SavedStateHandle key RegisterScreen uses to hand the new account's email back to Login. */
+const val REGISTERED_EMAIL_KEY = "registered_email"
+
 /**
  * Login screen for user authentication.
  */
@@ -56,6 +59,21 @@ fun LoginScreen(
     val scope = rememberCoroutineScope()
 
     val loginFailedText = stringResource(R.string.login_failed)
+    val registeredBannerText = stringResource(R.string.account_registered_banner)
+
+    // One-shot confirmation after registration (set by RegisterScreen via SavedStateHandle)
+    LaunchedEffect(Unit) {
+        val handle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
+        val registeredEmail = handle.get<String>(REGISTERED_EMAIL_KEY)
+        if (!registeredEmail.isNullOrBlank()) {
+            handle.remove<String>(REGISTERED_EMAIL_KEY)
+            if (email.isBlank()) email = registeredEmail
+            snackbarHostState.showSnackbar(
+                message = registeredBannerText,
+                duration = SnackbarDuration.Long
+            )
+        }
+    }
 
     // Handle login state changes
     LaunchedEffect(loginState) {
@@ -191,7 +209,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    enabled = loginState !is Resource.Loading
+                    enabled = loginState !is Resource.Loading && email.isNotBlank() && password.isNotBlank()
                 ) {
                     if (loginState is Resource.Loading) {
                         CircularProgressIndicator(

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_learn">Learn</string>
+    <string name="nav_tasks">Tasks</string>
+    <string name="nav_me">Me</string>
+
+    <!-- Learn hub -->
+    <string name="learn_title">Learn</string>
+    <string name="learn_tab_videos">Videos</string>
+    <string name="learn_tab_lessons">Lessons</string>
+    <string name="ask_fred">Ask Fred</string>
+
+    <!-- Shared guidance -->
+    <string name="continue_label">Continue</string>
+    <string name="next_up">Next up</string>
+    <string name="done_today">Done today</string>
+    <string name="tasks_done_today_format">%1$d of %2$d done today</string>
+    <string name="all_done_today">All done for today!</string>
+    <string name="xp_earned_format">+%1$d XP</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="step_of_format">Step %1$d of %2$d</string>
+    <string name="required_label">Required</string>
+    <string name="not_started">Not started</string>
+    <string name="stay">Stay</string>
+    <string name="leave">Leave</string>
+    <string name="something_went_wrong">Something went wrong. Please try again.</string>
+</resources>

@@ -1,5 +1,6 @@
 package com.afyaquest.app.presentation.dailyquestions
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,6 +9,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,11 +30,18 @@ import androidx.navigation.NavController
 import com.afyaquest.app.R
 import com.afyaquest.app.domain.model.Difficulty
 import com.afyaquest.app.domain.model.Question
+import com.afyaquest.app.presentation.components.CompletionDialog
+import com.afyaquest.app.presentation.components.ConfirmLeaveDialog
+import com.afyaquest.app.presentation.components.XpChip
+import com.afyaquest.app.presentation.navigation.goHome
+import com.afyaquest.app.ui.theme.AfyaSuccess
+import com.afyaquest.app.util.DailyQuestionsResult
 import com.afyaquest.app.util.Resource
 
 /**
  * Daily Questions screen
- * Displays 3 daily health questions with XP rewards and lives system
+ * Displays 3 daily health questions with XP rewards and lives system.
+ * One session per day: finishing shows a completion dialog, reopening shows today's result.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,18 +53,49 @@ fun DailyQuestionsScreen(
     val currentQuestionIndex by viewModel.currentQuestionIndex.collectAsState()
     val selectedAnswer by viewModel.selectedAnswer.collectAsState()
     val showExplanation by viewModel.showExplanation.collectAsState()
-    val score by viewModel.score.collectAsState()
     val correctAnswers by viewModel.correctAnswers.collectAsState()
     val lives by viewModel.lives.collectAsState()
     val quizFinished by viewModel.quizFinished.collectAsState()
+    val answeredCount by viewModel.answeredCount.collectAsState()
+    val xpEarned by viewModel.xpEarned.collectAsState()
+    val livesDelta by viewModel.livesDelta.collectAsState()
+    val completedToday by viewModel.completedToday.collectAsState()
+    val lastResult by viewModel.lastResult.collectAsState()
 
     val scrollState = rememberScrollState()
+    var showLeaveDialog by remember { mutableStateOf(false) }
 
-    // Handle quiz completion — navigate back to dashboard
-    LaunchedEffect(quizFinished) {
-        if (quizFinished) {
-            navController.popBackStack()
+    // Leaving mid-quiz forfeits the completion bonus, so ask first.
+    val quizInProgress = answeredCount > 0 && !quizFinished
+    BackHandler(enabled = quizInProgress) { showLeaveDialog = true }
+
+    if (showLeaveDialog) {
+        ConfirmLeaveDialog(
+            title = stringResource(R.string.daily_leave_quiz_title),
+            message = stringResource(R.string.daily_leave_quiz_message),
+            onStay = { showLeaveDialog = false },
+            onLeave = {
+                showLeaveDialog = false
+                navController.popBackStack()
+            }
+        )
+    }
+
+    if (quizFinished) {
+        val totalQuestions = viewModel.getTotalQuestions()
+        val livesLine = when {
+            livesDelta > 0 -> stringResource(R.string.daily_lives_gained_format, livesDelta)
+            livesDelta < 0 -> stringResource(R.string.daily_lives_lost_format, -livesDelta)
+            else -> stringResource(R.string.daily_lives_unchanged)
         }
+        CompletionDialog(
+            title = stringResource(R.string.daily_questions_complete),
+            message = stringResource(R.string.quiz_score_summary, correctAnswers, totalQuestions) +
+                "\n" + livesLine,
+            primaryText = stringResource(R.string.back_to_home),
+            onPrimary = { navController.goHome() },
+            xpEarned = xpEarned
+        )
     }
 
     Scaffold(
@@ -59,28 +103,27 @@ fun DailyQuestionsScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.daily_questions), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = {
+                        if (quizInProgress) showLeaveDialog = true else navController.popBackStack()
+                    }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
-                    // Score display
-                    Text(
-                        text = "💯 $score",
-                        modifier = Modifier.padding(end = 8.dp),
-                        fontWeight = FontWeight.Bold
-                    )
-                    // Lives display
-                    Text(
-                        text = "❤️ $lives",
-                        modifier = Modifier.padding(end = 16.dp),
-                        fontWeight = FontWeight.Bold
-                    )
+                    SessionStatusRow(lives = lives, xpEarned = xpEarned)
                 }
             )
         }
     ) { paddingValues ->
-        when (questionsState) {
+        if (completedToday && !quizFinished) {
+            CompletedTodayContent(
+                result = lastResult,
+                onBackHome = { navController.goHome() },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            )
+        } else when (questionsState) {
             is Resource.Loading -> {
                 Box(
                     modifier = Modifier
@@ -182,7 +225,9 @@ fun DailyQuestionsScreen(
                                 if (!isLastQuestion) {
                                     Button(
                                         onClick = { viewModel.nextQuestion() },
-                                        modifier = Modifier.fillMaxWidth()
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(52.dp)
                                     ) {
                                         Text(stringResource(R.string.next_question), fontSize = 16.sp)
                                     }
@@ -191,14 +236,18 @@ fun DailyQuestionsScreen(
                                     QuizSummaryCard(
                                         correctAnswers = correctAnswers,
                                         totalQuestions = totalQuestions,
-                                        lives = lives
+                                        lives = lives,
+                                        livesDelta = livesDelta
                                     )
 
                                     Spacer(modifier = Modifier.height(16.dp))
 
                                     Button(
                                         onClick = { viewModel.finishQuiz() },
-                                        modifier = Modifier.fillMaxWidth()
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(52.dp),
+                                        enabled = !quizFinished
                                     ) {
                                         Text(stringResource(R.string.finish_quiz), fontSize = 16.sp)
                                     }
@@ -223,11 +272,119 @@ fun DailyQuestionsScreen(
     }
 }
 
+/** Lives and XP-earned counters shown in the top bar. */
+@Composable
+private fun SessionStatusRow(lives: Int, xpEarned: Int) {
+    Row(
+        modifier = Modifier.padding(end = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Favorite,
+            contentDescription = stringResource(R.string.lives),
+            tint = MaterialTheme.colorScheme.error,
+            modifier = Modifier.size(20.dp)
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(text = lives.toString(), fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.width(12.dp))
+        Icon(
+            imageVector = Icons.Filled.Stars,
+            contentDescription = stringResource(R.string.xp_earned),
+            tint = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.size(20.dp)
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(text = xpEarned.toString(), fontWeight = FontWeight.Bold)
+    }
+}
+
+/** Shown instead of the quiz when today's questions were already finished. */
+@Composable
+private fun CompletedTodayContent(
+    result: DailyQuestionsResult?,
+    onBackHome: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.CheckCircle,
+                    contentDescription = stringResource(R.string.completed),
+                    tint = AfyaSuccess,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = stringResource(R.string.done_today),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    textAlign = TextAlign.Center
+                )
+                if (result != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(
+                            R.string.quiz_score_summary,
+                            result.correctAnswers,
+                            result.totalQuestions
+                        ),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        textAlign = TextAlign.Center
+                    )
+                    if (result.xpEarned > 0) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        XpChip(xp = result.xpEarned)
+                    }
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = stringResource(R.string.daily_come_back_tomorrow),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = onBackHome,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp)
+        ) {
+            Text(stringResource(R.string.back_to_home), fontSize = 16.sp)
+        }
+    }
+}
+
 @Composable
 fun QuestionProgress(
     current: Int,
     total: Int
 ) {
+    val fraction = if (total <= 0) 0f else (current.toFloat() / total.toFloat()).coerceIn(0f, 1f)
     Column {
         Text(
             text = stringResource(R.string.question_progress, current, total),
@@ -239,12 +396,13 @@ fun QuestionProgress(
         Spacer(modifier = Modifier.height(8.dp))
 
         LinearProgressIndicator(
-            progress = { current.toFloat() / total.toFloat() },
+            progress = { fraction },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp)
                 .clip(RoundedCornerShape(4.dp)),
             color = MaterialTheme.colorScheme.primary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant
         )
     }
 }
@@ -425,6 +583,7 @@ fun OptionButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
+                modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Option label (A, B, C, D)
@@ -453,9 +612,19 @@ fun OptionButton(
             // Result icon
             if (showResult) {
                 if (isCorrect) {
-                    Text("✓", fontSize = 20.sp, color = Color.White)
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = stringResource(R.string.correct),
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp)
+                    )
                 } else if (isSelected) {
-                    Text("✗", fontSize = 20.sp, color = Color.White)
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = stringResource(R.string.incorrect),
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp)
+                    )
                 }
             }
         }
@@ -466,9 +635,14 @@ fun OptionButton(
 fun QuizSummaryCard(
     correctAnswers: Int,
     totalQuestions: Int,
-    lives: Int
+    lives: Int,
+    livesDelta: Int
 ) {
     val summaryText = stringResource(R.string.quiz_score_summary, correctAnswers, totalQuestions)
+    // Each wrong answer removes one life; gained is derived from the real net change so the
+    // MAX_LIVES cap is reflected honestly.
+    val livesLost = (totalQuestions - correctAnswers).coerceAtLeast(0)
+    val livesGained = (livesDelta + livesLost).coerceAtLeast(0)
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -501,21 +675,32 @@ fun QuizSummaryCard(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(stringResource(R.string.lives_gained), fontSize = 12.sp)
-                    Text("${correctAnswers * 2} ❤️", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                }
-
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(stringResource(R.string.lives_lost), fontSize = 12.sp)
-                    Text("${totalQuestions - correctAnswers} 💔", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                }
-
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(stringResource(R.string.current_lives), fontSize = 12.sp)
-                    Text("$lives ❤️", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                }
+                LivesStat(label = stringResource(R.string.lives_gained), value = "+$livesGained")
+                LivesStat(label = stringResource(R.string.lives_lost), value = "-$livesLost")
+                LivesStat(label = stringResource(R.string.current_lives), value = lives.toString())
             }
+        }
+    }
+}
+
+@Composable
+private fun LivesStat(label: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onTertiaryContainer)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = value,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onTertiaryContainer
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Icon(
+                imageVector = Icons.Filled.Favorite,
+                contentDescription = stringResource(R.string.lives),
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier.size(16.dp)
+            )
         }
     }
 }

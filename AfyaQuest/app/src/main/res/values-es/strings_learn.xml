@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Aprender: flujo de módulos de video (lista -> módulo -> reproductor -> cuestionario) -->
+
+    <!-- Títulos y descripciones de módulos -->
+    <string name="learn_module_1_title">Sistemas del Cuerpo</string>
+    <string name="learn_module_1_desc">Conoce los principales sistemas del cuerpo humano</string>
+    <string name="learn_module_2_title">Enfermedades Comunes de la Niñez</string>
+    <string name="learn_module_2_desc">Identifica y maneja las enfermedades comunes en los niños</string>
+    <string name="learn_module_3_title">Enfermedades Crónicas e Infecciosas</string>
+    <string name="learn_module_3_desc">Comprende las enfermedades crónicas e infecciosas</string>
+    <string name="learn_module_4_title">Salud Materna y Reproductiva</string>
+    <string name="learn_module_4_desc">Salud materna, embarazo y planificación familiar</string>
+    <string name="learn_module_5_title">Primeros Auxilios y Emergencias</string>
+    <string name="learn_module_5_desc">Respuesta a emergencias y técnicas de primeros auxilios</string>
+    <string name="learn_module_6_title">Prevención y Control de Infecciones</string>
+    <string name="learn_module_6_desc">Prevén y controla la propagación de infecciones</string>
+
+    <!-- Lista de módulos -->
+    <string name="learn_module_number_format">Módulo %1$d</string>
+    <string name="learn_continue_learning">Seguir aprendiendo</string>
+    <string name="learn_all_videos_done">¡Ya viste todos los videos!</string>
+    <string name="learn_all_videos_done_hint">Termina los cuestionarios pendientes para completar los módulos.</string>
+    <string name="learn_videos_count_format">%1$d/%2$d videos</string>
+    <string name="learn_quizzes_count_format">%1$d/%2$d cuestionarios</string>
+    <string name="learn_module_complete">Módulo completado</string>
+
+    <!-- Detalle del módulo -->
+    <string name="learn_video_number_format">Video %1$d</string>
+    <string name="learn_video_of_format">Video %1$d de %2$d</string>
+    <string name="learn_watched">Visto</string>
+    <string name="learn_quiz_done">Cuestionario hecho</string>
+    <string name="learn_quiz_locked_hint">Mira el video para desbloquear el cuestionario</string>
+
+    <!-- Reproductor de video -->
+    <string name="learn_video_error">No se pudo reproducir el video. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="learn_video_complete">Video completado</string>
+    <string name="learn_next_video">Siguiente video</string>
+    <string name="learn_back_to_module">Volver al módulo</string>
+</resources>

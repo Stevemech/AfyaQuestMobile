@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kaqchikel (cak). DRAFT: machine-drafted from existing app vocabulary; needs review by a native Kaqchikel speaker before release. -->
+<resources>
+    <!-- Taq tijonik: cholajem chuqa' rutzijol tijonik -->
+    <string name="lesson_ui_progress_label">Taq tijonik xetz\'aqät</string>
+    <string name="lesson_ui_number_format">Tijonik %1$d</string>
+    <string name="lesson_ui_next_lesson">Jun chik tijonik</string>
+    <string name="lesson_ui_back_to_lessons">Titzolïx pa taq tijonik</string>
+    <string name="lesson_ui_all_done_title">Ronojel taq tijonik xetz\'aqät!</string>
+    <string name="lesson_ui_all_done_message">Ütz asamaj. Yatikïr nasik\'ij chik xab\'achike tijonik.</string>
+    <string name="lesson_ui_not_found">Man k\'o ta ri tijonik</string>
+    <string name="lesson_ui_completed_message">Ütz asamaj! Titikïr chik richin ye\'amolo\' ch\'aqa\' chik XP.</string>
+    <string name="lesson_ui_reading_progress">Rub\'eyal ri tijonik</string>
+    <string name="lesson_ui_read_hint">Tasik\'ij k\'a ruk\'isib\'äl, k\'a ri\' taya\' retal chi xtz\'aqät richin ye\'amolo\' XP.</string>
+</resources>

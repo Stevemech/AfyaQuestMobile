@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Interactive lessons: list (Learn hub tab) and lesson detail -->
+    <string name="lesson_ui_progress_label">Lessons completed</string>
+    <string name="lesson_ui_number_format">Lesson %1$d</string>
+    <string name="lesson_ui_next_lesson">Next lesson</string>
+    <string name="lesson_ui_back_to_lessons">Back to lessons</string>
+    <string name="lesson_ui_all_done_title">All lessons completed!</string>
+    <string name="lesson_ui_all_done_message">Great work. You can reread any lesson below.</string>
+    <string name="lesson_ui_not_found">Lesson not found</string>
+    <string name="lesson_ui_completed_message">Great work! Keep going to earn more XP.</string>
+    <string name="lesson_ui_reading_progress">Reading progress</string>
+    <string name="lesson_ui_read_hint">Read to the end, then mark the lesson complete to earn XP.</string>
+</resources>

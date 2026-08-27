@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kaqchikel (cak). DRAFT: machine-drafted from existing app vocabulary; needs review by a native Kaqchikel speaker before release. -->
+<resources>
+    <!-- Rub'ey jujun q'ij (ruwäch rulewal) -->
+    <string name="field_map_progress_label">Taq k\'olib\'äl xeb\'an</string>
+    <string name="field_map_load_error">Man xtikirel ta xsamajïx ri ab\'ey richin wakami.</string>
+    <string name="field_map_confirm_visited_title">La niya\' retal chi xb\'an %1$s?</string>
+    <string name="field_map_confirm_visited_message">Xtb\'an retal chi xtz\'aqät wakami.</string>
+    <string name="field_map_confirm_visited_yes">Ütz, tiya\' retal xb\'an</string>
+    <string name="field_map_legend_facility">K\'olib\'äl K\'aslemal</string>
+    <string name="field_map_location_title">Taya\' q\'ij chi re ri GPS richin natz\'ët ri ab\'ey</string>
+    <string name="field_map_location_body">Ri ab\'ey nitikïr akuchi\' yat k\'o wi. Ri ak\'olib\'äl nik\'oje\' pa re oyonib\'äl re\'.</string>
+    <string name="field_map_location_button">Taya\' q\'ij chi re ri GPS</string>
+    <string name="field_map_all_visited_subtitle">Xeb\'an ronojel ri ak\'olib\'äl. Tatz\'aqatisaj rik\'in ri atzijol jujun q\'ij.</string>
+    <string name="field_map_fill_report">Tatz\'aqatisaj ri Rutzijol Jujun Q\'ij</string>
+
+    <!-- Taq samaj -->
+    <string name="field_tasks_overdue">Xik\'o ri q\'ij</string>
+    <string name="field_tasks_review">Titz\'et chik</string>
+    <string name="field_tasks_no_link_hint">Majun nijaq richin re samaj re\'. Tak\'utuj chi re ri animaläj.</string>
+    <string name="field_tasks_type_generic">Samaj</string>
+    <string name="field_tasks_open_video">Tatzu\' ri Silowachib\'äl</string>
+    <string name="field_tasks_open_lesson">Tijaq ri Tijonik</string>
+    <string name="field_tasks_open_report">Tijaq ri Rutzijol</string>
+
+    <!-- Tzijonem rik'in Fred -->
+    <string name="field_chat_suggestions_title">Tak\'utuj chi re Fred:</string>
+    <string name="field_chat_suggest_dehydration">Taq retal chi jun ak\'wal k\'o deshidratación rik\'in</string>
+    <string name="field_chat_suggest_report">Achike rub\'eyal nintz\'aqatisaj ri rutzijol jujun q\'ij?</string>
+    <string name="field_chat_suggest_pregnancy">Achike ora\' nintäq jun nan k\'o rak\'wal pa kowilab\'äl?</string>
+    <string name="field_chat_suggest_handwashing">Taq ruxaq richin ütz ruch\'ajik q\'ab\'</string>
+    <string name="field_chat_resend">Titaq chik</string>
+</resources>

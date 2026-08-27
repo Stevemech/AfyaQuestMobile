@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.afyaquest.app.R
 import com.afyaquest.app.data.local.entity.PendingClientVisitEntity
 import com.afyaquest.app.data.remote.ApiService
 import com.afyaquest.app.domain.model.ClientHouse
@@ -16,7 +17,9 @@ import com.afyaquest.app.domain.model.HealthFacility
 import com.afyaquest.app.domain.model.ItineraryStop
 import com.afyaquest.app.domain.model.VisitStatus
 import com.afyaquest.app.sync.SyncManager
+import com.afyaquest.app.util.DateUtils
 import com.afyaquest.app.util.ProgressDataStore
+import com.afyaquest.app.util.Resource
 import com.afyaquest.app.util.TokenManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -24,22 +27,22 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.afyaquest.app.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
 /**
  * ViewModel for Map screen.
  * Manages daily itinerary (ordered stops from API) and real-time device location.
- * Persists stop completion locally and syncs to AWS.
+ * Persists stop completion locally (scoped to today) and syncs to AWS.
  */
 @HiltViewModel
 class MapViewModel @Inject constructor(
@@ -82,13 +85,38 @@ class MapViewModel @Inject constructor(
     private val _clientHouses = MutableStateFlow<List<ClientHouse>>(emptyList())
     val clientHouses: StateFlow<List<ClientHouse>> = _clientHouses.asStateFlow()
 
-    /** Ordered list of stops for today's itinerary from API */
-    private val _dailyItineraryStops = MutableStateFlow<List<ItineraryStop>>(emptyList())
-    val dailyItineraryStops: StateFlow<List<ItineraryStop>> = _dailyItineraryStops.asStateFlow()
+    /** Raw itinerary as returned by the API (completion flag from the server only). */
+    private val _rawItinerary = MutableStateFlow<Resource<List<ItineraryStop>>>(Resource.Loading())
 
-    /** Set of completed stop IDs (persisted locally) */
+    /** Stop ids marked visited today (persisted locally, date-scoped). */
     private val _completedStopIds = MutableStateFlow<Set<String>>(emptySet())
     val completedStopIds: StateFlow<Set<String>> = _completedStopIds.asStateFlow()
+
+    /**
+     * Loading / error / success state of today's itinerary. On success the stops carry
+     * completion merged from the server flag and today's local "visited" marks.
+     */
+    val itineraryState: StateFlow<Resource<List<ItineraryStop>>> =
+        combine(_rawItinerary, _completedStopIds) { raw, completed ->
+            val merged: Resource<List<ItineraryStop>> = when (raw) {
+                is Resource.Success -> Resource.Success(mergeCompletion(raw.data ?: emptyList(), completed))
+                is Resource.Error -> Resource.Error(
+                    raw.message ?: context.getString(R.string.field_map_load_error),
+                    raw.data?.let { mergeCompletion(it, completed) }
+                )
+                is Resource.Loading -> Resource.Loading()
+            }
+            merged
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            Resource.Loading<List<ItineraryStop>>()
+        )
+
+    /** Ordered list of stops for today's itinerary (empty until loaded). */
+    val dailyItineraryStops: StateFlow<List<ItineraryStop>> =
+        itineraryState.map { it.data ?: emptyList() }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val _selectedClient = MutableStateFlow<ClientHouse?>(null)
     val selectedClient: StateFlow<ClientHouse?> = _selectedClient.asStateFlow()
@@ -98,9 +126,14 @@ class MapViewModel @Inject constructor(
 
     init {
         loadHealthFacilities()
-        fetchItinerariesFromApi()
         loadCompletedStops()
+        loadItinerary()
     }
+
+    private fun mergeCompletion(stops: List<ItineraryStop>, completed: Set<String>): List<ItineraryStop> =
+        stops.map { stop ->
+            if (!stop.completed && completed.contains(stop.id)) stop.copy(completed = true) else stop
+        }
 
     /**
      * Load real health facilities in the Chimaltenango/Guatemala area.
@@ -183,70 +216,73 @@ class MapViewModel @Inject constructor(
     }
 
     /**
-     * Load completed stops from DataStore
+     * Observe the stops marked visited today (date-scoped in DataStore).
      */
     private fun loadCompletedStops() {
         viewModelScope.launch {
-            progressDataStore.getCompletedStops().collect { stops ->
+            progressDataStore.getCompletedStopsToday().collect { stops ->
                 _completedStopIds.value = stops
             }
         }
     }
 
     /**
-     * Fetch today's itinerary from the API.
+     * Fetch today's itinerary from the API. Safe to call again (Retry / refresh).
      */
-    private fun fetchItinerariesFromApi() {
+    fun loadItinerary() {
         viewModelScope.launch {
+            _rawItinerary.value = Resource.Loading()
             try {
-                val idToken = tokenManager.getIdToken() ?: return@launch
-                val response = apiService.getItineraries("Bearer $idToken")
-                if (response.isSuccessful) {
-                    val body = response.body() ?: return@launch
-                    val itinerary = body.itineraries.firstOrNull() ?: return@launch
-                    if (itinerary.stops.isNotEmpty()) {
-                        val localCompleted = _completedStopIds.value
-                        _dailyItineraryStops.value = itinerary.stops.map { stopDto ->
-                            val stopId = stopDto.houseId ?: "stop-${stopDto.order}"
-                            ItineraryStop(
-                                order = stopDto.order,
-                                id = stopId,
-                                label = stopDto.label,
-                                address = stopDto.address,
-                                latitude = stopDto.latitude,
-                                longitude = stopDto.longitude,
-                                description = stopDto.description,
-                                completed = stopDto.completed || localCompleted.contains(stopId)
-                            )
-                        }
-                    }
+                val idToken = tokenManager.getIdToken()
+                if (idToken == null) {
+                    _rawItinerary.value = Resource.Error(loadErrorText())
+                    return@launch
                 }
+                val response = apiService.getItineraries("Bearer $idToken")
+                val body = response.body()
+                if (!response.isSuccessful || body == null) {
+                    _rawItinerary.value = Resource.Error(loadErrorText())
+                    return@launch
+                }
+                val itinerary = body.itineraries.firstOrNull()
+                val stops = itinerary?.stops.orEmpty().map { stopDto ->
+                    ItineraryStop(
+                        order = stopDto.order,
+                        id = stopDto.houseId ?: "stop-${stopDto.order}",
+                        label = stopDto.label,
+                        address = stopDto.address,
+                        latitude = stopDto.latitude,
+                        longitude = stopDto.longitude,
+                        description = stopDto.description,
+                        completed = stopDto.completed
+                    )
+                }
+                progressDataStore.setItineraryTotal(stops.size)
+                _rawItinerary.value = Resource.Success(stops)
             } catch (e: Exception) {
                 Log.d("MapViewModel", "Failed to fetch itineraries from API: ${e.message}")
+                _rawItinerary.value = Resource.Error(loadErrorText())
             }
         }
     }
 
+    private fun loadErrorText(): String = context.getString(R.string.field_map_load_error)
+
     /**
-     * Mark an itinerary stop as completed.
-     * Persists locally, queues for sync, and updates AWS.
+     * Mark an itinerary stop as visited today.
+     * Persists locally (date-scoped), queues for sync, and updates AWS.
      */
     fun markStopCompleted(stopId: String) {
         if (_completedStopIds.value.contains(stopId)) return
+        // Optimistic update; the DataStore flow will confirm it right after.
         _completedStopIds.value = _completedStopIds.value + stopId
-
-        // Update the stop in the itinerary list immediately
-        _dailyItineraryStops.value = _dailyItineraryStops.value.map { stop ->
-            if (stop.id == stopId) stop.copy(completed = true) else stop
-        }
 
         viewModelScope.launch {
             progressDataStore.markStopCompleted(stopId)
 
             // Queue for sync via PendingClientVisit
             val userId = tokenManager.getUserId() ?: ""
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val today = dateFormat.format(Date())
+            val today = DateUtils.todayIso()
 
             syncManager.queueClientVisit(
                 PendingClientVisitEntity(
@@ -310,7 +346,7 @@ class MapViewModel @Inject constructor(
     }
 
     fun getItineraryPathPoints(): List<Pair<Double, Double>> =
-        _dailyItineraryStops.value.map { it.latitude to it.longitude }
+        (_rawItinerary.value.data ?: emptyList()).map { it.latitude to it.longitude }
 
     fun getFullRoutePoints(): List<Pair<Double, Double>> {
         val start = _liveLocationLatitude.value to _liveLocationLongitude.value

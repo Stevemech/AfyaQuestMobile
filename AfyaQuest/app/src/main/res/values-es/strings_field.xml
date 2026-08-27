@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Itinerario diario (mapa) -->
+    <string name="field_map_progress_label">Paradas visitadas</string>
+    <string name="field_map_load_error">No se pudo cargar la ruta de hoy.</string>
+    <string name="field_map_confirm_visited_title">¿Marcar %1$s como visitada?</string>
+    <string name="field_map_confirm_visited_message">Contará como hecha por hoy.</string>
+    <string name="field_map_confirm_visited_yes">Sí, marcar visitada</string>
+    <string name="field_map_legend_facility">Centro de salud</string>
+    <string name="field_map_location_title">Activa la ubicación para ver tu ruta</string>
+    <string name="field_map_location_body">La ruta empieza desde donde estás. Tu ubicación se queda en este teléfono.</string>
+    <string name="field_map_location_button">Activar ubicación</string>
+    <string name="field_map_all_visited_subtitle">Visitaste todas las paradas. Termina con tu reporte diario.</string>
+    <string name="field_map_fill_report">Llenar reporte diario</string>
+
+    <!-- Tareas (asignaciones) -->
+    <string name="field_tasks_overdue">Atrasada</string>
+    <string name="field_tasks_review">Revisar</string>
+    <string name="field_tasks_no_link_hint">Esta tarea no tiene nada que abrir. Consulta con tu supervisor.</string>
+    <string name="field_tasks_type_generic">Tarea</string>
+    <string name="field_tasks_open_video">Ver video</string>
+    <string name="field_tasks_open_lesson">Abrir lección</string>
+    <string name="field_tasks_open_report">Abrir reporte</string>
+
+    <!-- Chat con Fred -->
+    <string name="field_chat_suggestions_title">Prueba preguntarle a Fred:</string>
+    <string name="field_chat_suggest_dehydration">Señales de deshidratación en un niño</string>
+    <string name="field_chat_suggest_report">¿Cómo lleno el reporte diario?</string>
+    <string name="field_chat_suggest_pregnancy">¿Cuándo debo referir a una embarazada?</string>
+    <string name="field_chat_suggest_handwashing">Pasos para lavarse bien las manos</string>
+    <string name="field_chat_resend">Reenviar</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Cuestionario del módulo -->
+    <string name="quiz_title_format">Cuestionario: %1$s</string>
+    <string name="quiz_complete_title">¡Cuestionario completado!</string>
+    <string name="quiz_complete_retake_title">¡Cuestionario terminado de nuevo!</string>
+    <string name="quiz_result_format">Acertaste %1$d de %2$d (%3$d%%)</string>
+    <string name="quiz_back_to_module">Volver al módulo</string>
+    <string name="quiz_try_again">Intentar de nuevo</string>
+    <string name="quiz_leave_title">¿Salir del cuestionario?</string>
+    <string name="quiz_leave_message">Se perderán tus respuestas.</string>
+    <string name="quiz_correct_count_desc">Respuestas correctas hasta ahora</string>
+    <string name="quiz_saving_desc">Guardando tu resultado</string>
+    <string name="quiz_score_label">Puntaje</string>
+    <string name="quiz_percentage_label">Porcentaje</string>
+</resources>

@@ -7,11 +7,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,15 +20,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.afyaquest.app.R
 import com.afyaquest.app.domain.model.Achievement
 import com.afyaquest.app.presentation.dashboard.translatedRank
+import com.afyaquest.app.presentation.navigation.Screen
+import com.afyaquest.app.presentation.navigation.navigateSingle
 
 /**
- * Profile screen with tabs for Overview, Achievements, and Reflections
+ * Profile screen ("Me" bottom tab) with tabs for Overview and Achievements.
+ * Top-level destination: no back arrow; Settings is reached from the top bar action.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,9 +50,9 @@ fun ProfileScreen(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.profile), fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                actions = {
+                    IconButton(onClick = { navController.navigateSingle(Screen.Settings.route) }) {
+                        Icon(Icons.Outlined.Settings, contentDescription = stringResource(R.string.settings))
                     }
                 }
             )
@@ -60,37 +63,21 @@ fun ProfileScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Icons avoid cramped text (e.g. "Achievements" wrapping); labels via contentDescription
-            TabRow(selectedTabIndex = selectedTab) {
-                Tab(
-                    selected = selectedTab == 0,
+            // Icon + short label so the tab meaning is obvious at a glance.
+            // Only two tabs: the former Reflections tab was a dead end (nothing creates a reflection).
+            val tabIndex = selectedTab.coerceIn(0, 1)
+            TabRow(selectedTabIndex = tabIndex) {
+                ProfileTab(
+                    selected = tabIndex == 0,
                     onClick = { viewModel.setSelectedTab(0) },
-                    icon = {
-                        Icon(
-                            Icons.Filled.Person,
-                            contentDescription = stringResource(R.string.overview)
-                        )
-                    }
+                    label = stringResource(R.string.overview),
+                    icon = Icons.Filled.Person
                 )
-                Tab(
-                    selected = selectedTab == 1,
+                ProfileTab(
+                    selected = tabIndex == 1,
                     onClick = { viewModel.setSelectedTab(1) },
-                    icon = {
-                        Icon(
-                            Icons.Filled.EmojiEvents,
-                            contentDescription = stringResource(R.string.achievements)
-                        )
-                    }
-                )
-                Tab(
-                    selected = selectedTab == 2,
-                    onClick = { viewModel.setSelectedTab(2) },
-                    icon = {
-                        Icon(
-                            Icons.Filled.AutoStories,
-                            contentDescription = stringResource(R.string.reflections)
-                        )
-                    }
+                    label = stringResource(R.string.achievements),
+                    icon = Icons.Filled.EmojiEvents
                 )
             }
 
@@ -101,14 +88,35 @@ fun ProfileScreen(
                     .fillMaxWidth()
                     .navigationBarsPadding()
             ) {
-                when (selectedTab) {
+                when (tabIndex) {
                     0 -> OverviewTab(xpData = xpData, quickStats = quickStats, userName = userProfile?.name, userOrg = userProfile?.organization)
-                    1 -> AchievementsTab(achievements = achievements)
-                    2 -> ReflectionsTab(viewModel = viewModel)
+                    else -> AchievementsTab(achievements = achievements)
                 }
             }
         }
     }
+}
+
+@Composable
+private fun ProfileTab(
+    selected: Boolean,
+    onClick: () -> Unit,
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector
+) {
+    Tab(
+        selected = selected,
+        onClick = onClick,
+        text = {
+            Text(
+                text = label,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.labelSmall
+            )
+        },
+        icon = { Icon(icon, contentDescription = null) }
+    )
 }
 
 @Composable
@@ -131,7 +139,8 @@ fun OverviewTab(xpData: com.afyaquest.app.util.XpData, quickStats: com.afyaquest
                         .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Avatar
+                    // Avatar: user's initial, or a person icon when the name is unknown
+                    val initial = userName?.trim()?.firstOrNull { it.isLetterOrDigit() }?.uppercaseChar()
                     Box(
                         modifier = Modifier
                             .size(80.dp)
@@ -139,12 +148,21 @@ fun OverviewTab(xpData: com.afyaquest.app.util.XpData, quickStats: com.afyaquest
                             .background(MaterialTheme.colorScheme.primary),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = xpData.level.toString(),
-                            fontSize = 36.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
+                        if (initial != null) {
+                            Text(
+                                text = initial.toString(),
+                                fontSize = 36.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Filled.Person,
+                                contentDescription = stringResource(R.string.profile),
+                                modifier = Modifier.size(44.dp),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -449,84 +467,10 @@ fun AchievementCard(achievement: Achievement) {
             if (achievement.unlocked) {
                 Icon(
                     imageVector = Icons.Filled.CheckCircle,
-                    contentDescription = "Unlocked",
+                    contentDescription = stringResource(R.string.account_unlocked_cd),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun ReflectionsTab(viewModel: ProfileViewModel) {
-    val reflections by viewModel.weeklyReflections.collectAsState()
-
-    LazyColumn(
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        item {
-            Text(
-                text = stringResource(R.string.weekly_reflections_title),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        if (reflections.isEmpty()) {
-            item {
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = stringResource(R.string.no_reflections_yet),
-                        modifier = Modifier.padding(16.dp),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        } else {
-            items(reflections) { reflection ->
-                ReflectionCard(reflection = reflection)
-            }
-        }
-    }
-}
-
-@Composable
-fun ReflectionCard(reflection: com.afyaquest.app.domain.model.WeeklyReflection) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.week_of_format, reflection.weekStartDate),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Row {
-                    repeat(5) { index ->
-                        Text(
-                            text = if (index < reflection.overallRating) "⭐" else "☆",
-                            fontSize = 16.sp
-                        )
-                    }
-                }
-            }
-
-            Text(
-                text = stringResource(R.string.success_format, reflection.successStory),
-                fontSize = 14.sp
-            )
-            Text(
-                text = stringResource(R.string.submitted_format, reflection.submittedDate),
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
     }
 }

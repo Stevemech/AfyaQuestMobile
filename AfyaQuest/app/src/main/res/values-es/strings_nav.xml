@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Bottom navigation -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_learn">Aprender</string>
+    <string name="nav_tasks">Tareas</string>
+    <string name="nav_me">Perfil</string>
+
+    <!-- Learn hub -->
+    <string name="learn_title">Aprender</string>
+    <string name="learn_tab_videos">Videos</string>
+    <string name="learn_tab_lessons">Lecciones</string>
+    <string name="ask_fred">Preguntar a Fred</string>
+
+    <!-- Shared guidance -->
+    <string name="continue_label">Continuar</string>
+    <string name="next_up">Siguiente</string>
+    <string name="done_today">Hecho hoy</string>
+    <string name="tasks_done_today_format">%1$d de %2$d hechas hoy</string>
+    <string name="all_done_today">¡Todo listo por hoy!</string>
+    <string name="xp_earned_format">+%1$d XP</string>
+    <string name="back_to_home">Volver al inicio</string>
+    <string name="step_of_format">Paso %1$d de %2$d</string>
+    <string name="required_label">Obligatorio</string>
+    <string name="not_started">Sin empezar</string>
+    <string name="stay">Quedarme</string>
+    <string name="leave">Salir</string>
+    <string name="something_went_wrong">Algo salió mal. Inténtalo de nuevo.</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kaqchikel (cak). DRAFT: machine-drafted from existing app vocabulary; needs review by a native Kaqchikel speaker before release. -->
+<resources>
+    <!-- Account area: profile, settings, login, register -->
+    <string name="account_session_header">Tok / Tel</string>
+    <string name="account_about_version_format">Versión %1$s</string>
+    <string name="account_about_description">Tijonik chuqa\' samaj richin ri Ato\'onel pa K\'aslemal pa Tinamït.</string>
+    <string name="account_registered_banner">Xtz\'ib\'äx ri ataqoya\'l. Tajikib\'a\' ri ataqoya\'l, k\'a ri\' katoka\'.</string>
+    <string name="account_section_about_you">Chi rij rat</string>
+    <string name="account_section_your_account">Ri ataqoya\'l</string>
+    <string name="account_unlocked_cd">Xjaq</string>
+    <string name="account_selected_cd">Xcha\'</string>
+</resources>

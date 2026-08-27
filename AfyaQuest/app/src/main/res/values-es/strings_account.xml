@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Área de cuenta: perfil, ajustes, inicio de sesión, registro -->
+    <string name="account_session_header">Sesión</string>
+    <string name="account_about_version_format">Versión %1$s</string>
+    <string name="account_about_description">Compañero de aprendizaje y tareas diarias para Voluntarios Comunitarios de Salud.</string>
+    <string name="account_registered_banner">Cuenta creada. Revisa tu correo para verificarla y luego inicia sesión.</string>
+    <string name="account_section_about_you">Sobre ti</string>
+    <string name="account_section_your_account">Tu cuenta</string>
+    <string name="account_unlocked_cd">Desbloqueado</string>
+    <string name="account_selected_cd">Seleccionado</string>
+</resources>

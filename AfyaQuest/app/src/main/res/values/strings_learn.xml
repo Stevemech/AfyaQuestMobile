@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Learn hub: video modules workflow (module list -> module detail -> player -> quiz) -->
+
+    <!-- Module titles and descriptions -->
+    <string name="learn_module_1_title">Body Systems</string>
+    <string name="learn_module_1_desc">Learn about the major systems of the human body</string>
+    <string name="learn_module_2_title">Common Childhood Illnesses</string>
+    <string name="learn_module_2_desc">Identify and manage common illnesses in children</string>
+    <string name="learn_module_3_title">Chronic &amp; Infectious Diseases</string>
+    <string name="learn_module_3_desc">Understand chronic and infectious diseases</string>
+    <string name="learn_module_4_title">Maternal &amp; Reproductive Health</string>
+    <string name="learn_module_4_desc">Maternal health, pregnancy, and family planning</string>
+    <string name="learn_module_5_title">First Aid &amp; Emergency Care</string>
+    <string name="learn_module_5_desc">Emergency response and first aid techniques</string>
+    <string name="learn_module_6_title">Infection Prevention &amp; Control</string>
+    <string name="learn_module_6_desc">Prevent and control the spread of infections</string>
+
+    <!-- Module list -->
+    <string name="learn_module_number_format">Module %1$d</string>
+    <string name="learn_continue_learning">Continue learning</string>
+    <string name="learn_all_videos_done">You have watched every video!</string>
+    <string name="learn_all_videos_done_hint">Finish any remaining quizzes to complete the modules.</string>
+    <string name="learn_videos_count_format">%1$d/%2$d videos</string>
+    <string name="learn_quizzes_count_format">%1$d/%2$d quizzes</string>
+    <string name="learn_module_complete">Module complete</string>
+
+    <!-- Module detail -->
+    <string name="learn_video_number_format">Video %1$d</string>
+    <string name="learn_video_of_format">Video %1$d of %2$d</string>
+    <string name="learn_watched">Watched</string>
+    <string name="learn_quiz_done">Quiz done</string>
+    <string name="learn_quiz_locked_hint">Watch the video to unlock the quiz</string>
+
+    <!-- Video player -->
+    <string name="learn_video_error">The video could not be played. Check your connection and try again.</string>
+    <string name="learn_video_complete">Video complete</string>
+    <string name="learn_next_video">Next video</string>
+    <string name="learn_back_to_module">Back to module</string>
+</resources>

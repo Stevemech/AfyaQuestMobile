@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -52,21 +53,21 @@ fun RegisterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
 
-    val registrationSuccessful = stringResource(R.string.registration_successful)
     val registrationFailed = stringResource(R.string.registration_failed)
 
     // Handle registration state changes
     LaunchedEffect(registerState) {
         when (registerState) {
             is Resource.Success -> {
-                snackbarHostState.showSnackbar(
-                    message = registrationSuccessful,
-                    duration = SnackbarDuration.Long
-                )
-                navController.navigate(Screen.Login.route) {
-                    popUpTo(Screen.Register.route) { inclusive = true }
-                }
+                // Hand the email back to Login (which shows the "check your email" banner) and
+                // return immediately; no blocking snackbar here.
                 viewModel.resetRegisterState()
+                navController.previousBackStackEntry?.savedStateHandle?.set(REGISTERED_EMAIL_KEY, email)
+                if (!navController.popBackStack()) {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Register.route) { inclusive = true }
+                    }
+                }
             }
             is Resource.Error -> {
                 snackbarHostState.showSnackbar(
@@ -85,7 +86,7 @@ fun RegisterScreen(
                 title = { Text(stringResource(R.string.create_account)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -117,7 +118,10 @@ fun RegisterScreen(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Section 1: who you are
+            FormSectionHeader(text = stringResource(R.string.account_section_about_you))
 
             // Organization dropdown
             if (organizations.isNotEmpty()) {
@@ -221,7 +225,10 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Section 2: credentials
+            FormSectionHeader(text = stringResource(R.string.account_section_your_account))
 
             // Password field
             OutlinedTextField(
@@ -356,4 +363,17 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
+}
+
+@Composable
+private fun FormSectionHeader(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp)
+    )
 }

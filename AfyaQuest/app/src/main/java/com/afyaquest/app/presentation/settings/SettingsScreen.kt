@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.compose.ui.res.stringResource
+import com.afyaquest.app.BuildConfig
 import com.afyaquest.app.R
 import com.afyaquest.app.presentation.auth.AuthViewModel
 import com.afyaquest.app.presentation.navigation.Screen
@@ -38,6 +39,7 @@ fun SettingsScreen(
     var showProfileDialog by remember { mutableStateOf(false) }
     var showPasswordDialog by remember { mutableStateOf(false) }
     var showLogoutDialog by remember { mutableStateOf(false) }
+    var showAboutDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     Scaffold(
@@ -67,9 +69,9 @@ fun SettingsScreen(
                     icon = Icons.Default.Language,
                     title = stringResource(R.string.language),
                     subtitle = when (currentLanguage) {
-                        LanguageManager.LANGUAGE_SPANISH -> "Español"
-                        LanguageManager.LANGUAGE_KAQCHIKEL -> "Kaqchikel"
-                        else -> "English"
+                        LanguageManager.LANGUAGE_SPANISH -> stringResource(R.string.espanol)
+                        LanguageManager.LANGUAGE_KAQCHIKEL -> stringResource(R.string.kaqchikel)
+                        else -> stringResource(R.string.english)
                     },
                     onClick = { showLanguageDialog = true }
                 )
@@ -109,15 +111,15 @@ fun SettingsScreen(
                 SettingsItem(
                     icon = Icons.Default.Info,
                     title = stringResource(R.string.settings_about_app),
-                    subtitle = stringResource(R.string.settings_version),
-                    onClick = { }
+                    subtitle = stringResource(R.string.account_about_version_format, BuildConfig.VERSION_NAME),
+                    onClick = { showAboutDialog = true }
                 )
             }
 
             // Logout
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                SectionHeader(text = stringResource(R.string.settings_danger_zone))
+                SectionHeader(text = stringResource(R.string.account_session_header))
             }
 
             item {
@@ -295,6 +297,11 @@ fun SettingsScreen(
         )
     }
 
+    // About dialog: app name + build version
+    if (showAboutDialog) {
+        AboutDialog(onDismiss = { showAboutDialog = false })
+    }
+
     // Logout confirmation dialog
     if (showLogoutDialog) {
         AlertDialog(
@@ -319,6 +326,38 @@ fun SettingsScreen(
             }
         )
     }
+}
+
+@Composable
+private fun AboutDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
+        title = { Text(stringResource(R.string.app_name)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = stringResource(R.string.account_about_version_format, BuildConfig.VERSION_NAME),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = stringResource(R.string.account_about_description),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.close)) }
+        }
+    )
 }
 
 @Composable
@@ -401,11 +440,11 @@ fun LanguageDialog(
         title = { Text(stringResource(R.string.settings_select_language)) },
         text = {
             Column {
-                LanguageOption(LanguageManager.LANGUAGE_ENGLISH, "English", currentLanguage == LanguageManager.LANGUAGE_ENGLISH) { onLanguageSelected(LanguageManager.LANGUAGE_ENGLISH) }
+                LanguageOption(LanguageManager.LANGUAGE_ENGLISH, stringResource(R.string.english), currentLanguage == LanguageManager.LANGUAGE_ENGLISH) { onLanguageSelected(LanguageManager.LANGUAGE_ENGLISH) }
                 Spacer(modifier = Modifier.height(8.dp))
-                LanguageOption(LanguageManager.LANGUAGE_SPANISH, "Español", currentLanguage == LanguageManager.LANGUAGE_SPANISH) { onLanguageSelected(LanguageManager.LANGUAGE_SPANISH) }
+                LanguageOption(LanguageManager.LANGUAGE_SPANISH, stringResource(R.string.espanol), currentLanguage == LanguageManager.LANGUAGE_SPANISH) { onLanguageSelected(LanguageManager.LANGUAGE_SPANISH) }
                 Spacer(modifier = Modifier.height(8.dp))
-                LanguageOption(LanguageManager.LANGUAGE_KAQCHIKEL, "Kaqchikel", currentLanguage == LanguageManager.LANGUAGE_KAQCHIKEL) { onLanguageSelected(LanguageManager.LANGUAGE_KAQCHIKEL) }
+                LanguageOption(LanguageManager.LANGUAGE_KAQCHIKEL, stringResource(R.string.kaqchikel), currentLanguage == LanguageManager.LANGUAGE_KAQCHIKEL) { onLanguageSelected(LanguageManager.LANGUAGE_KAQCHIKEL) }
             }
         },
         confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } }
@@ -427,7 +466,7 @@ fun LanguageOption(language: String, displayName: String, isSelected: Boolean, o
         ) {
             Text(text = displayName, fontSize = 16.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal)
             if (isSelected) {
-                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "Selected", tint = MaterialTheme.colorScheme.primary)
+                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = stringResource(R.string.account_selected_cd), tint = MaterialTheme.colorScheme.primary)
             }
         }
     }

@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.afyaquest.app.data.repository.QuestionsRepository
 import com.afyaquest.app.domain.model.Difficulty
 import com.afyaquest.app.domain.model.Question
+import com.afyaquest.app.util.DailyQuestionsResult
+import com.afyaquest.app.util.ProgressDataStore
 import com.afyaquest.app.util.Resource
 import com.afyaquest.app.util.XpManager
 import com.afyaquest.app.util.XpRewards
@@ -19,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DailyQuestionsViewModel @Inject constructor(
     private val questionsRepository: QuestionsRepository,
-    private val xpManager: XpManager
+    private val xpManager: XpManager,
+    private val progressDataStore: ProgressDataStore
 ) : ViewModel() {
 
     private val _questionsState = MutableStateFlow<Resource<List<Question>>?>(null)
@@ -42,8 +45,28 @@ class DailyQuestionsViewModel @Inject constructor(
 
     private val _answeredQuestions = MutableStateFlow<Set<String>>(emptySet())
 
+    /** How many questions have been answered in this session (drives the leave guard). */
+    val answeredCount: StateFlow<Int> = _answeredQuestions
+        .map { it.size }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0
+        )
+
     private val _quizFinished = MutableStateFlow(false)
     val quizFinished: StateFlow<Boolean> = _quizFinished.asStateFlow()
+
+    /** XP earned in this session: per-correct-answer rewards plus the completion bonus. */
+    private val _xpEarned = MutableStateFlow(0)
+    val xpEarned: StateFlow<Int> = _xpEarned.asStateFlow()
+
+    /** Net change in lives since the session started (positive = gained). */
+    private val _livesDelta = MutableStateFlow(0)
+    val livesDelta: StateFlow<Int> = _livesDelta.asStateFlow()
+
+    /** Lives when the session started; captured lazily so the delta is real, not estimated. */
+    private var startLives: Int? = null
 
     // Lives from XpManager
     val lives: StateFlow<Int> = xpManager.getXpDataFlow()
@@ -54,8 +77,31 @@ class DailyQuestionsViewModel @Inject constructor(
             initialValue = 10
         )
 
+    /** True once today's daily questions have been finished (persisted, survives restarts). */
+    val completedToday: StateFlow<Boolean> = progressDataStore.isDailyQuestionsDoneToday()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
+        )
+
+    /** The last finished session, used for the "Completed today" summary. */
+    val lastResult: StateFlow<DailyQuestionsResult?> = progressDataStore.getDailyQuestionsResult()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
+
     init {
-        loadDailyQuestions()
+        viewModelScope.launch {
+            startLives = xpManager.getLives()
+            // Do not replay the quiz if today's session is already done.
+            val doneToday = progressDataStore.isDailyQuestionsDoneToday().first()
+            if (!doneToday) {
+                loadDailyQuestions()
+            }
+        }
     }
 
     /**
@@ -101,18 +147,23 @@ class DailyQuestionsViewModel @Inject constructor(
                 Difficulty.MEDIUM -> XpRewards.MEDIUM_QUESTION
                 Difficulty.HARD -> XpRewards.HARD_QUESTION
             }
+            _xpEarned.value += xpReward
             viewModelScope.launch {
+                val base = startLives ?: xpManager.getLives().also { startLives = it }
                 xpManager.addXP(
                     xpReward,
                     "Correct answer: ${question.question.take(50)}..."
                 )
                 // Add 1 life for correct answer (capped at MAX_LIVES)
-                xpManager.addLives(1, "Correct answer!")
+                val newLives = xpManager.addLives(1, "Correct answer!")
+                _livesDelta.value = newLives - base
             }
         } else {
             // Remove 1 life for wrong answer
             viewModelScope.launch {
-                xpManager.removeLives(1, "Wrong answer")
+                val base = startLives ?: xpManager.getLives().also { startLives = it }
+                val newLives = xpManager.removeLives(1, "Wrong answer")
+                _livesDelta.value = newLives - base
             }
         }
 
@@ -146,10 +197,11 @@ class DailyQuestionsViewModel @Inject constructor(
     }
 
     /**
-     * Finish quiz - awards bonus XP and signals navigation back.
+     * Finish quiz - awards bonus XP, records today's result and signals the completion dialog.
      * Works entirely offline; no API call required.
      */
     fun finishQuiz() {
+        if (_quizFinished.value) return
         viewModelScope.launch {
             val questions = (_questionsState.value as? Resource.Success)?.data ?: return@launch
 
@@ -159,9 +211,20 @@ class DailyQuestionsViewModel @Inject constructor(
                     XpRewards.DAILY_QUESTION_BONUS,
                     "Completed all daily questions!"
                 )
+                _xpEarned.value += XpRewards.DAILY_QUESTION_BONUS
             }
 
-            // Signal quiz is finished — UI will navigate back
+            // Real lives delta (accounts for the MAX_LIVES cap)
+            val base = startLives ?: xpManager.getLives()
+            _livesDelta.value = xpManager.getLives() - base
+
+            progressDataStore.markDailyQuestionsCompleted(
+                correctAnswers = _correctAnswers.value,
+                totalQuestions = questions.size,
+                xpEarned = _xpEarned.value
+            )
+
+            // Signal quiz is finished; the UI shows the completion dialog
             _quizFinished.value = true
         }
     }

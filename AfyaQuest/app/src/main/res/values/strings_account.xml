@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Account area: profile, settings, login, register -->
+    <string name="account_session_header">Session</string>
+    <string name="account_about_version_format">Version %1$s</string>
+    <string name="account_about_description">Learning and daily-task companion for Community Health Volunteers.</string>
+    <string name="account_registered_banner">Account created. Check your email to verify, then sign in.</string>
+    <string name="account_section_about_you">About you</string>
+    <string name="account_section_your_account">Your account</string>
+    <string name="account_unlocked_cd">Unlocked</string>
+    <string name="account_selected_cd">Selected</string>
+</resources>
