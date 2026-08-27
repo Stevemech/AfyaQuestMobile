@@ -40,4 +40,9 @@ sealed class Screen(val route: String) {
     object Chat : Screen("chat")
     object Profile : Screen("profile")
     object Settings : Screen("settings")
+
+    // Emergency Response Guide
+    object EmergencyGuide : Screen("emergency_guide")
+    object TriageFlow : Screen("triage_flow")
+    object CaseHistory : Screen("case_history")
 }

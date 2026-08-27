@@ -22,6 +22,9 @@ import com.afyaquest.app.presentation.auth.SplashScreen
 import com.afyaquest.app.presentation.chat.ChatScreen
 import com.afyaquest.app.presentation.dailyquestions.DailyQuestionsScreen
 import com.afyaquest.app.presentation.dashboard.DashboardScreen
+import com.afyaquest.app.presentation.emergencyguide.CaseHistoryScreen
+import com.afyaquest.app.presentation.emergencyguide.EmergencyGuideScreen
+import com.afyaquest.app.presentation.emergencyguide.TriageFlowScreen
 import com.afyaquest.app.presentation.learn.LearnScreen
 import com.afyaquest.app.presentation.lessons.LessonDetailRoute
 import com.afyaquest.app.presentation.map.MapScreen
@@ -131,6 +134,20 @@ fun NavGraph(navController: NavHostController) {
                 composable(route = Screen.LessonDetail.route) { entry ->
                     val lessonId = entry.arguments?.getString("lessonId") ?: ""
                     LessonDetailRoute(lessonId = lessonId, navController = navController)
+                }
+
+                // ---- Emergency Response Guide ----
+
+                composable(route = Screen.EmergencyGuide.route) {
+                    EmergencyGuideScreen(navController = navController)
+                }
+
+                composable(route = Screen.TriageFlow.route) {
+                    TriageFlowScreen(navController = navController)
+                }
+
+                composable(route = Screen.CaseHistory.route) {
+                    CaseHistoryScreen(navController = navController)
                 }
 
                 // ---- Other ----

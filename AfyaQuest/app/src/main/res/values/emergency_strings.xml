@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Emergency Response Guide (EMT ABCDE triage). Clinical step content lives in
+         assets/triage/triage_tree.json; these are app-chrome strings only. -->
+    <string name="emergency_response">Emergency Response</string>
+    <string name="emergency_response_subtitle">Step-by-step help in a medical emergency</string>
+    <string name="emergency_start_title">Emergency Response Guide</string>
+    <string name="emergency_start_subtitle">Answer one question at a time. The guide will tell you what to do next.</string>
+    <string name="emergency_start_button">Start assessment</string>
+    <string name="emergency_disclaimer">Draft tool — not validated for clinical use and not a substitute for trained medical care. In a real emergency, call for help.</string>
+    <string name="emergency_phase_scene">Scene</string>
+    <string name="emergency_phase_primary">Primary</string>
+    <string name="emergency_phase_secondary">Secondary</string>
+    <string name="emergency_phase_disposition">Result</string>
+    <string name="emergency_new_assessment">New assessment</string>
+    <string name="emergency_done">Done</string>
+    <string name="emergency_hear_step">Tap to hear this step</string>
+    <string name="emergency_assistant">AfyaQuest Assistant</string>
+    <string name="emergency_voice_on">Voice on — tap to mute</string>
+    <string name="emergency_voice_off">Voice off — tap to unmute</string>
+    <string name="emergency_history">Past cases</string>
+    <string name="emergency_history_empty">No past assessments yet.</string>
+    <string name="emergency_not_synced">Not synced</string>
+    <string name="emergency_mechanism_trauma">Injury</string>
+    <string name="emergency_mechanism_medical">Illness</string>
+    <string name="emergency_mechanism_unknown">Unknown cause</string>
+</resources>

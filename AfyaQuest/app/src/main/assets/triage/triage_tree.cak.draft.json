@@ -1,0 +1,106 @@
+{
+  "_README": "MACHINE-GENERATED DRAFT KAQCHIKEL — UNVALIDATED, NOT SAFE FOR USE. Produced by an AI that is NOT a reliable Kaqchikel speaker; it almost certainly contains errors in grammar, orthography, and medical terminology. It is a SEED for a native Kaqchikel speaker / Wuqu' Kawoq translator to rewrite and a clinician to re-approve before ANY field use. Keyed by audioKey (see docs/emergency-response/AUDIO.md); merged into the tree at load as the 'cak' text.",
+  "_status": "draft-unvalidated",
+
+  "scene_safe": "Tatz'eta' chawij. ¿La ütz richin yat'ok? (manäq q'aq', ch'ich', ch'a'oj, korriente, ya')",
+  "scene_safe_a": "A. Ja', ütz",
+  "scene_safe_b": "B. Manäq, k'o k'ayewal",
+
+  "scene_ppe": "Tak'ulu' ri guantes wakami. ¿La k'o guantes pa aq'a'?",
+  "scene_ppe_a": "A. Ja', k'o guantes",
+  "scene_ppe_b": "B. Manäq guantes — tachajij ri aq'a' (rik'in bolsa o tz'iek), k'a ri' tab'ana' samaj",
+
+  "scene_mechanism": "¿Achike xb'an chi re re winäq re'?",
+  "scene_mechanism_a": "A. Sok o k'ayewal (xtzaq, choque, ch'ayoj, sokil)",
+  "scene_mechanism_b": "B. Yab'il, manäq sok (q'oxom, q'aq', sutz'unïk, xtzaq pa ulew)",
+  "scene_mechanism_c": "C. Manwetaman ta",
+
+  "prim_responsive": "Tachapa' ri telq'aj chuqa' tasik'ij: \"¿La ütz at?\" ¿La nsïl ri winäq?",
+  "prim_responsive_a": "A. Ja' — nsilon, nch'on, o nujäq runaq'wäch",
+  "prim_responsive_b": "B. Majun nub'än",
+
+  "prim_airway_aware": "¿La nikowin nch'o o noq' jeb'ël?",
+  "prim_airway_aware_a": "A. Ja', nch'o jeb'ël",
+  "prim_airway_aware_b": "B. Manäq — njik'on, nkamisäx ruxla', o k'o ruq'ajan",
+
+  "prim_airway_unresp": "Ri winäq manäq nub'än. Tasilij ri jolomaj chi qiläl richin njäq ri b'ey ruxla'. Tatz'eta' pa chi' — ¿k'o jun natz'apin?",
+  "prim_airway_unresp_a": "A. Choj k'o ri chi'",
+  "prim_airway_unresp_b": "B. K'o jun ntz'apin (way, xa'ow, kik') — tawelesaj wi natz'ët",
+
+  "prim_airway_open": "Tato'o' richin nuqupij ri'. ¿K'a nukamisaj na richin nuxla' chi rij ojob'?",
+  "prim_airway_open_a": "A. Manäq, wakami nikowin nuxla'",
+  "prim_airway_open_b": "B. Ja', k'a manäq nikowin nuxla'",
+
+  "prim_breathing": "Tatz'eta' ri ruk'u'x 10 segundos. ¿La nuxla' ri winäq? (njote' ri ruk'u'x, nana' kaq'ïq')",
+  "prim_breathing_a": "A. Ja', nuxla' jeb'ël",
+  "prim_breathing_b": "B. Anin, eqal, o k'ayew ri ruxlanik",
+  "prim_breathing_c": "C. Manäq nuxla', o xa njik'on",
+
+  "prim_circulation": "Tatz'eta' anin ronojel ri ch'akulaj. ¿K'o nïm kik' nel? (nmolotäj o nt'iqotäj)",
+  "prim_circulation_a": "A. Manäq nïm kik'",
+  "prim_circulation_b": "B. Ja' — taq'apij RUCHUQ'A' ri sok rik'in tz'iek, man tayä' kan",
+
+  "prim_disability": "Tatz'eta' la k'as ri winäq. ¿Achike qitzij wakami?",
+  "prim_disability_a": "A. K'astajinäq chuqa' nch'o jeb'ël",
+  "prim_disability_b": "B. Xa nk'astäj toq nasik'ij rik'in ruchuq'a'",
+  "prim_disability_c": "C. Xa nub'än toq naq'ät (tach'iro')",
+  "prim_disability_d": "D. Majun nub'än",
+
+  "sec_t_head": "Tatz'eta' chuqa' tachapa' chi qiläl ri jolomaj chuqa' ri qul. ¿K'o jun chi re re'? (kik', nïm sipoj, b'olob'ïk, q'oxom pa qul)",
+  "sec_t_head_a": "A. Majun k'ayewal xinwïl",
+  "sec_t_head_b": "B. Ja', k'o k'ayewal pa jolomaj o qul — MAN tasilij ri qul",
+
+  "sec_t_chest": "Tatz'eta' chuqa' tachapa' ri ruk'u'x. ¿La ütz nuk'utuj chuqa' junan nsilon toq nuxla'?",
+  "sec_t_chest_a": "A. Ja', ütz ntzu'un",
+  "sec_t_chest_b": "B. Manäq — sok, man junan ta nsilon, o k'ayew ruxlanik",
+
+  "sec_t_abdomen": "Taq'apij chi qiläl ri pamaj. ¿La ch'uch'uj chuqa' manäq nïm q'oxom?",
+  "sec_t_abdomen_a": "A. Ja', ch'uch'uj chuqa' manäq nïm q'oxom",
+  "sec_t_abdomen_b": "B. Manäq — kowïk, sipoj, o k'o nïm q'oxom",
+
+  "sec_t_extremities": "Tatz'eta' ri aq'a' chuqa' aqän. ¿K'o jun b'olob'ïk, nïm sok, o man nikowin ta nsilon?",
+  "sec_t_extremities_a": "A. Ütz ri aq'a' chuqa' aqän",
+  "sec_t_extremities_b": "B. Ja' — ntzu' q'ajinäq, nïm sok, o man nsilon ta",
+
+  "sec_t_spine": "Tak'utuj: ¿La nana' chuqa' nikowin nasilij ri ruwi' aq'a' chuqa' aqän? (o tach'iro' chi qiläl chuqa' tatz'eta')",
+  "sec_t_spine_a": "A. Ja', nuna' chuqa' nusilij ronojel",
+  "sec_t_spine_b": "B. Manäq nuna' o manäq nsilon pa jun lugar",
+
+  "sec_m_conditions": "Tak'utuj chi re ri winäq o ri rach'alal: ¿k'o jun yab'il retaman? (anima', azúcar, asma, sutz'unïk, alanïk)",
+  "sec_m_conditions_a": "A. Majun yab'il retaman",
+  "sec_m_conditions_b": "B. Ja', k'o jun yab'il retaman",
+
+  "sec_m_onset": "¿Achike rub'anik xtikïr ri yab'il?",
+  "sec_m_onset_a": "A. Aninäq, junanin",
+  "sec_m_onset_b": "B. Eqal, pa taq horas o q'ij",
+
+  "sec_m_complaint": "¿Achike ri NÏM k'ayewal nuna' ri winäq?",
+  "sec_m_complaint_a": "A. Q'oxom pa ruk'u'x o k'ayew ruxlanik",
+  "sec_m_complaint_b": "B. Ntzaq ruwäch, jun lado manäq ruchuq'a', o sachsöj ruch'ab'äl",
+  "sec_m_complaint_c": "C. Nïm q'oxom, q'aq', o xa'ow",
+  "sec_m_complaint_d": "D. Sutz'unïk, manäq ruchuq'a', o xtzaq",
+
+  "sec_m_vitals_breath": "Tajila' ri ruxlanik 30 segundos, k'a ri' takamulaj. ¿Achike rub'anik ri ruxlanik?",
+  "sec_m_vitals_breath_a": "A. Ütz (achi'el 12-20 pa jun minuto)",
+  "sec_m_vitals_breath_b": "B. Sib'iläj anin o sib'iläj eqal, o k'ayew",
+
+  "sec_m_vitals_pulse": "Tana' ri pulso pa q'a' o pa qul. Tajila' 30 segundos, k'a ri' takamulaj. ¿Achike rub'anik ri pulso?",
+  "sec_m_vitals_pulse_a": "A. Ütz chuqa' kow (achi'el 60-100)",
+  "sec_m_vitals_pulse_b": "B. Sib'iläj anin, eqal, o man kow ta",
+  "sec_m_vitals_pulse_c": "C. Majun pulso nna'on",
+
+  "disp_unsafe": "K'AYEWAL K'O — TAQ'ATÄJ",
+  "disp_unsafe_instructions": "MAN katok. Tel pa jun ütz lugar naj. Tasik'ij to'ïk wakami. Ke'achajij ri chïk winäq. Xaxe katok toq xq'ax yan ri k'ayewal.",
+
+  "disp_cpr": "MANÄQ RUXLANIK — TATIKIRISAJ RCP WAKAMI",
+  "disp_cpr_instructions": "Tasik'ij to'ïk de emergencia wakami. Tatz'ulu' ri winäq pa rij pa jun kow lugar. Taq'apij ruchuq'a' chuqa' anin pa runik'ajal ruk'u'x, achi'el 2 pa jun segundo. Man taq'ät kan k'a toq npe to'ïk o k'a toq nuxla' ri winäq. Wi awetaman chuqa' k'o DEA, tokisaj.",
+
+  "disp_immediate": "WAKAMI — K'O PA K'AYEWAL RUK'ASLEM",
+  "disp_immediate_instructions": "Re' k'o pa k'ayewal ri k'aslem. Tak'waj WAKAMI — man koyob'ej, man taq'is ri chïk nik'oj. Taq'apij k'a ri kik'. Wi k'o sok pa qul/rij, tachajij ri jolomaj chuqa' man tasilij. Tab'ij chi re ri clínica chi yape rik'in jun yawa' k'o pa nïm k'ayewal. Tatz'eta' chïk ri ruxlanik pa b'ey.",
+
+  "disp_priority": "NABEY — KAB'IYIN ANIN",
+  "disp_priority_instructions": "Kab'iyin anin. Tachojmirisaj ri b'ey wakami chuqa' tasik'ij nab'ey richin ütz ri clínica. Ke'aya' ri winäq jub'ulüj, tz'uyul, chuqa' mäq'. Tatz'eta' ri ruxlanik chuqa' ri rk'astajem chi taq jujun ratzeq — wi nïm nub'än, tab'ana' achi'el wakami.",
+
+  "disp_stable": "JIK'ÏL — TATZ'ETA'",
+  "disp_stable_instructions": "Ri winäq jik'ïl wakami. Taya' jub'ulüj chuqa' tatz'eta'. Tatz'eta' ri ruxlanik, pulso, chuqa' rk'astajem chi taq 5-10 minutos. Tachojmirisaj b'ey o seguimiento. Wi XABACHIKE nub'än k'ayew, tajote'isaj pa nabey o pa wakami."
+}

@@ -43,6 +43,7 @@ import com.afyaquest.app.presentation.components.HintRow
 import com.afyaquest.app.presentation.components.LoadingState
 import com.afyaquest.app.presentation.components.ProgressSummary
 import com.afyaquest.app.presentation.components.SyncStatusIndicator
+import com.afyaquest.app.presentation.emergencyguide.EmergencyEntryCard
 import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.presentation.navigation.navigateSingle
 import com.afyaquest.app.presentation.navigation.navigateTopLevel
@@ -165,6 +166,11 @@ fun DashboardScreen(
                 progress = dashboardViewModel.getLevelProgress(),
                 xpForNextLevel = dashboardViewModel.getXPForNextLevel()
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Emergency Response entry point
+            EmergencyEntryCard(onClick = { navController.navigateSingle(Screen.EmergencyGuide.route) })
 
             Spacer(modifier = Modifier.height(24.dp))
 
