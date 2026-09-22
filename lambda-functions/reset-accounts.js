@@ -2,7 +2,7 @@
  * One-time script: Reset all existing user accounts to clean defaults.
  *
  * Run with:
- *   AWS_PROFILE=afyaquest AWS_REGION=af-south-1 node reset-accounts.js
+ *   AWS_PROFILE=default AWS_REGION=us-east-1 node reset-accounts.js
  */
 
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
@@ -10,7 +10,7 @@ const { DynamoDBDocumentClient, ScanCommand, UpdateCommand } = require("@aws-sdk
 
 const TABLE_NAME = "AfyaQuestData";
 
-const client = new DynamoDBClient({ region: process.env.AWS_REGION || "af-south-1" });
+const client = new DynamoDBClient({ region: process.env.AWS_REGION || "us-east-1" });
 const docClient = DynamoDBDocumentClient.from(client);
 
 async function resetAllAccounts() {

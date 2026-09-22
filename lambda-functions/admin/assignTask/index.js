@@ -1,7 +1,8 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
+const { requireAdmin } = require('./authz');
 
-const client = new DynamoDBClient({ region: 'af-south-1' });
+const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 const ddb = DynamoDBDocumentClient.from(client);
 const TABLE = 'AfyaQuestData';
 
@@ -13,11 +14,21 @@ exports.handler = async (event) => {
   };
 
   try {
+    // Admin-only: the JWT authorizer proves identity, not role.
+    const auth = await requireAdmin(event);
+    if (auth.denied) return auth.denied;
+
     const body = JSON.parse(event.body || '{}');
     const { chvId, type, data, action } = body;
 
     if (!chvId || !type) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing chvId or type' }) };
+    }
+
+    // Every branch below reads fields off `data`; without this it throws a
+    // TypeError and surfaces as a 500 instead of a validation error.
+    if (!data || typeof data !== 'object') {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing data object for assignment' }) };
     }
 
     // Handle delete action

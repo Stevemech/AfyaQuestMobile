@@ -31,7 +31,8 @@ function calculateLevel(totalXP) {
  */
 exports.handler = async (event) => {
     try {
-        const userId = event.requestContext?.authorizer?.claims?.sub;
+        const userId = event.requestContext?.authorizer?.jwt?.claims?.sub
+        || event.requestContext?.authorizer?.claims?.sub;
 
         if (!userId) {
             return {

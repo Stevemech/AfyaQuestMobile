@@ -5,7 +5,7 @@
 
 const { CognitoIdentityProviderClient, SignUpCommand } = require("@aws-sdk/client-cognito-identity-provider");
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 
 const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION });
@@ -16,7 +16,11 @@ exports.handler = async (event) => {
 
     try {
         const body = JSON.parse(event.body);
-        const { email, password, name, phone, role = 'cha', organization } = body;
+        // `role` is deliberately NOT read from the request. Public signup always
+        // creates a CHA; an admin is promoted out-of-band. Trusting a client-supplied
+        // role would let anyone self-elevate past every admin authorization check.
+        const { email, password, name, phone, organization } = body;
+        const role = 'cha';
 
         // Validate input
         if (!email || !password || !name) {
@@ -32,6 +36,20 @@ exports.handler = async (event) => {
                 statusCode: 400,
                 headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
                 body: JSON.stringify({ error: 'Organization is required' })
+            };
+        }
+
+        // Only accept an organization that actually exists, so the field cannot be
+        // used to place a user in an arbitrary or invented org.
+        const orgLookup = await docClient.send(new GetCommand({
+            TableName: process.env.DYNAMODB_TABLE,
+            Key: { PK: `ORG#${organization}`, SK: 'INFO' }
+        }));
+        if (!orgLookup.Item) {
+            return {
+                statusCode: 400,
+                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+                body: JSON.stringify({ error: 'Unknown organization' })
             };
         }
 

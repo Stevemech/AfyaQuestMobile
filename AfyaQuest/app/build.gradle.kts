@@ -25,8 +25,8 @@ android {
         applicationId = "com.afyaquest.app"
         minSdk = 27
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -38,8 +38,25 @@ android {
             localProperties.getProperty("google.maps.apiKey", "")
     }
 
+    signingConfigs {
+        create("release") {
+            // Credentials live in ~/.gradle/gradle.properties, never in the repo.
+            // Without them the release build stays unsigned rather than failing.
+            val storeFilePath = providers.gradleProperty("AFYAQUEST_STORE_FILE").orNull
+            if (storeFilePath != null) {
+                storeFile = file(storeFilePath)
+                storePassword = providers.gradleProperty("AFYAQUEST_STORE_PASSWORD").orNull
+                keyAlias = providers.gradleProperty("AFYAQUEST_KEY_ALIAS").orNull
+                keyPassword = providers.gradleProperty("AFYAQUEST_KEY_PASSWORD").orNull
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (providers.gradleProperty("AFYAQUEST_STORE_FILE").orNull != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(

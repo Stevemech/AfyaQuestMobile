@@ -2,9 +2,9 @@
 set -e
 
 PROFILE="afyaquest"
-REGION="af-south-1"
-ROLE_ARN="arn:aws:iam::756401225362:role/AfyaQuest-Lambda-Role"
-API_ID="gc6iib7ck2"
+REGION="us-east-1"
+ROLE_ARN="arn:aws:iam::556683673972:role/AfyaQuest-Lambda-Role"
+API_ID="tkytlmt856"
 LAMBDA_DIR="../lambda-functions/admin"
 AUTHORIZER_ID="ezwjbs"
 
@@ -98,7 +98,7 @@ add_api_route() {
   fi
 
   # Add Lambda permission for API Gateway
-  ACCOUNT_ID="756401225362"
+  ACCOUNT_ID="556683673972"
   STATEMENT_ID="apigateway-${FUNC_NAME}-$(date +%s)"
   aws lambda add-permission \
     --function-name "$FUNC_NAME" \

@@ -3,7 +3,7 @@
 # Requires: aws CLI, jq
 #
 # Usage:
-#   export AWS_REGION=af-south-1   # must match your AfyaQuestData table region
+#   export AWS_REGION=us-east-1   # must match your AfyaQuestData table region
 #   export DYNAMODB_TABLE=AfyaQuestData
 #   ./scripts/delete-all-dynamodb-assignments.sh
 #
@@ -12,7 +12,7 @@
 
 set -euo pipefail
 
-REGION="${AWS_REGION:-af-south-1}"
+REGION="${AWS_REGION:-us-east-1}"
 TABLE="${DYNAMODB_TABLE:-AfyaQuestData}"
 DRY_RUN="${DRY_RUN:-0}"
 

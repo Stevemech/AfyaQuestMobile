@@ -3,7 +3,7 @@
  * Cognito Custom Message trigger - sends verification emails with clickable links
  */
 
-const VERIFY_URL = process.env.VERIFY_URL || 'https://gc6iib7ck2.execute-api.af-south-1.amazonaws.com/prod/auth/verify';
+const VERIFY_URL = process.env.VERIFY_URL || 'https://tkytlmt856.execute-api.us-east-1.amazonaws.com/prod/auth/verify';
 
 exports.handler = async (event) => {
     console.log('CustomMessage trigger:', JSON.stringify(event, null, 2));

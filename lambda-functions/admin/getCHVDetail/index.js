@@ -1,7 +1,8 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, GetCommand, QueryCommand } = require('@aws-sdk/lib-dynamodb');
+const { requireAdmin } = require('./authz');
 
-const client = new DynamoDBClient({ region: 'af-south-1' });
+const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 const ddb = DynamoDBDocumentClient.from(client);
 const TABLE = 'AfyaQuestData';
 
@@ -17,6 +18,10 @@ exports.handler = async (event) => {
   };
 
   try {
+    // Admin-only: the JWT authorizer proves identity, not role.
+    const auth = await requireAdmin(event);
+    if (auth.denied) return auth.denied;
+
     const chvId = event.pathParameters?.chvId;
     if (!chvId) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing chvId' }) };

@@ -11,7 +11,7 @@ const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
 const { SNSClient, PublishCommand } = require("@aws-sdk/client-sns");
 
-const region = process.env.AWS_REGION || "af-south-1";
+const region = process.env.AWS_REGION || "us-east-1";
 const cognitoClient = new CognitoIdentityProviderClient({ region });
 const dynamoClient = new DynamoDBClient({ region });
 const docClient = DynamoDBDocumentClient.from(dynamoClient);
@@ -106,7 +106,7 @@ exports.handler = async (event) => {
             `  Date:         ${now}`,
             "",
             "To approve this request:",
-            "  1. Open the AWS Cognito console (af-south-1)",
+            "  1. Open the AWS Cognito console (us-east-1)",
             "  2. Go to the AfyaQuest User Pool → Users",
             `  3. Search for "${email}"`,
             "  4. Click the user and choose Actions → Enable user",

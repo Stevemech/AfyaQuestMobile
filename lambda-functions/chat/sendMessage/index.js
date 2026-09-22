@@ -1,16 +1,30 @@
 /**
- * Lambda Function: chat-sendMessage
- * Sends message to Amazon Bedrock (Claude) and stores conversation
+ * Lambda Function: afyaquest-chat-sendMessage
+ * Sends a message to Groq and stores the conversation.
+ *
+ * Groq exposes an OpenAI-compatible chat/completions endpoint, so this uses
+ * plain fetch (built into the nodejs20.x runtime) rather than an SDK -- it
+ * keeps the deployment package small and adds no dependency to audit.
  */
 
-const { BedrockRuntimeClient, InvokeModelCommand } = require("@aws-sdk/client-bedrock-runtime");
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand, QueryCommand } = require("@aws-sdk/lib-dynamodb");
 const { randomUUID } = require("crypto");
 
-const bedrockClient = new BedrockRuntimeClient({ region: process.env.AWS_REGION });
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 const docClient = DynamoDBDocumentClient.from(dynamoClient);
+
+const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
+const MAX_TOKENS = Number(process.env.GROQ_MAX_TOKENS || 800);
+// gpt-oss models reason before answering and bill that against max_tokens. At
+// the default effort a 500-token budget went ~240 tokens on reasoning and the
+// answer was cut off mid-sentence; "low" drops that to single digits. Set this
+// to "" if GROQ_MODEL is ever switched to a model that rejects the field.
+const REASONING_EFFORT = process.env.GROQ_REASONING_EFFORT ?? "low";
+// Leave headroom under the Lambda's 30s timeout so a slow upstream surfaces as
+// our own error rather than an opaque Lambda timeout with no log line.
+const REQUEST_TIMEOUT_MS = Number(process.env.GROQ_TIMEOUT_MS || 20000);
 
 const SYSTEM_PROMPT = `You are Fred, a friendly and knowledgeable health assistant for Community Health Assistants (CHAs) in East Africa. Your role is to:
 
@@ -32,125 +46,144 @@ Guidelines:
 
 Remember: CHAs are frontline health workers serving their communities. Your guidance helps them help others.`;
 
-exports.handler = async (event) => {
-    console.log('Chat message request:', JSON.stringify(event, null, 2));
+const HEADERS = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
 
+async function callGroq(messages) {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+        const err = new Error("GROQ_API_KEY is not configured on this function");
+        err.statusCode = 503;
+        throw err;
+    }
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+    let res;
     try {
-        const body = JSON.parse(event.body);
-        const { message } = body;
+        res = await fetch(GROQ_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+                model: GROQ_MODEL,
+                max_tokens: MAX_TOKENS,
+                ...(REASONING_EFFORT ? { reasoning_effort: REASONING_EFFORT } : {}),
+                messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+            }),
+            signal: controller.signal,
+        });
+    } catch (e) {
+        const err = new Error(
+            e.name === "AbortError"
+                ? `Groq request timed out after ${REQUEST_TIMEOUT_MS}ms`
+                : `Could not reach Groq: ${e.message}`
+        );
+        err.statusCode = 504;
+        throw err;
+    } finally {
+        clearTimeout(timer);
+    }
 
-        // Extract user ID from authorizer
+    const raw = await res.text();
+    if (!res.ok) {
+        // Surface Groq's own message (bad key, unknown model, rate limit) instead
+        // of a generic 500 -- these are the failures worth seeing in the logs.
+        let detail = raw.slice(0, 400);
+        try { detail = JSON.parse(raw)?.error?.message || detail; } catch { /* keep raw */ }
+        const err = new Error(`Groq ${res.status}: ${detail}`);
+        err.statusCode = res.status === 429 ? 429 : 502;
+        throw err;
+    }
+
+    let parsed;
+    try {
+        parsed = JSON.parse(raw);
+    } catch {
+        const err = new Error("Groq returned a non-JSON response");
+        err.statusCode = 502;
+        throw err;
+    }
+
+    const choice = parsed?.choices?.[0];
+    const text = choice?.message?.content;
+    if (!text) {
+        const err = new Error("Groq returned no message content");
+        err.statusCode = 502;
+        throw err;
+    }
+    // Worth seeing in the logs: a truncated answer still returns 200, so this is
+    // the only signal that MAX_TOKENS needs raising.
+    if (choice.finish_reason === "length") {
+        console.warn(`Response truncated at ${MAX_TOKENS} tokens (model=${GROQ_MODEL})`);
+    }
+    return text;
+}
+
+exports.handler = async (event) => {
+    try {
         const userId = event.requestContext?.authorizer?.jwt?.claims?.sub
             || event.requestContext?.authorizer?.claims?.sub;
-
         if (!userId) {
-            return {
-                statusCode: 401,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ error: 'Unauthorized' })
-            };
+            return { statusCode: 401, headers: HEADERS, body: JSON.stringify({ error: "Unauthorized" }) };
         }
 
+        const { message } = JSON.parse(event.body || "{}");
         if (!message) {
-            return {
-                statusCode: 400,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ error: 'Message is required' })
-            };
+            return { statusCode: 400, headers: HEADERS, body: JSON.stringify({ error: "Message is required" }) };
         }
 
-        // Get recent conversation history (last 10 messages)
-        const queryCommand = new QueryCommand({
+        // Recent turns, oldest-first, so Fred keeps context across the conversation.
+        const historyResult = await docClient.send(new QueryCommand({
             TableName: process.env.DYNAMODB_TABLE,
-            KeyConditionExpression: 'PK = :pk AND begins_with(SK, :sk)',
-            ExpressionAttributeValues: {
-                ':pk': `USER#${userId}`,
-                ':sk': 'CHAT#'
-            },
+            KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+            ExpressionAttributeValues: { ":pk": `USER#${userId}`, ":sk": "CHAT#" },
             ScanIndexForward: false,
-            Limit: 10
-        });
+            Limit: 10,
+        }));
 
-        const historyResult = await docClient.send(queryCommand);
-        const history = (historyResult.Items || []).reverse();
-
-        // Build conversation for Claude
         const messages = [];
-        for (const item of history) {
-            messages.push({ role: 'user', content: item.message });
-            if (item.response) {
-                messages.push({ role: 'assistant', content: item.response });
-            }
+        for (const item of (historyResult.Items || []).reverse()) {
+            messages.push({ role: "user", content: item.message });
+            if (item.response) messages.push({ role: "assistant", content: item.response });
         }
-        messages.push({ role: 'user', content: message });
+        messages.push({ role: "user", content: message });
 
-        // Call Bedrock
-        const bedrockInput = {
-            modelId: process.env.BEDROCK_MODEL_ID || 'anthropic.claude-3-5-sonnet-20241022-v2:0',
-            contentType: 'application/json',
-            accept: 'application/json',
-            body: JSON.stringify({
-                anthropic_version: 'bedrock-2023-05-31',
-                max_tokens: 500,
-                system: SYSTEM_PROMPT,
-                messages: messages
-            })
-        };
+        const assistantMessage = await callGroq(messages);
 
-        const command = new InvokeModelCommand(bedrockInput);
-        const response = await bedrockClient.send(command);
-        const responseBody = JSON.parse(new TextDecoder().decode(response.body));
-
-        const assistantMessage = responseBody.content[0].text;
-
-        // Save to DynamoDB
         const timestamp = new Date().toISOString();
         const messageId = randomUUID();
-
-        const chatItem = {
-            PK: `USER#${userId}`,
-            SK: `CHAT#${timestamp}#${messageId}`,
-            id: messageId,
-            userId,
-            message,
-            response: assistantMessage,
-            role: 'assistant',
-            createdAt: timestamp
-        };
-
-        const putCommand = new PutCommand({
+        await docClient.send(new PutCommand({
             TableName: process.env.DYNAMODB_TABLE,
-            Item: chatItem
-        });
-
-        await docClient.send(putCommand);
+            Item: {
+                PK: `USER#${userId}`,
+                SK: `CHAT#${timestamp}#${messageId}`,
+                id: messageId,
+                userId,
+                message,
+                response: assistantMessage,
+                role: "assistant",
+                model: GROQ_MODEL,
+                createdAt: timestamp,
+            },
+        }));
 
         return {
             statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
-            body: JSON.stringify({
-                response: assistantMessage,
-                messageId,
-                timestamp
-            })
+            headers: HEADERS,
+            body: JSON.stringify({ response: assistantMessage, messageId, timestamp }),
         };
-
     } catch (error) {
-        console.error('Chat error:', error);
-
+        console.error("Chat error:", error);
         return {
-            statusCode: 500,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
-            body: JSON.stringify({
-                error: 'Failed to process chat message',
-                details: error.message
-            })
+            statusCode: error.statusCode || 500,
+            headers: HEADERS,
+            body: JSON.stringify({ error: "Failed to process chat message", details: error.message }),
         };
     }
 };

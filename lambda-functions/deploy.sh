@@ -1,146 +1,96 @@
 #!/bin/bash
-
-# AfyaQuest Lambda Deployment Script
-# This script packages and deploys all Lambda functions
+# AfyaQuest Lambda Deployment
+#
+# Target: account 556683673972 (stevemech2020@gmail.com), us-east-1
+# All functions are prefixed "afyaquest-" to keep this project's namespace
+# separate from MedPull and recovery-copilot, which share this account.
+# The execution role is scoped to AfyaQuest resources only.
 
 set -e
 
-export AWS_PROFILE=afyaquest
+export AWS_PROFILE="${AWS_PROFILE:-default}"
 
-echo "🚀 Starting Lambda deployment..."
-
-# Configuration
-REGION="af-south-1"
-ROLE_ARN="arn:aws:iam::756401225362:role/AfyaQuest-Lambda-Role"
+REGION="us-east-1"
+ACCOUNT_ID="556683673972"
+ROLE_ARN="arn:aws:iam::${ACCOUNT_ID}:role/AfyaQuest-Lambda-Role"
+PREFIX="afyaquest"
 RUNTIME="nodejs20.x"
 TIMEOUT=30
 MEMORY=512
 
-# Environment variables
+# NOTE: AWS_REGION is a reserved Lambda key and must NOT be set here --
+# the runtime provides it automatically. Setting it makes the API reject
+# the whole call, which is why the previous version of this script failed.
 TABLE_NAME="AfyaQuestData"
-COGNITO_CLIENT_ID="${COGNITO_CLIENT_ID:-3oj94klb6jejp4lbal9ninv870}"
-CLOUDFRONT_DOMAIN="${CLOUDFRONT_DOMAIN:-d2c7svayh8fll3.cloudfront.net}"
-S3_BUCKET="afyaquest-media-756401225362"
-BEDROCK_MODEL_ID="anthropic.claude-3-5-sonnet-20241022-v2:0"
-COGNITO_USER_POOL_ID="${COGNITO_USER_POOL_ID:-}"
-SNS_TOPIC_ARN="${SNS_TOPIC_ARN:-}"
+COGNITO_CLIENT_ID="${COGNITO_CLIENT_ID:-3qkth9j9bcvvhl9b6q7ml7qih}"
+COGNITO_USER_POOL_ID="${COGNITO_USER_POOL_ID:-us-east-1_MxKriIgiC}"
+S3_BUCKET="${S3_BUCKET:-afyaquest-media}"
+# Groq powers the chat assistant. GROQ_API_KEY is never committed -- export it
+# in your shell before deploying, or the chat function deploys keyless and
+# returns a 503 until it is set.
+GROQ_MODEL="${GROQ_MODEL:-openai/gpt-oss-20b}"
+GROQ_API_KEY="${GROQ_API_KEY:-}"
+VERIFY_URL="${VERIFY_URL:-https://tkytlmt856.execute-api.us-east-1.amazonaws.com/prod/auth/verify}"
 
-# Array of Lambda functions
-declare -A LAMBDAS=(
-    ["auth/register"]="auth-register"
-    ["auth/login"]="auth-login"
-    ["auth/getCurrentUser"]="auth-getCurrentUser"
-    ["auth/verify"]="auth-verify"
-    ["auth/customMessage"]="auth-customMessage"
-    ["auth/forgotPassword"]="auth-forgotPassword"
-    ["auth/confirmForgotPassword"]="auth-confirmForgotPassword"
-    ["auth/registerAdmin"]="auth-registerAdmin"
-    ["chat/sendMessage"]="chat-sendMessage"
-    ["questions/getDaily"]="questions-getDaily"
-    ["progress/getUser"]="progress-getUser"
-    ["progress/updateLesson"]="progress-updateLesson"
-    ["progress/submitQuiz"]="progress-submitQuiz"
-    ["progress/updateStreak"]="progress-updateStreak"
-)
+ENV_VARS="Variables={DYNAMODB_TABLE=$TABLE_NAME,COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID,COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID,S3_BUCKET=$S3_BUCKET,GROQ_MODEL=$GROQ_MODEL,GROQ_API_KEY=$GROQ_API_KEY,VERIFY_URL=$VERIFY_URL,NODE_ENV=production}"
 
-# Function to deploy a Lambda
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ONLY="${1:-}"   # optional: deploy a single dir, e.g. ./deploy.sh auth/login
+
 deploy_lambda() {
     local path=$1
-    local name=$2
+    local name="${PREFIX}-$(echo "$path" | tr '/' '-')"
+    local full="$SCRIPT_DIR/$path"
 
-    echo "📦 Deploying $name..."
+    [ -d "$full" ] || { echo "  missing dir: $path"; return 1; }
+    cd "$full"
 
-    cd "$path"
-
-    # Install dependencies if package.json exists
-    if [ -f "package.json" ]; then
-        echo "  📥 Installing dependencies..."
-        npm install --production --silent
+    if [ -f package.json ] && [ ! -d node_modules ]; then
+        npm install --omit=dev --silent >/dev/null 2>&1 || true
     fi
 
-    # Create deployment package
-    echo "  📦 Creating deployment package..."
-    zip -q -r function.zip . -x "*.git*" "*.DS_Store"
+    # Admin functions share an authorization helper. It lives in _shared/ as the
+    # single source of truth and is copied in just for packaging.
+    local copied_shared=""
+    if grep -q "require('./authz')" index.js 2>/dev/null; then
+        cp "$SCRIPT_DIR/_shared/authz.js" ./authz.js
+        copied_shared="authz.js"
+    fi
 
-    # Check if function exists
-    if aws lambda get-function --function-name "$name" --region "$REGION" &> /dev/null; then
-        echo "  🔄 Updating existing function..."
-        aws lambda update-function-code \
-            --function-name "$name" \
-            --zip-file fileb://function.zip \
-            --region "$REGION" \
-            --no-cli-pager > /dev/null
+    rm -f function.zip
+    zip -q -r function.zip . -x "*.git*" "*.DS_Store" "function.zip"
+    [ -n "$copied_shared" ] && rm -f "$copied_shared"
 
-        # Update configuration
-        aws lambda update-function-configuration \
-            --function-name "$name" \
-            --timeout "$TIMEOUT" \
-            --memory-size "$MEMORY" \
-            --environment "Variables={
-                DYNAMODB_TABLE=$TABLE_NAME,
-                COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID,
-                COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID,
-                SNS_TOPIC_ARN=$SNS_TOPIC_ARN,
-                S3_BUCKET=$S3_BUCKET,
-                CLOUDFRONT_DOMAIN=$CLOUDFRONT_DOMAIN,
-                BEDROCK_MODEL_ID=$BEDROCK_MODEL_ID,
-                AWS_REGION=$REGION,
-                NODE_ENV=production
-            }" \
-            --region "$REGION" \
-            --no-cli-pager > /dev/null
+    if aws lambda get-function --function-name "$name" --region "$REGION" >/dev/null 2>&1; then
+        aws lambda update-function-code --function-name "$name" \
+            --zip-file fileb://function.zip --region "$REGION" --no-cli-pager >/dev/null
+        aws lambda wait function-updated --function-name "$name" --region "$REGION"
+        aws lambda update-function-configuration --function-name "$name" \
+            --timeout "$TIMEOUT" --memory-size "$MEMORY" --environment "$ENV_VARS" \
+            --region "$REGION" --no-cli-pager >/dev/null
+        echo "  updated  $name"
     else
-        echo "  ✨ Creating new function..."
-        aws lambda create-function \
-            --function-name "$name" \
-            --runtime "$RUNTIME" \
-            --role "$ROLE_ARN" \
-            --handler index.handler \
-            --zip-file fileb://function.zip \
-            --timeout "$TIMEOUT" \
-            --memory-size "$MEMORY" \
-            --environment "Variables={
-                DYNAMODB_TABLE=$TABLE_NAME,
-                COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID,
-                COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID,
-                SNS_TOPIC_ARN=$SNS_TOPIC_ARN,
-                S3_BUCKET=$S3_BUCKET,
-                CLOUDFRONT_DOMAIN=$CLOUDFRONT_DOMAIN,
-                BEDROCK_MODEL_ID=$BEDROCK_MODEL_ID,
-                AWS_REGION=$REGION,
-                NODE_ENV=production
-            }" \
-            --region "$REGION" \
-            --no-cli-pager > /dev/null
+        aws lambda create-function --function-name "$name" \
+            --runtime "$RUNTIME" --role "$ROLE_ARN" --handler index.handler \
+            --zip-file fileb://function.zip --timeout "$TIMEOUT" --memory-size "$MEMORY" \
+            --environment "$ENV_VARS" --region "$REGION" \
+            --tags Project=AfyaQuest --no-cli-pager >/dev/null
+        echo "  created  $name"
     fi
 
-    # Clean up
-    rm function.zip
-
-    echo "  ✅ $name deployed successfully"
-
-    cd - > /dev/null
+    rm -f function.zip
+    cd "$SCRIPT_DIR"
 }
 
-# Main deployment
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo "Deploying AfyaQuest Lambdas -> $REGION (account $ACCOUNT_ID), prefix '${PREFIX}-'"
 
-for path in "${!LAMBDAS[@]}"; do
-    name="${LAMBDAS[$path]}"
-    full_path="$SCRIPT_DIR/$path"
+if [ -n "$ONLY" ]; then
+    deploy_lambda "$ONLY"
+else
+    find "$SCRIPT_DIR" -name index.js -not -path "*/node_modules/*" -not -path "*/_shared/*" \
+      | sed "s|^$SCRIPT_DIR/||; s|/index.js$||" | sort | while IFS= read -r d; do
+        deploy_lambda "$d" || echo "  FAILED   $d"
+    done
+fi
 
-    if [ -d "$full_path" ]; then
-        deploy_lambda "$full_path" "$name"
-    else
-        echo "⚠️  Warning: Directory not found: $full_path"
-    fi
-done
-
-echo ""
-echo "✅ All Lambda functions deployed successfully!"
-echo ""
-echo "📝 Next steps:"
-echo "  1. Configure Cognito User Pool ID in local.properties"
-echo "  2. Set up API Gateway endpoints"
-echo "  3. Create Cognito authorizer"
-echo "  4. Test endpoints with Postman/curl"
+echo "Done."

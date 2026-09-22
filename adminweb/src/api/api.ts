@@ -1,6 +1,6 @@
 import { clearAdminSessionAndRedirectToLogin } from '../auth/sessionUtils';
 
-const API_BASE = 'https://gc6iib7ck2.execute-api.af-south-1.amazonaws.com/prod';
+const API_BASE = 'https://tkytlmt856.execute-api.us-east-1.amazonaws.com/prod';
 
 function getToken(): string | null {
   return localStorage.getItem('adminToken');

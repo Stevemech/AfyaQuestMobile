@@ -1,7 +1,8 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, ScanCommand } = require('@aws-sdk/lib-dynamodb');
+const { requireAdmin } = require('./authz');
 
-const client = new DynamoDBClient({ region: 'af-south-1' });
+const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 const ddb = DynamoDBDocumentClient.from(client);
 const TABLE = 'AfyaQuestData';
 
@@ -13,9 +14,11 @@ exports.handler = async (event) => {
   };
 
   try {
-    // Get the admin's org from their JWT
-    const adminUserId = event.requestContext?.authorizer?.jwt?.claims?.sub;
-    const org = event.queryStringParameters?.organization;
+    // Admin-only: the JWT authorizer proves identity, not role.
+    const auth = await requireAdmin(event);
+    if (auth.denied) return auth.denied;
+
+    const org = auth.organization;
 
     // Scan for all user profiles (non-admin)
     const result = await ddb.send(new ScanCommand({

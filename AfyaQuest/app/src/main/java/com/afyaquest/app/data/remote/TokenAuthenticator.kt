@@ -19,8 +19,8 @@ class TokenAuthenticator @Inject constructor(
 ) : Authenticator {
 
     companion object {
-        private const val COGNITO_URL = "https://cognito-idp.af-south-1.amazonaws.com/"
-        private const val CLIENT_ID = "3oj94klb6jejp4lbal9ninv870"
+        private const val COGNITO_URL = "https://cognito-idp.us-east-1.amazonaws.com/"
+        private const val CLIENT_ID = "3qkth9j9bcvvhl9b6q7ml7qih"
     }
 
     override fun authenticate(route: Route?, response: Response): Request? {

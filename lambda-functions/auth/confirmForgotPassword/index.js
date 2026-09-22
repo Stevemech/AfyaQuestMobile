@@ -4,8 +4,8 @@
  */
 const { CognitoIdentityProviderClient, ConfirmForgotPasswordCommand } = require("@aws-sdk/client-cognito-identity-provider");
 
-const cognitoClient = new CognitoIdentityProviderClient({ region: "af-south-1" });
-const CLIENT_ID = "3oj94klb6jejp4lbal9ninv870";
+const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
+const CLIENT_ID = process.env.COGNITO_CLIENT_ID;
 
 exports.handler = async (event) => {
   const headers = {
