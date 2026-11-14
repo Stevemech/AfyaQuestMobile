@@ -285,6 +285,7 @@
     <string name="service_vaccination">Vaccination</string>
     <string name="service_family_planning">Family Planning</string>
     <string name="service_pharmacy">Pharmacy</string>
+    <string name="service_mental_health">Mental Health</string>
 
     <string name="time_just_now">Just now</string>
     <string name="mark_complete_xp">Mark as Complete (+%d XP)</string>
@@ -318,7 +319,7 @@
     <!-- Lesson 3: Prenatal -->
     <string name="lesson_3_title">Prenatal Care Essentials</string>
     <string name="lesson_3_description">Key aspects of maternal health during pregnancy</string>
-    <string name="lesson_3_content"># Prenatal Care Essentials\n\n## Regular Check-ups\nVisit health facility at least 4 times during pregnancy:\n- Once in first 3 months\n- Once between 4-6 months\n- Twice in last 3 months\n\n## Nutrition During Pregnancy\n- Increase food intake\n- Take iron and folic acid supplements\n- Drink plenty of clean water\n\n## Warning Signs\nSeek immediate help if:\n- Severe headache\n- Blurred vision\n- Vaginal bleeding\n- Severe abdominal pain\n- Reduced baby movement\n\n## Malaria Prevention\n- Sleep under treated mosquito net\n- Take preventive medication as prescribed</string>
+    <string name="lesson_3_content"># Prenatal Care Essentials\n\n## Regular Check-ups\nGo to the antenatal clinic at least 4 times during pregnancy:\n- First visit before 16 weeks\n- Second visit at 16-28 weeks\n- Third visit at 28-32 weeks\n- Fourth visit at 32-40 weeks\n\nAntenatal care is free.\n\n## Nutrition During Pregnancy\n- Increase food intake\n- Take iron and folic acid supplements\n- Drink plenty of clean water\n\n## Warning Signs\nSeek immediate help if:\n- Severe headache\n- Blurred vision\n- Vaginal bleeding\n- Severe abdominal pain\n- Reduced baby movement\n\n## Malaria Prevention\n- Sleep under treated mosquito net\n- Take preventive medication as prescribed</string>
 
     <!-- Lesson 4: Vaccination -->
     <string name="lesson_4_title">Child Vaccination Schedule</string>

@@ -104,4 +104,74 @@ class XpManagerTest {
         assertEquals(10, defaults.lives)
         assertEquals("Beginner", defaults.rank)
     }
+
+    // ---- streak ----
+
+    @Test
+    fun `streak rules`() {
+        // First ever activity starts a streak of 1.
+        assertEquals(1, XpManager.streakAfterActivity(0, "", "2026-11-12"))
+        // Another activity on the same day does not add a day.
+        assertEquals(3, XpManager.streakAfterActivity(3, "2026-11-12", "2026-11-12"))
+        // Activity the day after extends it, also across a month boundary.
+        assertEquals(4, XpManager.streakAfterActivity(3, "2026-11-11", "2026-11-12"))
+        assertEquals(8, XpManager.streakAfterActivity(7, "2026-10-31", "2026-11-01"))
+        // A missed day starts again from 1.
+        assertEquals(1, XpManager.streakAfterActivity(9, "2026-11-10", "2026-11-12"))
+    }
+
+    @Test
+    fun `a streak is shown while it can still be extended and reads 0 after a missed day`() {
+        assertEquals(5, XpManager.visibleStreak(5, "2026-11-12", "2026-11-12"))
+        assertEquals(5, XpManager.visibleStreak(5, "2026-11-11", "2026-11-12"))
+        assertEquals(0, XpManager.visibleStreak(5, "2026-11-10", "2026-11-12"))
+        assertEquals(0, XpManager.visibleStreak(0, "", "2026-11-12"))
+    }
+
+    @Test
+    fun `earning XP starts today's streak once and remembers the best streak`() = runBlocking {
+        xpManager.clearAll()
+
+        val first = xpManager.addXP(20, "daily question")
+        val second = xpManager.addXP(50, "quiz, same day")
+
+        assertEquals(70, second.totalXP)
+        assertEquals(70, second.dailyXP)
+        assertEquals(1, first.streak)
+        assertEquals(1, second.streak)
+        assertEquals(1, second.longestStreak)
+        assertEquals(second.lastResetDate, second.lastStreakDate)
+    }
+
+    // ---- merging the account state from the server ----
+
+    @Test
+    fun `server state never lowers XP and the later streak day wins`() = runBlocking {
+        xpManager.clearAll()
+        xpManager.addXP(200, "earned offline")
+        val today = xpManager.getSyncState().lastStreakDate
+
+        // The server is behind on XP and has an older streak entry.
+        xpManager.mergeFromServer(totalXP = 150, lives = 3, streak = 6, lastStreakDate = "2020-01-01", adoptLives = false, longestStreak = 6)
+
+        val state = xpManager.getSyncState()
+        assertEquals(200, state.totalXP)
+        assertEquals(1, state.storedStreak)
+        assertEquals(today, state.lastStreakDate)
+        assertEquals(10, state.lives)          // local lives are the newer ones
+        assertEquals(6, state.longestStreak)   // the best streak ever is kept
+    }
+
+    @Test
+    fun `a device with no history takes the server's totals, level and lives`() = runBlocking {
+        xpManager.clearAll()
+
+        xpManager.mergeFromServer(totalXP = 520, lives = 4, streak = 3, lastStreakDate = "2026-11-12", adoptLives = true, longestStreak = 3)
+
+        val data = xpManager.getXpData()
+        assertEquals(520, data.totalXP)
+        assertEquals(3, data.level)
+        assertEquals(4, data.lives)
+        assertEquals(3, xpManager.getSyncState().storedStreak)
+    }
 }

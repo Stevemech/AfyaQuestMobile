@@ -25,10 +25,11 @@ android {
         applicationId = "com.afyaquest.app"
         minSdk = 27
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.3"
+        versionCode = 4
+        versionName = "1.4"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Starts the Hilt test application, so screens that use hiltViewModel() can be tested.
+        testInstrumentationRunner = "com.afyaquest.app.HiltTestRunner"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -59,6 +60,12 @@ android {
             }
             isMinifyEnabled = true
             isShrinkResources = true
+            // Phones are ARM. `-PphonesOnly` leaves out the x86 libraries that only emulators on
+            // Intel/AMD computers need, which makes the APK about 17 MB smaller (handwriting
+            // recognition ships one large native library per processor type).
+            if (providers.gradleProperty("phonesOnly").isPresent) {
+                ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -107,10 +114,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // AWS
-    implementation(libs.aws.android.sdk.core)
-    implementation(libs.aws.android.sdk.cognitoidentityprovider)
-
     // Networking
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
@@ -126,6 +129,9 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.hilt.work)
+    // Generates the factories HiltWorkerFactory needs for @HiltWorker classes. Without it
+    // WorkManager cannot construct SyncWorker / the video workers and background sync never runs.
+    ksp(libs.androidx.hilt.compiler)
 
     // Google Maps
     implementation(libs.play.services.maps)
@@ -137,9 +143,6 @@ dependencies {
 
     // ML Kit Digital Ink Recognition
     implementation(libs.mlkit.digital.ink.recognition)
-
-    // Image Loading
-    implementation(libs.coil.compose)
 
     // WorkManager (for sync)
     implementation(libs.androidx.work.runtime.ktx)
@@ -159,9 +162,12 @@ dependencies {
     testImplementation(libs.androidx.arch.core.testing)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.work.testing)
+    testImplementation(libs.okhttp.mockwebserver)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

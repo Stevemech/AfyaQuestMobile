@@ -4,67 +4,44 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.afyaquest.app.data.local.dao.PendingSyncDao
-import com.afyaquest.app.util.NetworkMonitor
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CancellationException
 
 /**
- * Background worker for syncing offline data
+ * Background worker for syncing offline data.
+ *
+ * It runs every 15 minutes while there is a connection, and once more as soon as the connection
+ * returns after something was queued offline. The upload itself is [SyncManager.runSyncPass], which
+ * is shared with the Home screen so that two passes never run side by side.
  */
 @HiltWorker
 class SyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
-    private val syncManager: SyncManager,
-    private val networkMonitor: NetworkMonitor,
-    private val pendingSyncDao: PendingSyncDao
+    private val syncManager: SyncManager
 ) : CoroutineWorker(context, params) {
 
-    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        try {
-            // Check network connectivity
-            if (!networkMonitor.isCurrentlyConnected()) {
-                return@withContext Result.retry()
-            }
-
-            // Sync pending reports
-            val reportsSynced = syncManager.syncReports()
-
-            // Sync pending quiz results
-            val quizzesSynced = syncManager.syncQuizzes()
-
-            // Sync pending chat messages
-            val chatsSynced = syncManager.syncChats()
-
-            // Sync pending client visits
-            val visitsSynced = syncManager.syncClientVisits()
-
-            // Clean up old synced data (older than 7 days)
-            val sevenDaysAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
-            pendingSyncDao.deleteSyncedReports(sevenDaysAgo)
-            pendingSyncDao.deleteSyncedQuizzes(sevenDaysAgo)
-            pendingSyncDao.deleteSyncedChats(sevenDaysAgo)
-            pendingSyncDao.deleteSyncedClientVisits(sevenDaysAgo)
-
-            // Determine result
-            val totalSynced = reportsSynced + quizzesSynced + chatsSynced + visitsSynced
-
-            return@withContext if (totalSynced > 0) {
-                Result.success()
-            } else {
-                Result.success() // No items to sync is still success
-            }
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return@withContext Result.retry()
-        }
+    override suspend fun doWork(): Result = try {
+        resultFor(syncManager.runSyncPass(), syncManager.isSignedIn())
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Result.retry()
     }
 
     companion object {
         const val WORK_NAME = "sync_work"
+
+        /**
+         * Nothing left on the phone is a success. Anything that did not go through is retried
+         * (with WorkManager's backoff), except when nobody is signed in: there is nothing to
+         * retry for until the next login, which starts its own sync.
+         */
+        fun resultFor(pass: SyncPassResult?, signedIn: Boolean): Result = when {
+            pass == null -> if (signedIn) Result.retry() else Result.success()
+            pass.complete -> Result.success()
+            else -> Result.retry()
+        }
     }
 }

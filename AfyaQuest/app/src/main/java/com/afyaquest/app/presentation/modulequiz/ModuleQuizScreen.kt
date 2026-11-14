@@ -67,8 +67,10 @@ import com.afyaquest.app.domain.model.ModuleQuizQuestion
 import com.afyaquest.app.presentation.components.CompletionDialog
 import com.afyaquest.app.presentation.components.ConfirmLeaveDialog
 import com.afyaquest.app.presentation.components.EmptyState
+import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.ui.theme.AfyaError
 import com.afyaquest.app.ui.theme.AfyaSuccess
+import com.afyaquest.app.presentation.navigation.popBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,6 +89,16 @@ fun ModuleQuizScreen(
     val scrollState = rememberScrollState()
     var showLeaveDialog by remember { mutableStateOf(false) }
 
+    // The quiz is reached from a module, a focus topic, or straight from the player; the results
+    // dialog pops back, so its button names the place it actually returns to.
+    val backLabelRes = remember(navController) {
+        when (navController.previousBackStackEntry?.destination?.route) {
+            Screen.ModuleDetail.route -> R.string.quiz_back_to_module
+            Screen.Topic.route -> R.string.learn_back_to_topic
+            else -> R.string.go_back
+        }
+    }
+
     val questions = viewModel.questions
     val totalQuestions = viewModel.getTotalQuestions()
     val screenTitle = stringResource(R.string.quiz_title_format, viewModel.getModuleTitle())
@@ -98,7 +110,7 @@ fun ModuleQuizScreen(
         if (hasUnsavedProgress) {
             showLeaveDialog = true
         } else {
-            navController.popBackStack()
+            navController.popBack()
         }
     }
     BackHandler(enabled = hasUnsavedProgress) { showLeaveDialog = true }
@@ -120,7 +132,7 @@ fun ModuleQuizScreen(
                     title = stringResource(R.string.no_questions_available),
                     icon = Icons.Outlined.Quiz,
                     actionText = stringResource(R.string.go_back),
-                    onAction = { navController.popBackStack() }
+                    onAction = { navController.popBack() }
                 )
             }
         }
@@ -193,8 +205,8 @@ fun ModuleQuizScreen(
                 stringResource(R.string.quiz_complete_retake_title)
             },
             message = stringResource(R.string.quiz_result_format, correctAnswers, totalQuestions, percentage),
-            primaryText = stringResource(R.string.quiz_back_to_module),
-            onPrimary = { navController.popBackStack() },
+            primaryText = stringResource(backLabelRes),
+            onPrimary = { navController.popBack() },
             xpEarned = completionXp,
             secondaryText = stringResource(R.string.quiz_try_again),
             onSecondary = { viewModel.restart() }
@@ -208,7 +220,7 @@ fun ModuleQuizScreen(
             onStay = { showLeaveDialog = false },
             onLeave = {
                 showLeaveDialog = false
-                navController.popBackStack()
+                navController.popBack()
             }
         )
     }

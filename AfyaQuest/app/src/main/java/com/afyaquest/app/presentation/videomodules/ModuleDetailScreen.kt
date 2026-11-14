@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -52,6 +53,7 @@ import com.afyaquest.app.presentation.components.ProgressSummary
 import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.presentation.navigation.navigateSingle
 import com.afyaquest.app.ui.theme.AfyaSuccess
+import com.afyaquest.app.presentation.navigation.popBack
 
 /**
  * One module: "Module N" eyebrow + localized title, module progress, and the videos as
@@ -91,7 +93,7 @@ fun ModuleDetailScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navController.popBack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back)
@@ -164,13 +166,19 @@ private fun ModuleProgressCard(
     }
 }
 
+/**
+ * One video as a numbered step with its Watch / Quiz actions. Also used by the focus-topic screen,
+ * which passes [sourceLabel] ("Module 4 · Maternal & Reproductive Health") because a topic mixes
+ * videos from several modules.
+ */
 @Composable
-private fun VideoStepCard(
+internal fun VideoStepCard(
     stepNumber: Int,
     video: VideoModule,
     isNext: Boolean,
     onVideoClick: () -> Unit,
-    onQuizClick: () -> Unit
+    onQuizClick: () -> Unit,
+    sourceLabel: String? = null
 ) {
     val isDone = video.watched && video.quizComplete
     val containerColor = if (isNext) MaterialTheme.colorScheme.primaryContainer
@@ -234,6 +242,16 @@ private fun VideoStepCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2
                     )
+                    if (sourceLabel != null) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = sourceLabel,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                     StatusRow(video = video, isDone = isDone)
                 }
             }

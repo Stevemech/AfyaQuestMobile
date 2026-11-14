@@ -28,6 +28,7 @@ import com.afyaquest.app.domain.triage.localized
 import com.afyaquest.app.ui.theme.AfyaQuestTheme
 import java.text.SimpleDateFormat
 import java.util.Locale
+import com.afyaquest.app.presentation.navigation.popBack
 
 /**
  * Read-only list of the current user's past emergency assessments, newest first.
@@ -54,7 +55,7 @@ fun CaseHistoryScreen(
                         navigationIconContentColor = Color.White
                     ),
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = { navController.popBack() }) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.back)

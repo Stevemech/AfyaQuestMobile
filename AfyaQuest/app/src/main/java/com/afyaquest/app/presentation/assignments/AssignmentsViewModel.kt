@@ -1,8 +1,10 @@
 package com.afyaquest.app.presentation.assignments
 
+import android.os.SystemClock
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import android.util.Log
 import com.afyaquest.app.data.remote.dto.AssignmentDto
 import com.afyaquest.app.data.repository.AssignmentsRepository
 import com.afyaquest.app.presentation.videomodules.VideoModulesViewModel
@@ -57,8 +59,14 @@ class AssignmentsViewModel @Inject constructor(
             buildUiState(state, filter, lessons, quizzes)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AssignmentsUiState())
 
+    private var loadJob: Job? = null
+
+    /** When the list was last confirmed by the server ([SystemClock.elapsedRealtime]). */
+    private var loadedAt = 0L
+
     init {
-        videoDownloadManager.refreshDownloadedState()
+        // Listing the download folder is disk work: not on the main thread.
+        viewModelScope.launch(Dispatchers.IO) { videoDownloadManager.refreshDownloadedState() }
         loadLocalProgress()
         loadAssignments()
     }
@@ -75,35 +83,56 @@ class AssignmentsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Load the assignments (also Retry and the refresh button). A list that is already on screen
+     * stays there while the server is asked again: replacing it with a spinner made the section
+     * collapse and everything below it jump every time the screen came back.
+     */
     fun loadAssignments() {
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             assignmentsRepository.getAssignments().collect { resource ->
+                val showing = _assignmentsState.value is Resource.Success
                 when (resource) {
                     is Resource.Success -> {
                         val assignments = resource.data?.assignments ?: emptyList()
-                        Log.d("AssignmentsVM", "Loaded ${assignments.size} assignments from API")
                         _assignmentsState.value = Resource.Success(assignments)
+                        loadedAt = SystemClock.elapsedRealtime()
                         queueModuleDownloads(assignments)
                     }
-                    is Resource.Error -> {
-                        _assignmentsState.value = Resource.Error(
-                            resource.message ?: "Failed to load assignments"
-                        )
+                    is Resource.Error -> if (!showing) {
+                        _assignmentsState.value = Resource.Error(resource.message ?: "Failed to load assignments")
                     }
-                    is Resource.Loading -> {
-                        _assignmentsState.value = Resource.Loading()
-                    }
+                    is Resource.Loading -> if (!showing) _assignmentsState.value = Resource.Loading()
                 }
             }
         }
     }
 
+    /** Ask the server again when the list on screen is older than [STALE_AFTER_MS]. */
+    fun refreshIfStale() {
+        if (loadJob?.isActive == true) return
+        if (SystemClock.elapsedRealtime() - loadedAt > STALE_AFTER_MS) loadAssignments()
+    }
+
+    /**
+     * Keep the videos of assigned modules on the phone for offline use. Tasks that are already
+     * done are skipped: their video is removed a day after the quiz, and without this check it
+     * was downloaded again on the next visit to Home, over and over.
+     */
     private fun queueModuleDownloads(assignments: List<AssignmentDto>) {
-        val videoUrls = VideoModulesViewModel.allVideoUrls()
-        val assignedModuleIds = assignments
-            .filter { (it.type == "module" || it.type == "video") && !it.moduleId.isNullOrBlank() }
-            .mapNotNull { it.moduleId }
-        videoDownloadManager.queueAssignedModuleDownloads(assignedModuleIds, videoUrls)
+        viewModelScope.launch(Dispatchers.IO) {
+            val finished = progressDataStore.getCompletedQuizzes().first()
+            val assignedModuleIds = assignments
+                .filter { (it.type == "module" || it.type == "video") && !it.moduleId.isNullOrBlank() }
+                .filter { it.status != "completed" && it.moduleId !in finished }
+                .mapNotNull { it.moduleId }
+            videoDownloadManager.queueAssignedModuleDownloads(assignedModuleIds, VideoModulesViewModel.allVideoUrls())
+        }
+    }
+
+    private companion object {
+        const val STALE_AFTER_MS = 60_000L
     }
 
     fun setFilter(filter: AssignmentFilter) {

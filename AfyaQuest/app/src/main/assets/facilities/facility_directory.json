@@ -1,0 +1,351 @@
+{
+  "version": 1,
+  "source": "Kenyan facility names and coordinates are from OpenStreetMap (c) OpenStreetMap contributors, ODbL, checked 2026-11-12. A service is listed only where the facility's name, its OpenStreetMap entry or its published role states it. Guatemalan entries are the app's original sample list and are not verified.",
+  "regions": [
+    {
+      "id": "nairobi-kibera",
+      "name": "Kibera, Nairobi",
+      "organizations": [
+        "kibera-east"
+      ],
+      "center": {
+        "lat": -1.3133,
+        "lng": 36.7876
+      },
+      "facilities": [
+        {
+          "id": "ke-kibera-do-hc",
+          "name": "Kibera D.O. Health Centre",
+          "type": "health_center",
+          "lat": -1.30619,
+          "lng": 36.78813,
+          "services": [
+            "primary_care",
+            "vaccination",
+            "family_planning"
+          ]
+        },
+        {
+          "id": "ke-amref-kibera-hc",
+          "name": "Amref Kibera Health Centre",
+          "type": "health_center",
+          "lat": -1.31124,
+          "lng": 36.7956,
+          "services": [
+            "primary_care",
+            "vaccination",
+            "family_planning"
+          ]
+        },
+        {
+          "id": "ke-tabitha-clinic",
+          "name": "Tabitha Medical Clinic",
+          "type": "clinic",
+          "lat": -1.31613,
+          "lng": 36.78011,
+          "services": [
+            "primary_care"
+          ]
+        },
+        {
+          "id": "ke-shofco-kibera",
+          "name": "SHOFCO Clinic, Kibera",
+          "type": "clinic",
+          "lat": -1.30968,
+          "lng": 36.78649,
+          "services": [
+            "primary_care"
+          ]
+        },
+        {
+          "id": "ke-mbagathi",
+          "name": "Mbagathi County Referral Hospital",
+          "type": "hospital",
+          "lat": -1.30904,
+          "lng": 36.80331,
+          "services": [
+            "emergency",
+            "maternity",
+            "pediatrics",
+            "outpatient",
+            "laboratory"
+          ]
+        },
+        {
+          "id": "ke-knh",
+          "name": "Kenyatta National Hospital",
+          "type": "hospital",
+          "lat": -1.30083,
+          "lng": 36.80724,
+          "services": [
+            "emergency",
+            "maternity",
+            "pediatrics",
+            "surgery",
+            "outpatient",
+            "laboratory"
+          ]
+        },
+        {
+          "id": "ke-st-marys-langata",
+          "name": "St. Mary's Mission Hospital",
+          "type": "hospital",
+          "lat": -1.32355,
+          "lng": 36.77556,
+          "services": [
+            "emergency",
+            "maternity",
+            "outpatient"
+          ]
+        },
+        {
+          "id": "ke-langata-hospital",
+          "name": "Lang'ata Hospital",
+          "type": "hospital",
+          "lat": -1.3277,
+          "lng": 36.78919,
+          "services": [
+            "outpatient"
+          ]
+        },
+        {
+          "id": "ke-nairobi-womens",
+          "name": "Nairobi Women's Hospital, Hurlingham",
+          "type": "hospital",
+          "lat": -1.29379,
+          "lng": 36.7965,
+          "services": [
+            "emergency",
+            "maternity",
+            "outpatient"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nairobi-mathare",
+      "name": "Mathare, Nairobi",
+      "organizations": [
+        "mathare"
+      ],
+      "center": {
+        "lat": -1.26,
+        "lng": 36.859
+      },
+      "facilities": [
+        {
+          "id": "ke-upendo-dispensary",
+          "name": "Upendo Dispensary",
+          "type": "clinic",
+          "lat": -1.26336,
+          "lng": 36.85845,
+          "services": [
+            "primary_care"
+          ]
+        },
+        {
+          "id": "ke-shofco-mathare",
+          "name": "SHOFCO Clinic, Mathare",
+          "type": "clinic",
+          "lat": -1.26366,
+          "lng": 36.8579,
+          "services": [
+            "primary_care"
+          ]
+        },
+        {
+          "id": "ke-baraka-mc",
+          "name": "Baraka Medical Centre",
+          "type": "clinic",
+          "lat": -1.26,
+          "lng": 36.86053,
+          "services": [
+            "primary_care"
+          ]
+        },
+        {
+          "id": "ke-huruma-lions-hc",
+          "name": "Huruma Lions Health Centre",
+          "type": "health_center",
+          "lat": -1.26094,
+          "lng": 36.86675,
+          "services": [
+            "primary_care",
+            "vaccination"
+          ]
+        },
+        {
+          "id": "ke-kariobangi-hc",
+          "name": "Kariobangi Health Centre",
+          "type": "health_center",
+          "lat": -1.25471,
+          "lng": 36.88068,
+          "services": [
+            "primary_care",
+            "vaccination",
+            "family_planning"
+          ]
+        },
+        {
+          "id": "ke-mama-margaret-uhuru",
+          "name": "Mama Margaret Uhuru Hospital",
+          "type": "hospital",
+          "lat": -1.25123,
+          "lng": 36.88611,
+          "services": [
+            "outpatient"
+          ]
+        },
+        {
+          "id": "ke-pumwani-maternity",
+          "name": "Pumwani Maternity Hospital",
+          "type": "hospital",
+          "lat": -1.28122,
+          "lng": 36.84562,
+          "services": [
+            "maternity"
+          ]
+        },
+        {
+          "id": "ke-mathari-hospital",
+          "name": "Mathari National Teaching & Referral Hospital",
+          "type": "hospital",
+          "lat": -1.2603,
+          "lng": 36.8461,
+          "services": [
+            "mental_health"
+          ]
+        },
+        {
+          "id": "ke-gertrudes",
+          "name": "Gertrude's Children's Hospital",
+          "type": "hospital",
+          "lat": -1.25605,
+          "lng": 36.83178,
+          "services": [
+            "emergency",
+            "pediatrics",
+            "outpatient"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chimaltenango",
+      "name": "Chimaltenango, Guatemala",
+      "organizations": [],
+      "center": {
+        "lat": 14.6392,
+        "lng": -90.8208
+      },
+      "facilities": [
+        {
+          "id": "hf1",
+          "name": "Hospital Nacional de Chimaltenango",
+          "type": "hospital",
+          "lat": 14.6614,
+          "lng": -90.8194,
+          "services": [
+            "emergency",
+            "maternity",
+            "pediatrics",
+            "surgery",
+            "outpatient",
+            "laboratory"
+          ]
+        },
+        {
+          "id": "hf2",
+          "name": "Centro de Salud Chimaltenango",
+          "type": "clinic",
+          "lat": 14.638,
+          "lng": -90.8215,
+          "services": [
+            "primary_care",
+            "vaccination",
+            "family_planning",
+            "pharmacy"
+          ]
+        },
+        {
+          "id": "hf3",
+          "name": "Hospital Nacional San Juan Comalapa",
+          "type": "hospital",
+          "lat": 14.7414,
+          "lng": -90.8886,
+          "services": [
+            "emergency",
+            "maternity",
+            "outpatient",
+            "xray"
+          ]
+        },
+        {
+          "id": "hf4",
+          "name": "Puesto de Salud Parramos",
+          "type": "clinic",
+          "lat": 14.6128,
+          "lng": -90.8042,
+          "services": [
+            "primary_care",
+            "vaccination",
+            "pharmacy"
+          ]
+        },
+        {
+          "id": "hf5",
+          "name": "Centro de Salud San Andres Itzapa",
+          "type": "health_center",
+          "lat": 14.6195,
+          "lng": -90.8439,
+          "services": [
+            "primary_care",
+            "vaccination",
+            "maternal_health",
+            "nutrition"
+          ]
+        },
+        {
+          "id": "hf6",
+          "name": "Hospital Antiguo de Antigua Guatemala",
+          "type": "hospital",
+          "lat": 14.5586,
+          "lng": -90.7345,
+          "services": [
+            "emergency",
+            "surgery",
+            "maternity",
+            "pediatrics",
+            "laboratory",
+            "xray"
+          ]
+        },
+        {
+          "id": "hf7",
+          "name": "Puesto de Salud Zaragoza",
+          "type": "clinic",
+          "lat": 14.6492,
+          "lng": -90.8893,
+          "services": [
+            "primary_care",
+            "vaccination",
+            "pharmacy"
+          ]
+        },
+        {
+          "id": "hf8",
+          "name": "Centro de Salud Patzicia",
+          "type": "health_center",
+          "lat": 14.6312,
+          "lng": -90.927,
+          "services": [
+            "primary_care",
+            "maternal_health",
+            "vaccination",
+            "family_planning"
+          ]
+        }
+      ]
+    }
+  ]
+}

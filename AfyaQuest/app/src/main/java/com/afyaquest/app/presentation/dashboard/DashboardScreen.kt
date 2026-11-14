@@ -1,5 +1,6 @@
 package com.afyaquest.app.presentation.dashboard
 
+import androidx.activity.compose.ReportDrawn
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.afyaquest.app.R
 import com.afyaquest.app.data.remote.dto.AssignmentDto
+import com.afyaquest.app.domain.model.VideoModule
 import com.afyaquest.app.presentation.assignments.AssignmentsViewModel
 import com.afyaquest.app.presentation.components.DoneBadge
 import com.afyaquest.app.presentation.components.HintRow
@@ -44,13 +46,16 @@ import com.afyaquest.app.presentation.components.LoadingState
 import com.afyaquest.app.presentation.components.ProgressSummary
 import com.afyaquest.app.presentation.components.SyncStatusIndicator
 import com.afyaquest.app.presentation.emergencyguide.EmergencyEntryCard
+import com.afyaquest.app.presentation.learn.FeaturedVideoCompactCard
+import com.afyaquest.app.presentation.learn.LearnTopic
+import com.afyaquest.app.presentation.lessons.LessonsViewModel
 import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.presentation.navigation.navigateSingle
 import com.afyaquest.app.presentation.navigation.navigateTopLevel
 import com.afyaquest.app.presentation.navigation.openLearn
 import com.afyaquest.app.presentation.navigation.openLesson
+import com.afyaquest.app.presentation.navigation.openTopicVideo
 import com.afyaquest.app.presentation.navigation.openVideo
-import com.afyaquest.app.presentation.profile.ProfileViewModel
 import com.afyaquest.app.presentation.videomodules.VideoModulesViewModel
 import com.afyaquest.app.ui.theme.AfyaSuccess
 import com.afyaquest.app.util.DateUtils
@@ -70,18 +75,25 @@ import kotlinx.coroutines.launch
 fun DashboardScreen(
     navController: NavController,
     dashboardViewModel: DashboardViewModel = hiltViewModel(),
-    profileViewModel: ProfileViewModel = hiltViewModel(),
     assignmentsViewModel: AssignmentsViewModel = hiltViewModel()
 ) {
     val xpData by dashboardViewModel.xpData.collectAsState()
     val dailyProgress by dashboardViewModel.dailyProgress.collectAsState()
     val learningProgress by dashboardViewModel.learningProgress.collectAsState()
+    val featuredVideo by dashboardViewModel.featuredVideo.collectAsState()
     val assignmentsState by assignmentsViewModel.assignmentsState.collectAsState()
     val scrollState = rememberScrollState()
 
-    // Re-fetch assignments every time the dashboard is shown
+    val assignmentsUi by assignmentsViewModel.uiState.collectAsState()
+
+    // Home is drawn: this is the end of "app start" for a signed-in user (shows up as
+    // "Fully drawn" in logcat and in Play's start-up vitals).
+    ReportDrawn()
+
+    // The ViewModel loads the assignments itself; coming back to Home only asks the server again
+    // when the list is no longer fresh, and never blanks what is already shown.
     LaunchedEffect(Unit) {
-        assignmentsViewModel.loadAssignments()
+        assignmentsViewModel.refreshIfStale()
     }
     var showClockDialog by remember { mutableStateOf(false) }
     val isConnected by dashboardViewModel.isConnected.collectAsState()
@@ -95,7 +107,7 @@ fun DashboardScreen(
     Scaffold(
         topBar = {
             DashboardTopBar(
-                onLanguageSelected = { profileViewModel.changeLanguage(it) },
+                onLanguageSelected = { dashboardViewModel.changeLanguage(it) },
                 onSettingsClick = { navController.navigateSingle(Screen.Settings.route) }
             )
         }
@@ -138,7 +150,7 @@ fun DashboardScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = clockError ?: "",
+                            text = stringResource(R.string.home_clock_error),
                             modifier = Modifier.weight(1f),
                             fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.onErrorContainer
@@ -182,14 +194,19 @@ fun DashboardScreen(
             // Assigned to You Section
             AssignedToYouSection(
                 assignmentsState = assignmentsState,
-                assignmentsViewModel = assignmentsViewModel,
+                assignments = assignmentsUi.visible,
+                onRetry = { assignmentsViewModel.loadAssignments() },
                 navController = navController
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Learning Center Section
-            LearningCenterSection(navController = navController, progress = learningProgress)
+            LearningCenterSection(
+                navController = navController,
+                progress = learningProgress,
+                featuredVideo = featuredVideo
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -544,12 +561,30 @@ private fun AllDoneBanner() {
 @Composable
 fun LearningCenterSection(
     navController: NavController,
-    progress: LearningProgress
+    progress: LearningProgress,
+    featuredVideo: VideoModule? = null
 ) {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         SectionTitle(stringResource(R.string.learning_center))
 
         Spacer(modifier = Modifier.height(12.dp))
+
+        // Featured video (opens the player directly, in the context of its focus topic)
+        if (featuredVideo != null) {
+            val topic = LearnTopic.forVideo(featuredVideo.id)
+            val eyebrow = if (topic != null) {
+                stringResource(R.string.learn_featured_label_format, stringResource(topic.titleRes))
+            } else {
+                stringResource(R.string.learn_featured_title)
+            }
+            FeaturedVideoCompactCard(
+                video = featuredVideo,
+                eyebrow = eyebrow,
+                onClick = { navController.openTopicVideo(featuredVideo.id, topic?.id) }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+        }
 
         // Video Modules
         TaskCard(
@@ -610,16 +645,13 @@ private fun NavController.openAssignment(assignment: AssignmentDto) {
 @Composable
 fun AssignedToYouSection(
     assignmentsState: Resource<List<AssignmentDto>>?,
-    assignmentsViewModel: AssignmentsViewModel,
+    /** Assignments merged with what was completed on this phone, in display order. */
+    assignments: List<AssignmentDto>,
+    onRetry: () -> Unit,
     navController: NavController
 ) {
-    // Use merged assignments (local completion + API status)
-    val allMerged = if (assignmentsState is Resource.Success) {
-        assignmentsViewModel.getFilteredAssignments()
-    } else {
-        emptyList()
-    }
-    val pending = allMerged.filter { it.status != "completed" }
+    // Reactive: a task leaves this list the moment its lesson or quiz is finished.
+    val pending = remember(assignments) { assignments.filter { it.status != "completed" } }
 
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Row(
@@ -650,7 +682,7 @@ fun AssignedToYouSection(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error
                     )
-                    TextButton(onClick = { assignmentsViewModel.loadAssignments() }) {
+                    TextButton(onClick = onRetry) {
                         Text(stringResource(R.string.retry))
                     }
                 }
@@ -794,15 +826,7 @@ fun AssignmentPreviewCard(
 @Composable
 private fun assignmentDisplayName(id: String?): String? {
     if (id.isNullOrBlank()) return null
-    val lessonTitle = when (id) {
-        "lesson-1" -> stringResource(R.string.lesson_1_title)
-        "lesson-2" -> stringResource(R.string.lesson_2_title)
-        "lesson-3" -> stringResource(R.string.lesson_3_title)
-        "lesson-4" -> stringResource(R.string.lesson_4_title)
-        "lesson-5" -> stringResource(R.string.lesson_5_title)
-        "lesson-6" -> stringResource(R.string.lesson_6_title)
-        else -> null
-    }
+    val lessonTitle = LessonsViewModel.lessonTitleRes(id)?.let { stringResource(it) }
     if (lessonTitle != null) return lessonTitle
     val videoTitle = remember(id) {
         VideoModulesViewModel.allVideos().find { it.id == id }?.title

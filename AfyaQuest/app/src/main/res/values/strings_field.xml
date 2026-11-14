@@ -12,6 +12,8 @@
     <string name="field_map_location_button">Turn on location</string>
     <string name="field_map_all_visited_subtitle">You visited every stop. Finish with your daily report.</string>
     <string name="field_map_fill_report">Fill in daily report</string>
+    <string name="field_facilities_empty">No health facilities are listed for your area yet</string>
+    <string name="field_facilities_disclaimer">Locations from OpenStreetMap. Call ahead to confirm opening hours and services.</string>
 
     <!-- Tasks (assignments) -->
     <string name="field_tasks_overdue">Overdue</string>
@@ -29,4 +31,5 @@
     <string name="field_chat_suggest_pregnancy">When should I refer a pregnant woman?</string>
     <string name="field_chat_suggest_handwashing">Steps for proper handwashing</string>
     <string name="field_chat_resend">Resend</string>
+    <string name="field_chat_waiting_for_connection">Will be sent when you are back online</string>
 </resources>

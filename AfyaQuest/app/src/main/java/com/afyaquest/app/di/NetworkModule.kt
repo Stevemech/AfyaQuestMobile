@@ -2,6 +2,7 @@ package com.afyaquest.app.di
 
 import com.afyaquest.app.BuildConfig
 import com.afyaquest.app.data.remote.ApiService
+import com.afyaquest.app.data.remote.TimeoutDns
 import com.afyaquest.app.data.remote.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
@@ -35,12 +36,17 @@ object NetworkModule {
             }
         }
 
+        // Every request has a hard ceiling. Before, the only limits were 30 s per connection
+        // attempt (one per server address) and nothing at all for the name lookup, so on a bad
+        // network a spinner could turn for minutes with no error and no way out.
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .authenticator(tokenAuthenticator)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .dns(TimeoutDns())
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(25, TimeUnit.SECONDS) // Fred's answers can take a while to come back
+            .writeTimeout(20, TimeUnit.SECONDS)
+            .callTimeout(35, TimeUnit.SECONDS)
             .build()
     }
 

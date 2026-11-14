@@ -3,7 +3,6 @@ package com.afyaquest.app.util
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.os.Build
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -73,12 +72,24 @@ class LanguageManager @Inject constructor(
             prefs.getString(userKey, null) ?: _currentLanguage.value
         }
 
-        prefs.edit().putString(userKey, lang).commit()
-        // Keep global key in sync for attachBaseContext after process death.
-        prefs.edit().putString(LANGUAGE_KEY, lang).commit()
+        // Keep the global key in sync for attachBaseContext after process death.
+        saveLanguage(prefs, lang, userKey, LANGUAGE_KEY)
 
         _currentLanguage.value = lang
         applyLanguage(lang)
+    }
+
+    /**
+     * Store [lang] under [keys] in one write, and only when a value really changes. This runs on
+     * the main thread at every start of the app; it used to be two blocking disk writes each
+     * time, even when nothing had changed.
+     */
+    private fun saveLanguage(prefs: SharedPreferences, lang: String, vararg keys: String) {
+        val stale = keys.filter { prefs.getString(it, null) != lang }
+        if (stale.isEmpty()) return
+        val editor = prefs.edit()
+        stale.forEach { editor.putString(it, lang) }
+        editor.apply()
     }
 
     /**
@@ -102,11 +113,9 @@ class LanguageManager @Inject constructor(
      * Persist a new language choice and apply it immediately.
      */
     suspend fun setLanguage(languageCode: String) {
-        val prefs = getPrefs()
-        // Save to user-specific key (or global if not logged in).
-        prefs.edit().putString(activeKey(), languageCode).commit()
-        // Always mirror to global key for attachBaseContext.
-        prefs.edit().putString(LANGUAGE_KEY, languageCode).commit()
+        // The user-specific key (or the global one when nobody is signed in), mirrored to the
+        // global key for attachBaseContext.
+        saveLanguage(getPrefs(), languageCode, activeKey(), LANGUAGE_KEY)
 
         _currentLanguage.value = languageCode
         applyLanguage(languageCode)
@@ -119,7 +128,7 @@ class LanguageManager @Inject constructor(
      */
     fun applySavedLanguageBlocking() {
         val lang = getPrefs().getString(activeKey(), LANGUAGE_ENGLISH) ?: LANGUAGE_ENGLISH
-        getPrefs().edit().putString(LANGUAGE_KEY, lang).commit()
+        saveLanguage(getPrefs(), lang, LANGUAGE_KEY)
         _currentLanguage.value = lang
         applyLanguage(lang)
     }
@@ -169,10 +178,9 @@ class LanguageManager @Inject constructor(
         val config = Configuration(context.resources.configuration)
         config.setLocale(locale)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            context.createConfigurationContext(config)
-        }
-
+        // ViewModels read strings through the application context, so its resources follow the
+        // chosen language too.
+        @Suppress("DEPRECATION")
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 }

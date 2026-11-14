@@ -1,5 +1,6 @@
 package com.afyaquest.app.presentation.navigation
 
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 
 /**
@@ -8,8 +9,9 @@ import androidx.navigation.NavController
  * - Bottom-bar (top-level) destinations are switched with [navigateTopLevel]: the back stack is
  *   trimmed to the Dashboard, state is saved/restored, and no duplicates are created.
  * - Child screens are pushed with [navigateSingle] so a double tap never stacks two copies.
- * - Deep links to a specific learning item ([openModule], [openVideo], [openLesson]) build the
- *   proper stack (Learn -> detail) so system back always lands somewhere sensible.
+ * - Deep links to a specific learning item ([openModule], [openVideo], [openTopicVideo],
+ *   [openLesson]) build the proper stack (Learn -> detail) so system back always lands somewhere
+ *   sensible.
  */
 
 /** Routes that show the bottom navigation bar. Must match the destinations in [AppBottomBar]. */
@@ -34,6 +36,19 @@ fun NavController.navigateSingle(route: String) {
     navigate(route) { launchSingleTop = true }
 }
 
+/**
+ * Go back one screen, once.
+ *
+ * While a screen change is still on its way the screen that is coming is not "resumed" yet, and a
+ * second call is ignored. Without this a quick double tap on a back arrow, or a tap outside a
+ * result dialog followed by its button, went back two screens instead of one.
+ */
+fun NavController.popBack(): Boolean {
+    val current = currentBackStackEntry ?: return false
+    if (current.lifecycle.currentState != Lifecycle.State.RESUMED) return false
+    return popBackStack()
+}
+
 /** Pop everything above the Dashboard (used by "Back to Home" actions). */
 fun NavController.goHome() {
     val popped = popBackStack(Screen.Dashboard.route, inclusive = false)
@@ -55,6 +70,15 @@ fun NavController.openModule(moduleNumber: Int) {
 fun NavController.openVideo(moduleNumber: Int, videoId: String) {
     openModule(moduleNumber)
     navigateSingle(Screen.VideoPlayer.createRoute(videoId))
+}
+
+/**
+ * Open a video from outside the Learn hub with its focus-topic context: Learn(videos) -> VideoPlayer.
+ * Back returns to the hub, where the featured videos and topics live.
+ */
+fun NavController.openTopicVideo(videoId: String, topicId: String?) {
+    openLearn(Screen.Learn.TAB_VIDEOS)
+    navigateSingle(Screen.VideoPlayer.createRoute(videoId, topicId))
 }
 
 /** Open a specific lesson: Learn(lessons) -> LessonDetail. */

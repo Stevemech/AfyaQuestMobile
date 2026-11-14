@@ -2,6 +2,7 @@ package com.afyaquest.app.presentation.videomodules
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -46,13 +49,17 @@ import com.afyaquest.app.presentation.components.DoneBadge
 import com.afyaquest.app.presentation.components.EmptyState
 import com.afyaquest.app.presentation.components.NextStepCard
 import com.afyaquest.app.presentation.components.ProgressSummary
+import com.afyaquest.app.presentation.learn.FeaturedVideoCard
+import com.afyaquest.app.presentation.learn.LearnTopic
+import com.afyaquest.app.presentation.learn.TopicCard
 import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.presentation.navigation.navigateSingle
 import com.afyaquest.app.ui.theme.AfyaSuccess
 
 /**
- * Videos tab of the Learn hub: overall progress, one clear "continue" action, then the six
- * modules as numbered steps. No Scaffold here - the hub owns the top bar and tabs.
+ * Videos tab of the Learn hub: the featured videos first, one clear "continue" action, the focus
+ * topics, overall progress, then the six modules as numbered steps. No Scaffold here - the hub
+ * owns the top bar and tabs.
  */
 @Composable
 fun VideoModulesContent(
@@ -62,40 +69,86 @@ fun VideoModulesContent(
 ) {
     val watchedVideos by viewModel.watchedVideos.collectAsState()
     val completedQuizzes by viewModel.completedQuizzes.collectAsState()
+    val completedLessons by viewModel.completedLessons.collectAsState()
 
     // Re-derive everything whenever the persisted progress changes so returning from the
     // player / quiz updates the list immediately.
     val moduleFolders = remember(watchedVideos, completedQuizzes) { viewModel.getModuleFolders() }
     val nextVideo = remember(watchedVideos) { viewModel.nextUnwatchedVideo() }
+    val featuredVideos = remember(watchedVideos, completedQuizzes) { viewModel.getFeaturedVideos() }
     val totalVideos = viewModel.getTotalVideos()
     val watchedCount = remember(watchedVideos) { viewModel.getWatchedCount() }
     val quizCount = remember(completedQuizzes) { viewModel.getQuizCompletedCount() }
 
+    // The carousel runs edge to edge, so the list has no horizontal padding of its own; every
+    // other row is inset by this gutter instead.
+    val gutter = Modifier.padding(horizontal = 16.dp)
+
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+        contentPadding = PaddingValues(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        item(key = "overall") {
-            OverallProgressCard(
-                watchedCount = watchedCount,
-                quizCount = quizCount,
-                totalVideos = totalVideos
-            )
+        if (featuredVideos.isNotEmpty()) {
+            item(key = "featured") {
+                FeaturedVideosSection(
+                    videos = featuredVideos,
+                    onVideoClick = { video ->
+                        // Straight to the player; back returns to the hub. The topic keeps
+                        // "Next video" on the same subject.
+                        navController.navigateSingle(
+                            Screen.VideoPlayer.createRoute(video.id, LearnTopic.forVideo(video.id)?.id)
+                        )
+                    }
+                )
+            }
         }
 
         item(key = "next") {
-            if (nextVideo != null) {
-                NextVideoCard(
-                    video = nextVideo,
-                    onClick = {
-                        // Build Module -> Player so back returns to the module, not the hub.
-                        navController.navigateSingle(Screen.ModuleDetail.createRoute(nextVideo.moduleNumber))
-                        navController.navigateSingle(Screen.VideoPlayer.createRoute(nextVideo.id))
-                    }
+            Box(modifier = gutter) {
+                if (nextVideo != null) {
+                    NextVideoCard(
+                        video = nextVideo,
+                        onClick = {
+                            // Build Module -> Player so back returns to the module, not the hub.
+                            navController.navigateSingle(Screen.ModuleDetail.createRoute(nextVideo.moduleNumber))
+                            navController.navigateSingle(Screen.VideoPlayer.createRoute(nextVideo.id))
+                        }
+                    )
+                } else {
+                    AllVideosDoneCard()
+                }
+            }
+        }
+
+        item(key = "topics_header") {
+            Text(
+                text = stringResource(R.string.learn_topics_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = gutter.padding(top = 4.dp)
+            )
+        }
+
+        items(LearnTopic.entries, key = { "topic_${it.id}" }) { topic ->
+            TopicCard(
+                topic = topic,
+                videosWatched = topic.videoIds.count { it in watchedVideos },
+                videosTotal = topic.videoIds.size,
+                lessonsCompleted = topic.lessonIds.count { it in completedLessons },
+                lessonsTotal = topic.lessonIds.size,
+                onClick = { navController.navigateSingle(Screen.Topic.createRoute(topic.id)) },
+                modifier = gutter
+            )
+        }
+
+        item(key = "overall") {
+            Box(modifier = gutter.padding(top = 4.dp)) {
+                OverallProgressCard(
+                    watchedCount = watchedCount,
+                    quizCount = quizCount,
+                    totalVideos = totalVideos
                 )
-            } else {
-                AllVideosDoneCard()
             }
         }
 
@@ -104,18 +157,69 @@ fun VideoModulesContent(
                 text = stringResource(R.string.modules),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = gutter.padding(top = 4.dp)
             )
         }
 
         items(moduleFolders, key = { it.moduleNumber }) { folder ->
-            ModuleStepCard(
-                folder = folder,
-                isNext = nextVideo?.moduleNumber == folder.moduleNumber,
-                onClick = {
-                    navController.navigateSingle(Screen.ModuleDetail.createRoute(folder.moduleNumber))
-                }
+            Box(modifier = gutter) {
+                ModuleStepCard(
+                    folder = folder,
+                    isNext = nextVideo?.moduleNumber == folder.moduleNumber,
+                    onClick = {
+                        navController.navigateSingle(Screen.ModuleDetail.createRoute(folder.moduleNumber))
+                    }
+                )
+            }
+        }
+    }
+}
+
+/**
+ * "Featured" heading plus a horizontally scrolling row of [FeaturedVideoCard]s. The next card
+ * peeks in from the right so it is obvious there is more to swipe to.
+ */
+@Composable
+private fun FeaturedVideosSection(
+    videos: List<VideoModule>,
+    onVideoClick: (VideoModule) -> Unit
+) {
+    val listState = rememberLazyListState()
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Text(
+                text = stringResource(R.string.learn_featured_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
             )
+            Text(
+                text = stringResource(R.string.learn_featured_subtitle),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        LazyRow(
+            state = listState,
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
+        ) {
+            items(videos, key = { it.id }) { video ->
+                val topicTitle = LearnTopic.forVideo(video.id)?.let { stringResource(it.titleRes) }
+                val moduleLabel = stringResource(R.string.learn_module_number_format, video.moduleNumber) +
+                    " · " + stringResource(VideoModulesViewModel.moduleTitleRes(video.moduleNumber))
+                FeaturedVideoCard(
+                    video = video,
+                    topicTitle = topicTitle,
+                    moduleLabel = moduleLabel,
+                    onClick = { onVideoClick(video) },
+                    modifier = Modifier.fillParentMaxWidth(if (videos.size > 1) 0.86f else 1f)
+                )
+            }
         }
     }
 }

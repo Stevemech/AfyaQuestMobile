@@ -2,12 +2,18 @@
 <resources>
     <!-- Daily Questions -->
     <string name="daily_questions_complete">Daily questions complete!</string>
-    <string name="daily_lives_gained_format">You gained %1$d lives.</string>
-    <string name="daily_lives_lost_format">You lost %1$d lives.</string>
+    <plurals name="daily_lives_gained">
+        <item quantity="one">You gained %1$d life.</item>
+        <item quantity="other">You gained %1$d lives.</item>
+    </plurals>
+    <plurals name="daily_lives_lost">
+        <item quantity="one">You lost %1$d life.</item>
+        <item quantity="other">You lost %1$d lives.</item>
+    </plurals>
     <string name="daily_lives_unchanged">Your lives did not change.</string>
     <string name="daily_come_back_tomorrow">Come back tomorrow for new questions.</string>
     <string name="daily_leave_quiz_title">Leave the quiz?</string>
-    <string name="daily_leave_quiz_message">Your answers will be lost and you will not get the completion bonus.</string>
+    <string name="daily_leave_quiz_message">Your answers so far are saved. Come back later today to finish and collect the completion bonus.</string>
 
     <!-- Daily Report -->
     <string name="daily_report_saved_title">Report saved</string>

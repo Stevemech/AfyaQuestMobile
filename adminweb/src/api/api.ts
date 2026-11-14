@@ -119,7 +119,7 @@ const VIDEO_MODULES = [
   { id: 'mod6-unseen-shield', name: 'An Unseen Shield', module: 6, moduleName: 'Infection Prevention & Control', type: 'video' as const },
 ];
 
-// Interactive lessons matching the mobile app (IDs 1-6)
+// Interactive lessons matching the mobile app (IDs 1-10)
 const INTERACTIVE_LESSONS = [
   { id: 'lesson-1', name: 'Técnicas de Lavado de Manos / Handwashing Techniques', nameEs: 'Técnicas de Lavado de Manos', nameEn: 'Proper Handwashing Techniques', type: 'lesson' as const },
   { id: 'lesson-2', name: 'Dieta Balanceada para Niños / Balanced Diet for Children', nameEs: 'Dieta Balanceada para Niños', nameEn: 'Balanced Diet for Children', type: 'lesson' as const },
@@ -127,6 +127,10 @@ const INTERACTIVE_LESSONS = [
   { id: 'lesson-4', name: 'Calendario de Vacunación / Child Vaccination Schedule', nameEs: 'Calendario de Vacunación Infantil', nameEn: 'Child Vaccination Schedule', type: 'lesson' as const },
   { id: 'lesson-5', name: 'Prevención de Malaria / Malaria Prevention', nameEs: 'Prevención de Malaria', nameEn: 'Malaria Prevention', type: 'lesson' as const },
   { id: 'lesson-6', name: 'RCP Básico / CPR Basics', nameEs: 'RCP Básico', nameEn: 'CPR Basics', type: 'lesson' as const },
+  { id: 'lesson-7', name: 'Alimentar a un Niño con Diarrea / Feeding a Child with Diarrhoea', nameEs: 'Alimentar a un Niño con Diarrea', nameEn: 'Feeding a Child with Diarrhoea', type: 'lesson' as const },
+  { id: 'lesson-8', name: 'Lactancia Materna Exclusiva / Exclusive Breastfeeding', nameEs: 'Lactancia Materna Exclusiva', nameEn: 'Exclusive Breastfeeding', type: 'lesson' as const },
+  { id: 'lesson-9', name: 'Reconocer la Desnutrición / Recognising Malnutrition', nameEs: 'Reconocer la Desnutrición', nameEn: 'Recognising Malnutrition', type: 'lesson' as const },
+  { id: 'lesson-10', name: 'Nutrición y Suplementos en el Embarazo / Nutrition and Supplements in Pregnancy', nameEs: 'Nutrición y Suplementos en el Embarazo', nameEn: 'Nutrition and Supplements in Pregnancy', type: 'lesson' as const },
 ];
 
 export const ALL_MODULES = [...VIDEO_MODULES, ...INTERACTIVE_LESSONS];

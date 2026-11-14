@@ -38,4 +38,17 @@
     <string name="learn_video_complete">Xtz\'aqät ri silowachib\'äl</string>
     <string name="learn_next_video">Jun chik silowachib\'äl</string>
     <string name="learn_back_to_module">Titzolïx pa ch\'akulal</string>
+
+    <!-- K'atzinel taq silowachib'äl chuqa' taq ruwäch tijonik. DRAFT like the rest of this file:
+         composed only from wording already used elsewhere in the cak resources. -->
+    <string name="learn_featured_title">K\'atzinel taq silowachib\'äl</string>
+    <string name="learn_featured_subtitle">Taq silowachib\'äl chi rij k\'aslemal chuqa\' wa\'im</string>
+    <string name="learn_featured_label_format">K\'atzinel · %1$s</string>
+    <string name="learn_topics_title">Taq Ruwäch Tijonik</string>
+    <string name="learn_topic_label">Ruwäch tijonik</string>
+    <string name="learn_topic_maternal_desc">Ruk\'aslemal nan, toq k\'o ak\'wal, chuqa\' runuk\'ulem ach\'alalri\'ïl</string>
+    <string name="learn_topic_nutrition_desc">Tawetamaj ri achike nik\'atzin chi ke ri ak\'wala\' richin ütz nik\'ïy</string>
+    <string name="learn_lessons_count_format">%1$d/%2$d tijonik</string>
+    <string name="learn_back_to_topic">Titzolïx pa ruwäch tijonik</string>
+    <string name="learn_topic_not_found">Man k\'o ta ri ruwäch tijonik</string>
 </resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Problemas de inicio de sesión / registro que la app puede explicar -->
+    <string name="auth_error_no_connection">Sin conexión a internet. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="auth_error_timeout">Esto está tardando demasiado. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="auth_error_invalid_credentials">Correo o contraseña incorrectos.</string>
+    <string name="auth_error_email_not_confirmed">Tu correo aún no está confirmado. Abre el enlace del correo que te enviamos y luego inicia sesión.</string>
+    <string name="auth_error_account_incomplete">Esta cuenta no está configurada por completo. Pide ayuda a tu supervisor.</string>
+    <string name="auth_error_server">Algo salió mal de nuestro lado. Inténtalo de nuevo en un momento.</string>
+    <string name="auth_session_expired">Se cerró tu sesión porque terminó. Inicia sesión de nuevo.</string>
+    <string name="auth_organizations_loading">Cargando organizaciones…</string>
+    <string name="auth_organizations_error">No se pudo cargar la lista de organizaciones.</string>
+    <string name="auth_organization_required">Elige tu organización</string>
+    <string name="auth_email_verified">¡Correo verificado! Ya puedes iniciar sesión.</string>
+</resources>

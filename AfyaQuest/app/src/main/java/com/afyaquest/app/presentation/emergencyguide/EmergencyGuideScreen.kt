@@ -37,6 +37,7 @@ import com.afyaquest.app.ui.theme.SeverityWarn
 import com.afyaquest.app.ui.theme.SeverityWarnContainer
 import com.afyaquest.app.ui.theme.SeverityWarnOnContainer
 import com.afyaquest.app.util.LanguageManager
+import com.afyaquest.app.presentation.navigation.popBack
 
 /**
  * Intro / home screen for the Emergency Response Guide: brand mark, a draft
@@ -63,7 +64,7 @@ fun EmergencyGuideScreen(
                         actionIconContentColor = Color.White
                     ),
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = { navController.popBack() }) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.back)

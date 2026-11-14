@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -55,8 +56,10 @@ import com.afyaquest.app.presentation.components.DoneBadge
 import com.afyaquest.app.presentation.components.EmptyState
 import com.afyaquest.app.presentation.components.HintRow
 import com.afyaquest.app.presentation.components.LoadingState
+import com.afyaquest.app.presentation.learn.LearnTopic
 import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.ui.theme.AfyaSuccess
+import com.afyaquest.app.presentation.navigation.popBack
 
 /**
  * Lesson detail as its own navigation destination (route [Screen.LessonDetail]).
@@ -76,6 +79,15 @@ fun LessonDetailRoute(
     val completedIds by viewModel.completedLessons.collectAsState()
     val lesson = lessons.find { it.id == lessonId }
         ?.let { it.copy(completed = completedIds.contains(it.id)) }
+    // A lesson is opened from the Lessons tab or from a focus topic; "back" pops to whichever it
+    // was, so the button names that place, and "Next lesson" follows that topic's own order.
+    val topicEntry = remember(navController) {
+        navController.previousBackStackEntry?.takeIf { it.destination.route == Screen.Topic.route }
+    }
+    val topic = remember(topicEntry) {
+        LearnTopic.fromId(topicEntry?.arguments?.getString(Screen.Topic.ARG_TOPIC_ID))
+    }
+    val backLabelRes = if (topicEntry != null) R.string.learn_back_to_topic else R.string.lesson_ui_back_to_lessons
 
     when {
         lessons.isEmpty() -> {
@@ -89,7 +101,7 @@ fun LessonDetailRoute(
                     TopAppBar(
                         title = { Text(stringResource(R.string.lesson), fontWeight = FontWeight.Bold) },
                         navigationIcon = {
-                            IconButton(onClick = { navController.popBackStack() }) {
+                            IconButton(onClick = { navController.popBack() }) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = stringResource(R.string.back)
@@ -108,8 +120,8 @@ fun LessonDetailRoute(
                     EmptyState(
                         title = stringResource(R.string.lesson_ui_not_found),
                         icon = Icons.AutoMirrored.Filled.MenuBook,
-                        actionText = stringResource(R.string.lesson_ui_back_to_lessons),
-                        onAction = { navController.popBackStack() }
+                        actionText = stringResource(backLabelRes),
+                        onAction = { navController.popBack() }
                     )
                 }
             }
@@ -117,9 +129,12 @@ fun LessonDetailRoute(
         else -> {
             LessonDetailContent(
                 lesson = lesson,
-                onBack = { navController.popBackStack() },
+                backLabel = stringResource(backLabelRes),
+                onBack = { navController.popBack() },
                 onComplete = { viewModel.completeLesson(lesson.id) },
-                nextLessonProvider = { viewModel.nextIncompleteLesson(afterId = lesson.id) },
+                nextLessonProvider = {
+                    viewModel.nextIncompleteLesson(afterId = lesson.id, within = topic?.lessonIds)
+                },
                 onOpenNext = { next ->
                     // Replace this lesson with the next one so back still returns to the list.
                     navController.navigate(Screen.LessonDetail.createRoute(next.id)) {
@@ -136,6 +151,7 @@ fun LessonDetailRoute(
 @Composable
 private fun LessonDetailContent(
     lesson: Lesson,
+    backLabel: String,
     onBack: () -> Unit,
     onComplete: () -> Unit,
     nextLessonProvider: () -> Lesson?,
@@ -146,11 +162,15 @@ private fun LessonDetailContent(
     var justCompleted by rememberSaveable { mutableStateOf(false) }
     val isCompleted = lesson.completed || justCompleted
 
-    // Reading progress: 0 until laid out, 1 when the whole lesson fits on screen.
-    val readFraction = when (scrollState.maxValue) {
-        0 -> 1f
-        Int.MAX_VALUE -> 0f
-        else -> (scrollState.value.toFloat() / scrollState.maxValue).coerceIn(0f, 1f)
+    // Reading progress: 0 until laid out, 1 when the whole lesson fits on screen. It is read
+    // inside the progress bar's own lambda (below), so scrolling only redraws the bar; reading
+    // the scroll position here recomposed the whole lesson screen on every frame of a scroll.
+    val readFraction = {
+        when (scrollState.maxValue) {
+            0 -> 1f
+            Int.MAX_VALUE -> 0f
+            else -> (scrollState.value.toFloat() / scrollState.maxValue).coerceIn(0f, 1f)
+        }
     }
     val readingProgressLabel = stringResource(R.string.lesson_ui_reading_progress)
 
@@ -176,7 +196,7 @@ private fun LessonDetailContent(
                     }
                 )
                 LinearProgressIndicator(
-                    progress = { readFraction },
+                    progress = readFraction,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(4.dp)
@@ -262,12 +282,8 @@ private fun LessonDetailContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Lesson content
-            Text(
-                text = lesson.content,
-                fontSize = 16.sp,
-                lineHeight = 24.sp
-            )
+            // Lesson content (Markdown subset: headings, lists, bold)
+            LessonMarkdown(content = lesson.content)
 
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -275,7 +291,7 @@ private fun LessonDetailContent(
 
     if (showCompletion) {
         val next = nextLessonProvider()
-        val backToLessons = stringResource(R.string.lesson_ui_back_to_lessons)
+        val backToLessons = backLabel
         if (next != null) {
             CompletionDialog(
                 title = stringResource(R.string.lesson_completed),

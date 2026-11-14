@@ -3,12 +3,15 @@
 <resources>
     <!-- Kik'utunïk Jujun Q'ij -->
     <string name="daily_questions_complete">Xetz\'aqät ri kik\'utunïk jujun q\'ij!</string>
-    <string name="daily_lives_gained_format">Xak\'ul %1$d k\'aslemal.</string>
-    <string name="daily_lives_lost_format">Xasäch %1$d k\'aslemal.</string>
+    <plurals name="daily_lives_gained">
+        <item quantity="other">Xak\'ul %1$d k\'aslemal.</item>
+    </plurals>
+    <plurals name="daily_lives_lost">
+        <item quantity="other">Xasäch %1$d k\'aslemal.</item>
+    </plurals>
     <string name="daily_lives_unchanged">Man xjalatäj ta ri ak\'aslemal.</string>
     <string name="daily_come_back_tomorrow">Katpe chik chuwäq richin k\'ak\'a\' taq k\'utunïk.</string>
     <string name="daily_leave_quiz_title">La nawajo\' yatel pa ri moloj k\'utunïk?</string>
-    <string name="daily_leave_quiz_message">Xtisäch ri atzolin tzij chuqa\' man xtak\'ul ta ri XP richin xtz\'aqät.</string>
 
     <!-- Rutzijol Jujun Q'ij -->
     <string name="daily_report_saved_title">Xyak ri rutzijol</string>

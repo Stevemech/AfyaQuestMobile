@@ -48,6 +48,7 @@ import com.afyaquest.app.util.Resource
 import androidx.compose.material.icons.filled.Delete
 import java.text.SimpleDateFormat
 import java.util.*
+import com.afyaquest.app.presentation.navigation.popBack
 
 /**
  * Daily Report screen
@@ -106,7 +107,7 @@ fun DailyReportScreen(
             onStay = { showLeaveDialog = false },
             onLeave = {
                 showLeaveDialog = false
-                navController.popBackStack()
+                navController.popBack()
             }
         )
     }
@@ -163,7 +164,7 @@ fun DailyReportScreen(
                 title = { Text(stringResource(R.string.daily_report), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (draftGuardActive) showLeaveDialog = true else navController.popBackStack()
+                        if (draftGuardActive) showLeaveDialog = true else navController.popBack()
                     }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
@@ -921,7 +922,8 @@ private fun ReportHistoryCard(
 
             if (report.healthEducation.isNotBlank()) {
                 Text(
-                    text = stringResource(R.string.health_education_topics_label),
+                    // The form label ends in " *" (required field); a saved report has no required fields.
+                    text = stringResource(R.string.health_education_topics_label).trimEnd('*', ' '),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

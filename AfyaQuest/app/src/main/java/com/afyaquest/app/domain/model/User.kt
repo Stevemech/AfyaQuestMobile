@@ -14,6 +14,9 @@ data class User(
     val totalPoints: Int = 0,
     val rank: String = "Beginner",
     val currentStreak: Int = 0,
+    /** The account is enabled. This is NOT the clock-in status, see [clockedIn]. */
     val isActive: Boolean = true,
-    val organization: String? = null
+    val organization: String? = null,
+    /** Clocked in for the field day (the profile's manualStatus, the value supervisors see). */
+    val clockedIn: Boolean = false
 )

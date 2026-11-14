@@ -37,4 +37,16 @@
     <string name="learn_video_complete">Video completado</string>
     <string name="learn_next_video">Siguiente video</string>
     <string name="learn_back_to_module">Volver al módulo</string>
+
+    <!-- Videos destacados y temas (los títulos de los temas reutilizan category_maternal_health / category_nutrition) -->
+    <string name="learn_featured_title">Destacados</string>
+    <string name="learn_featured_subtitle">Videos de salud y nutrición para empezar</string>
+    <string name="learn_featured_label_format">Destacado · %1$s</string>
+    <string name="learn_topics_title">Temas</string>
+    <string name="learn_topic_label">Tema</string>
+    <string name="learn_topic_maternal_desc">Embarazo, parto seguro, cuidado del recién nacido y planificación familiar</string>
+    <string name="learn_topic_nutrition_desc">Alimentación de bebés y niños, nutrición en el embarazo y cómo reconocer la desnutrición</string>
+    <string name="learn_lessons_count_format">%1$d/%2$d lecciones</string>
+    <string name="learn_back_to_topic">Volver al tema</string>
+    <string name="learn_topic_not_found">Tema no encontrado</string>
 </resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Logros (Perfil). Se calculan en el dispositivo a partir del progreso real: ver AchievementRules. -->
+    <string name="achievement_first_video_title">Primeros Pasos</string>
+    <string name="achievement_first_video_desc">Mira tu primer video</string>
+    <string name="achievement_video_10_title">Aprendiz en Video</string>
+    <string name="achievement_video_10_desc">Mira 10 videos</string>
+    <string name="achievement_quiz_5_title">As de los Cuestionarios</string>
+    <string name="achievement_quiz_5_desc">Completa 5 cuestionarios de video</string>
+    <string name="achievement_lessons_5_title">Gran Lector</string>
+    <string name="achievement_lessons_5_desc">Completa 5 lecciones</string>
+    <string name="achievement_topic_maternal_title">Campeón de Salud Materna</string>
+    <string name="achievement_topic_maternal_desc">Termina todos los videos y lecciones de Salud Materna</string>
+    <string name="achievement_topic_nutrition_title">Campeón de Nutrición</string>
+    <string name="achievement_topic_nutrition_desc">Termina todos los videos y lecciones de Nutrición</string>
+    <string name="achievement_streak_3_title">En Racha</string>
+    <string name="achievement_streak_3_desc">Aprende o reporta 3 días seguidos</string>
+    <string name="achievement_streak_7_title">Guerrero de la Semana</string>
+    <string name="achievement_streak_7_desc">Aprende o reporta 7 días seguidos</string>
+    <string name="achievement_report_1_title">Primer Reporte</string>
+    <string name="achievement_report_1_desc">Envía tu primer reporte diario</string>
+    <string name="achievement_report_5_title">Reportero Confiable</string>
+    <string name="achievement_report_5_desc">Envía reportes diarios en 5 días distintos</string>
+    <string name="achievement_level_3_title">Estrella en Ascenso</string>
+    <string name="achievement_level_3_desc">Alcanza el nivel 3</string>
+    <string name="achievement_xp_1000_title">Club de los 1,000</string>
+    <string name="achievement_xp_1000_desc">Gana 1,000 XP</string>
+    <string name="achievements_empty_hint">Mira un video, termina una lección o envía un reporte para ganar tu primer logro.</string>
+</resources>

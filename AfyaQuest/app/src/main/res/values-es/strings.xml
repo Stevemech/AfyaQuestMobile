@@ -285,6 +285,7 @@
     <string name="service_vaccination">Vacunación</string>
     <string name="service_family_planning">Planificación Familiar</string>
     <string name="service_pharmacy">Farmacia</string>
+    <string name="service_mental_health">Salud Mental</string>
 
     <string name="time_just_now">Ahora mismo</string>
     <string name="mark_complete_xp">Marcar como Completado (+%d XP)</string>
@@ -318,7 +319,7 @@
     <!-- Lesson 3: Prenatal -->
     <string name="lesson_3_title">Fundamentos del Cuidado Prenatal</string>
     <string name="lesson_3_description">Aspectos clave de la salud materna durante el embarazo</string>
-    <string name="lesson_3_content"># Fundamentos del Cuidado Prenatal\n\n## Revisiones Regulares\nVisita el centro de salud al menos 4 veces durante el embarazo:\n- Una vez en los primeros 3 meses\n- Una vez entre los 4-6 meses\n- Dos veces en los últimos 3 meses\n\n## Nutrición Durante el Embarazo\n- Aumenta la ingesta de alimentos\n- Toma suplementos de hierro y ácido fólico\n- Bebe abundante agua limpia\n\n## Señales de Alarma\nBusca ayuda inmediata si:\n- Dolor de cabeza severo\n- Visión borrosa\n- Sangrado vaginal\n- Dolor abdominal severo\n- Reducción del movimiento del bebé\n\n## Prevención de Malaria\n- Duerme bajo mosquitero tratado\n- Toma medicación preventiva según prescripción</string>
+    <string name="lesson_3_content"># Fundamentos del Cuidado Prenatal\n\n## Revisiones Regulares\nVe al control prenatal al menos 4 veces durante el embarazo:\n- Primer control antes de las 16 semanas\n- Segundo control entre las 16 y 28 semanas\n- Tercer control entre las 28 y 32 semanas\n- Cuarto control entre las 32 y 40 semanas\n\nEl control prenatal es gratuito.\n\n## Nutrición Durante el Embarazo\n- Aumenta la ingesta de alimentos\n- Toma suplementos de hierro y ácido fólico\n- Bebe abundante agua limpia\n\n## Señales de Alarma\nBusca ayuda inmediata si:\n- Dolor de cabeza severo\n- Visión borrosa\n- Sangrado vaginal\n- Dolor abdominal severo\n- Reducción del movimiento del bebé\n\n## Prevención de Malaria\n- Duerme bajo mosquitero tratado\n- Toma medicación preventiva según prescripción</string>
 
     <!-- Lesson 4: Vaccination -->
     <string name="lesson_4_title">Calendario de Vacunación Infantil</string>

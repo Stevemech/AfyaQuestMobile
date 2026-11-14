@@ -38,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -60,6 +61,7 @@ import com.afyaquest.app.domain.triage.localized
 import com.afyaquest.app.ui.theme.AfyaQuestTheme
 import com.afyaquest.app.util.LanguageManager
 import kotlinx.coroutines.delay
+import com.afyaquest.app.presentation.navigation.popBack
 
 /**
  * Conversational assessment flow, styled after the MedPull kiosk guided intake:
@@ -135,7 +137,7 @@ fun TriageFlowScreen(
                     IconButton(
                         onClick = {
                             if (state.path.isNotEmpty()) viewModel.back()
-                            else navController.popBackStack()
+                            else navController.popBack()
                         },
                         modifier = Modifier.alpha(0.5f)
                     ) {
@@ -194,7 +196,7 @@ fun TriageFlowScreen(
                                 disposition = disposition,
                                 language = language,
                                 onRestart = { viewModel.restart() },
-                                onDone = { navController.popBackStack() }
+                                onDone = { navController.popBack() }
                             )
                             node != null -> {
                                 Spacer(Modifier.height(12.dp))
@@ -241,21 +243,23 @@ private fun AssistantBadge(typing: Boolean, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // The animated value is read in the draw phase only (graphicsLayer), so the animation
+            // repaints the icon without recomposing anything.
             val sparkleAlpha = if (typing) {
                 rememberInfiniteTransition(label = "sparkle").animateFloat(
                     initialValue = 1f,
                     targetValue = 0.35f,
                     animationSpec = infiniteRepeatable(tween(500), RepeatMode.Reverse),
                     label = "sparkleAlpha"
-                ).value
-            } else 1f
+                )
+            } else null
             Icon(
                 Icons.Filled.AutoAwesome,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .size(16.dp)
-                    .alpha(sparkleAlpha)
+                    .graphicsLayer { alpha = sparkleAlpha?.value ?: 1f }
             )
             Spacer(Modifier.width(8.dp))
             Text(
@@ -274,7 +278,7 @@ private fun TypingIndicator(modifier: Modifier = Modifier) {
     val transition = rememberInfiniteTransition(label = "typing")
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         repeat(3) { i ->
-            val alpha by transition.animateFloat(
+            val dotAlpha = transition.animateFloat(
                 initialValue = 0.25f,
                 targetValue = 1f,
                 animationSpec = infiniteRepeatable(
@@ -286,7 +290,7 @@ private fun TypingIndicator(modifier: Modifier = Modifier) {
             Box(
                 modifier = Modifier
                     .size(12.dp)
-                    .alpha(alpha)
+                    .graphicsLayer { alpha = dotAlpha.value }
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary)
             )
@@ -385,6 +389,9 @@ private fun DispositionView(
 ) {
     val colors = severityColorsFor(disposition.color)
 
+    // An emergency result pulses for as long as it is on screen. The value is read in the draw
+    // phase only (graphicsLayer below); read here, it recomposed the whole result (picture,
+    // instructions, buttons) on every frame, on the one screen that must stay responsive.
     val headerAlpha = if (disposition.pulse) {
         val transition = rememberInfiniteTransition(label = "pulse")
         transition.animateFloat(
@@ -392,9 +399,9 @@ private fun DispositionView(
             targetValue = 0.55f,
             animationSpec = infiniteRepeatable(tween(700), RepeatMode.Reverse),
             label = "pulseAlpha"
-        ).value
+        )
     } else {
-        1f
+        null
     }
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -410,7 +417,7 @@ private fun DispositionView(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .alpha(headerAlpha),
+                .graphicsLayer { alpha = headerAlpha?.value ?: 1f },
             shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(containerColor = colors.main)
         ) {

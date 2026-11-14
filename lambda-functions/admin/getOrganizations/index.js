@@ -17,16 +17,25 @@ exports.handler = async (event) => {
   };
 
   try {
-    const result = await ddb.send(new ScanCommand({
-      TableName: TABLE,
-      FilterExpression: 'begins_with(PK, :pk) AND SK = :sk',
-      ExpressionAttributeValues: {
-        ':pk': 'ORG#',
-        ':sk': 'INFO',
-      },
-    }));
+    // A scan returns at most 1 MB of the table per request. Follow the pages, or organizations
+    // silently drop out of the sign-up list once the table has grown past that.
+    const items = [];
+    let startKey;
+    do {
+      const page = await ddb.send(new ScanCommand({
+        TableName: TABLE,
+        FilterExpression: 'begins_with(PK, :pk) AND SK = :sk',
+        ExpressionAttributeValues: {
+          ':pk': 'ORG#',
+          ':sk': 'INFO',
+        },
+        ExclusiveStartKey: startKey,
+      }));
+      items.push(...(page.Items || []));
+      startKey = page.LastEvaluatedKey;
+    } while (startKey);
 
-    const organizations = (result.Items || []).map(item => ({
+    const organizations = items.map(item => ({
       id: item.PK.replace('ORG#', ''),
       name: item.name,
       location: item.location || '',

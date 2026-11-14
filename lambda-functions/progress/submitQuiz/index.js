@@ -88,9 +88,17 @@ exports.handler = async (event) => {
             xpEarned += XP_REWARDS.DAILY_QUESTION_BONUS;
         }
 
+        // Newer app versions award XP on the device (so it works offline) and upload their
+        // totals through "state_sync". They send skipXp so this result is only recorded and
+        // the XP / lives are not counted a second time here.
+        const skipXp = body.skipXp === true;
+        if (skipXp) {
+            xpEarned = Math.max(0, Math.floor(Number(body.xpEarned) || 0));
+        }
+
         // Calculate lives change: +1 per correct, -1 per incorrect
-        const livesGained = correctAnswers;
-        const livesLost = incorrectAnswers || 0;
+        const livesGained = skipXp ? 0 : correctAnswers;
+        const livesLost = skipXp ? 0 : (incorrectAnswers || 0);
 
         // Save quiz result
         await docClient.send(new PutCommand({
@@ -110,6 +118,23 @@ exports.handler = async (event) => {
                 completedAt: timestamp
             }
         }));
+
+        if (skipXp) {
+            return {
+                statusCode: 200,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "*"
+                },
+                body: JSON.stringify({
+                    message: "Quiz submitted successfully",
+                    score,
+                    xpEarned,
+                    livesGained,
+                    livesLost
+                })
+            };
+        }
 
         // Get current user profile
         const userResult = await docClient.send(new GetCommand({

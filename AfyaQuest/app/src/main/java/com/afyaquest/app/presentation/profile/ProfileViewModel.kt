@@ -1,11 +1,9 @@
 package com.afyaquest.app.presentation.profile
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afyaquest.app.data.remote.ApiService
 import com.afyaquest.app.data.repository.AuthRepository
-import com.afyaquest.app.domain.model.Achievement
 import com.afyaquest.app.domain.model.User
 import com.afyaquest.app.domain.model.WeeklyReflection
 import com.afyaquest.app.util.LanguageManager
@@ -14,6 +12,7 @@ import com.afyaquest.app.util.Resource
 import com.afyaquest.app.util.TokenManager
 import com.afyaquest.app.util.XpData
 import com.afyaquest.app.util.XpManager
+import com.afyaquest.app.util.apiErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -44,22 +43,44 @@ class ProfileViewModel @Inject constructor(
     val quickStats: StateFlow<QuickStats> = combine(
         progressDataStore.getWatchedVideos(),
         progressDataStore.getCompletedLessons(),
-        progressDataStore.getCompletedQuizzes()
-    ) { videos, lessons, quizzes ->
+        progressDataStore.getCompletedQuizzes(),
+        progressDataStore.getReportDates()
+    ) { videos, lessons, quizzes, reportDates ->
         QuickStats(
             lessonsCompleted = lessons.size,
             videosWatched = videos.size,
             quizzesCompleted = quizzes.size,
-            reportsSubmitted = 0
+            reportsSubmitted = reportDates.size
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), QuickStats())
+
+    /**
+     * Achievements, worked out from the account's real progress (see [AchievementRules]). The
+     * screen resolves their names, so they follow the app language.
+     */
+    val achievements: StateFlow<List<AchievementStatus>> = combine(
+        progressDataStore.getWatchedVideos(),
+        progressDataStore.getCompletedQuizzes(),
+        progressDataStore.getCompletedLessons(),
+        progressDataStore.getReportDates(),
+        xpManager.getXpDataFlow()
+    ) { videos, quizzes, lessons, reportDates, xp ->
+        AchievementRules.evaluate(
+            AchievementInput(
+                watchedVideos = videos,
+                completedQuizzes = quizzes,
+                completedLessons = lessons,
+                reportDays = reportDates.size,
+                totalXP = xp.totalXP,
+                level = xp.level,
+                longestStreak = xp.longestStreak
+            )
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AchievementRules.evaluate(AchievementInput()))
 
     // User profile from API
     private val _userProfile = MutableStateFlow<User?>(null)
     val userProfile: StateFlow<User?> = _userProfile.asStateFlow()
-
-    private val _achievements = MutableStateFlow<List<Achievement>>(emptyList())
-    val achievements: StateFlow<List<Achievement>> = _achievements.asStateFlow()
 
     private val _weeklyReflections = MutableStateFlow<List<WeeklyReflection>>(emptyList())
     val weeklyReflections: StateFlow<List<WeeklyReflection>> = _weeklyReflections.asStateFlow()
@@ -67,12 +88,12 @@ class ProfileViewModel @Inject constructor(
     private val _selectedTab = MutableStateFlow(0)
     val selectedTab: StateFlow<Int> = _selectedTab.asStateFlow()
 
-    private val _userStatus = MutableStateFlow("active")
-    val userStatus: StateFlow<String> = _userStatus.asStateFlow()
+    /** Clocked in for the field day, as last confirmed by the server (the same value Home shows). */
+    val clockedIn: StateFlow<Boolean> = progressDataStore.clockedIn()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
         loadUserProfile()
-        loadAchievements()
     }
 
     /**
@@ -80,51 +101,15 @@ class ProfileViewModel @Inject constructor(
      */
     private fun loadUserProfile() {
         viewModelScope.launch {
+            // The copy saved on the phone first, so the name and organisation show without a
+            // connection; the server's answer replaces it when it arrives.
+            val saved = tokenManager.getUserId()?.let { id -> authRepository.getLocalUser(id) }
+            if (saved != null && _userProfile.value == null) _userProfile.value = saved
+
             authRepository.getCurrentUser().collectLatest { result ->
                 if (result is Resource.Success) {
                     _userProfile.value = result.data
-                    Log.d("ProfileVM", "Profile loaded: ${result.data?.name}")
                 }
-            }
-        }
-    }
-
-    private fun loadAchievements() {
-        viewModelScope.launch {
-            try {
-                val token = tokenManager.getIdToken() ?: return@launch
-                val response = apiService.getUserProgress("Bearer $token")
-                if (response.isSuccessful) {
-                    val body = response.body() ?: return@launch
-                    @Suppress("UNCHECKED_CAST")
-                    val achievementsList = body["achievements"] as? List<Map<String, Any>>
-                    if (achievementsList != null) {
-                        _achievements.value = achievementsList.mapNotNull { map ->
-                            try {
-                                Achievement(
-                                    id = map["id"]?.toString() ?: return@mapNotNull null,
-                                    title = map["title"]?.toString() ?: "",
-                                    description = map["description"]?.toString() ?: "",
-                                    icon = map["icon"]?.toString() ?: "",
-                                    category = try {
-                                        val catStr = map["category"]?.toString()?.uppercase() ?: "LEARNING"
-                                        com.afyaquest.app.domain.model.AchievementCategory.valueOf(catStr)
-                                    } catch (e: Exception) {
-                                        com.afyaquest.app.domain.model.AchievementCategory.LEARNING
-                                    },
-                                    unlocked = map["unlocked"] as? Boolean ?: false,
-                                    unlockedDate = map["unlockedDate"]?.toString(),
-                                    progress = (map["progress"] as? Number)?.toInt() ?: 0,
-                                    target = (map["target"] as? Number)?.toInt() ?: 0
-                                )
-                            } catch (e: Exception) {
-                                null
-                            }
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                // Offline — achievements remain empty
             }
         }
     }
@@ -154,7 +139,7 @@ class ProfileViewModel @Inject constructor(
                 mapOf("currentPassword" to currentPassword, "newPassword" to newPassword)
             )
             if (response.isSuccessful) null
-            else response.errorBody()?.string() ?: "Failed to change password"
+            else apiErrorMessage(response.errorBody()?.string(), "Failed to change password")
         } catch (e: Exception) {
             e.localizedMessage ?: "Network error"
         }

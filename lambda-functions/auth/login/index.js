@@ -52,31 +52,30 @@ exports.handler = async (event) => {
         const payload = JSON.parse(Buffer.from(idToken.split('.')[1], 'base64').toString());
         const userId = payload.sub;
 
-        // Update last active date in DynamoDB
-        const updateCommand = new UpdateCommand({
-            TableName: process.env.DYNAMODB_TABLE,
-            Key: {
-                PK: `USER#${userId}`,
-                SK: 'PROFILE'
-            },
-            UpdateExpression: 'SET lastActiveDate = :date, updatedAt = :date',
-            ExpressionAttributeValues: {
-                ':date': new Date().toISOString()
-            }
-        });
-
-        await docClient.send(updateCommand);
-
-        // Get user profile
-        const getCommand = new GetCommand({
-            TableName: process.env.DYNAMODB_TABLE,
-            Key: {
-                PK: `USER#${userId}`,
-                SK: 'PROFILE'
-            }
-        });
-
-        const userResult = await docClient.send(getCommand);
+        // Record the sign-in and read the profile in one request.
+        //
+        // The condition matters: an update without it CREATES the row when the account has no
+        // profile (sign-up failed half-way, or the user was made in the Cognito console). That
+        // left a stub profile with no id, name or role, which the app could not sign in with.
+        let profile;
+        try {
+            const updated = await docClient.send(new UpdateCommand({
+                TableName: process.env.DYNAMODB_TABLE,
+                Key: { PK: `USER#${userId}`, SK: 'PROFILE' },
+                UpdateExpression: 'SET lastActiveDate = :date, updatedAt = :date',
+                ConditionExpression: 'attribute_exists(id)',
+                ExpressionAttributeValues: { ':date': new Date().toISOString() },
+                ReturnValues: 'ALL_NEW'
+            }));
+            profile = updated.Attributes;
+        } catch (err) {
+            if (err.name !== 'ConditionalCheckFailedException') throw err;
+            return {
+                statusCode: 409,
+                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+                body: JSON.stringify({ error: 'This account is not set up completely. Ask your supervisor for help.' })
+            };
+        }
 
         return {
             statusCode: 200,
@@ -89,7 +88,7 @@ exports.handler = async (event) => {
                 idToken: authResponse.AuthenticationResult.IdToken,
                 refreshToken: authResponse.AuthenticationResult.RefreshToken,
                 expiresIn: authResponse.AuthenticationResult.ExpiresIn,
-                user: userResult.Item
+                user: profile
             })
         };
 

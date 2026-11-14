@@ -59,7 +59,124 @@ class ModuleQuizViewModel @Inject constructor(
     /** Every answer given in this run, keyed by question id, sent to the API on finish. */
     private val answerRecords = mutableMapOf<String, QuizAnswer>()
 
-    private val moduleTitles = mapOf(
+    val questions: List<ModuleQuizQuestion> = QuizBank.allQuizzes[moduleId] ?: emptyList()
+
+    fun getCurrentQuestion(): ModuleQuizQuestion? = questions.getOrNull(_currentQuestionIndex.value)
+
+    fun isLastQuestion(): Boolean = _currentQuestionIndex.value == questions.size - 1
+
+    fun getTotalQuestions(): Int = questions.size
+
+    fun getModuleTitle(): String = QuizBank.moduleTitles[moduleId] ?: "Module Quiz"
+
+    fun selectAnswer(index: Int) {
+        if (_showExplanation.value) return
+        val question = getCurrentQuestion() ?: return
+        _selectedAnswer.value = index
+        val isCorrect = index == question.correctAnswerIndex
+        if (isCorrect) {
+            _correctAnswers.value = _correctAnswers.value + 1
+        }
+        answerRecords[question.id] = QuizAnswer(
+            questionId = question.id,
+            selectedAnswer = index,
+            isCorrect = isCorrect
+        )
+        _showExplanation.value = true
+    }
+
+    /**
+     * Move on once the current question has been answered. A quick double tap on "Next" used to
+     * skip a question, or run past the last one onto a blank page with no Finish button.
+     */
+    fun nextQuestion() {
+        if (!_showExplanation.value || isLastQuestion()) return
+        _currentQuestionIndex.value++
+        _selectedAnswer.value = null
+        _showExplanation.value = false
+    }
+
+    /** Start the quiz over ("Try again" on the results dialog). */
+    fun restart() {
+        if (_isSubmitting.value) return
+        answerRecords.clear()
+        _currentQuestionIndex.value = 0
+        _selectedAnswer.value = null
+        _showExplanation.value = false
+        _correctAnswers.value = 0
+        _completionXp.value = null
+        _isFinished.value = false
+    }
+
+    /**
+     * Save the result. Safe to call repeatedly: returns immediately while a save is in flight or
+     * once finished. XP and the local "completed" mark are only granted on the first completion;
+     * the API sync always runs, after [isFinished] is raised, without blocking the UI.
+     */
+    fun finishQuiz() {
+        if (_isSubmitting.value || _isFinished.value) return
+        _isSubmitting.value = true
+        viewModelScope.launch {
+            var xpAwarded: Int? = null
+            try {
+                val alreadyCompleted = progressDataStore.getCompletedQuizzes().first().contains(moduleId)
+                if (!alreadyCompleted) {
+                    progressDataStore.markQuizCompleted(moduleId)
+                    xpManager.addXP(
+                        XpRewards.MODULE_COMPLETED,
+                        "Completed quiz for module $moduleId"
+                    )
+                    xpAwarded = XpRewards.MODULE_COMPLETED
+                }
+
+                videoDownloadManager.scheduleOffload(moduleId)
+            } catch (e: Exception) {
+                Log.d("ModuleQuizVM", "Local progress save failed: ${e.message}")
+            }
+
+            _completionXp.value = xpAwarded
+            _isFinished.value = true
+            _isSubmitting.value = false
+
+            try {
+                val token = tokenManager.getIdToken()
+                if (token != null) {
+                    val request = QuizSubmissionRequest(
+                        videoId = "module-$moduleId",
+                        totalQuestions = getTotalQuestions(),
+                        correctAnswers = _correctAnswers.value,
+                        incorrectAnswers = getTotalQuestions() - _correctAnswers.value,
+                        xpEarned = xpAwarded ?: 0,
+                        answers = questions.map { q ->
+                            answerRecords[q.id] ?: QuizAnswer(
+                                questionId = q.id,
+                                selectedAnswer = -1,
+                                isCorrect = false
+                            )
+                        }
+                    )
+                    apiService.submitQuiz("Bearer $token", request)
+
+                    val progressBody = mapOf<String, Any>(
+                        "type" to "module_quiz_complete",
+                        "itemId" to moduleId,
+                        "score" to _correctAnswers.value
+                    )
+                    apiService.updateUserProgress("Bearer $token", progressBody)
+                }
+            } catch (e: Exception) {
+                Log.d("ModuleQuizVM", "Quiz sync failed (progress saved locally): ${e.message}")
+            }
+        }
+    }
+}
+
+/**
+ * Every quiz question, keyed by video id. Built once, the first time a quiz is opened: it used to
+ * be rebuilt (all 229 questions of all 36 videos) every time any quiz screen was opened.
+ */
+private object QuizBank {
+    val moduleTitles = mapOf(
         "mod1-nervous-system" to "Nervous System",
         "mod1-musculoskeletal" to "Musculoskeletal System",
         "mod1-lymphatic" to "Lymphatic System",
@@ -102,7 +219,7 @@ class ModuleQuizViewModel @Inject constructor(
     //  ALL QUIZ DATA — 36 videos across 6 modules
     // ──────────────────────────────────────────────────────────────
 
-    private val allQuizzes: Map<String, List<ModuleQuizQuestion>> = mapOf(
+    val allQuizzes: Map<String, List<ModuleQuizQuestion>> = mapOf(
 
         // ════════════════════════════════════════════════════════════
         //  MODULE 1 — Human Body Systems
@@ -1718,129 +1835,232 @@ class ModuleQuizViewModel @Inject constructor(
         //  MODULE 4 — Maternal & Reproductive Health
         // ════════════════════════════════════════════════════════════
 
+        // Questions for this video are the education team's own (Drive: ED Team / quizzes for dev /
+        // "Module 4 Quizzes"); explanations follow the Medic Outpost Module 4 lecture deck.
         "mod4-antenatal-care" to listOf(
             ModuleQuizQuestion(
                 id = "mod4-ac-q1",
                 moduleId = "mod4",
-                question = "How many antenatal care visits are recommended as a minimum during pregnancy?",
-                options = listOf("1", "4", "8", "12"),
-                correctAnswerIndex = 2,
-                explanation = "The WHO recommends at least 8 antenatal care contacts during pregnancy to ensure healthy outcomes for mother and baby."
+                question = "Why is it important for pregnant women to attend their first ANC visit before 16 weeks of pregnancy?",
+                options = listOf(
+                    "To determine the baby's gender",
+                    "To detect health problems early and protect the mother and baby",
+                    "To reduce the number of required clinic visits",
+                    "To begin vaccinations for the baby"
+                ),
+                correctAnswerIndex = 1,
+                explanation = "An early first visit means problems such as anemia, infections and high blood pressure are found and treated early, which protects both mother and baby."
             ),
             ModuleQuizQuestion(
                 id = "mod4-ac-q2",
                 moduleId = "mod4",
-                question = "Which nutrient is especially important during pregnancy to prevent neural tube defects?",
-                options = listOf("Vitamin C", "Iron", "Folic acid", "Calcium"),
-                correctAnswerIndex = 2,
-                explanation = "Folic acid is critical for the developing baby's brain and spinal cord. Taking it early in pregnancy helps prevent neural tube defects."
+                question = "Which combination of conditions is checked using the urine test at the first ANC visit?",
+                options = listOf(
+                    "Malaria, HIV, and anemia",
+                    "Diabetes, infection, and pre-eclampsia",
+                    "Blood group, anemia, and syphilis",
+                    "Tuberculosis, diabetes, and HIV"
+                ),
+                correctAnswerIndex = 1,
+                explanation = "The urine test looks for diabetes, infection and pre-eclampsia. Blood tests are used for blood count, blood group, HIV and syphilis."
             ),
             ModuleQuizQuestion(
                 id = "mod4-ac-q3",
                 moduleId = "mod4",
-                question = "Which of the following is a danger sign during pregnancy that requires immediate medical attention?",
+                question = "Why are pregnant women tested for infections such as HIV and syphilis during the first ANC appointment?",
                 options = listOf(
-                    "Mild morning nausea",
-                    "Slight ankle swelling in the evening",
-                    "Severe headache with blurred vision and swelling",
-                    "Occasional back discomfort"
+                    "These infections only affect the mother's health",
+                    "They help determine the baby's due date",
+                    "They can affect the baby if not treated early",
+                    "They help determine the number of ANC visits needed"
                 ),
                 correctAnswerIndex = 2,
-                explanation = "Severe headache with blurred vision and swelling can indicate pre-eclampsia, a life-threatening condition requiring urgent care."
+                explanation = "Both can pass to the baby. Syphilis can cause prematurity and stillbirth but is easily treated, and starting HIV treatment early lowers the risk of the baby getting HIV."
             ),
             ModuleQuizQuestion(
                 id = "mod4-ac-q4",
                 moduleId = "mod4",
-                question = "Why are regular antenatal checkups important?",
+                question = "What is the main purpose of iron (ferrous sulphate) supplements during pregnancy?",
                 options = listOf(
-                    "They are only needed if the mother feels unwell",
-                    "They help detect problems early and keep mother and baby healthy",
-                    "They are required only for first-time mothers",
-                    "They replace the need for a skilled birth attendant"
+                    "To increase the baby's weight before birth",
+                    "To prevent anemia and support healthy blood production",
+                    "To prevent infections during pregnancy",
+                    "To strengthen the baby's bones"
                 ),
                 correctAnswerIndex = 1,
-                explanation = "Regular checkups allow health workers to monitor the pregnancy, detect complications early, and provide timely interventions."
+                explanation = "Iron prevents anemia and helps the mother make the extra blood she needs during pregnancy."
             ),
             ModuleQuizQuestion(
                 id = "mod4-ac-q5",
                 moduleId = "mod4",
-                question = "What is typically checked during an antenatal visit?",
+                question = "Folic acid is important during pregnancy because it helps prevent which problem in the baby?",
                 options = listOf(
-                    "Only the baby's heartbeat",
-                    "Blood pressure, weight, urine, and the baby's growth",
-                    "Only the mother's diet",
-                    "Only the expected delivery date"
+                    "Heart disease",
+                    "Low birth weight",
+                    "Neural tube defects affecting the brain and spinal cord",
+                    "Breathing problems after birth"
+                ),
+                correctAnswerIndex = 2,
+                explanation = "Folic acid helps prevent neural tube defects, where the baby's brain and spinal cord do not form normally."
+            ),
+            ModuleQuizQuestion(
+                id = "mod4-ac-q6",
+                moduleId = "mod4",
+                question = "Which test during the first ANC visit helps determine if a pregnant woman has anemia?",
+                options = listOf(
+                    "Urine test",
+                    "Blood count test",
+                    "HIV test",
+                    "Blood pressure test"
                 ),
                 correctAnswerIndex = 1,
-                explanation = "Antenatal visits include checking blood pressure, weight, urine (for protein and sugar), and monitoring the baby's growth and position."
+                explanation = "A blood count shows whether the mother is anemic and gives a baseline for her health."
+            ),
+            ModuleQuizQuestion(
+                id = "mod4-ac-q7",
+                moduleId = "mod4",
+                question = "What condition during pregnancy can cause dangerous high blood pressure and is screened for during the urine test?",
+                options = listOf(
+                    "Malaria",
+                    "Tuberculosis",
+                    "Pre-eclampsia",
+                    "Neural tube defects"
+                ),
+                correctAnswerIndex = 2,
+                explanation = "Pre-eclampsia causes very high blood pressure and can lead to fits. It is a common cause of death in pregnancy, which is why urine and blood pressure are checked at ANC."
+            ),
+            ModuleQuizQuestion(
+                id = "mod4-ac-q8",
+                moduleId = "mod4",
+                question = "Which of the following best describes the role of a Community Health Volunteer (CHV) regarding ANC?",
+                options = listOf(
+                    "Performing medical tests at the clinic",
+                    "Delivering babies at home",
+                    "Encouraging pregnant women to attend ANC early and take supplements",
+                    "Prescribing medication for pregnant women"
+                ),
+                correctAnswerIndex = 2,
+                explanation = "A CHV does not test, deliver or prescribe. The CHV's role is to encourage women to start ANC early, keep their visits and take their supplements."
+            ),
+            ModuleQuizQuestion(
+                id = "mod4-ac-q9",
+                moduleId = "mod4",
+                question = "Why is taking iron supplements important for the baby as well as the mother?",
+                options = listOf(
+                    "It increases the baby's heartbeat",
+                    "It helps ensure enough oxygen can be carried in the mother's blood",
+                    "It prevents infections in the baby",
+                    "It strengthens the baby's bones"
+                ),
+                correctAnswerIndex = 1,
+                explanation = "Healthy blood carries oxygen. Preventing anemia in the mother means her blood can carry enough oxygen for her and her baby."
+            ),
+            ModuleQuizQuestion(
+                id = "mod4-ac-q10",
+                moduleId = "mod4",
+                question = "Which of the following actions should a CHV encourage pregnant women to do during pregnancy?",
+                options = listOf(
+                    "Only visit the clinic if they feel sick",
+                    "Attend the first ANC visit before 16 weeks and return for scheduled visits",
+                    "Stop taking supplements after the first month",
+                    "Avoid urine and blood testing"
+                ),
+                correctAnswerIndex = 1,
+                explanation = "Antenatal care is free and saves lives: start before 16 weeks, return for every scheduled visit, keep taking supplements and accept the tests."
             )
         ),
 
+        // Questions for this video are the education team's own (Drive: ED Team / quizzes for dev /
+        // "Module 4 Quizzes"); explanations follow the Medic Outpost Module 4 lecture deck.
         "mod4-pregnancy" to listOf(
             ModuleQuizQuestion(
                 id = "mod4-pg-q1",
                 moduleId = "mod4",
-                question = "Which of the following is a normal symptom during early pregnancy?",
+                question = "Which of the following is considered a normal symptom during pregnancy?",
                 options = listOf(
-                    "Heavy vaginal bleeding",
-                    "Mild nausea and breast tenderness",
-                    "Severe abdominal pain",
-                    "High fever with chills"
+                    "Vaginal bleeding",
+                    "Severe stomach pain",
+                    "Nausea (feeling like vomiting)",
+                    "Continuous dampness"
                 ),
-                correctAnswerIndex = 1,
-                explanation = "Mild nausea (morning sickness) and breast tenderness are common, normal symptoms of early pregnancy caused by hormonal changes."
+                correctAnswerIndex = 2,
+                explanation = "Nausea is common in pregnancy. Bleeding, severe stomach pain and continuous dampness are danger signs."
             ),
             ModuleQuizQuestion(
                 id = "mod4-pg-q2",
                 moduleId = "mod4",
-                question = "Which symptom during pregnancy is a danger sign that needs immediate medical care?",
+                question = "A pregnant woman tells you she has swelling in both legs, ankles, and feet. What should you tell her?",
                 options = listOf(
-                    "Occasional mild heartburn",
-                    "Feeling the baby move",
-                    "Vaginal bleeding at any stage of pregnancy",
-                    "Increased appetite"
+                    "It is always a danger sign.",
+                    "It is a common pregnancy symptom and is usually not harmful.",
+                    "She should stop drinking water.",
+                    "She must go to the hospital immediately."
                 ),
-                correctAnswerIndex = 2,
-                explanation = "Vaginal bleeding during pregnancy can indicate serious complications like miscarriage, placenta previa, or placental abruption."
+                correctAnswerIndex = 1,
+                explanation = "Swelling on both sides in the lower legs, ankles and feet is common. Swelling on one side, or sudden swelling with a headache, needs to be checked."
             ),
             ModuleQuizQuestion(
                 id = "mod4-pg-q3",
                 moduleId = "mod4",
-                question = "A pregnant woman reports sudden severe swelling of the face and hands along with a headache. What should you suspect?",
+                question = "Which danger sign requires a pregnant woman to go to a healthcare facility immediately?",
                 options = listOf(
-                    "Normal water retention",
-                    "Pre-eclampsia",
-                    "Mild allergic reaction",
-                    "Dehydration"
+                    "Backache",
+                    "Constipation",
+                    "Vaginal bleeding",
+                    "Heartburn"
                 ),
-                correctAnswerIndex = 1,
-                explanation = "Sudden severe swelling of the face and hands with headache are warning signs of pre-eclampsia, a serious pregnancy complication."
+                correctAnswerIndex = 2,
+                explanation = "Any pregnant woman with bleeding from the vagina needs to go to a healthcare facility urgently."
             ),
             ModuleQuizQuestion(
                 id = "mod4-pg-q4",
                 moduleId = "mod4",
-                question = "When should a pregnant woman seek urgent care if she notices reduced fetal movement?",
+                question = "A pregnant woman has sudden swelling and a headache. What should a CHV advise?",
                 options = listOf(
-                    "Only if it persists for a full week",
-                    "Immediately, as it could indicate the baby is in distress",
-                    "Only after trying to eat a large meal",
-                    "Never — reduced movement is always normal"
+                    "Rest at home and wait a week.",
+                    "Drink more water only.",
+                    "Seek urgent medical care because it may be a serious condition such as pre-eclampsia.",
+                    "Ignore it because swelling is normal in pregnancy."
                 ),
-                correctAnswerIndex = 1,
-                explanation = "Reduced fetal movement can signal that the baby is not getting enough oxygen and requires prompt medical evaluation."
+                correctAnswerIndex = 2,
+                explanation = "Sudden swelling, or a sudden increase in swelling, together with a headache can be a sign of pre-eclampsia and needs urgent care."
             ),
             ModuleQuizQuestion(
                 id = "mod4-pg-q5",
                 moduleId = "mod4",
-                question = "Which of the following is NOT a danger sign during pregnancy?",
+                question = "Continuous dampness during pregnancy may mean:",
                 options = listOf(
-                    "Severe persistent vomiting",
-                    "Feeling tired in the afternoon",
-                    "Leaking fluid from the vagina before due date",
-                    "Convulsions"
+                    "The baby is growing normally.",
+                    "The waters have broken.",
+                    "The woman needs more sleep.",
+                    "The woman is dehydrated."
                 ),
                 correctAnswerIndex = 1,
-                explanation = "Mild fatigue is a normal part of pregnancy. Severe vomiting, leaking fluid, and convulsions are all danger signs requiring medical attention."
+                explanation = "A lot of dampness, or dampness that continues, can mean the waters have broken. She should go to a hospital or antenatal clinic: labour may start soon, and the baby is at higher risk of infection."
+            ),
+            ModuleQuizQuestion(
+                id = "mod4-pg-q6",
+                moduleId = "mod4",
+                question = "True or False: Because a medication is easily available, it is safe for pregnant women to take.",
+                options = listOf(
+                    "True",
+                    "False"
+                ),
+                correctAnswerIndex = 1,
+                explanation = "Not all medicines are safe in pregnancy, even ones that can be bought freely. A pregnant woman should ask a health professional before taking any medicine."
+            ),
+            ModuleQuizQuestion(
+                id = "mod4-pg-q7",
+                moduleId = "mod4",
+                question = "A pregnant woman has severe tummy pain and vaginal bleeding. What should you advise?",
+                options = listOf(
+                    "Wait until the next antenatal visit.",
+                    "Take over-the-counter medication.",
+                    "Go to a healthcare facility immediately.",
+                    "Rest at home and monitor symptoms."
+                ),
+                correctAnswerIndex = 2,
+                explanation = "Severe stomach pain together with vaginal bleeding is an emergency. She needs to go to hospital urgently."
             )
         ),
 
@@ -1912,66 +2132,86 @@ class ModuleQuizViewModel @Inject constructor(
             )
         ),
 
+        // Questions for this video are the education team's own (Drive: ED Team / quizzes for dev /
+        // "Module 4 Quizzes"); explanations follow the Medic Outpost Module 4 lecture deck.
         "mod4-birth-spacing" to listOf(
             ModuleQuizQuestion(
                 id = "mod4-bs-q1",
                 moduleId = "mod4",
-                question = "What is the minimum recommended interval between a live birth and the next pregnancy?",
-                options = listOf("6 months", "12 months", "24 months", "36 months"),
-                correctAnswerIndex = 2,
-                explanation = "The WHO recommends waiting at least 24 months after a live birth before the next pregnancy to allow the mother's body to recover."
+                question = "What is birth spacing?",
+                options = listOf(
+                    "The time between doctor visits",
+                    "The time between births or pregnancies",
+                    "The hours that a baby should sleep",
+                    "The healthy time between meals"
+                ),
+                correctAnswerIndex = 1,
+                explanation = "Birth spacing is the amount of time between births or pregnancies."
             ),
             ModuleQuizQuestion(
                 id = "mod4-bs-q2",
                 moduleId = "mod4",
-                question = "What is a health risk of pregnancies that are too close together?",
+                question = "Why is birth spacing so important?",
                 options = listOf(
-                    "Increased immunity for the mother",
-                    "Higher risk of preterm birth and low birth weight",
-                    "Faster recovery from delivery",
-                    "Improved fetal nutrition"
+                    "It helps families travel more",
+                    "It reduces hospital costs only",
+                    "It ensures the baby and the mother are safe and healthy",
+                    "It's not important"
                 ),
-                correctAnswerIndex = 1,
-                explanation = "Short birth intervals increase the risk of preterm birth, low birth weight, and maternal nutritional depletion."
+                correctAnswerIndex = 2,
+                explanation = "Enough time between pregnancies is good for the health of both the mother and the baby."
             ),
             ModuleQuizQuestion(
                 id = "mod4-bs-q3",
                 moduleId = "mod4",
-                question = "How does birth spacing benefit the existing child?",
+                question = "What is the recommended gap between births?",
                 options = listOf(
-                    "It has no effect on older children",
-                    "It ensures the older child receives adequate nutrition and attention",
-                    "It makes the older child grow faster",
-                    "It reduces the need for breastfeeding"
+                    "3 years",
+                    "2 years",
+                    "1 year",
+                    "6 years"
                 ),
-                correctAnswerIndex = 1,
-                explanation = "Adequate spacing ensures the older child continues to receive breastfeeding, nutrition, and parental attention during critical development."
+                correctAnswerIndex = 0,
+                explanation = "There should be 3 years between the birth of a baby and the mother's next pregnancy: \"Just us for 3 years\"."
             ),
             ModuleQuizQuestion(
                 id = "mod4-bs-q4",
                 moduleId = "mod4",
-                question = "After a miscarriage or abortion, how long should a woman wait before becoming pregnant again?",
+                question = "What is one benefit of birth spacing for the baby?",
                 options = listOf(
-                    "No waiting period is needed",
-                    "At least 6 months",
-                    "At least 2 years",
-                    "At least 5 years"
+                    "It will be taller",
+                    "It will be cooler",
+                    "It will be more active",
+                    "It will be born on time and at a healthy weight"
                 ),
-                correctAnswerIndex = 1,
-                explanation = "The WHO recommends waiting at least 6 months after a miscarriage or abortion to allow the body to recover before another pregnancy."
+                correctAnswerIndex = 3,
+                explanation = "Babies born too close together are more likely to be premature, to grow poorly in the womb and to have a low birth weight."
             ),
             ModuleQuizQuestion(
                 id = "mod4-bs-q5",
                 moduleId = "mod4",
-                question = "Which method can help achieve healthy birth spacing?",
+                question = "How does birth spacing help the mother?",
                 options = listOf(
-                    "Using no family planning methods",
-                    "Relying only on traditional remedies",
-                    "Using modern contraceptive methods",
-                    "Avoiding health facility visits"
+                    "It helps them sleep more",
+                    "It allows for time to replenish nutrients and heal",
+                    "It makes them stronger instantly",
+                    "It reduces the need to exercise"
                 ),
-                correctAnswerIndex = 2,
-                explanation = "Modern contraceptive methods are the most reliable way to plan pregnancies and achieve healthy birth spacing."
+                correctAnswerIndex = 1,
+                explanation = "Spacing gives the mother's body time to recover and rebuild its stores of nutrients before the next pregnancy."
+            ),
+            ModuleQuizQuestion(
+                id = "mod4-bs-q6",
+                moduleId = "mod4",
+                question = "What could happen without proper birth spacing?",
+                options = listOf(
+                    "Uterine rupture",
+                    "Flu",
+                    "Less money",
+                    "Allergies"
+                ),
+                correctAnswerIndex = 0,
+                explanation = "Pregnancies that are too close together raise the mother's risk of pre-term labour, uterine rupture and bleeding."
             )
         ),
 
@@ -2779,109 +3019,4 @@ class ModuleQuizViewModel @Inject constructor(
             )
         )
     )
-
-    val questions: List<ModuleQuizQuestion> get() = allQuizzes[moduleId] ?: emptyList()
-
-    fun getCurrentQuestion(): ModuleQuizQuestion? = questions.getOrNull(_currentQuestionIndex.value)
-
-    fun isLastQuestion(): Boolean = _currentQuestionIndex.value == questions.size - 1
-
-    fun getTotalQuestions(): Int = questions.size
-
-    fun getModuleTitle(): String = moduleTitles[moduleId] ?: "Module Quiz"
-
-    fun selectAnswer(index: Int) {
-        if (_showExplanation.value) return
-        val question = getCurrentQuestion() ?: return
-        _selectedAnswer.value = index
-        val isCorrect = index == question.correctAnswerIndex
-        if (isCorrect) {
-            _correctAnswers.value = _correctAnswers.value + 1
-        }
-        answerRecords[question.id] = QuizAnswer(
-            questionId = question.id,
-            selectedAnswer = index,
-            isCorrect = isCorrect
-        )
-        _showExplanation.value = true
-    }
-
-    fun nextQuestion() {
-        _currentQuestionIndex.value++
-        _selectedAnswer.value = null
-        _showExplanation.value = false
-    }
-
-    /** Start the quiz over ("Try again" on the results dialog). */
-    fun restart() {
-        if (_isSubmitting.value) return
-        answerRecords.clear()
-        _currentQuestionIndex.value = 0
-        _selectedAnswer.value = null
-        _showExplanation.value = false
-        _correctAnswers.value = 0
-        _completionXp.value = null
-        _isFinished.value = false
-    }
-
-    /**
-     * Save the result. Safe to call repeatedly: returns immediately while a save is in flight or
-     * once finished. XP and the local "completed" mark are only granted on the first completion;
-     * the API sync always runs, after [isFinished] is raised, without blocking the UI.
-     */
-    fun finishQuiz() {
-        if (_isSubmitting.value || _isFinished.value) return
-        _isSubmitting.value = true
-        viewModelScope.launch {
-            var xpAwarded: Int? = null
-            try {
-                val alreadyCompleted = progressDataStore.getCompletedQuizzes().first().contains(moduleId)
-                if (!alreadyCompleted) {
-                    progressDataStore.markQuizCompleted(moduleId)
-                    xpManager.addXP(
-                        XpRewards.MODULE_COMPLETED,
-                        "Completed quiz for module $moduleId"
-                    )
-                    xpAwarded = XpRewards.MODULE_COMPLETED
-                }
-
-                videoDownloadManager.scheduleOffload(moduleId)
-            } catch (e: Exception) {
-                Log.d("ModuleQuizVM", "Local progress save failed: ${e.message}")
-            }
-
-            _completionXp.value = xpAwarded
-            _isFinished.value = true
-            _isSubmitting.value = false
-
-            try {
-                val token = tokenManager.getIdToken()
-                if (token != null) {
-                    val request = QuizSubmissionRequest(
-                        videoId = "module-$moduleId",
-                        totalQuestions = getTotalQuestions(),
-                        correctAnswers = _correctAnswers.value,
-                        incorrectAnswers = getTotalQuestions() - _correctAnswers.value,
-                        answers = questions.map { q ->
-                            answerRecords[q.id] ?: QuizAnswer(
-                                questionId = q.id,
-                                selectedAnswer = -1,
-                                isCorrect = false
-                            )
-                        }
-                    )
-                    apiService.submitQuiz("Bearer $token", request)
-
-                    val progressBody = mapOf<String, Any>(
-                        "type" to "module_quiz_complete",
-                        "itemId" to moduleId,
-                        "score" to _correctAnswers.value
-                    )
-                    apiService.updateUserProgress("Bearer $token", progressBody)
-                }
-            } catch (e: Exception) {
-                Log.d("ModuleQuizVM", "Quiz sync failed (progress saved locally): ${e.message}")
-            }
-        }
-    }
 }

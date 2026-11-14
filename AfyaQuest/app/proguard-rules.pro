@@ -1,130 +1,63 @@
-# Add project specific ProGuard rules here.
+# AfyaQuest shrinker (R8) rules.
+#
+# Only what R8 cannot work out by itself is kept: classes that are filled or created by
+# reflection. Every library used here (Compose, Navigation, Hilt, Room, WorkManager, OkHttp,
+# Retrofit, Maps, ExoPlayer, ML Kit, coroutines, DataStore) ships its own rules.
+#
+# This file used to keep whole libraries ("-keep class androidx.compose.** { *; }" and the like).
+# That switched shrinking and optimisation off for most of the app: all 11,000 Material icons were
+# packaged, and the release code was 27 MB. Do not add a library-wide keep back to fix a
+# release-only crash; keep the one class that is reached by reflection instead.
 
-# Keep source file and line numbers for better crash reports
+# Readable stack traces in crash reports.
 -keepattributes SourceFile,LineNumberTable
-
-# Rename source file attribute to "SourceFile" to match the default value
 -renamesourcefileattribute SourceFile
 
-# Keep custom exceptions
--keep public class * extends java.lang.Exception
+# Needed by Gson and Retrofit to read generic types and annotations at run time.
+-keepattributes Signature,InnerClasses,EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations,AnnotationDefault
 
-# Keep all model classes (data classes for API and Room)
+# ---- Classes Gson fills by reflection (API bodies, cached JSON, bundled JSON assets) ----
 -keep class com.afyaquest.app.domain.model.** { *; }
 -keep class com.afyaquest.app.data.local.entity.** { *; }
 -keep class com.afyaquest.app.data.remote.dto.** { *; }
 -keep class com.afyaquest.app.data.remote.TokenAuthenticator$* { *; }
+# Emergency Response Guide: the triage tree, audio manifest and case path are read with Gson by
+# reflection. Without this R8 renames/merges them and the guide crashes on open in release builds
+# ("Unable to invoke no-args constructor ... Abstract class can't be instantiated").
+-keep class com.afyaquest.app.domain.triage.** { *; }
 
-# Keep Hilt generated classes
--keep class dagger.hilt.** { *; }
--keep class javax.inject.** { *; }
--keep class **_HiltComponents { *; }
--keep class **_HiltModules** { *; }
--keep class **_Factory { *; }
--keep class **_MembersInjector { *; }
-
-# Keep Room entities and DAOs
--keep class * extends androidx.room.RoomDatabase
--keep @androidx.room.Entity class *
--dontwarn androidx.room.paging.**
-
-# Keep Retrofit and OkHttp
--keepattributes Signature,InnerClasses,EnclosingMethod
--keepattributes RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
--keepattributes *Annotation*
--keep class retrofit2.** { *; }
--keepclasseswithmembers class * {
-    @retrofit2.http.* <methods>;
-}
--keep,allowobfuscation,allowshrinking class retrofit2.Response
--keep,allowobfuscation,allowshrinking interface retrofit2.Call
--keep class okhttp3.** { *; }
--keep interface okhttp3.** { *; }
--dontwarn okhttp3.**
--dontwarn okio.**
-
-# Keep the API service interface with full generic signatures (critical for R8 full mode)
--keep interface com.afyaquest.app.data.remote.ApiService { *; }
-
-# Retrofit @suspend: response Type is carried on Continuation; R8 full mode can break the cast to
-# ParameterizedType inside Retrofit/Gson without this (release-only ClassCastException on login, etc.)
--keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
-
-# Keep Gson
--keep class com.google.gson.** { *; }
+# ---- Gson (2.8.x has no rules of its own) ----
 -keepclassmembers,allowobfuscation class * {
     @com.google.gson.annotations.SerializedName <fields>;
 }
+-keep class * extends com.google.gson.TypeAdapter
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+# R8 full mode strips the generic signature from anonymous TypeToken subclasses unless kept.
+-keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
+-keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
 
-# Gson TypeToken — R8 full mode strips generic signatures from anonymous TypeToken
-# subclasses unless explicitly kept
--keep class com.google.gson.reflect.TypeToken { *; }
--keep class * extends com.google.gson.reflect.TypeToken
+# ---- Retrofit with R8 full mode (in addition to the rules Retrofit ships) ----
+# The API interface keeps its full generic signatures.
+-keep interface com.afyaquest.app.data.remote.ApiService { *; }
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+# Retrofit @suspend: the response type is carried on Continuation; without this the cast to
+# ParameterizedType fails in release builds only (ClassCastException on login, etc.).
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+-dontwarn okhttp3.**
+-dontwarn okio.**
 
-# Keep AWS SDK
--keep class com.amazonaws.** { *; }
--dontwarn com.amazonaws.**
--dontwarn org.apache.http.**
-
-# Keep Kotlin coroutines
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
--keepclassmembernames class kotlinx.** {
-    volatile <fields>;
-}
-
-# Keep DataStore
--keepclassmembers class * extends androidx.datastore.preferences.protobuf.GeneratedMessageLite {
-    <fields>;
-}
-
-# Keep Compose
--keep class androidx.compose.** { *; }
--keep interface androidx.compose.** { *; }
-
-# Keep WorkManager
--keep class * extends androidx.work.Worker
--keep class * extends androidx.work.CoroutineWorker {
+# ---- WorkManager stores worker class names; they must survive from one version to the next ----
+-keep class * extends androidx.work.ListenableWorker {
     public <init>(android.content.Context,androidx.work.WorkerParameters);
 }
--keep class androidx.work.impl.WorkManagerImpl {
-    public <methods>;
-}
 
-# Keep Google Maps
--keep class com.google.android.gms.maps.** { *; }
--keep interface com.google.android.gms.maps.** { *; }
-
-# Keep ExoPlayer
--keep class com.google.android.exoplayer2.** { *; }
--dontwarn com.google.android.exoplayer2.**
-
-# Keep Coil
--keep class coil.** { *; }
--keep interface coil.** { *; }
-
-# Keep Parcelable implementations
--keep class * implements android.os.Parcelable {
-    public static final android.os.Parcelable$Creator *;
-}
-
-# Remove logging in release builds
+# ---- Remove debug logging from release builds ----
 -assumenosideeffects class android.util.Log {
     public static *** d(...);
     public static *** v(...);
     public static *** i(...);
 }
-
-# Keep ViewModels
--keep class * extends androidx.lifecycle.ViewModel {
-    <init>();
-}
-
-# Keep Navigation
--keep class androidx.navigation.** { *; }
-
-# Optimization flags
--optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
--optimizationpasses 5
--allowaccessmodification
--dontpreverify

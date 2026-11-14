@@ -10,6 +10,8 @@ import com.afyaquest.app.data.remote.ApiService
 import com.afyaquest.app.domain.model.VideoCategory
 import com.afyaquest.app.domain.model.VideoModule
 import com.afyaquest.app.domain.model.VideoModuleFolder
+import com.afyaquest.app.presentation.learn.FeaturedLearning
+import com.afyaquest.app.presentation.learn.LearnTopic
 import com.afyaquest.app.util.ProgressDataStore
 import com.afyaquest.app.util.TokenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -120,6 +122,45 @@ class VideoModulesViewModel @Inject constructor(
             vm(6, "mod6-unseen-shield", "An Unseen Shield", "Immunity and vaccination", "module-6/An_Unseen_Shield.mp4")
         )
 
+        /** Videos of [topic] in the topic's own order. Ids that no longer exist are skipped. */
+        fun videosForTopic(topic: LearnTopic): List<VideoModule> {
+            val byId = allVideos().associateBy { it.id }
+            return topic.videoIds.mapNotNull { byId[it] }
+        }
+
+        /** The spotlighted videos ([FeaturedLearning]) in display order. */
+        fun featuredVideos(): List<VideoModule> {
+            val byId = allVideos().associateBy { it.id }
+            return FeaturedLearning.videoIds.mapNotNull { byId[it] }
+        }
+
+        /**
+         * The video to spotlight where there is room for only one (Home): the first featured
+         * video not watched yet, or the lead featured video once all of them have been watched.
+         */
+        fun featuredVideoFor(watched: Set<String>): VideoModule? {
+            val featured = featuredVideos()
+            return featured.firstOrNull { it.id !in watched } ?: featured.firstOrNull()
+        }
+
+        /**
+         * Next unwatched video in [ordered]. With [afterVideoId], videos after it are preferred;
+         * if none remain after it, the first unwatched video before it is returned instead. The
+         * video [afterVideoId] itself is never returned.
+         */
+        fun nextUnwatched(
+            ordered: List<VideoModule>,
+            watched: Set<String>,
+            afterVideoId: String?
+        ): VideoModule? {
+            val unwatched = ordered.filter { it.id !in watched && it.id != afterVideoId }
+            if (afterVideoId == null) return unwatched.firstOrNull()
+            val currentIndex = ordered.indexOfFirst { it.id == afterVideoId }
+            if (currentIndex < 0) return unwatched.firstOrNull()
+            val after = ordered.drop(currentIndex + 1).firstOrNull { it.id !in watched }
+            return after ?: unwatched.firstOrNull()
+        }
+
         private fun vm(mod: Int, id: String, title: String, desc: String, s3Path: String) = VideoModule(
             id = id,
             moduleNumber = mod,
@@ -144,10 +185,9 @@ class VideoModulesViewModel @Inject constructor(
     private val _completedQuizzes = MutableStateFlow<Set<String>>(emptySet())
     val completedQuizzes: StateFlow<Set<String>> = _completedQuizzes.asStateFlow()
 
-    /**
-     * XP awarded by the most recent first-time [markVideoWatched] call in this ViewModel
-     * (0 when the video had already been watched). Used by the player end card.
-     */
+    /** Completed lesson ids; only needed to show how much of a focus topic is done. */
+    private val _completedLessons = MutableStateFlow<Set<String>>(emptySet())
+    val completedLessons: StateFlow<Set<String>> = _completedLessons.asStateFlow()
 
     init {
         _videos.value = allVideos()
@@ -163,6 +203,11 @@ class VideoModulesViewModel @Inject constructor(
         viewModelScope.launch {
             progressDataStore.getCompletedQuizzes().collect { completed ->
                 _completedQuizzes.value = completed
+            }
+        }
+        viewModelScope.launch {
+            progressDataStore.getCompletedLessons().collect { completed ->
+                _completedLessons.value = completed
             }
         }
     }
@@ -208,16 +253,42 @@ class VideoModulesViewModel @Inject constructor(
      * Next unwatched video inside [moduleNumber]. When [afterVideoId] is given, videos after it are
      * preferred; if none remain after it, the first unwatched video before it is returned instead.
      */
-    fun nextUnwatchedInModule(moduleNumber: Int, afterVideoId: String?): VideoModule? {
-        val watched = _watchedVideos.value
-        val modVideos = _videos.value.filter { it.moduleNumber == moduleNumber }
-        val unwatched = modVideos.filter { !watched.contains(it.id) && it.id != afterVideoId }
-        if (afterVideoId == null) return unwatched.firstOrNull()
-        val currentIndex = modVideos.indexOfFirst { it.id == afterVideoId }
-        if (currentIndex < 0) return unwatched.firstOrNull()
-        val after = modVideos.drop(currentIndex + 1).firstOrNull { !watched.contains(it.id) }
-        return after ?: unwatched.firstOrNull()
+    fun nextUnwatchedInModule(moduleNumber: Int, afterVideoId: String?): VideoModule? =
+        nextUnwatched(
+            ordered = _videos.value.filter { it.moduleNumber == moduleNumber },
+            watched = _watchedVideos.value,
+            afterVideoId = afterVideoId
+        )
+
+    // ------------------------------------------------------------------
+    // Featured videos and focus topics
+    // ------------------------------------------------------------------
+
+    /** The spotlighted videos with their watched / quiz state applied. */
+    fun getFeaturedVideos(): List<VideoModule> = featuredVideos().map { it.withProgress() }
+
+    /** Videos of [topic], in topic order, with their watched / quiz state applied. */
+    fun getVideosForTopic(topic: LearnTopic): List<VideoModule> =
+        videosForTopic(topic).map { it.withProgress() }
+
+    /** Next unwatched video of [topic]; same ordering rules as [nextUnwatchedInModule]. */
+    fun nextUnwatchedInTopic(topic: LearnTopic, afterVideoId: String?): VideoModule? =
+        nextUnwatched(
+            ordered = videosForTopic(topic),
+            watched = _watchedVideos.value,
+            afterVideoId = afterVideoId
+        )
+
+    /** 1-based position of [videoId] inside [topic] (for "Video 2 of 7"), or null. */
+    fun videoIndexInTopic(topic: LearnTopic, videoId: String): Int? {
+        val index = videosForTopic(topic).indexOfFirst { it.id == videoId }
+        return if (index >= 0) index + 1 else null
     }
+
+    private fun VideoModule.withProgress(): VideoModule = copy(
+        watched = _watchedVideos.value.contains(id),
+        quizComplete = _completedQuizzes.value.contains(id)
+    )
 
     /** Module number that contains [videoId], or null for an unknown id. */
     fun moduleNumberFor(videoId: String): Int? =

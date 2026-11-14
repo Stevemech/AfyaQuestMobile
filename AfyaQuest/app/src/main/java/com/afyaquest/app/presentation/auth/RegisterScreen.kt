@@ -10,9 +10,11 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,18 +39,24 @@ fun RegisterScreen(
     navController: NavController,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-    var selectedOrganization by remember { mutableStateOf("") }
+    // Saveable: rotating the phone must not empty a half-filled form.
+    var selectedOrganization by rememberSaveable { mutableStateOf("") }
     var organizationExpanded by remember { mutableStateOf(false) }
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var confirmPasswordVisible by remember { mutableStateOf(false) }
+    var name by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var phone by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    var confirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
     val registerState by viewModel.registerState.collectAsState()
     val organizations by viewModel.organizations.collectAsState()
+    val organizationsState by viewModel.organizationsState.collectAsState()
+    val context = LocalContext.current
+
+    // Only this screen needs the list of organizations.
+    LaunchedEffect(Unit) { viewModel.loadOrganizations() }
     val focusManager = LocalFocusManager.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
@@ -71,8 +79,8 @@ fun RegisterScreen(
             }
             is Resource.Error -> {
                 snackbarHostState.showSnackbar(
-                    message = (registerState as Resource.Error).message ?: registrationFailed,
-                    duration = SnackbarDuration.Short
+                    message = authErrorText(context, (registerState as Resource.Error).message, registrationFailed),
+                    duration = SnackbarDuration.Long
                 )
             }
             else -> {}
@@ -123,7 +131,41 @@ fun RegisterScreen(
             // Section 1: who you are
             FormSectionHeader(text = stringResource(R.string.account_section_about_you))
 
-            // Organization dropdown
+            // Organization: required by the server, so the field is always here. While the list
+            // loads, or when it could not be loaded, the form says so instead of quietly hiding
+            // the field and then failing with "Organization is required".
+            if (organizations.isEmpty()) {
+                if (organizationsState is Resource.Error) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.auth_organizations_error),
+                            color = MaterialTheme.colorScheme.error,
+                            fontSize = 14.sp,
+                            modifier = Modifier.weight(1f)
+                        )
+                        TextButton(onClick = { viewModel.loadOrganizations() }) {
+                            Text(stringResource(R.string.retry))
+                        }
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(R.string.auth_organizations_loading),
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
             if (organizations.isNotEmpty()) {
                 ExposedDropdownMenuBox(
                     expanded = organizationExpanded,
@@ -135,6 +177,7 @@ fun RegisterScreen(
                         onValueChange = {},
                         readOnly = true,
                         label = { Text(stringResource(R.string.organization)) },
+                        placeholder = { Text(stringResource(R.string.auth_organization_required)) },
                         leadingIcon = {
                             Icon(Icons.Default.Business, contentDescription = stringResource(R.string.organization))
                         },
@@ -314,7 +357,9 @@ fun RegisterScreen(
             // Register button
             Button(
                 onClick = {
-                    if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank() && password == confirmPassword) {
+                    if (selectedOrganization.isNotBlank() && name.isNotBlank() && email.isNotBlank() &&
+                        password.isNotBlank() && password == confirmPassword
+                    ) {
                         viewModel.register(
                             email, password, name, phone.ifBlank { null },
                             organization = selectedOrganization.ifBlank { null }
@@ -325,6 +370,7 @@ fun RegisterScreen(
                     .fillMaxWidth()
                     .height(56.dp),
                 enabled = registerState !is Resource.Loading &&
+                        selectedOrganization.isNotBlank() &&
                         name.isNotBlank() &&
                         email.isNotBlank() &&
                         password.isNotBlank() &&

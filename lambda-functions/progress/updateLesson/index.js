@@ -5,6 +5,22 @@ const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 const docClient = DynamoDBDocumentClient.from(client);
 const TABLE = "AfyaQuestData";
 
+/** Progressive level thresholds: same table as progress-submitQuiz and the mobile app. */
+const LEVEL_THRESHOLDS = [0, 100, 250, 500, 850, 1300, 1900, 2650, 3550, 4600];
+const XP_PER_LEVEL_AFTER_TABLE = 1200;
+
+function calculateLevel(totalXP) {
+    for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
+        if (totalXP >= LEVEL_THRESHOLDS[i]) {
+            if (i === LEVEL_THRESHOLDS.length - 1 && totalXP > LEVEL_THRESHOLDS[i]) {
+                return i + Math.floor((totalXP - LEVEL_THRESHOLDS[i]) / XP_PER_LEVEL_AFTER_TABLE);
+            }
+            return i;
+        }
+    }
+    return 0;
+}
+
 /**
  * Update lesson progress
  * Awards XP for lesson completion
@@ -60,8 +76,10 @@ exports.handler = async (event) => {
             }
         }));
 
-        // If lesson completed, award XP
-        if (completed) {
+        // If lesson completed, award XP. Newer app versions award it on the device and upload
+        // their totals through "state_sync"; they send skipXp so it is not counted twice.
+        const skipXp = body.skipXp === true;
+        if (completed && !skipXp) {
             const xpEarned = XP_REWARDS.MODULE_COMPLETED;
 
             // Get current user profile
@@ -78,7 +96,7 @@ exports.handler = async (event) => {
                 const currentDailyXP = userResult.Item.dailyXP || 0;
                 const currentWeeklyXP = userResult.Item.weeklyXP || 0;
                 const newTotalXP = currentTotalXP + xpEarned;
-                const newLevel = Math.floor(newTotalXP / 500) + 1;
+                const newLevel = calculateLevel(newTotalXP);
 
                 // Update user profile with new XP
                 await docClient.send(new UpdateCommand({
@@ -112,7 +130,7 @@ exports.handler = async (event) => {
                 message: "Lesson progress updated",
                 lessonId,
                 completed,
-                xpEarned: completed ? XP_REWARDS.MODULE_COMPLETED : 0
+                xpEarned: completed && !skipXp ? XP_REWARDS.MODULE_COMPLETED : 0
             })
         };
 

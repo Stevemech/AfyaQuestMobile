@@ -9,8 +9,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afyaquest.app.R
+import com.afyaquest.app.data.facilities.FacilityDirectory
+import com.afyaquest.app.data.facilities.FacilityRegion
+import com.afyaquest.app.data.local.dao.UserDao
 import com.afyaquest.app.data.local.entity.PendingClientVisitEntity
-import com.afyaquest.app.data.remote.ApiService
+import com.afyaquest.app.data.repository.ItineraryRepository
 import com.afyaquest.app.domain.model.ClientHouse
 import com.afyaquest.app.domain.model.FacilityType
 import com.afyaquest.app.domain.model.HealthFacility
@@ -36,7 +39,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -47,40 +52,42 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val apiService: ApiService,
     private val tokenManager: TokenManager,
     private val progressDataStore: ProgressDataStore,
-    private val syncManager: SyncManager
+    private val syncManager: SyncManager,
+    private val userDao: UserDao,
+    private val itineraryRepository: ItineraryRepository
 ) : ViewModel() {
 
-    // Default map camera — Chimaltenango, Guatemala (AfyaQuest operational area)
-    val defaultLatitude = 14.6392
-    val defaultLongitude = -90.8208
-    val defaultZoom = 13f
+    /**
+     * Device position; null until the first real GPS fix. It is never a made-up default: a fake
+     * starting point used to draw the day's route from another continent.
+     */
+    private val _liveLocation = MutableStateFlow<Pair<Double, Double>?>(null)
+    val liveLocation: StateFlow<Pair<Double, Double>?> = _liveLocation.asStateFlow()
 
-    private val defaultLiveLatitude = 14.6392
-    private val defaultLiveLongitude = -90.8208
-
-    private val _liveLocationLatitude = MutableStateFlow(defaultLiveLatitude)
-    val liveLocationLatitude: StateFlow<Double> = _liveLocationLatitude.asStateFlow()
-
-    private val _liveLocationLongitude = MutableStateFlow(defaultLiveLongitude)
-    val liveLocationLongitude: StateFlow<Double> = _liveLocationLongitude.asStateFlow()
+    /** The area this user works in (decides which facilities are listed and where the map opens). */
+    private val _region = MutableStateFlow<FacilityRegion?>(null)
+    private var facilityDirectory: FacilityDirectory? = null
+    private var userOrganization: String? = null
 
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
-            result.lastLocation?.let { location ->
-                _liveLocationLatitude.value = location.latitude
-                _liveLocationLongitude.value = location.longitude
-            }
+            result.lastLocation?.let { location -> onLocation(location.latitude, location.longitude) }
         }
     }
 
-    private val _healthFacilities = MutableStateFlow<List<HealthFacility>>(emptyList())
-    val healthFacilities: StateFlow<List<HealthFacility>> = _healthFacilities.asStateFlow()
+    /**
+     * Facilities of the user's region. Once the device position is known they carry their real
+     * distance and are listed nearest first.
+     */
+    val healthFacilities: StateFlow<List<HealthFacility>> =
+        combine(_region, _liveLocation) { region, location ->
+            FacilityDirectory.withDistances(region?.facilities ?: emptyList(), location?.first, location?.second)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val _clientHouses = MutableStateFlow<List<ClientHouse>>(emptyList())
     val clientHouses: StateFlow<List<ClientHouse>> = _clientHouses.asStateFlow()
@@ -124,6 +131,13 @@ class MapViewModel @Inject constructor(
     private val _statusFilter = MutableStateFlow<VisitStatus?>(null)
     val statusFilter: StateFlow<VisitStatus?> = _statusFilter.asStateFlow()
 
+    private companion object {
+        const val FACILITY_DIRECTORY_ASSET = "facilities/facility_directory.json"
+
+        /** Nairobi: only used for the instant before the directory has been read. */
+        val FALLBACK_CENTER = -1.2921 to 36.8219
+    }
+
     init {
         loadHealthFacilities()
         loadCompletedStops()
@@ -136,83 +150,34 @@ class MapViewModel @Inject constructor(
         }
 
     /**
-     * Load real health facilities in the Chimaltenango/Guatemala area.
+     * Load the bundled facility directory and pick the region for this user's organization
+     * (see [FacilityDirectory.regionFor]).
      */
     private fun loadHealthFacilities() {
-        _healthFacilities.value = listOf(
-            HealthFacility(
-                id = "hf1",
-                name = "Hospital Nacional de Chimaltenango",
-                type = FacilityType.HOSPITAL,
-                latitude = 14.6614,
-                longitude = -90.8194,
-                servicesAvailable = listOf("Emergency", "Maternity", "Pediatrics", "Surgery", "Outpatient", "Laboratory"),
-                distance = 0.8
-            ),
-            HealthFacility(
-                id = "hf2",
-                name = "Centro de Salud Chimaltenango",
-                type = FacilityType.CLINIC,
-                latitude = 14.6380,
-                longitude = -90.8215,
-                servicesAvailable = listOf("Primary Care", "Vaccination", "Family Planning", "Pharmacy"),
-                distance = 0.3
-            ),
-            HealthFacility(
-                id = "hf3",
-                name = "Hospital Nacional San Juan Comalapa",
-                type = FacilityType.HOSPITAL,
-                latitude = 14.7414,
-                longitude = -90.8886,
-                servicesAvailable = listOf("Emergency", "Maternity", "Outpatient", "X-Ray"),
-                distance = 12.5
-            ),
-            HealthFacility(
-                id = "hf4",
-                name = "Puesto de Salud Parramos",
-                type = FacilityType.CLINIC,
-                latitude = 14.6128,
-                longitude = -90.8042,
-                servicesAvailable = listOf("Primary Care", "Vaccination", "Pharmacy"),
-                distance = 3.2
-            ),
-            HealthFacility(
-                id = "hf5",
-                name = "Centro de Salud San Andres Itzapa",
-                type = FacilityType.HEALTH_CENTER,
-                latitude = 14.6195,
-                longitude = -90.8439,
-                servicesAvailable = listOf("Primary Care", "Vaccination", "Maternal Health", "Nutrition"),
-                distance = 4.1
-            ),
-            HealthFacility(
-                id = "hf6",
-                name = "Hospital Antiguo de Antigua Guatemala",
-                type = FacilityType.HOSPITAL,
-                latitude = 14.5586,
-                longitude = -90.7345,
-                servicesAvailable = listOf("Emergency", "Surgery", "Maternity", "Pediatrics", "Laboratory", "X-Ray"),
-                distance = 15.0
-            ),
-            HealthFacility(
-                id = "hf7",
-                name = "Puesto de Salud Zaragoza",
-                type = FacilityType.CLINIC,
-                latitude = 14.6492,
-                longitude = -90.8893,
-                servicesAvailable = listOf("Primary Care", "Vaccination", "Pharmacy"),
-                distance = 6.3
-            ),
-            HealthFacility(
-                id = "hf8",
-                name = "Centro de Salud Patzicia",
-                type = FacilityType.HEALTH_CENTER,
-                latitude = 14.6312,
-                longitude = -90.9270,
-                servicesAvailable = listOf("Primary Care", "Maternal Health", "Vaccination", "Family Planning"),
-                distance = 9.8
-            )
-        )
+        viewModelScope.launch {
+            try {
+                facilityDirectory = withContext(Dispatchers.IO) {
+                    val json = context.assets.open(FACILITY_DIRECTORY_ASSET).bufferedReader().use { it.readText() }
+                    FacilityDirectory.parse(json)
+                }
+                userOrganization = tokenManager.getUserId()?.let { userDao.getUserById(it)?.organization }
+                updateRegion()
+            } catch (e: Exception) {
+                Log.e("MapViewModel", "Could not load the facility directory: ${e.message}")
+            }
+        }
+    }
+
+    private fun updateRegion() {
+        val location = _liveLocation.value
+        _region.value = facilityDirectory?.regionFor(userOrganization, location?.first, location?.second)
+    }
+
+    private fun onLocation(latitude: Double, longitude: Double) {
+        val first = _liveLocation.value == null
+        _liveLocation.value = latitude to longitude
+        // A user whose organization has no region yet gets the region they are standing in.
+        if (first) updateRegion()
     }
 
     /**
@@ -227,41 +192,22 @@ class MapViewModel @Inject constructor(
     }
 
     /**
-     * Fetch today's itinerary from the API. Safe to call again (Retry / refresh).
+     * Load today's itinerary. Safe to call again (Retry / refresh).
+     *
+     * The route comes from the server when it can be reached and from the copy kept on the phone
+     * otherwise (see [ItineraryRepository]); only when there is neither is an error shown.
      */
     fun loadItinerary() {
         viewModelScope.launch {
-            _rawItinerary.value = Resource.Loading()
-            try {
-                val idToken = tokenManager.getIdToken()
-                if (idToken == null) {
-                    _rawItinerary.value = Resource.Error(loadErrorText())
-                    return@launch
-                }
-                val response = apiService.getItineraries("Bearer $idToken")
-                val body = response.body()
-                if (!response.isSuccessful || body == null) {
-                    _rawItinerary.value = Resource.Error(loadErrorText())
-                    return@launch
-                }
-                val itinerary = body.itineraries.firstOrNull()
-                val stops = itinerary?.stops.orEmpty().map { stopDto ->
-                    ItineraryStop(
-                        order = stopDto.order,
-                        id = stopDto.houseId ?: "stop-${stopDto.order}",
-                        label = stopDto.label,
-                        address = stopDto.address,
-                        latitude = stopDto.latitude,
-                        longitude = stopDto.longitude,
-                        description = stopDto.description,
-                        completed = stopDto.completed
-                    )
-                }
-                progressDataStore.setItineraryTotal(stops.size)
-                _rawItinerary.value = Resource.Success(stops)
-            } catch (e: Exception) {
-                Log.d("MapViewModel", "Failed to fetch itineraries from API: ${e.message}")
-                _rawItinerary.value = Resource.Error(loadErrorText())
+            // The route saved on the phone first (Home downloads it when the app opens), so the
+            // map has its stops at once; the server's copy replaces it when it arrives.
+            val saved = itineraryRepository.cachedToday()
+            _rawItinerary.value = if (saved != null) Resource.Success(saved) else Resource.Loading()
+
+            val fresh = itineraryRepository.refreshToday()
+            when {
+                fresh != null -> _rawItinerary.value = Resource.Success(fresh)
+                saved == null -> _rawItinerary.value = Resource.Error(loadErrorText())
             }
         }
     }
@@ -270,7 +216,7 @@ class MapViewModel @Inject constructor(
 
     /**
      * Mark an itinerary stop as visited today.
-     * Persists locally (date-scoped), queues for sync, and updates AWS.
+     * Persists locally (date-scoped) and queues the visit for upload.
      */
     fun markStopCompleted(stopId: String) {
         if (_completedStopIds.value.contains(stopId)) return
@@ -284,6 +230,9 @@ class MapViewModel @Inject constructor(
             val userId = tokenManager.getUserId() ?: ""
             val today = DateUtils.todayIso()
 
+            // The queue is the only upload path: it sends at once when there is a connection and
+            // later when there is not. Sending directly as well uploaded every visit twice, and
+            // the supervisor got two "stop visited" notifications for one stop.
             syncManager.queueClientVisit(
                 PendingClientVisitEntity(
                     userId = userId,
@@ -293,19 +242,6 @@ class MapViewModel @Inject constructor(
                     notes = ""
                 )
             )
-
-            // Also try direct API sync
-            try {
-                val token = tokenManager.getIdToken() ?: return@launch
-                val body = mapOf<String, Any>(
-                    "type" to "itinerary_stop_complete",
-                    "itemId" to stopId,
-                    "date" to today
-                )
-                apiService.updateUserProgress("Bearer $token", body)
-            } catch (e: Exception) {
-                Log.d("MapViewModel", "Stop sync will retry via SyncManager: ${e.message}")
-            }
         }
     }
 
@@ -329,10 +265,7 @@ class MapViewModel @Inject constructor(
             Looper.getMainLooper()
         )
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            location?.let {
-                _liveLocationLatitude.value = it.latitude
-                _liveLocationLongitude.value = it.longitude
-            }
+            location?.let { onLocation(it.latitude, it.longitude) }
         }
     }
 
@@ -348,11 +281,20 @@ class MapViewModel @Inject constructor(
     fun getItineraryPathPoints(): List<Pair<Double, Double>> =
         (_rawItinerary.value.data ?: emptyList()).map { it.latitude to it.longitude }
 
-    fun getFullRoutePoints(): List<Pair<Double, Double>> {
-        val start = _liveLocationLatitude.value to _liveLocationLongitude.value
-        val itinerary = getItineraryPathPoints()
-        return listOf(start) + itinerary
-    }
+    /** The day's route: from where the CHV is (once that is known) through the stops in order. */
+    fun getFullRoutePoints(): List<Pair<Double, Double>> =
+        listOfNotNull(_liveLocation.value) + getItineraryPathPoints()
+
+    /**
+     * Where the map should open before there is a GPS fix: the first stop of today's route, or
+     * the centre of the user's region.
+     */
+    val mapCenter: StateFlow<Pair<Double, Double>> =
+        combine(_region, _rawItinerary) { region, itinerary ->
+            itinerary.data?.firstOrNull()?.let { it.latitude to it.longitude }
+                ?: region?.let { it.centerLatitude to it.centerLongitude }
+                ?: FALLBACK_CENTER
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, FALLBACK_CENTER)
 
     fun getFilteredClients(): List<ClientHouse> {
         val filter = _statusFilter.value

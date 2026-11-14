@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.afyaquest.app.presentation.navigation.NavGraph
+import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.ui.theme.AfyaQuestTheme
 import com.afyaquest.app.util.LanguageManager
 import com.afyaquest.app.util.TokenManager
@@ -51,11 +52,15 @@ class MainActivity : ComponentActivity() {
 
         // Restore per-user language context if already logged in.
         val userId = tokenManager.getUserId()
-        if (tokenManager.isTokenValid() && userId != null) {
+        val signedIn = tokenManager.isTokenValid() && userId != null
+        if (signedIn) {
             languageManager.setCurrentUser(userId)
         } else {
             languageManager.applySavedLanguageBlocking()
         }
+        // Known without touching the network or the encrypted token file, so the app opens
+        // straight on the right screen (there used to be a fixed two-second splash here).
+        val startDestination = if (signedIn) Screen.Dashboard.route else Screen.Login.route
 
         enableEdgeToEdge()
 
@@ -67,8 +72,9 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 // Observe language so all screens reactively get the correct locale.
+                val initialLanguage = remember { languageManager.getCurrentLanguage() }
                 val currentLanguage by languageManager.getCurrentLanguageFlow()
-                    .collectAsState(initial = languageManager.getCurrentLanguageBlocking())
+                    .collectAsState(initial = initialLanguage)
 
                 // Use ContextThemeWrapper so Hilt can still find the Activity
                 // in the context chain (createConfigurationContext returns a plain
@@ -83,7 +89,11 @@ class MainActivity : ComponentActivity() {
                 }
 
                 CompositionLocalProvider(LocalContext provides localizedContext) {
-                    NavGraph(navController = navController)
+                    NavGraph(
+                        navController = navController,
+                        startDestination = startDestination,
+                        sessionExpired = tokenManager.sessionExpired
+                    )
                 }
             }
         }
@@ -98,11 +108,9 @@ class MainActivity : ComponentActivity() {
         val data = intent?.data
         if (data?.scheme == "afyaquest" && data.host == "verified") {
             // User clicked email verification link
-            Toast.makeText(
-                this,
-                "Email verified! You can now log in.",
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this, getString(R.string.auth_email_verified), Toast.LENGTH_LONG).show()
+            // Handled: without this the message came back after every rotation.
+            intent.data = null
         }
     }
 }

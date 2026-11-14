@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.afyaquest.app.data.repository.QuestionsRepository
 import com.afyaquest.app.domain.model.Difficulty
 import com.afyaquest.app.domain.model.Question
+import com.afyaquest.app.util.DateUtils
+import com.afyaquest.app.util.DailyAnswer
 import com.afyaquest.app.util.DailyQuestionsResult
 import com.afyaquest.app.util.ProgressDataStore
 import com.afyaquest.app.util.Resource
@@ -68,6 +70,12 @@ class DailyQuestionsViewModel @Inject constructor(
     /** Lives when the session started; captured lazily so the delta is real, not estimated. */
     private var startLives: Int? = null
 
+    /** The day this session belongs to, fixed when the questions are loaded (see [finishQuiz]). */
+    private var sessionDate: String = DateUtils.todayIso()
+
+    /** Set the moment Finish is tapped, so a second tap cannot pay the bonus again. */
+    private var finishing = false
+
     // Lives from XpManager
     val lives: StateFlow<Int> = xpManager.getXpDataFlow()
         .map { it.lives }
@@ -112,7 +120,10 @@ class DailyQuestionsViewModel @Inject constructor(
             questionsRepository.getDailyQuestions().collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        _questionsState.value = Resource.Success(resource.data?.questions ?: emptyList())
+                        val questions = resource.data?.questions ?: emptyList()
+                        sessionDate = DateUtils.todayIso()
+                        resumeSession(questions)
+                        _questionsState.value = Resource.Success(questions)
                     }
                     is Resource.Error -> {
                         _questionsState.value = Resource.Error(resource.message ?: "Failed to load questions")
@@ -126,55 +137,87 @@ class DailyQuestionsViewModel @Inject constructor(
     }
 
     /**
+     * Pick the session up where it was left: questions answered earlier today stay answered (and
+     * paid), and the quiz continues with the first open one.
+     */
+    private suspend fun resumeSession(questions: List<Question>) {
+        val answered = progressDataStore.getDailySessionAnswers(sessionDate)
+            .filter { answer -> questions.any { it.id == answer.questionId } }
+        if (answered.isEmpty()) return
+
+        val byId = answered.associateBy { it.questionId }
+        _answeredQuestions.value = byId.keys
+        _correctAnswers.value = answered.count { it.correct }
+        _xpEarned.value = answered.sumOf { it.xp }
+        _score.value = questions.filter { byId[it.id]?.correct == true }.sumOf { it.points }
+
+        val firstOpen = questions.indexOfFirst { it.id !in byId }
+        if (firstOpen >= 0) {
+            _currentQuestionIndex.value = firstOpen
+        } else {
+            // Everything was answered but Finish was never tapped: show the last question with
+            // its answer, so the Finish button is there.
+            val last = questions.last()
+            _currentQuestionIndex.value = questions.lastIndex
+            _selectedAnswer.value = byId[last.id]?.selectedIndex
+            _showExplanation.value = true
+        }
+    }
+
+    /**
      * Handle answer selection
      */
     fun selectAnswer(answerIndex: Int, question: Question) {
         if (_answeredQuestions.value.contains(question.id)) return
+        // Mark question as answered straight away (a second tap must not count twice).
+        _answeredQuestions.value = _answeredQuestions.value + question.id
 
         _selectedAnswer.value = answerIndex
         _showExplanation.value = true
 
         val isCorrect = answerIndex == question.correctAnswerIndex
-
+        // Award XP based on question difficulty
+        val xpReward = if (!isCorrect) 0 else when (question.difficulty) {
+            Difficulty.EASY -> XpRewards.EASY_QUESTION
+            Difficulty.MEDIUM -> XpRewards.MEDIUM_QUESTION
+            Difficulty.HARD -> XpRewards.HARD_QUESTION
+        }
         if (isCorrect) {
-            // Update score
             _score.value += question.points
             _correctAnswers.value += 1
-
-            // Award XP based on question difficulty
-            val xpReward = when (question.difficulty) {
-                Difficulty.EASY -> XpRewards.EASY_QUESTION
-                Difficulty.MEDIUM -> XpRewards.MEDIUM_QUESTION
-                Difficulty.HARD -> XpRewards.HARD_QUESTION
-            }
             _xpEarned.value += xpReward
-            viewModelScope.launch {
-                val base = startLives ?: xpManager.getLives().also { startLives = it }
-                xpManager.addXP(
-                    xpReward,
-                    "Correct answer: ${question.question.take(50)}..."
-                )
-                // Add 1 life for correct answer (capped at MAX_LIVES)
-                val newLives = xpManager.addLives(1, "Correct answer!")
-                _livesDelta.value = newLives - base
-            }
-        } else {
-            // Remove 1 life for wrong answer
-            viewModelScope.launch {
-                val base = startLives ?: xpManager.getLives().also { startLives = it }
-                val newLives = xpManager.removeLives(1, "Wrong answer")
-                _livesDelta.value = newLives - base
-            }
         }
 
-        // Mark question as answered
-        _answeredQuestions.value = _answeredQuestions.value + question.id
+        viewModelScope.launch {
+            // Written before anything is paid out: if the answer is already on record for today
+            // (the quiz was left and reopened) it is not paid a second time.
+            val firstTime = progressDataStore.recordDailyAnswer(
+                DailyAnswer(question.id, answerIndex, isCorrect, xpReward),
+                sessionDate
+            )
+            if (!firstTime) return@launch
+
+            val base = startLives ?: xpManager.getLives().also { startLives = it }
+            val newLives = if (isCorrect) {
+                xpManager.addXP(xpReward, "Correct answer: ${question.question.take(50)}...")
+                // Add 1 life for correct answer (capped at MAX_LIVES)
+                xpManager.addLives(1, "Correct answer!")
+            } else {
+                // Remove 1 life for wrong answer
+                xpManager.removeLives(1, "Wrong answer")
+            }
+            _livesDelta.value = newLives - base
+        }
     }
 
     /**
-     * Move to next question
+     * Move to next question. Only once the current one has been answered: a quick double tap on
+     * "Next" used to skip a question, or run past the last one onto a blank page.
      */
     fun nextQuestion() {
+        if (!_showExplanation.value) return
+        val total = getTotalQuestions()
+        if (_currentQuestionIndex.value >= total - 1) return
         _currentQuestionIndex.value += 1
         _selectedAnswer.value = null
         _showExplanation.value = false
@@ -201,9 +244,10 @@ class DailyQuestionsViewModel @Inject constructor(
      * Works entirely offline; no API call required.
      */
     fun finishQuiz() {
-        if (_quizFinished.value) return
+        if (_quizFinished.value || finishing) return
+        val questions = (_questionsState.value as? Resource.Success)?.data ?: return
+        finishing = true
         viewModelScope.launch {
-            val questions = (_questionsState.value as? Resource.Success)?.data ?: return@launch
 
             // Award bonus XP for completing all questions
             if (_answeredQuestions.value.size == questions.size) {
@@ -218,10 +262,13 @@ class DailyQuestionsViewModel @Inject constructor(
             val base = startLives ?: xpManager.getLives()
             _livesDelta.value = xpManager.getLives() - base
 
+            // Recorded for the day the questions belong to: a session started just before
+            // midnight must not use up the next day's questions.
             progressDataStore.markDailyQuestionsCompleted(
                 correctAnswers = _correctAnswers.value,
                 totalQuestions = questions.size,
-                xpEarned = _xpEarned.value
+                xpEarned = _xpEarned.value,
+                date = sessionDate
             )
 
             // Signal quiz is finished; the UI shows the completion dialog

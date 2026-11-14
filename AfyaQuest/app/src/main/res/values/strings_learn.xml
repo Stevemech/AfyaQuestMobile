@@ -37,4 +37,16 @@
     <string name="learn_video_complete">Video complete</string>
     <string name="learn_next_video">Next video</string>
     <string name="learn_back_to_module">Back to module</string>
+
+    <!-- Featured videos and focus topics (topic titles reuse category_maternal_health / category_nutrition) -->
+    <string name="learn_featured_title">Featured</string>
+    <string name="learn_featured_subtitle">Health and nutrition videos to start with</string>
+    <string name="learn_featured_label_format">Featured · %1$s</string>
+    <string name="learn_topics_title">Topics</string>
+    <string name="learn_topic_label">Topic</string>
+    <string name="learn_topic_maternal_desc">Pregnancy, safe delivery, newborn care and family planning</string>
+    <string name="learn_topic_nutrition_desc">Feeding babies and children, nutrition in pregnancy, and spotting malnutrition</string>
+    <string name="learn_lessons_count_format">%1$d/%2$d lessons</string>
+    <string name="learn_back_to_topic">Back to topic</string>
+    <string name="learn_topic_not_found">Topic not found</string>
 </resources>

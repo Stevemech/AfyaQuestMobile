@@ -25,14 +25,26 @@ exports.handler = async (event) => {
             };
         }
 
-        // Get user profile
-        const profileResult = await docClient.send(new GetCommand({
-            TableName: process.env.DYNAMODB_TABLE,
-            Key: {
-                PK: `USER#${userId}`,
-                SK: "PROFILE"
-            }
+        // The five reads do not depend on each other, so they run together. One after the other
+        // they made this endpoint, which the app calls on every sign-in and every start, several
+        // times slower than it needs to be.
+        const table = process.env.DYNAMODB_TABLE;
+        const pk = `USER#${userId}`;
+        const byPrefix = (prefix, extra = {}) => docClient.send(new QueryCommand({
+            TableName: table,
+            KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+            ExpressionAttributeValues: { ":pk": pk, ":sk": prefix },
+            ...extra
         }));
+        const [profileResult, progressResult, achievementsResult, quizResult, stateResult] = await Promise.all([
+            docClient.send(new GetCommand({ TableName: table, Key: { PK: pk, SK: "PROFILE" } })),
+            byPrefix("PROGRESS#"),
+            byPrefix("ACHIEVEMENT#"),
+            // Most recent first, last 50 quiz attempts
+            byPrefix("QUIZ#", { ScanIndexForward: false, Limit: 50 }),
+            // Account-level learning state uploaded by the app (see user-updateProgress "state_sync").
+            docClient.send(new GetCommand({ TableName: table, Key: { PK: pk, SK: "STATE" } }))
+        ]);
 
         if (!profileResult.Item) {
             return {
@@ -45,52 +57,29 @@ exports.handler = async (event) => {
             };
         }
 
-        // Get user progress records
-        const progressResult = await docClient.send(new QueryCommand({
-            TableName: process.env.DYNAMODB_TABLE,
-            KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
-            ExpressionAttributeValues: {
-                ":pk": `USER#${userId}`,
-                ":sk": "PROGRESS#"
-            }
-        }));
+        let state = null;
+        if (stateResult.Item) {
+            const { PK, SK, ...rest } = stateResult.Item;
+            state = rest;
+        }
 
-        // Get achievements
-        const achievementsResult = await docClient.send(new QueryCommand({
-            TableName: process.env.DYNAMODB_TABLE,
-            KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
-            ExpressionAttributeValues: {
-                ":pk": `USER#${userId}`,
-                ":sk": "ACHIEVEMENT#"
-            }
-        }));
-
-        // Get quiz results
-        const quizResult = await docClient.send(new QueryCommand({
-            TableName: process.env.DYNAMODB_TABLE,
-            KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
-            ExpressionAttributeValues: {
-                ":pk": `USER#${userId}`,
-                ":sk": "QUIZ#"
-            },
-            ScanIndexForward: false, // Sort descending (most recent first)
-            Limit: 50 // Last 50 quiz attempts
-        }));
-
+        // A new account really has 0 XP, level 0 and no streak. The old demo defaults
+        // (1432 XP, level 5, 3-day streak) made every empty profile look active.
         const response = {
             profile: {
-                userId: profileResult.Item.userId,
+                userId: profileResult.Item.id || profileResult.Item.userId,
                 name: profileResult.Item.name,
                 email: profileResult.Item.email,
-                level: profileResult.Item.level || 5,
-                totalPoints: profileResult.Item.totalPoints || 1432,
-                dailyXP: profileResult.Item.dailyXP || 0,
-                weeklyXP: profileResult.Item.weeklyXP || 0,
-                rank: profileResult.Item.rank || "Novice",
-                currentStreak: profileResult.Item.currentStreak || 3,
-                lives: profileResult.Item.lives || 10,
+                level: profileResult.Item.level ?? 0,
+                totalPoints: profileResult.Item.totalPoints ?? 0,
+                dailyXP: profileResult.Item.dailyXP ?? 0,
+                weeklyXP: profileResult.Item.weeklyXP ?? 0,
+                rank: profileResult.Item.rank || "Beginner",
+                currentStreak: profileResult.Item.currentStreak ?? 0,
+                lives: profileResult.Item.lives ?? 10,
                 lastResetDate: profileResult.Item.lastResetDate || new Date().toISOString().split('T')[0]
             },
+            state,
             progress: progressResult.Items || [],
             achievements: achievementsResult.Items || [],
             recentQuizzes: quizResult.Items || []

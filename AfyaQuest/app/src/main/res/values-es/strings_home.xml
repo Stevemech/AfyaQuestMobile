@@ -8,5 +8,6 @@
     <string name="home_task_label">Tarea</string>
     <string name="home_no_assignments">No tienes asignaciones por ahora</string>
     <string name="home_clock_hint">Registra tu entrada cuando empieces tu día de campo</string>
+    <string name="home_clock_error">No se pudo actualizar tu estado. Revisa tu conexión e inténtalo de nuevo.</string>
     <string name="home_open_settings">Abrir configuración</string>
 </resources>

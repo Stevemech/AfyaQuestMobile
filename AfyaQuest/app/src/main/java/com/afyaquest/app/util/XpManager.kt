@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,7 +30,11 @@ data class XpData(
     val level: Int = 0,
     val lives: Int = 10,
     val lastResetDate: String = "",
-    val rank: String = "Beginner"
+    val rank: String = "Beginner",
+    /** Last day (yyyy-MM-dd) on which XP was earned; drives the streak. Empty if never. */
+    val lastStreakDate: String = "",
+    /** Best streak ever reached. Unlike [streak] it never drops, so achievements can rely on it. */
+    val longestStreak: Int = 0
 )
 
 data class XpTransaction(
@@ -72,6 +77,8 @@ class XpManager @Inject constructor(
         val LIVES = intPreferencesKey("lives")
         val LAST_RESET_DATE = stringPreferencesKey("last_reset_date")
         val RANK = stringPreferencesKey("rank")
+        val LAST_STREAK_DATE = stringPreferencesKey("last_streak_date")
+        val LONGEST_STREAK = intPreferencesKey("longest_streak")
     }
 
     companion object {
@@ -96,6 +103,30 @@ class XpManager @Inject constructor(
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
             return dateFormat.format(Date())
         }
+
+        /**
+         * The streak after earning XP on [today], given the stored streak and the last day XP was
+         * earned: unchanged for another activity on the same day, +1 when the last activity was
+         * yesterday, and back to 1 after a gap (or for the very first activity).
+         */
+        fun streakAfterActivity(storedStreak: Int, lastStreakDate: String, today: String): Int = when {
+            lastStreakDate == today -> storedStreak.coerceAtLeast(1)
+            lastStreakDate == dayBefore(today) -> storedStreak.coerceAtLeast(0) + 1
+            else -> 1
+        }
+
+        /**
+         * The streak to show on [today]. A streak is alive if XP was earned today or yesterday
+         * (there is still time to extend it); after a missed day it reads 0.
+         */
+        fun visibleStreak(storedStreak: Int, lastStreakDate: String, today: String): Int =
+            if (lastStreakDate == today || lastStreakDate == dayBefore(today)) storedStreak else 0
+
+        private fun dayBefore(isoDate: String): String? = try {
+            LocalDate.parse(isoDate).minusDays(1).toString()
+        } catch (e: Exception) {
+            null
+        }
     }
 
     /**
@@ -116,15 +147,18 @@ class XpManager @Inject constructor(
         val level = preferences[PreferencesKeys.LEVEL] ?: calculateLevel(totalXP)
         val lives = preferences[PreferencesKeys.LIVES] ?: 10
 
+        val lastStreakDate = preferences[PreferencesKeys.LAST_STREAK_DATE] ?: ""
         XpData(
             totalXP = totalXP,
             dailyXP = dailyXP,
             weeklyXP = preferences[PreferencesKeys.WEEKLY_XP] ?: 0,
-            streak = preferences[PreferencesKeys.STREAK] ?: 0,
+            streak = visibleStreak(preferences[PreferencesKeys.STREAK] ?: 0, lastStreakDate, today),
             level = level,
             lives = lives,
             lastResetDate = lastResetDate,
-            rank = calculateRank(level)
+            rank = calculateRank(level),
+            lastStreakDate = lastStreakDate,
+            longestStreak = preferences[PreferencesKeys.LONGEST_STREAK] ?: 0
         )
     }
 
@@ -136,21 +170,35 @@ class XpManager @Inject constructor(
     }
 
     /**
-     * Add XP points
+     * Add XP points. Earning XP is also what keeps the daily streak going, so the streak is
+     * updated in the same write.
      */
     suspend fun addXP(amount: Int, reason: String): XpData {
-        val currentData = getXpData()
-        val newTotalXP = currentData.totalXP + amount
-        val newDailyXP = currentData.dailyXP + amount
-        val newWeeklyXP = currentData.weeklyXP + amount
-        val newLevel = calculateLevel(newTotalXP)
-
+        val today = getCurrentDateString()
         dataStore.edit { preferences ->
+            val lastResetDate = preferences[PreferencesKeys.LAST_RESET_DATE] ?: today
+            val dailySoFar = if (lastResetDate != today) 0 else preferences[PreferencesKeys.DAILY_XP] ?: 0
+            val newTotalXP = (preferences[PreferencesKeys.TOTAL_XP] ?: 0) + amount
+            val newLevel = calculateLevel(newTotalXP)
+
             preferences[PreferencesKeys.TOTAL_XP] = newTotalXP
-            preferences[PreferencesKeys.DAILY_XP] = newDailyXP
-            preferences[PreferencesKeys.WEEKLY_XP] = newWeeklyXP
+            preferences[PreferencesKeys.DAILY_XP] = dailySoFar + amount
+            preferences[PreferencesKeys.LAST_RESET_DATE] = today
+            preferences[PreferencesKeys.WEEKLY_XP] = (preferences[PreferencesKeys.WEEKLY_XP] ?: 0) + amount
             preferences[PreferencesKeys.LEVEL] = newLevel
             preferences[PreferencesKeys.RANK] = calculateRank(newLevel)
+
+            if (amount > 0) {
+                val newStreak = streakAfterActivity(
+                    storedStreak = preferences[PreferencesKeys.STREAK] ?: 0,
+                    lastStreakDate = preferences[PreferencesKeys.LAST_STREAK_DATE] ?: "",
+                    today = today
+                )
+                preferences[PreferencesKeys.STREAK] = newStreak
+                preferences[PreferencesKeys.LAST_STREAK_DATE] = today
+                preferences[PreferencesKeys.LONGEST_STREAK] =
+                    maxOf(preferences[PreferencesKeys.LONGEST_STREAK] ?: 0, newStreak)
+            }
         }
 
         return getXpData()
@@ -174,26 +222,28 @@ class XpManager @Inject constructor(
     }
 
     /**
-     * Update streak
+     * What the account sync uploads: the raw stored values (the streak here is NOT faded to 0 after
+     * a missed day; the server keeps the pair of streak and last-activity day).
      */
-    suspend fun updateStreak(increment: Boolean = true): Int {
-        val currentData = getXpData()
+    data class SyncState(
+        val totalXP: Int = 0,
+        val lives: Int = XpRewards.MAX_LIVES,
+        val storedStreak: Int = 0,
+        val lastStreakDate: String = "",
+        val longestStreak: Int = 0
+    )
 
-        val newStreak = if (increment) {
-            val incrementedStreak = currentData.streak + 1
-            // Add flat streak bonus XP
-            addXP(XpRewards.STREAK_BONUS, "$incrementedStreak day streak bonus!")
-            incrementedStreak
-        } else {
-            0
-        }
-
-        dataStore.edit { preferences ->
-            preferences[PreferencesKeys.STREAK] = newStreak
-        }
-
-        return newStreak
+    fun syncStateFlow(): Flow<SyncState> = dataStore.data.map { preferences ->
+        SyncState(
+            totalXP = preferences[PreferencesKeys.TOTAL_XP] ?: 0,
+            lives = preferences[PreferencesKeys.LIVES] ?: XpRewards.MAX_LIVES,
+            storedStreak = preferences[PreferencesKeys.STREAK] ?: 0,
+            lastStreakDate = preferences[PreferencesKeys.LAST_STREAK_DATE] ?: "",
+            longestStreak = preferences[PreferencesKeys.LONGEST_STREAK] ?: 0
+        )
     }
+
+    suspend fun getSyncState(): SyncState = syncStateFlow().first()
 
     /**
      * Get current lives
@@ -251,16 +301,51 @@ class XpManager @Inject constructor(
     }
 
     /**
-     * Overwrite local XP data with values from the server.
-     * Called on dashboard load so the app reflects the latest server state.
+     * Merge the account state held by the server into this device.
+     *
+     * XP never goes down (the device may hold XP earned offline that the server has not seen yet),
+     * and the streak entry with the later activity day wins. With [adoptLives] the server's lives
+     * replace the local ones; that is only right when this device has no history for the account
+     * (fresh install or a different user signed in), otherwise the local count is the newer one.
      */
-    suspend fun syncFromServer(totalXP: Int, streak: Int, level: Int, rank: String) {
+    suspend fun mergeFromServer(
+        totalXP: Int,
+        lives: Int?,
+        streak: Int,
+        lastStreakDate: String,
+        adoptLives: Boolean,
+        longestStreak: Int = 0
+    ) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKeys.TOTAL_XP] = totalXP
-            preferences[PreferencesKeys.STREAK] = streak
-            preferences[PreferencesKeys.LEVEL] = level
-            preferences[PreferencesKeys.RANK] = rank
+            val mergedXP = maxOf(preferences[PreferencesKeys.TOTAL_XP] ?: 0, totalXP)
+            val mergedLevel = calculateLevel(mergedXP)
+            preferences[PreferencesKeys.TOTAL_XP] = mergedXP
+            preferences[PreferencesKeys.LEVEL] = mergedLevel
+            preferences[PreferencesKeys.RANK] = calculateRank(mergedLevel)
+
+            val localDate = preferences[PreferencesKeys.LAST_STREAK_DATE] ?: ""
+            val localStreak = preferences[PreferencesKeys.STREAK] ?: 0
+            if (lastStreakDate > localDate) {
+                preferences[PreferencesKeys.STREAK] = streak
+                preferences[PreferencesKeys.LAST_STREAK_DATE] = lastStreakDate
+            } else if (lastStreakDate == localDate && streak > localStreak) {
+                preferences[PreferencesKeys.STREAK] = streak
+            }
+            preferences[PreferencesKeys.LONGEST_STREAK] = maxOf(
+                preferences[PreferencesKeys.LONGEST_STREAK] ?: 0,
+                longestStreak,
+                preferences[PreferencesKeys.STREAK] ?: 0
+            )
+
+            if (adoptLives && lives != null) {
+                preferences[PreferencesKeys.LIVES] = lives.coerceIn(0, XpRewards.MAX_LIVES)
+            }
         }
+    }
+
+    /** Forget everything (used when a different account signs in on this device). */
+    suspend fun clearAll() {
+        dataStore.edit { it.clear() }
     }
 
     /**

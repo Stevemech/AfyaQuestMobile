@@ -1,5 +1,9 @@
 package com.afyaquest.app.presentation.videoplayer
 
+import androidx.compose.runtime.snapshots.Snapshot
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import android.net.Uri
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
@@ -58,6 +62,7 @@ import androidx.navigation.NavController
 import com.afyaquest.app.R
 import com.afyaquest.app.domain.model.VideoModule
 import com.afyaquest.app.presentation.components.ErrorState
+import com.afyaquest.app.presentation.learn.LearnTopic
 import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.presentation.videomodules.VideoModulesViewModel
 import com.afyaquest.app.sync.VideoDownloadManager
@@ -72,6 +77,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import java.io.File
+import com.afyaquest.app.presentation.navigation.popBack
 
 /** A video counts as watched once this fraction of it has been played. */
 private const val WATCHED_FRACTION = 0.9
@@ -79,13 +85,17 @@ private const val WATCHED_FRACTION = 0.9
 /**
  * Plays one video ([moduleId] is the video id). The video is marked watched only when it has
  * actually been played to (near) the end; on completion an end card offers the next step
- * (quiz, next video, or back to the module) so the player never dead-ends.
+ * (quiz, next video, or back to where the video was opened from) so the player never dead-ends.
+ *
+ * [topicId] is set when the video was opened from a focus topic or the featured row: "Next video"
+ * and the "Video 2 of 7" position then follow that topic instead of the video's numbered module.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VideoPlayerScreen(
     moduleId: String,
     navController: NavController,
+    topicId: String? = null,
     viewModel: VideoModulesViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -94,10 +104,28 @@ fun VideoPlayerScreen(
     val videoUrl = remember(moduleId) { viewModel.getVideoUrl(moduleId) }
     val videoTitle = remember(moduleId) { viewModel.getVideoTitle(moduleId) }
     val moduleNumber = remember(moduleId) { viewModel.moduleNumberFor(moduleId) }
-    val videoIndex = remember(moduleId) { viewModel.videoIndexInModule(moduleId) }
-    val videoCount = remember(moduleId) { moduleNumber?.let { viewModel.videoCountInModule(it) } ?: 0 }
-    val nextVideo = remember(watchedVideos, moduleId) {
-        moduleNumber?.let { viewModel.nextUnwatchedInModule(it, moduleId) }
+    // Only honour the topic when this video really belongs to it (guards a stale / edited route).
+    val topic = remember(topicId, moduleId) {
+        LearnTopic.fromId(topicId)?.takeIf { moduleId in it.videoIds }
+    }
+    val videoIndex = remember(moduleId, topic) {
+        if (topic != null) viewModel.videoIndexInTopic(topic, moduleId)
+        else viewModel.videoIndexInModule(moduleId)
+    }
+    val videoCount = remember(moduleId, topic) {
+        topic?.videoIds?.size ?: moduleNumber?.let { viewModel.videoCountInModule(it) } ?: 0
+    }
+    val nextVideo = remember(watchedVideos, moduleId, topic) {
+        if (topic != null) viewModel.nextUnwatchedInTopic(topic, moduleId)
+        else moduleNumber?.let { viewModel.nextUnwatchedInModule(it, moduleId) }
+    }
+    // The end card's last action pops back, so name the place it actually returns to.
+    val backLabelRes = remember(navController) {
+        when (navController.previousBackStackEntry?.destination?.route) {
+            Screen.ModuleDetail.route -> R.string.learn_back_to_module
+            Screen.Topic.route -> R.string.learn_back_to_topic
+            else -> R.string.go_back
+        }
     }
 
     // Check for locally downloaded file first (offline playback)
@@ -130,15 +158,40 @@ fun VideoPlayerScreen(
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
             .build()
+        // The saved position is written once a second while a video plays. Read it here without
+        // subscribing to it: otherwise this whole screen was recomposed every second.
+        val (startAt, startPlaying) = Snapshot.withoutReadObservation { savedPosition to savedPlayWhenReady }
         ExoPlayer.Builder(context).build().apply {
             setAudioAttributes(audioAttributes, /* handleAudioFocus = */ true)
             if (mediaUri != null) {
                 setMediaItem(MediaItem.fromUri(mediaUri))
                 prepare()
-                if (savedPosition > 0L) seekTo(savedPosition)
-                playWhenReady = savedPlayWhenReady
+                if (startAt > 0L) seekTo(startAt)
+                playWhenReady = startPlaying
             }
         }
+    }
+
+    // Leaving the app (Home button, screen off, a phone call) pauses the video; it used to keep
+    // playing its sound in the background. Coming back resumes it if it was playing.
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner, exoPlayer) {
+        var resumeOnReturn = false
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_STOP -> {
+                    resumeOnReturn = exoPlayer.isPlaying
+                    exoPlayer.pause()
+                }
+                Lifecycle.Event.ON_START -> {
+                    if (resumeOnReturn) exoPlayer.play()
+                    resumeOnReturn = false
+                }
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     DisposableEffect(exoPlayer) {
@@ -200,9 +253,15 @@ fun VideoPlayerScreen(
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-                        if (moduleNumber != null && videoIndex != null && videoCount > 0) {
+                        val collectionLabel = when {
+                            topic != null -> stringResource(topic.titleRes)
+                            moduleNumber != null ->
+                                stringResource(R.string.learn_module_number_format, moduleNumber)
+                            else -> null
+                        }
+                        if (collectionLabel != null && videoIndex != null && videoCount > 0) {
                             Text(
-                                text = stringResource(R.string.learn_module_number_format, moduleNumber) +
+                                text = collectionLabel +
                                     " · " +
                                     stringResource(R.string.learn_video_of_format, videoIndex, videoCount),
                                 style = MaterialTheme.typography.labelMedium,
@@ -212,7 +271,7 @@ fun VideoPlayerScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navController.popBack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back)
@@ -240,6 +299,9 @@ fun VideoPlayerScreen(
                         PlayerView(it).apply {
                             player = exoPlayer
                             layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+                            // A spinner while the video loads. Without it a slow connection
+                            // showed a plain black screen for many seconds, as if it had hung.
+                            setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING)
                         }
                     },
                     update = { view -> view.player = exoPlayer },
@@ -265,13 +327,14 @@ fun VideoPlayerScreen(
                 } else if (isEnded) {
                     VideoEndCard(
                         nextVideo = nextVideo,
+                        backLabel = stringResource(backLabelRes),
                         onTakeQuiz = {
                             navController.navigate(Screen.ModuleQuiz.createRoute(moduleId)) {
                                 popUpTo(Screen.VideoPlayer.route) { inclusive = true }
                             }
                         },
                         onNextVideo = { next ->
-                            navController.navigate(Screen.VideoPlayer.createRoute(next.id)) {
+                            navController.navigate(Screen.VideoPlayer.createRoute(next.id, topic?.id)) {
                                 popUpTo(Screen.VideoPlayer.route) { inclusive = true }
                             }
                         },
@@ -280,7 +343,7 @@ fun VideoPlayerScreen(
                             exoPlayer.seekTo(0L)
                             exoPlayer.play()
                         },
-                        onBackToModule = { navController.popBackStack() }
+                        onBack = { navController.popBack() }
                     )
                 }
             }
@@ -292,10 +355,11 @@ fun VideoPlayerScreen(
 @Composable
 private fun VideoEndCard(
     nextVideo: VideoModule?,
+    backLabel: String,
     onTakeQuiz: () -> Unit,
     onNextVideo: (VideoModule) -> Unit,
     onWatchAgain: () -> Unit,
-    onBackToModule: () -> Unit
+    onBack: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -375,10 +439,10 @@ private fun VideoEndCard(
                     Text(stringResource(R.string.watch_again))
                 }
                 TextButton(
-                    onClick = onBackToModule,
+                    onClick = onBack,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(R.string.learn_back_to_module))
+                    Text(backLabel)
                 }
             }
         }

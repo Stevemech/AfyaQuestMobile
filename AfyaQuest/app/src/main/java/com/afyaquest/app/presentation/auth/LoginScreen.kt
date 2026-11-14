@@ -1,5 +1,6 @@
 package com.afyaquest.app.presentation.auth
 
+import androidx.activity.compose.ReportDrawn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,11 +15,16 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -38,6 +44,9 @@ import kotlinx.coroutines.launch
 /** SavedStateHandle key RegisterScreen uses to hand the new account's email back to Login. */
 const val REGISTERED_EMAIL_KEY = "registered_email"
 
+/** SavedStateHandle key set when the app returned to Login because the session ended. */
+const val SESSION_EXPIRED_KEY = "session_expired"
+
 /**
  * Login screen for user authentication.
  */
@@ -47,12 +56,20 @@ fun LoginScreen(
     navController: NavController,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var showForgotPassword by remember { mutableStateOf(false) }
+    // Saveable: rotating the phone must not empty the form.
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    var showForgotPassword by rememberSaveable { mutableStateOf(false) }
+    // Why the last attempt failed. It stays on screen (a snackbar is gone in four seconds and is
+    // easy to miss, which left people looking at a form that had apparently done nothing).
+    var signInError by rememberSaveable { mutableStateOf<String?>(null) }
+    var sessionEnded by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
 
     val loginState by viewModel.loginState.collectAsState()
+    // The sign-in form is drawn: the end of "app start" for a signed-out user.
+    ReportDrawn()
     val focusManager = LocalFocusManager.current
     val snackbarHostState = remember { SnackbarHostState() }
     val currentLanguage by viewModel.currentLanguage.collectAsState()
@@ -64,6 +81,7 @@ fun LoginScreen(
     // One-shot confirmation after registration (set by RegisterScreen via SavedStateHandle)
     LaunchedEffect(Unit) {
         val handle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
+        if (handle.remove<Boolean>(SESSION_EXPIRED_KEY) == true) sessionEnded = true
         val registeredEmail = handle.get<String>(REGISTERED_EMAIL_KEY)
         if (!registeredEmail.isNullOrBlank()) {
             handle.remove<String>(REGISTERED_EMAIL_KEY)
@@ -85,10 +103,11 @@ fun LoginScreen(
                 viewModel.resetLoginState()
             }
             is Resource.Error -> {
-                snackbarHostState.showSnackbar(
-                    message = (loginState as Resource.Error).message ?: loginFailedText,
-                    duration = SnackbarDuration.Short
-                )
+                signInError = authErrorText(context, (loginState as Resource.Error).message, loginFailedText)
+            }
+            is Resource.Loading -> {
+                signInError = null
+                sessionEnded = false
             }
             else -> {}
         }
@@ -197,6 +216,27 @@ fun LoginScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                val notice = signInError ?: if (sessionEnded) stringResource(R.string.auth_session_expired) else null
+                if (notice != null) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Surface(
+                        color = if (signInError != null) MaterialTheme.colorScheme.errorContainer
+                        else MaterialTheme.colorScheme.secondaryContainer,
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics { liveRegion = LiveRegionMode.Polite }
+                    ) {
+                        Text(
+                            text = notice,
+                            color = if (signInError != null) MaterialTheme.colorScheme.onErrorContainer
+                            else MaterialTheme.colorScheme.onSecondaryContainer,
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                        )
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Login button
@@ -269,15 +309,18 @@ private fun ForgotPasswordDialog(
     viewModel: AuthViewModel,
     onDismiss: () -> Unit
 ) {
-    var step by remember { mutableStateOf(1) } // 1=enter email, 2=enter code+password
-    var forgotEmail by remember { mutableStateOf(initialEmail) }
-    var verificationCode by remember { mutableStateOf("") }
-    var newPassword by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    // Saveable: rotating after "Send code" used to close the dialog and a new code had to be sent.
+    var step by rememberSaveable { mutableStateOf(1) } // 1=enter email, 2=enter code+password
+    var forgotEmail by rememberSaveable { mutableStateOf(initialEmail) }
+    var verificationCode by rememberSaveable { mutableStateOf("") }
+    var newPassword by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var errorMessage by rememberSaveable { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
-    var success by remember { mutableStateOf(false) }
+    var success by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val genericError = stringResource(R.string.auth_error_server)
 
     val enterYourEmailText = stringResource(R.string.enter_your_email)
     val enterVerificationCodeText = stringResource(R.string.enter_verification_code_error)
@@ -364,7 +407,7 @@ private fun ForgotPasswordDialog(
                                     if (result == null) {
                                         step = 2
                                     } else {
-                                        errorMessage = result
+                                        errorMessage = authErrorText(context, result, genericError)
                                     }
                                 }
                             }
@@ -390,7 +433,7 @@ private fun ForgotPasswordDialog(
                                         if (result == null) {
                                             success = true
                                         } else {
-                                            errorMessage = result
+                                            errorMessage = authErrorText(context, result, genericError)
                                         }
                                     }
                                 }

@@ -37,6 +37,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.afyaquest.app.R
+import com.afyaquest.app.data.facilities.FacilityDirectory
 import com.afyaquest.app.domain.model.HealthFacility
 import com.afyaquest.app.domain.model.ItineraryStop
 import com.afyaquest.app.presentation.components.DoneBadge
@@ -52,6 +53,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraMoveStartedReason
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
@@ -61,11 +63,21 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
+import com.afyaquest.app.presentation.navigation.popBack
 
 // Colours that match the Google Maps default marker hues used below, so the legend is truthful.
 private val PendingMarkerColor = Color(0xFFE53935)   // HUE_RED
 private val VisitedMarkerColor = Color(0xFF43A047)   // HUE_GREEN
 private val FacilityMarkerColor = Color(0xFF8E24AA)  // HUE_VIOLET
+
+/** Zoom when centred on the device position (a few streets around the CHV). */
+private const val LOCATION_ZOOM = 14f
+
+/** Zoom when only the region / today's first stop is known. */
+private const val REGION_ZOOM = 13f
+
+/** While following the device position, re-centre once it is this far from the middle of the map. */
+private const val RECENTER_DISTANCE_KM = 0.15
 
 /**
  * Map/Itinerary screen
@@ -81,9 +93,9 @@ fun MapScreen(
     val itineraryState by viewModel.itineraryState.collectAsState()
     val dailyStops = itineraryState.data ?: emptyList()
     // Collect real-time device location so route and "You are here" marker update when GPS changes.
-    val liveLocationLat by viewModel.liveLocationLatitude.collectAsState()
-    val liveLocationLng by viewModel.liveLocationLongitude.collectAsState()
-    val fullRoutePoints = remember(liveLocationLat, liveLocationLng, dailyStops) {
+    val liveLocation by viewModel.liveLocation.collectAsState()
+    val mapCenter by viewModel.mapCenter.collectAsState()
+    val fullRoutePoints = remember(liveLocation, dailyStops) {
         viewModel.getFullRoutePoints()
     }
 
@@ -106,12 +118,65 @@ fun MapScreen(
 
     var selectedTab by remember { mutableStateOf(0) }
 
+    // Kept above the tabs so the map holds its position and zoom while the CHV looks at the
+    // facilities list and comes back. Opens on the device position when it is already known,
+    // otherwise on today's first stop / the user's region (mapCenter).
+    val cameraPositionState = rememberCameraPositionState {
+        val start = liveLocation ?: mapCenter
+        position = CameraPosition.fromLatLngZoom(
+            LatLng(start.first, start.second),
+            if (liveLocation != null) LOCATION_ZOOM else REGION_ZOOM
+        )
+    }
+    // Snap to the device position when the first GPS fix arrives. Until then follow mapCenter,
+    // which changes once the region / today's route has loaded.
+    var hasSnappedToLocation by remember { mutableStateOf(liveLocation != null) }
+    // Keep the map on the device position until the CHV takes control of it (pans, zooms, taps a
+    // marker or picks a stop). The first fix a phone reports is often its last known position
+    // from hours ago; snapping once and never again left the map on the place the CHV was this
+    // morning. The "My location" button hands control back.
+    var followLocation by remember { mutableStateOf(true) }
+    var zoomedToLocation by remember { mutableStateOf(liveLocation != null) }
+    // The "My location" button moves the camera with the same reason code as the zoom buttons
+    // and a marker tap, so it is told apart by its own callback.
+    var recenterRequested by remember { mutableStateOf(false) }
+    LaunchedEffect(cameraPositionState.isMoving) {
+        if (!cameraPositionState.isMoving) return@LaunchedEffect
+        when (cameraPositionState.cameraMoveStartedReason) {
+            CameraMoveStartedReason.GESTURE -> followLocation = false
+            CameraMoveStartedReason.API_ANIMATION ->
+                if (recenterRequested) recenterRequested = false else followLocation = false
+            else -> Unit
+        }
+    }
+    LaunchedEffect(liveLocation) {
+        val location = liveLocation ?: return@LaunchedEffect
+        hasSnappedToLocation = true
+        if (!followLocation) return@LaunchedEffect
+        val target = LatLng(location.first, location.second)
+        if (!zoomedToLocation) {
+            cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(target, LOCATION_ZOOM))
+            zoomedToLocation = true
+        } else {
+            val shown = cameraPositionState.position.target
+            val movedKm = FacilityDirectory.distanceKm(shown.latitude, shown.longitude, target.latitude, target.longitude)
+            // Small GPS jitter is not worth moving the map for.
+            if (movedKm > RECENTER_DISTANCE_KM) cameraPositionState.animate(CameraUpdateFactory.newLatLng(target))
+        }
+    }
+    LaunchedEffect(mapCenter) {
+        if (!hasSnappedToLocation) {
+            cameraPositionState.position =
+                CameraPosition.fromLatLngZoom(LatLng(mapCenter.first, mapCenter.second), REGION_ZOOM)
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.daily_itinerary), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navController.popBack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
@@ -143,10 +208,12 @@ fun MapScreen(
                     itineraryState = itineraryState,
                     healthFacilities = healthFacilities,
                     fullRoutePoints = fullRoutePoints,
-                    liveLocationLat = liveLocationLat,
-                    liveLocationLng = liveLocationLng,
-                    defaultLat = viewModel.defaultLatitude,
-                    defaultLng = viewModel.defaultLongitude,
+                    cameraPositionState = cameraPositionState,
+                    onStopSelected = { followLocation = false },
+                    onRecenterRequested = {
+                        recenterRequested = true
+                        followLocation = true
+                    },
                     hasLocationPermission = hasLocationPermission,
                     onRequestLocation = { permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) },
                     onRetry = { viewModel.loadItinerary() },
@@ -158,8 +225,25 @@ fun MapScreen(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(healthFacilities) { facility ->
+                    if (healthFacilities.isEmpty()) {
+                        item(key = "empty") {
+                            EmptyState(
+                                title = stringResource(R.string.field_facilities_empty),
+                                icon = Icons.Default.LocalHospital
+                            )
+                        }
+                    }
+                    items(healthFacilities, key = { it.id }) { facility ->
                         HealthFacilityCard(facility = facility)
+                    }
+                    if (healthFacilities.isNotEmpty()) {
+                        item(key = "source") {
+                            Text(
+                                text = stringResource(R.string.field_facilities_disclaimer),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             }
@@ -172,10 +256,9 @@ private fun MapAndItineraryTab(
     itineraryState: Resource<List<ItineraryStop>>,
     healthFacilities: List<HealthFacility>,
     fullRoutePoints: List<Pair<Double, Double>>,
-    liveLocationLat: Double,
-    liveLocationLng: Double,
-    defaultLat: Double,
-    defaultLng: Double,
+    cameraPositionState: CameraPositionState,
+    onStopSelected: () -> Unit,
+    onRecenterRequested: () -> Unit,
     hasLocationPermission: Boolean,
     onRequestLocation: () -> Unit,
     onRetry: () -> Unit,
@@ -183,26 +266,9 @@ private fun MapAndItineraryTab(
     onFillReport: () -> Unit
 ) {
     val dailyStops = itineraryState.data ?: emptyList()
-    // Use live location as initial camera position if available, otherwise default
-    val initialLat = if (liveLocationLat != 0.0) liveLocationLat else defaultLat
-    val initialLng = if (liveLocationLng != 0.0) liveLocationLng else defaultLng
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(initialLat, initialLng), 14f)
-    }
-    val routeLatLngs = fullRoutePoints.map { LatLng(it.first, it.second) }
+    val routeLatLngs = remember(fullRoutePoints) { fullRoutePoints.map { LatLng(it.first, it.second) } }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-
-    // Snap to live location when it first arrives
-    var hasSnappedToLocation by remember { mutableStateOf(false) }
-    LaunchedEffect(liveLocationLat, liveLocationLng) {
-        if (!hasSnappedToLocation && liveLocationLat != defaultLat) {
-            cameraPositionState.animate(
-                CameraUpdateFactory.newLatLngZoom(LatLng(liveLocationLat, liveLocationLng), 14f)
-            )
-            hasSnappedToLocation = true
-        }
-    }
 
     // Stop awaiting "Mark visited" confirmation
     var stopToConfirm by remember { mutableStateOf<ItineraryStop?>(null) }
@@ -252,6 +318,7 @@ private fun MapAndItineraryTab(
         ) {
             ItineraryMap(
                 cameraPositionState = cameraPositionState,
+                onRecenterRequested = onRecenterRequested,
                 hasLocationPermission = hasLocationPermission,
                 routeLatLngs = routeLatLngs,
                 dailyStops = dailyStops,
@@ -317,7 +384,9 @@ private fun MapAndItineraryTab(
                                         isNext = stop.id == nextStopId,
                                         onMarkVisited = { stopToConfirm = stop },
                                         onTap = {
-                                            // Snap map camera to this stop
+                                            // Snap map camera to this stop (and stop following the
+                                            // device position, which would move it straight back)
+                                            onStopSelected()
                                             scope.launch {
                                                 cameraPositionState.animate(
                                                     CameraUpdateFactory.newLatLngZoom(
@@ -342,6 +411,7 @@ private fun MapAndItineraryTab(
 @Composable
 private fun ItineraryMap(
     cameraPositionState: CameraPositionState,
+    onRecenterRequested: () -> Unit,
     hasLocationPermission: Boolean,
     routeLatLngs: List<LatLng>,
     dailyStops: List<ItineraryStop>,
@@ -359,6 +429,11 @@ private fun ItineraryMap(
                 zoomControlsEnabled = true,
                 myLocationButtonEnabled = hasLocationPermission
             )
+        },
+        // false: the map still does its own move to the device position.
+        onMyLocationButtonClick = {
+            onRecenterRequested()
+            false
         }
     ) {
         // Route polyline
@@ -370,25 +445,40 @@ private fun ItineraryMap(
                 geodesic = true
             )
         }
+        // Marker states and icons are remembered per stop / facility. Built inline they were new
+        // objects on every recomposition (every GPS fix, every few seconds), and the map threw
+        // away and rebuilt every marker each time.
+        val pendingIcon = remember { BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED) }
+        val visitedIcon = remember { BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN) }
+        val facilityIcon = remember { BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET) }
+
         // Stop markers with color based on completion
         dailyStops.forEach { stop ->
-            Marker(
-                state = MarkerState(position = LatLng(stop.latitude, stop.longitude)),
-                title = "${stop.order}. ${stop.label}",
-                snippet = if (stop.completed) context.getString(R.string.visited) else stop.address,
-                icon = BitmapDescriptorFactory.defaultMarker(
-                    if (stop.completed) BitmapDescriptorFactory.HUE_GREEN else BitmapDescriptorFactory.HUE_RED
+            key(stop.id) {
+                Marker(
+                    state = remember(stop.latitude, stop.longitude) {
+                        MarkerState(position = LatLng(stop.latitude, stop.longitude))
+                    },
+                    title = "${stop.order}. ${stop.label}",
+                    snippet = if (stop.completed) context.getString(R.string.visited) else stop.address,
+                    icon = if (stop.completed) visitedIcon else pendingIcon
                 )
-            )
+            }
         }
         // Health facility markers (violet)
         healthFacilities.forEach { facility ->
-            Marker(
-                state = MarkerState(position = LatLng(facility.latitude, facility.longitude)),
-                title = facility.name,
-                snippet = facility.servicesAvailable.take(3).joinToString(", "),
-                icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)
-            )
+            key(facility.id) {
+                Marker(
+                    state = remember(facility.latitude, facility.longitude) {
+                        MarkerState(position = LatLng(facility.latitude, facility.longitude))
+                    },
+                    title = facility.name,
+                    snippet = remember(facility.servicesAvailable, context) {
+                        facility.servicesAvailable.take(3).joinToString(", ") { serviceLabel(context, it) }
+                    },
+                    icon = facilityIcon
+                )
+            }
         }
     }
 }
@@ -657,6 +747,33 @@ private fun openDirections(context: android.content.Context, latitude: Double, l
     }
 }
 
+/** "0.8 km" up close, whole kilometres once the decimal stops meaning anything. */
+internal fun formatDistanceKm(distanceKm: Double): String =
+    if (distanceKm < 100) String.format(java.util.Locale.US, "%.1f km", distanceKm)
+    else String.format(java.util.Locale.US, "%.0f km", distanceKm)
+
+/** Localized name of a service key from the facility directory ("primary_care" -> "Primary Care"). */
+internal fun serviceLabel(context: android.content.Context, key: String): String {
+    val res = when (key) {
+        "emergency" -> R.string.service_emergency
+        "maternity" -> R.string.service_maternity
+        "pediatrics" -> R.string.service_pediatrics
+        "surgery" -> R.string.service_surgery
+        "outpatient" -> R.string.service_outpatient
+        "laboratory" -> R.string.service_laboratory
+        "xray" -> R.string.service_xray
+        "primary_care" -> R.string.service_primary_care
+        "vaccination" -> R.string.service_vaccination
+        "family_planning" -> R.string.service_family_planning
+        "pharmacy" -> R.string.service_pharmacy
+        "maternal_health" -> R.string.category_maternal_health
+        "nutrition" -> R.string.category_nutrition
+        "mental_health" -> R.string.service_mental_health
+        else -> return key.replace('_', ' ').replaceFirstChar { it.uppercase() }
+    }
+    return context.getString(res)
+}
+
 @Composable
 fun HealthFacilityCard(facility: HealthFacility) {
     val context = LocalContext.current
@@ -694,7 +811,7 @@ fun HealthFacilityCard(facility: HealthFacility) {
 
                 facility.distance?.let { distance ->
                     Text(
-                        text = "${distance}km",
+                        text = formatDistanceKm(distance),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.primary
@@ -702,22 +819,26 @@ fun HealthFacilityCard(facility: HealthFacility) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            // Services are only listed where they are known; an empty list shows nothing rather
+            // than a guess.
+            if (facility.servicesAvailable.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = stringResource(R.string.services) + ":",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium
-            )
+                Text(
+                    text = stringResource(R.string.services) + ":",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium
+                )
 
-            Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
-            Text(
-                text = facility.servicesAvailable.joinToString(", "),
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                lineHeight = 16.sp
-            )
+                Text(
+                    text = facility.servicesAvailable.map { serviceLabel(context, it) }.joinToString(", "),
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    lineHeight = 16.sp
+                )
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 

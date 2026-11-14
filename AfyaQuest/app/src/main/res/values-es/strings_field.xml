@@ -12,6 +12,8 @@
     <string name="field_map_location_button">Activar ubicación</string>
     <string name="field_map_all_visited_subtitle">Visitaste todas las paradas. Termina con tu reporte diario.</string>
     <string name="field_map_fill_report">Llenar reporte diario</string>
+    <string name="field_facilities_empty">Todavía no hay centros de salud registrados para tu zona</string>
+    <string name="field_facilities_disclaimer">Ubicaciones de OpenStreetMap. Llama antes para confirmar horarios y servicios.</string>
 
     <!-- Tareas (asignaciones) -->
     <string name="field_tasks_overdue">Atrasada</string>
@@ -29,4 +31,5 @@
     <string name="field_chat_suggest_pregnancy">¿Cuándo debo referir a una embarazada?</string>
     <string name="field_chat_suggest_handwashing">Pasos para lavarse bien las manos</string>
     <string name="field_chat_resend">Reenviar</string>
+    <string name="field_chat_waiting_for_connection">Se enviará cuando vuelvas a tener conexión</string>
 </resources>

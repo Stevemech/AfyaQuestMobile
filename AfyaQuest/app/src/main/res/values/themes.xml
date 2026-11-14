@@ -11,5 +11,8 @@
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- The system start-up screen (Android 12+): app icon on the brand colour. It is shown
+             only while the process starts, so it adds no waiting time. -->
+        <item name="android:windowSplashScreenBackground" tools:targetApi="31">@color/afya_primary</item>
     </style>
 </resources>

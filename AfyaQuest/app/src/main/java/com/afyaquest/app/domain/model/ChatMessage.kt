@@ -9,7 +9,9 @@ data class ChatMessage(
     val id: String,
     val text: String,
     val isUser: Boolean,
-    val timestamp: LocalDateTime = LocalDateTime.now()
+    val timestamp: LocalDateTime = LocalDateTime.now(),
+    /** A question asked offline that is still waiting to be sent. */
+    val pending: Boolean = false
 )
 
 /**

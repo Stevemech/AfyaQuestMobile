@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!--
+      Kaqchikel (cak) is a partial, draft locale: text that a native speaker has not provided is
+      deliberately left out (clinical text is never machine-translated) and falls back to the
+      default language. A string missing ONLY in "cak" is therefore expected. A string missing in
+      Spanish (alone, or together with "cak") is still reported as an error.
+    -->
+    <issue id="MissingTranslation">
+        <ignore regexp='is not translated in "cak"( \(Kaqchikel\))?$' />
+    </issue>
+</lint>

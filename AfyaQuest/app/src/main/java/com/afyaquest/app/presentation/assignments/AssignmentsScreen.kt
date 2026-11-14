@@ -42,6 +42,7 @@ import com.afyaquest.app.presentation.navigation.navigateSingle
 import com.afyaquest.app.presentation.navigation.openLearn
 import com.afyaquest.app.presentation.navigation.openLesson
 import com.afyaquest.app.presentation.navigation.openVideo
+import com.afyaquest.app.presentation.lessons.LessonsViewModel
 import com.afyaquest.app.presentation.videomodules.VideoModulesViewModel
 import com.afyaquest.app.ui.theme.AfyaSuccess
 import com.afyaquest.app.ui.theme.AfyaWarning
@@ -258,15 +259,9 @@ private fun assignmentItemName(assignment: AssignmentDto): String? {
     val lessonId = assignment.lessonId
     val moduleId = assignment.moduleId
     return when {
-        !lessonId.isNullOrBlank() -> when (lessonId) {
-            "lesson-1" -> stringResource(R.string.lesson_1_title)
-            "lesson-2" -> stringResource(R.string.lesson_2_title)
-            "lesson-3" -> stringResource(R.string.lesson_3_title)
-            "lesson-4" -> stringResource(R.string.lesson_4_title)
-            "lesson-5" -> stringResource(R.string.lesson_5_title)
-            "lesson-6" -> stringResource(R.string.lesson_6_title)
-            else -> humanizeId(lessonId)
-        }
+        // One list of lesson titles for the whole app, so a newly added lesson is named here too.
+        !lessonId.isNullOrBlank() ->
+            LessonsViewModel.lessonTitleRes(lessonId)?.let { stringResource(it) } ?: humanizeId(lessonId)
         !moduleId.isNullOrBlank() ->
             VideoModulesViewModel.allVideos().find { it.id == moduleId }?.title ?: humanizeId(moduleId)
         else -> null

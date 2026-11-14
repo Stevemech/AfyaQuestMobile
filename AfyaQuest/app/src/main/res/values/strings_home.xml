@@ -8,5 +8,6 @@
     <string name="home_task_label">Task</string>
     <string name="home_no_assignments">No assignments right now</string>
     <string name="home_clock_hint">Clock in when you start your field day</string>
+    <string name="home_clock_error">Could not update your status. Check your connection and try again.</string>
     <string name="home_open_settings">Open settings</string>
 </resources>

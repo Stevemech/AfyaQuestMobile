@@ -62,6 +62,32 @@ interface PendingSyncDao {
     @Query("DELETE FROM pending_client_visits WHERE synced = 1 AND updatedAt < :olderThan")
     suspend fun deleteSyncedClientVisits(olderThan: Long)
 
+    /** Drop a report that is still waiting for upload (the CHV deleted it before it was sent). */
+    @Query("DELETE FROM pending_reports WHERE userId = :userId AND date = :date AND synced = 0")
+    suspend fun deleteUnsyncedReportsForDate(userId: String, date: String)
+
+    // Account switch: queued items of whoever used this device before must never be uploaded
+    // under the account that is signing in now.
+    @Query("DELETE FROM pending_reports WHERE userId != :userId")
+    suspend fun deleteReportsOfOtherUsers(userId: String)
+
+    @Query("DELETE FROM pending_quizzes WHERE userId != :userId")
+    suspend fun deleteQuizzesOfOtherUsers(userId: String)
+
+    @Query("DELETE FROM pending_chats WHERE userId != :userId")
+    suspend fun deleteChatsOfOtherUsers(userId: String)
+
+    @Query("DELETE FROM pending_client_visits WHERE userId != :userId")
+    suspend fun deleteClientVisitsOfOtherUsers(userId: String)
+
+    @Transaction
+    suspend fun deleteItemsOfOtherUsers(userId: String) {
+        deleteReportsOfOtherUsers(userId)
+        deleteQuizzesOfOtherUsers(userId)
+        deleteChatsOfOtherUsers(userId)
+        deleteClientVisitsOfOtherUsers(userId)
+    }
+
     // Count unsynced items
     @Query("SELECT COUNT(*) FROM pending_reports WHERE synced = 0")
     fun getUnsyncedReportsCount(): Flow<Int>

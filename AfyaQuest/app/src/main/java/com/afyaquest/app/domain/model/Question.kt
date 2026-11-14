@@ -44,7 +44,14 @@ data class QuizSubmissionRequest(
     val totalQuestions: Int,
     val correctAnswers: Int,
     val incorrectAnswers: Int,
-    val answers: List<QuizAnswer>
+    val answers: List<QuizAnswer>,
+    /** XP this run awarded on the device (0 on a retake); stored with the result for reference. */
+    val xpEarned: Int = 0,
+    /**
+     * Tells the server to record the result without adding XP / lives itself. The device awards
+     * them (so quizzes work offline) and uploads its totals with the account state.
+     */
+    val skipXp: Boolean = true
 )
 
 data class QuizAnswer(

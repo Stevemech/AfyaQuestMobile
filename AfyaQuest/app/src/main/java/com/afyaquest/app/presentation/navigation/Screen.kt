@@ -1,7 +1,6 @@
 package com.afyaquest.app.presentation.navigation
 
 sealed class Screen(val route: String) {
-    object Splash : Screen("splash")
     object Login : Screen("login")
     object Register : Screen("register")
 
@@ -26,8 +25,20 @@ sealed class Screen(val route: String) {
     object ModuleDetail : Screen("module_detail/{moduleNumber}") {
         fun createRoute(moduleNumber: Int) = "module_detail/$moduleNumber"
     }
-    object VideoPlayer : Screen("video_player/{moduleId}") {
-        fun createRoute(moduleId: String) = "video_player/$moduleId"
+    /** A focus topic (see LearnTopic): its videos and lessons across all modules. */
+    object Topic : Screen("learn_topic/{topicId}") {
+        const val ARG_TOPIC_ID = "topicId"
+        fun createRoute(topicId: String) = "learn_topic/$topicId"
+    }
+
+    /**
+     * Video player. The optional topic argument keeps "Next video" inside the focus topic the
+     * video was opened from instead of its numbered module.
+     */
+    object VideoPlayer : Screen("video_player/{moduleId}?topic={topic}") {
+        const val ARG_TOPIC = "topic"
+        fun createRoute(moduleId: String, topicId: String? = null) =
+            if (topicId.isNullOrBlank()) "video_player/$moduleId" else "video_player/$moduleId?topic=$topicId"
     }
     object ModuleQuiz : Screen("module_quiz/{moduleId}") {
         fun createRoute(moduleId: String) = "module_quiz/$moduleId"

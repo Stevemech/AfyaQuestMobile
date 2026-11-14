@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,6 +38,7 @@ import com.afyaquest.app.presentation.navigation.goHome
 import com.afyaquest.app.ui.theme.AfyaSuccess
 import com.afyaquest.app.util.DailyQuestionsResult
 import com.afyaquest.app.util.Resource
+import com.afyaquest.app.presentation.navigation.popBack
 
 /**
  * Daily Questions screen
@@ -76,7 +78,7 @@ fun DailyQuestionsScreen(
             onStay = { showLeaveDialog = false },
             onLeave = {
                 showLeaveDialog = false
-                navController.popBackStack()
+                navController.popBack()
             }
         )
     }
@@ -84,8 +86,8 @@ fun DailyQuestionsScreen(
     if (quizFinished) {
         val totalQuestions = viewModel.getTotalQuestions()
         val livesLine = when {
-            livesDelta > 0 -> stringResource(R.string.daily_lives_gained_format, livesDelta)
-            livesDelta < 0 -> stringResource(R.string.daily_lives_lost_format, -livesDelta)
+            livesDelta > 0 -> pluralStringResource(R.plurals.daily_lives_gained, livesDelta, livesDelta)
+            livesDelta < 0 -> pluralStringResource(R.plurals.daily_lives_lost, -livesDelta, -livesDelta)
             else -> stringResource(R.string.daily_lives_unchanged)
         }
         CompletionDialog(
@@ -104,7 +106,7 @@ fun DailyQuestionsScreen(
                 title = { Text(stringResource(R.string.daily_questions), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (quizInProgress) showLeaveDialog = true else navController.popBackStack()
+                        if (quizInProgress) showLeaveDialog = true else navController.popBack()
                     }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
@@ -157,7 +159,7 @@ fun DailyQuestionsScreen(
                             textAlign = TextAlign.Center
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { navController.popBackStack() }) {
+                        Button(onClick = { navController.popBack() }) {
                             Text(stringResource(R.string.go_back))
                         }
                     }
@@ -181,7 +183,7 @@ fun DailyQuestionsScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = { navController.popBackStack() }) {
+                            Button(onClick = { navController.popBack() }) {
                                 Text(stringResource(R.string.go_back))
                             }
                         }

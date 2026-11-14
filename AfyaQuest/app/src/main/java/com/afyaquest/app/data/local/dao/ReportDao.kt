@@ -33,6 +33,9 @@ interface ReportDao {
     @Query("UPDATE reports SET isSynced = 1 WHERE id = :reportId")
     suspend fun markReportAsSynced(reportId: String)
 
+    @Query("UPDATE reports SET isSynced = 1 WHERE userId = :userId AND date = :date")
+    suspend fun markReportsSyncedForDate(userId: String, date: String)
+
     @Delete
     suspend fun deleteReport(report: ReportEntity)
 

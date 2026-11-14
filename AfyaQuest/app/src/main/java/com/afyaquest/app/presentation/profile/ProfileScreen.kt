@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.afyaquest.app.R
-import com.afyaquest.app.domain.model.Achievement
 import com.afyaquest.app.presentation.dashboard.translatedRank
 import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.presentation.navigation.navigateSingle
@@ -44,6 +43,7 @@ fun ProfileScreen(
     val quickStats by viewModel.quickStats.collectAsState()
     val userProfile by viewModel.userProfile.collectAsState()
     val achievements by viewModel.achievements.collectAsState()
+    val clockedIn by viewModel.clockedIn.collectAsState()
     val selectedTab by viewModel.selectedTab.collectAsState()
 
     Scaffold(
@@ -89,7 +89,13 @@ fun ProfileScreen(
                     .navigationBarsPadding()
             ) {
                 when (tabIndex) {
-                    0 -> OverviewTab(xpData = xpData, quickStats = quickStats, userName = userProfile?.name, userOrg = userProfile?.organization)
+                    0 -> OverviewTab(
+                        xpData = xpData,
+                        quickStats = quickStats,
+                        userName = userProfile?.name,
+                        userOrg = userProfile?.organization?.let(::organizationDisplayName),
+                        clockedIn = clockedIn
+                    )
                     else -> AchievementsTab(achievements = achievements)
                 }
             }
@@ -119,8 +125,24 @@ private fun ProfileTab(
     )
 }
 
+/**
+ * A readable name for an organization id: "kibera-east" becomes "Kibera East". The profile only
+ * carries the id, and showing it raw reads like an error.
+ */
+internal fun organizationDisplayName(organizationId: String): String =
+    organizationId
+        .split('-', '_', ' ')
+        .filter { it.isNotBlank() }
+        .joinToString(" ") { word -> word.replaceFirstChar { it.titlecase() } }
+
 @Composable
-fun OverviewTab(xpData: com.afyaquest.app.util.XpData, quickStats: com.afyaquest.app.presentation.profile.QuickStats, userName: String? = null, userOrg: String? = null) {
+fun OverviewTab(
+    xpData: com.afyaquest.app.util.XpData,
+    quickStats: com.afyaquest.app.presentation.profile.QuickStats,
+    userName: String? = null,
+    userOrg: String? = null,
+    clockedIn: Boolean = false
+) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -255,10 +277,10 @@ fun OverviewTab(xpData: com.afyaquest.app.util.XpData, quickStats: com.afyaquest
                         fontWeight = FontWeight.Bold
                     )
                     Badge(
-                        containerColor = Color(0xFF438894)
+                        containerColor = if (clockedIn) Color(0xFF438894) else MaterialTheme.colorScheme.outline
                     ) {
                         Text(
-                            text = stringResource(R.string.status_active),
+                            text = stringResource(if (clockedIn) R.string.status_active else R.string.status_inactive),
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                             color = Color.White,
                             fontWeight = FontWeight.Bold
@@ -346,7 +368,7 @@ fun StatRow(label: String, value: String) {
 }
 
 @Composable
-fun AchievementsTab(achievements: List<Achievement>) {
+fun AchievementsTab(achievements: List<AchievementStatus>) {
     val unlockedAchievements = achievements.filter { it.unlocked }
     val lockedAchievements = achievements.filter { !it.unlocked }
 
@@ -363,7 +385,17 @@ fun AchievementsTab(achievements: List<Achievement>) {
             )
         }
 
-        items(unlockedAchievements) { achievement ->
+        if (unlockedAchievements.isEmpty()) {
+            item {
+                Text(
+                    text = stringResource(R.string.achievements_empty_hint),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        items(unlockedAchievements, key = { it.definition.id }) { achievement ->
             AchievementCard(achievement = achievement)
         }
 
@@ -377,14 +409,15 @@ fun AchievementsTab(achievements: List<Achievement>) {
             )
         }
 
-        items(lockedAchievements) { achievement ->
+        items(lockedAchievements, key = { it.definition.id }) { achievement ->
             AchievementCard(achievement = achievement)
         }
     }
 }
 
 @Composable
-fun AchievementCard(achievement: Achievement) {
+fun AchievementCard(achievement: AchievementStatus) {
+    val definition = achievement.definition
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -416,7 +449,7 @@ fun AchievementCard(achievement: Achievement) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = achievement.icon,
+                    text = definition.icon,
                     fontSize = 32.sp,
                     color = if (achievement.unlocked) Color.Unspecified else Color.Gray
                 )
@@ -427,40 +460,32 @@ fun AchievementCard(achievement: Achievement) {
             // Details
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = achievement.title,
+                    text = stringResource(definition.titleRes),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = achievement.description,
+                    text = stringResource(definition.descriptionRes),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                if (!achievement.unlocked && achievement.target > 0) {
+                if (!achievement.unlocked && definition.target > 0) {
                     Spacer(modifier = Modifier.height(8.dp))
                     LinearProgressIndicator(
-                        progress = { achievement.progress.toFloat() / achievement.target },
+                        progress = { achievement.progress.toFloat() / definition.target },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(6.dp)
                             .clip(RoundedCornerShape(3.dp)),
                     )
                     Text(
-                        text = "${achievement.progress}/${achievement.target}",
+                        text = "${achievement.progress}/${definition.target}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
-                if (achievement.unlocked && achievement.unlockedDate != null) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = stringResource(R.string.unlocked_on_format, achievement.unlockedDate ?: ""),
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
             }
 
             // Unlocked badge

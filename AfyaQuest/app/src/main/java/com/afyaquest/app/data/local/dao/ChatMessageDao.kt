@@ -24,6 +24,10 @@ interface ChatMessageDao {
     @Query("UPDATE chat_messages SET isSynced = 1 WHERE id = :messageId")
     suspend fun markMessageAsSynced(messageId: String)
 
+    /** A question queued while offline has been delivered (matched by its text). */
+    @Query("UPDATE chat_messages SET isSynced = 1 WHERE userId = :userId AND role = 'user' AND message = :message AND isSynced = 0")
+    suspend fun markQuestionDelivered(userId: String, message: String)
+
     @Delete
     suspend fun deleteMessage(message: ChatMessageEntity)
 

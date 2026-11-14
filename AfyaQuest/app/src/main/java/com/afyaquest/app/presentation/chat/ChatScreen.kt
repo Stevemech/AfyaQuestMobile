@@ -30,7 +30,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.afyaquest.app.R
 import com.afyaquest.app.domain.model.ChatMessage
+import com.afyaquest.app.presentation.components.MarkdownStyles
+import com.afyaquest.app.presentation.components.MarkdownText
 import com.afyaquest.app.ui.theme.AfyaSuccess
+import com.afyaquest.app.presentation.navigation.popBack
 
 /**
  * AI Chat screen with Fred
@@ -44,6 +47,7 @@ fun ChatScreen(
     val messages by viewModel.messages.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val failedMessage by viewModel.failedMessage.collectAsState()
+    val isOnline by viewModel.isOnline.collectAsState()
     var inputText by rememberSaveable { mutableStateOf("") }
     val listState = rememberLazyListState()
     val showSuggestions = messages.none { it.isUser }
@@ -84,15 +88,15 @@ fun ChatScreen(
                                 fontSize = 16.sp
                             )
                             Text(
-                                text = stringResource(R.string.online),
+                                text = stringResource(if (isOnline) R.string.online else R.string.offline),
                                 fontSize = 12.sp,
-                                color = AfyaSuccess
+                                color = if (isOnline) AfyaSuccess else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navController.popBack() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back)
@@ -166,7 +170,7 @@ fun ChatScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(messages) { message ->
+                items(messages, key = { it.id }) { message ->
                     MessageBubble(
                         message = message,
                         viewModel = viewModel
@@ -317,16 +321,31 @@ fun MessageBubble(
                 },
                 tonalElevation = 1.dp
             ) {
+                if (message.isUser) {
+                    Text(
+                        text = message.text,
+                        modifier = Modifier.padding(12.dp),
+                        fontSize = 15.sp,
+                        lineHeight = 20.sp,
+                        color = Color.White
+                    )
+                } else {
+                    // Fred answers in Markdown (bold, lists); show it formatted, not as symbols.
+                    MarkdownText(
+                        content = message.text,
+                        modifier = Modifier.padding(12.dp),
+                        style = MarkdownStyles.chatBubble(MaterialTheme.colorScheme.onSurfaceVariant)
+                    )
+                }
+            }
+
+            // A question asked offline: it is saved and goes out with the next sync.
+            if (message.pending) {
                 Text(
-                    text = message.text,
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 15.sp,
-                    lineHeight = 20.sp,
-                    color = if (message.isUser) {
-                        Color.White
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    }
+                    text = stringResource(R.string.field_chat_waiting_for_connection),
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
                 )
             }
 

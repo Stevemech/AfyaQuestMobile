@@ -25,6 +25,7 @@ import com.afyaquest.app.presentation.navigation.Screen
 import com.afyaquest.app.presentation.profile.ProfileViewModel
 import com.afyaquest.app.util.LanguageManager
 import kotlinx.coroutines.launch
+import com.afyaquest.app.presentation.navigation.popBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +40,7 @@ fun SettingsScreen(
     var showProfileDialog by remember { mutableStateOf(false) }
     var showPasswordDialog by remember { mutableStateOf(false) }
     var showLogoutDialog by remember { mutableStateOf(false) }
+    var loggingOut by remember { mutableStateOf(false) }
     var showAboutDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
@@ -47,7 +49,7 @@ fun SettingsScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.settings), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navController.popBack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
@@ -302,6 +304,20 @@ fun SettingsScreen(
         AboutDialog(onDismiss = { showAboutDialog = false })
     }
 
+    // Shown for the moment it takes to upload unsent progress and close the session
+    if (loggingOut) {
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text(stringResource(R.string.logout)) },
+            text = {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            },
+            confirmButton = {}
+        )
+    }
+
     // Logout confirmation dialog
     if (showLogoutDialog) {
         AlertDialog(
@@ -311,9 +327,12 @@ fun SettingsScreen(
             confirmButton = {
                 TextButton(onClick = {
                     showLogoutDialog = false
-                    authViewModel.logout()
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(0) { inclusive = true }
+                    loggingOut = true
+                    // Progress is uploaded and the session cleared first; then go to Login.
+                    authViewModel.logout {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
                     }
                 }) {
                     Text(stringResource(R.string.logout), color = MaterialTheme.colorScheme.error)
