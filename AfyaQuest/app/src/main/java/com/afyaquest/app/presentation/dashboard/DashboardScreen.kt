@@ -286,6 +286,13 @@ private fun DashboardTopBar(
                         }
                     )
                     DropdownMenuItem(
+                        text = { Text(stringResource(R.string.kiswahili)) },
+                        onClick = {
+                            showLanguageMenu = false
+                            scope.launch { onLanguageSelected(LanguageManager.LANGUAGE_SWAHILI) }
+                        }
+                    )
+                    DropdownMenuItem(
                         text = { Text(stringResource(R.string.kaqchikel)) },
                         onClick = {
                             showLanguageMenu = false

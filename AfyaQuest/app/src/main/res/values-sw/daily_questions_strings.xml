@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Daily Question Categories -->
+    <string name="cat_hygiene">Usafi</string>
+    <string name="cat_nutrition">Lishe</string>
+    <string name="cat_maternal_health">Afya ya Mama</string>
+    <string name="cat_immunization">Chanjo</string>
+    <string name="cat_disease_prevention">Kuzuia Magonjwa</string>
+    <string name="cat_first_aid">Huduma ya Kwanza</string>
+    <string name="cat_child_care">Utunzaji wa Mtoto</string>
+    <string name="cat_community_health">Afya ya Jamii</string>
+    <string name="cat_reproductive_health">Afya ya Uzazi</string>
+    <string name="cat_emergency">Dharura</string>
+
+    <!-- Daily Questions -->
+
+    <!-- Hygiene -->
+    <string name="dq_local_hyg_1">Unapaswa kunawa mikono kwa sabuni kwa muda gani ili kuondoa vijidudu ipasavyo?</string>
+    <string name="dq_local_hyg_1_a">Sekunde 5</string>
+    <string name="dq_local_hyg_1_b">Sekunde 10</string>
+    <string name="dq_local_hyg_1_c">Angalau sekunde 20</string>
+    <string name="dq_local_hyg_1_d">Dakika 1</string>
+    <string name="dq_local_hyg_1_exp">Shirika la Afya Duniani (WHO) linapendekeza kunawa mikono kwa sabuni kwa angalau sekunde 20 ili kuondoa vijidudu ipasavyo na kuzuia maambukizi ya magonjwa.</string>
+
+    <string name="dq_local_hyg_2">Kati ya nyakati hizi, ni upi SI wakati muhimu wa kunawa mikono?</string>
+    <string name="dq_local_hyg_2_a">Kabla ya kuandaa chakula</string>
+    <string name="dq_local_hyg_2_b">Baada ya kutumia choo</string>
+    <string name="dq_local_hyg_2_c">Baada ya kutazama televisheni</string>
+    <string name="dq_local_hyg_2_d">Kabla ya kula</string>
+    <string name="dq_local_hyg_2_exp">Nyakati muhimu za kunawa mikono ni pamoja na kabla ya kuandaa/kula chakula, baada ya kutumia choo, baada ya kukohoa/kupiga chafya, na baada ya kugusa wanyama. Kutazama televisheni si wakati muhimu wa kunawa mikono.</string>
+
+    <string name="dq_local_hyg_3">Ni njia ipi bora zaidi ya kufanya maji kuwa salama kwa kunywa nyumbani?</string>
+    <string name="dq_local_hyg_3_a">Kuyaacha yatulie usiku kucha</string>
+    <string name="dq_local_hyg_3_b">Kuyachemsha kwa angalau dakika 1</string>
+    <string name="dq_local_hyg_3_c">Kuongeza sukari</string>
+    <string name="dq_local_hyg_3_d">Kuyachuja kwa kitambaa pekee</string>
+    <string name="dq_local_hyg_3_exp">Kuchemsha maji kwa angalau dakika 1 (dakika 3 katika maeneo ya miinuko mirefu) huua vimelea vingi vinavyosababisha magonjwa, na ndiyo njia ya kuaminika zaidi nyumbani ya kufanya maji kuwa salama.</string>
+
+    <string name="dq_local_hyg_4">Ni ipi njia sahihi ya kutupa kinyesi cha mtoto?</string>
+    <string name="dq_local_hyg_4_a">Kukiacha wazi nje</string>
+    <string name="dq_local_hyg_4_b">Kukitupa mtoni</string>
+    <string name="dq_local_hyg_4_c">Kukitupa kwenye choo cha shimo au choo</string>
+    <string name="dq_local_hyg_4_d">Kukifukia bustanini</string>
+    <string name="dq_local_hyg_4_exp">Kinyesi cha mtoto kinapaswa kutupwa kila mara kwenye choo cha shimo au choo. Kujisaidia ovyo nje huchafua vyanzo vya maji na kueneza magonjwa kama kipindupindu na homa ya matumbo.</string>
+
+    <string name="dq_local_hyg_5">Ni ugonjwa upi huenezwa zaidi kupitia maji yaliyochafuliwa?</string>
+    <string name="dq_local_hyg_5_a">Malaria</string>
+    <string name="dq_local_hyg_5_b">Kipindupindu</string>
+    <string name="dq_local_hyg_5_c">Kifua kikuu</string>
+    <string name="dq_local_hyg_5_d">VVU</string>
+    <string name="dq_local_hyg_5_exp">Kipindupindu huenezwa hasa kupitia maji na chakula vilivyochafuliwa. Husababisha kuhara kwa kiwango kikubwa na upungufu wa maji mwilini, na kinaweza kuua kisipotibiwa.</string>
+
+    <!-- Nutrition -->
+    <string name="dq_local_nut_1">Muda unaopendekezwa wa kunyonyesha maziwa ya mama pekee ni upi?</string>
+    <string name="dq_local_nut_1_a">Miezi 2</string>
+    <string name="dq_local_nut_1_b">Miezi 4</string>
+    <string name="dq_local_nut_1_c">Miezi 6</string>
+    <string name="dq_local_nut_1_d">Miezi 12</string>
+    <string name="dq_local_nut_1_exp">Shirika la Afya Duniani (WHO) linapendekeza kunyonyesha maziwa ya mama pekee kwa miezi 6 ya kwanza ya maisha. Baada ya miezi 6, vyakula vya nyongeza vinapaswa kuanzishwa huku unyonyeshaji ukiendelea hadi miaka 2 au zaidi.</string>
+
+    <string name="dq_local_nut_2">Upungufu wa kirutubisho gani husababisha upofu wa usiku kwa watoto?</string>
+    <string name="dq_local_nut_2_a">Madini ya chuma</string>
+    <string name="dq_local_nut_2_b">Vitamini A</string>
+    <string name="dq_local_nut_2_c">Kalsiamu</string>
+    <string name="dq_local_nut_2_d">Vitamini C</string>
+    <string name="dq_local_nut_2_exp">Upungufu wa Vitamini A ndio chanzo kikuu cha upofu wa utotoni unaoweza kuzuilika. Vyakula vyenye Vitamini A kwa wingi ni pamoja na matunda/mboga za rangi ya machungwa na njano, mboga za majani ya kijani kibichi, maini, na mayai.</string>
+
+    <string name="dq_local_nut_3">Ni ipi ishara ya utapiamlo mkali kwa watoto?</string>
+    <string name="dq_local_nut_3_a">Kuwa mrefu sana</string>
+    <string name="dq_local_nut_3_b">Uvimbe (edema) wa miguu yote miwili</string>
+    <string name="dq_local_nut_3_c">Kuwa na hamu kubwa ya kula</string>
+    <string name="dq_local_nut_3_d">Kuongezeka uzito haraka</string>
+    <string name="dq_local_nut_3_exp">Uvimbe unaobonyea kwenye miguu yote miwili (bilateral pitting edema) ni ishara ya kwashiorkor, aina ya utapiamlo mkali. Ishara nyingine ni pamoja na kukonda sana, MUAC iliyo chini sana, na ukondefu mkali unaoonekana kwa macho.</string>
+
+    <string name="dq_local_nut_4">Vyakula vya nyongeza vinapaswa kuanzishwa kwa mtoto anayenyonya akiwa na umri gani?</string>
+    <string name="dq_local_nut_4_a">Miezi 2</string>
+    <string name="dq_local_nut_4_b">Miezi 4</string>
+    <string name="dq_local_nut_4_c">Miezi 6</string>
+    <string name="dq_local_nut_4_d">Miezi 9</string>
+    <string name="dq_local_nut_4_exp">Vyakula vya nyongeza vinapaswa kuanzishwa mtoto anapofikisha umri wa miezi 6 huku unyonyeshaji ukiendelea. Kabla ya miezi 6, maziwa ya mama pekee hutoa virutubisho vyote anavyohitaji mtoto.</string>
+
+    <string name="dq_local_nut_5">Ni kipi kati ya hivi ni chanzo bora zaidi cha madini ya chuma kwa kuzuia upungufu wa damu?</string>
+    <string name="dq_local_nut_5_a">Wali mweupe</string>
+    <string name="dq_local_nut_5_b">Mboga za majani ya kijani kibichi na maini</string>
+    <string name="dq_local_nut_5_c">Ndizi</string>
+    <string name="dq_local_nut_5_d">Maziwa</string>
+    <string name="dq_local_nut_5_exp">Mboga za majani ya kijani kibichi (kama vile spinachi na sukuma wiki) na nyama za ndani kama maini ni vyanzo bora vya madini ya chuma. Upungufu wa damu unaosababishwa na ukosefu wa madini ya chuma ni mojawapo ya aina za upungufu wa lishe zinazotokea zaidi duniani.</string>
+
+    <!-- Maternal Health -->
+    <string name="dq_local_mat_1">Shirika la Afya Duniani (WHO) linapendekeza ziara ngapi za huduma ya kabla ya kujifungua wakati wa ujauzito?</string>
+    <string name="dq_local_mat_1_a">Ziara 2</string>
+    <string name="dq_local_mat_1_b">Ziara 4</string>
+    <string name="dq_local_mat_1_c">Angalau ziara 8</string>
+    <string name="dq_local_mat_1_d">Ziara 1</string>
+    <string name="dq_local_mat_1_exp">Shirika la Afya Duniani (WHO) linapendekeza angalau ziara 8 za huduma ya kabla ya kujifungua wakati wa ujauzito ili kupunguza vifo vya watoto karibu na wakati wa kuzaliwa na kuboresha uzoefu wa wanawake katika huduma hiyo.</string>
+
+    <string name="dq_local_mat_2">Ni ipi kati ya hizi ni ishara ya hatari wakati wa ujauzito inayohitaji matibabu ya haraka?</string>
+    <string name="dq_local_mat_2_a">Kichefuchefu kidogo asubuhi</string>
+    <string name="dq_local_mat_2_b">Kutokwa na damu ukeni</string>
+    <string name="dq_local_mat_2_c">Hamu ya kula kuongezeka</string>
+    <string name="dq_local_mat_2_d">Maumivu madogo ya mgongo</string>
+    <string name="dq_local_mat_2_exp">Kutokwa na damu ukeni wakati wa ujauzito ni ishara ya hatari ambayo inaweza kuashiria kondo la nyuma kukaa chini karibu na mlango wa kizazi (placenta previa), kondo la nyuma kujitenga mapema (placental abruption), au kuharibika kwa mimba. Ishara nyingine za hatari ni pamoja na maumivu makali ya kichwa, kuona ukungu, degedege, na homa kali.</string>
+
+    <string name="dq_local_mat_3">Wanawake wajawazito wanapaswa kutumia kirutubisho gani ili kuzuia kasoro za mirija ya neva (neural tube defects)?</string>
+    <string name="dq_local_mat_3_a">Vitamini C</string>
+    <string name="dq_local_mat_3_b">Kalsiamu</string>
+    <string name="dq_local_mat_3_c">Asidi ya foliki (folic acid)</string>
+    <string name="dq_local_mat_3_d">Vitamini D</string>
+    <string name="dq_local_mat_3_exp">Kutumia asidi ya foliki (folate) kabla ya ujauzito na mwanzoni mwa ujauzito hupunguza kwa kiasi kikubwa hatari ya kasoro za mirija ya neva, kama vile mgongo wazi (spina bifida), kwa watoto wachanga.</string>
+
+    <string name="dq_local_mat_4">Ni kipi chanzo kikuu cha vifo vya akina mama duniani?</string>
+    <string name="dq_local_mat_4_a">Malaria</string>
+    <string name="dq_local_mat_4_b">Kutokwa na damu nyingi baada ya kujifungua</string>
+    <string name="dq_local_mat_4_c">VVU</string>
+    <string name="dq_local_mat_4_d">Kifua kikuu</string>
+    <string name="dq_local_mat_4_exp">Kutokwa na damu nyingi baada ya kujifungua ndicho chanzo kikuu cha vifo vya akina mama duniani. Usimamizi hai wa hatua ya tatu ya uchungu wa kuzaa husaidia kuzuia hali hii.</string>
+
+    <string name="dq_local_mat_5">Mtoto mchanga anapaswa kuwekwa kwenye titi kwa mara ya kwanza lini?</string>
+    <string name="dq_local_mat_5_a">Ndani ya saa ya kwanza baada ya kuzaliwa</string>
+    <string name="dq_local_mat_5_b">Baada ya saa 6</string>
+    <string name="dq_local_mat_5_c">Siku inayofuata</string>
+    <string name="dq_local_mat_5_d">Mama anapojisikia tayari</string>
+    <string name="dq_local_mat_5_exp">Kuanza kunyonyesha mapema, ndani ya saa ya kwanza baada ya kuzaliwa, ni muhimu sana. Maziwa ya kwanza (dang\'a) yana kingamwili na virutubisho vingi muhimu kwa kinga ya mwili ya mtoto mchanga.</string>
+
+    <!-- Immunization -->
+    <string name="dq_local_imm_1">Mtoto anapaswa kupewa chanjo ya BCG akiwa na umri gani?</string>
+    <string name="dq_local_imm_1_a">Wakati wa kuzaliwa</string>
+    <string name="dq_local_imm_1_b">Wiki 6</string>
+    <string name="dq_local_imm_1_c">Miezi 9</string>
+    <string name="dq_local_imm_1_d">Miaka 5</string>
+    <string name="dq_local_imm_1_exp">Chanjo ya BCG (Bacillus Calmette-Guerin) dhidi ya kifua kikuu inapaswa kutolewa wakati wa kuzaliwa au mapema iwezekanavyo baada ya kuzaliwa.</string>
+
+    <string name="dq_local_imm_2">Chanjo ya pentavalent hukinga dhidi ya magonjwa gani?</string>
+    <string name="dq_local_imm_2_a">Malaria, kifua kikuu, kipindupindu, homa ya matumbo, na polio</string>
+    <string name="dq_local_imm_2_b">Dondakoo, kifaduro, pepopunda, homa ya ini aina B, na Hib</string>
+    <string name="dq_local_imm_2_c">Surua, matubwitubwi, rubela, tetekuwanga, na polio</string>
+    <string name="dq_local_imm_2_d">VVU, homa ya ini aina A, homa ya ini aina B, HPV, na homa ya uti wa mgongo</string>
+    <string name="dq_local_imm_2_exp">Chanjo ya pentavalent hukinga dhidi ya magonjwa 5: Dondakoo (diphtheria), Kifaduro (pertussis), Pepopunda (tetanus), Homa ya ini aina B (hepatitis B), na Haemophilus influenzae aina b (Hib).</string>
+
+    <string name="dq_local_imm_3">Chanjo ya surua kwa kawaida hutolewa mtoto akiwa na umri gani?</string>
+    <string name="dq_local_imm_3_a">Wakati wa kuzaliwa</string>
+    <string name="dq_local_imm_3_b">Wiki 6</string>
+    <string name="dq_local_imm_3_c">Miezi 9</string>
+    <string name="dq_local_imm_3_d">Miaka 2</string>
+    <string name="dq_local_imm_3_exp">Dozi ya kwanza ya chanjo ya surua kwa kawaida hutolewa mtoto akiwa na umri wa miezi 9. Katika nchi nyingi, dozi ya pili hutolewa akiwa na miezi 18 ili kuhakikisha kinga kamili.</string>
+
+    <string name="dq_local_imm_4">Ni ipi njia sahihi ya kuhifadhi chanjo nyingi?</string>
+    <string name="dq_local_imm_4_a">Katika joto la kawaida la chumba</string>
+    <string name="dq_local_imm_4_b">Ndani ya friza kwa -20°C</string>
+    <string name="dq_local_imm_4_c">Ndani ya jokofu kwa 2-8°C</string>
+    <string name="dq_local_imm_4_d">Kwenye jua moja kwa moja</string>
+    <string name="dq_local_imm_4_exp">Chanjo nyingi lazima zihifadhiwe ndani ya jokofu kwa 2-8°C ili ziendelee kufanya kazi ipasavyo. Hii inajulikana kama mnyororo wa baridi (cold chain). Baadhi ya chanjo hazipaswi kugandishwa kamwe.</string>
+
+    <string name="dq_local_imm_5">Ni ipi kati ya hizi ni sababu halali ya kutompa mtu chanjo?</string>
+    <string name="dq_local_imm_5_a">Homa kidogo</string>
+    <string name="dq_local_imm_5_b">Kuwahi kupata mzio mkali kutokana na chanjo hiyo</string>
+    <string name="dq_local_imm_5_c">Kuhara kidogo</string>
+    <string name="dq_local_imm_5_d">Kuwa na uzito pungufu</string>
+    <string name="dq_local_imm_5_exp">Kuwahi kupata mzio mkali (anaphylaxis) kutokana na chanjo au viambato vyake ni sababu halisi ya kutotoa chanjo. Ugonjwa mdogo, kuhara, au uzito pungufu SI sababu za kuchelewesha chanjo.</string>
+
+    <!-- Disease Prevention -->
+    <string name="dq_local_dis_1">Malaria huambukizwa hasa kwa njia gani?</string>
+    <string name="dq_local_dis_1_a">Kupitia maji yaliyochafuliwa</string>
+    <string name="dq_local_dis_1_b">Kupitia kuumwa na mbu</string>
+    <string name="dq_local_dis_1_c">Kupitia kukohoa</string>
+    <string name="dq_local_dis_1_d">Kupitia kugusana kimwili</string>
+    <string name="dq_local_dis_1_exp">Malaria huambukizwa kupitia kuumwa na mbu jike wa aina ya Anopheles mwenye maambukizi. Kinga ni pamoja na kulala ndani ya chandarua chenye dawa ya kuua wadudu na kuondoa maji yaliyotuama.</string>
+
+    <string name="dq_local_dis_2">Ni ipi kati ya hizi ni dalili ya kifua kikuu (TB)?</string>
+    <string name="dq_local_dis_2_a">Kikohozi kisichokoma kwa zaidi ya wiki 2</string>
+    <string name="dq_local_dis_2_b">Vipele kwenye ngozi</string>
+    <string name="dq_local_dis_2_c">Viungo kuvimba</string>
+    <string name="dq_local_dis_2_d">Kuona ukungu</string>
+    <string name="dq_local_dis_2_exp">Kikohozi kisichokoma kwa zaidi ya wiki 2 ndiyo dalili ya kawaida zaidi ya kifua kikuu cha mapafu. Dalili nyingine ni pamoja na kutokwa na jasho jingi usiku, kupungua uzito, homa, na kukohoa damu.</string>
+
+    <string name="dq_local_dis_3">Ni njia ipi bora zaidi ya kuzuia magonjwa yanayoenezwa na mbu?</string>
+    <string name="dq_local_dis_3_a">Kunywa maji yaliyochemshwa</string>
+    <string name="dq_local_dis_3_b">Kulala ndani ya chandarua chenye dawa ya kuua wadudu</string>
+    <string name="dq_local_dis_3_c">Kutumia viuavijasumu (antibiotiki)</string>
+    <string name="dq_local_dis_3_d">Kula kitunguu saumu</string>
+    <string name="dq_local_dis_3_exp">Kulala ndani ya vyandarua vyenye dawa ya kuua wadudu (ITN) ni mojawapo ya njia bora zaidi za kuzuia malaria na magonjwa mengine yanayoenezwa na mbu. Vyandarua vinapaswa kuwekwa dawa upya au kubadilishwa mara kwa mara.</string>
+
+    <string name="dq_local_dis_4">Myeyusho wa kurejesha maji mwilini (ORS) hutumika kwa ajili ya nini?</string>
+    <string name="dq_local_dis_4_a">Kutibu malaria</string>
+    <string name="dq_local_dis_4_b">Kuzuia upungufu wa maji mwilini unaosababishwa na kuhara</string>
+    <string name="dq_local_dis_4_c">Kuponya kifua kikuu</string>
+    <string name="dq_local_dis_4_d">Kutibu nimonia</string>
+    <string name="dq_local_dis_4_exp">ORS ni mchanganyiko wa maji safi, chumvi, na sukari unaotumika kuzuia na kutibu upungufu wa maji mwilini unaosababishwa na kuhara. Hurejesha maji na madini ya mwili (electrolytes) yaliyopotea, na huokoa mamilioni ya maisha kila mwaka.</string>
+
+    <string name="dq_local_dis_5">VVU huambukizwa hasa kwa njia gani?</string>
+    <string name="dq_local_dis_5_a">Kupitia kuumwa na mbu</string>
+    <string name="dq_local_dis_5_b">Kupitia kuchangia vyombo vya kulia</string>
+    <string name="dq_local_dis_5_c">Kupitia ngono bila kinga, na kupitia damu yenye maambukizi</string>
+    <string name="dq_local_dis_5_d">Kupitia kukohoa</string>
+    <string name="dq_local_dis_5_exp">VVU huambukizwa hasa kupitia ngono bila kinga, damu yenye maambukizi (sindano/kuongezewa damu), na kutoka kwa mama kwenda kwa mtoto wakati wa ujauzito, kujifungua, au kunyonyesha.</string>
+
+    <!-- First Aid -->
+    <string name="dq_local_fa_1">Ni ipi hatua ya kwanza unapokutana na mtu aliyepoteza fahamu?</string>
+    <string name="dq_local_fa_1_a">Mpe maji</string>
+    <string name="dq_local_fa_1_b">Angalia kama anaitikia na uite msaada</string>
+    <string name="dq_local_fa_1_c">Mhamishe mara moja</string>
+    <string name="dq_local_fa_1_d">Subiri hadi aamke</string>
+    <string name="dq_local_fa_1_exp">Hatua ya kwanza ni kuangalia kama anaitikia kwa kumgusa na kumwita kwa sauti kubwa, kisha uite msaada/huduma za dharura. Angalia kama anapumua na uanze CPR ikihitajika.</string>
+
+    <string name="dq_local_fa_2">Ni kasi ipi sahihi ya kubonyeza kifua katika CPR kwa mtu mzima?</string>
+    <string name="dq_local_fa_2_a">60 kwa dakika</string>
+    <string name="dq_local_fa_2_b">80 kwa dakika</string>
+    <string name="dq_local_fa_2_c">100-120 kwa dakika</string>
+    <string name="dq_local_fa_2_d">150 kwa dakika</string>
+    <string name="dq_local_fa_2_exp">Kasi sahihi ya kubonyeza kifua katika CPR ni mibonyezo 100-120 kwa dakika. Kwa watu wazima, kila mbonyezo unapaswa kuingia kwa kina cha angalau inchi 2 (5 cm).</string>
+
+    <string name="dq_local_fa_3">Unapaswa kutibu vipi jeraha dogo la kuungua?</string>
+    <string name="dq_local_fa_3_a">Paka siagi au mafuta</string>
+    <string name="dq_local_fa_3_b">Lipoze kwa maji safi yanayotiririka kwa angalau dakika 20</string>
+    <string name="dq_local_fa_3_c">Pasua malengelenge yoyote</string>
+    <string name="dq_local_fa_3_d">Weka barafu moja kwa moja</string>
+    <string name="dq_local_fa_3_exp">Majeraha madogo ya kuungua yanapaswa kupozwa kwa maji safi yanayotiririka kwa angalau dakika 20. Usipake siagi, mafuta, au dawa ya meno, na usiweke barafu. Funika kwa bendeji safi isiyoshikamana na jeraha.</string>
+
+    <string name="dq_local_fa_4">Ufanye nini ikiwa mtu amekabwa na kitu kooni na hawezi kukohoa, kuongea, wala kupumua?</string>
+    <string name="dq_local_fa_4_a">Mpe maji</string>
+    <string name="dq_local_fa_4_b">Msukume tumbo kwa nguvu (Heimlich maneuver)</string>
+    <string name="dq_local_fa_4_c">Mpige kofi usoni</string>
+    <string name="dq_local_fa_4_d">Mwambie alale chini</string>
+    <string name="dq_local_fa_4_exp">Kwa mtu mzima aliyekabwa akiwa na fahamu, msukume tumbo kwa nguvu (Heimlich maneuver): simama nyuma yake na umsukume tumbo kuelekea juu, sehemu iliyo juu ya kitovu.</string>
+
+    <string name="dq_local_fa_5">Unapaswa kudhibiti vipi kutokwa na damu nyingi kutoka kwenye jeraha?</string>
+    <string name="dq_local_fa_5_a">Ondoa bendeji mara kwa mara ili kuangalia</string>
+    <string name="dq_local_fa_5_b">Bonyeza jeraha moja kwa moja kwa nguvu ukitumia kitambaa safi</string>
+    <string name="dq_local_fa_5_c">Funga kamba ya kubana (tourniquet) kama hatua ya kwanza</string>
+    <string name="dq_local_fa_5_d">Mwaga maji kwenye jeraha</string>
+    <string name="dq_local_fa_5_exp">Bonyeza jeraha moja kwa moja kwa nguvu ukitumia kitambaa safi au bendeji. Endelea kubonyeza bila kuachia. Inua kiungo kilichojeruhiwa ikiwezekana. Tumia kamba ya kubana (tourniquet) tu kama njia ya mwisho.</string>
+
+    <!-- Child Care -->
+    <string name="dq_local_cc_1">Ni ipi ishara ya nimonia kwa mtoto aliye chini ya miaka 5?</string>
+    <string name="dq_local_cc_1_a">Kupumua haraka au kupumua kwa shida</string>
+    <string name="dq_local_cc_1_b">Ngozi kuwasha</string>
+    <string name="dq_local_cc_1_c">Kufunga choo</string>
+    <string name="dq_local_cc_1_d">Kiu kupita kiasi</string>
+    <string name="dq_local_cc_1_exp">Kupumua haraka au kupumua kwa shida ni ishara kuu ya nimonia kwa watoto walio chini ya miaka 5. Ishara nyingine ni pamoja na kifua kuvutika ndani wakati wa kupumua, kushindwa kula au kunyonya, na homa. Nimonia ni mojawapo ya visababishi vikuu vya vifo vya watoto walio chini ya miaka 5.</string>
+
+    <string name="dq_local_cc_2">Ni ipi ishara ya hatari ya upungufu wa maji mwilini kwa watoto wachanga?</string>
+    <string name="dq_local_cc_2_a">Nepi zilizolowa</string>
+    <string name="dq_local_cc_2_b">Utosi uliobonyea (sehemu laini juu ya kichwa)</string>
+    <string name="dq_local_cc_2_c">Hamu nzuri ya kula</string>
+    <string name="dq_local_cc_2_d">Kuwa mchangamfu na kucheza</string>
+    <string name="dq_local_cc_2_exp">Utosi uliobonyea (sehemu laini juu ya kichwa cha mtoto) ni ishara ya upungufu wa maji mwilini. Ishara nyingine ni pamoja na kinywa kikavu, kulia bila machozi, kukojoa kidogo kuliko kawaida, na ulegevu.</string>
+
+    <string name="dq_local_cc_3">Mtoto anapaswa kuanza kupewa nyongeza ya Vitamini A akiwa na umri gani?</string>
+    <string name="dq_local_cc_3_a">Wakati wa kuzaliwa</string>
+    <string name="dq_local_cc_3_b">Miezi 6</string>
+    <string name="dq_local_cc_3_c">Mwaka 1</string>
+    <string name="dq_local_cc_3_d">Miaka 2</string>
+    <string name="dq_local_cc_3_exp">Nyongeza ya Vitamini A inapaswa kuanza mtoto akiwa na umri wa miezi 6 na kuendelea kila baada ya miezi 6 hadi afikishe umri wa miaka 5. Vitamini A ni muhimu sana kwa kinga ya mwili na kuzuia upofu.</string>
+
+    <string name="dq_local_cc_4">Ni kipimo kipi cha MUAC kinachoonyesha utapiamlo mkali kwa watoto wa miezi 6-59?</string>
+    <string name="dq_local_cc_4_a">Chini ya 11.5 cm</string>
+    <string name="dq_local_cc_4_b">Chini ya 13.5 cm</string>
+    <string name="dq_local_cc_4_c">Chini ya 15 cm</string>
+    <string name="dq_local_cc_4_d">Chini ya 17 cm</string>
+    <string name="dq_local_cc_4_exp">MUAC iliyo chini ya 11.5 cm inaonyesha utapiamlo mkali (SAM) kwa watoto wa umri wa miezi 6-59. MUAC kati ya 11.5-12.5 cm inaonyesha utapiamlo wa wastani (MAM).</string>
+
+    <string name="dq_local_cc_5">Myeyusho wa kurejesha maji mwilini (ORS) unapaswa kutayarishwa vipi?</string>
+    <string name="dq_local_cc_5_a">Changanya pakiti nzima na 500 ml za maji</string>
+    <string name="dq_local_cc_5_b">Changanya pakiti nzima na lita 1 ya maji safi</string>
+    <string name="dq_local_cc_5_c">Changanya nusu ya pakiti na lita 2 za maji</string>
+    <string name="dq_local_cc_5_d">Yeyusha kwenye chai ya moto</string>
+    <string name="dq_local_cc_5_exp">Pakiti moja ya ORS inapaswa kuyeyushwa katika lita 1 (1000 ml) ya maji safi. Myeyusho unapaswa kutumika ndani ya saa 24. Usichemshe myeyusho wala kuongeza sukari.</string>
+
+    <!-- Community Health -->
+    <string name="dq_local_ch_1">Ni nini lengo la ziara ya nyumbani ya Mhudumu wa Afya ya Jamii?</string>
+    <string name="dq_local_ch_1_a">Kukusanya kodi ya nyumba</string>
+    <string name="dq_local_ch_1_b">Kutathmini afya, kutoa elimu, na kutoa rufaa inapohitajika</string>
+    <string name="dq_local_ch_1_c">Kuuza dawa</string>
+    <string name="dq_local_ch_1_d">Kufanya upasuaji</string>
+    <string name="dq_local_ch_1_exp">Wahudumu wa Afya ya Jamii hufanya ziara za nyumbani ili kutathmini afya ya wanafamilia, kutoa elimu ya afya, kutambua ishara za hatari, kutoa rufaa, na kufuatilia matibabu.</string>
+
+    <string name="dq_local_ch_2">Neno \'rufaa\' lina maana gani katika afya ya jamii?</string>
+    <string name="dq_local_ch_2_a">Kumrudisha mgonjwa nyumbani</string>
+    <string name="dq_local_ch_2_b">Kumpeleka mgonjwa kwenye kituo cha afya cha ngazi ya juu kwa huduma zaidi</string>
+    <string name="dq_local_ch_2_c">Kumwandikia mgonjwa dawa</string>
+    <string name="dq_local_ch_2_d">Kufanya upasuaji katika jamii</string>
+    <string name="dq_local_ch_2_exp">Rufaa ni kumpeleka mgonjwa kwenye kituo cha afya cha ngazi ya juu au kwa daktari bingwa ili apate huduma ambayo haiwezi kutolewa katika ngazi ya jamii. Rufaa zinazotolewa kwa wakati zinaweza kuokoa maisha.</string>
+
+    <string name="dq_local_ch_3">Ni upi kati ya ujuzi ufuatao ambao ni muhimu kwa Mhudumu wa Afya ya Jamii?</string>
+    <string name="dq_local_ch_3_a">Upasuaji</string>
+    <string name="dq_local_ch_3_b">Kusikiliza kwa makini na kutoa elimu ya afya</string>
+    <string name="dq_local_ch_3_c">Kuandika dawa</string>
+    <string name="dq_local_ch_3_d">Kuendesha mashine za eksirei</string>
+    <string name="dq_local_ch_3_exp">Kusikiliza kwa makini na kutoa elimu ya afya ni ujuzi muhimu kwa Wahudumu wa Afya ya Jamii. CHV ni kiungo kati ya jamii na mfumo wa afya.</string>
+
+    <string name="dq_local_ch_4">Lengo la kufuatilia ukuaji wa watoto ni nini?</string>
+    <string name="dq_local_ch_4_a">Kupima jinsi mtoto atakavyokuwa mrefu akiwa mtu mzima</string>
+    <string name="dq_local_ch_4_b">Kufuatilia ukuaji wa mtoto na kugundua utapiamlo mapema</string>
+    <string name="dq_local_ch_4_c">Kujua kiwango cha akili ya mtoto</string>
+    <string name="dq_local_ch_4_d">Kuamua shule atakayosoma</string>
+    <string name="dq_local_ch_4_exp">Ufuatiliaji wa ukuaji hupima uzito na urefu wa mtoto kwa muda ili kugundua mapema ukuaji unaodorora au utapiamlo. Hii huwezesha hatua za haraka na msaada wa lishe.</string>
+
+    <string name="dq_local_ch_5">CHV anapaswa kufanya nini anapogundua ishara ya hatari kwa mgonjwa?</string>
+    <string name="dq_local_ch_5_a">Kusubiri na kuangalia kwa wiki moja</string>
+    <string name="dq_local_ch_5_b">Kumpeleka mgonjwa mara moja kwenye kituo cha afya</string>
+    <string name="dq_local_ch_5_c">Kuandika dawa</string>
+    <string name="dq_local_ch_5_d">Kupuuza ikiwa mgonjwa anajisikia vizuri</string>
+    <string name="dq_local_ch_5_exp">CHV anapogundua ishara za hatari, anapaswa kumpeleka mgonjwa mara moja kwenye kituo cha afya kilicho karibu zaidi. Kuchelewa kutoa rufaa kunaweza kusababisha matatizo au kifo.</string>
+
+    <!-- Reproductive Health -->
+    <string name="dq_local_rh_1">Upangaji uzazi ni nini?</string>
+    <string name="dq_local_rh_1_a">Kuamua nyumba iwe na vyumba vingapi</string>
+    <string name="dq_local_rh_1_b">Uwezo wa kuamua idadi ya watoto na nafasi kati ya kuzaliwa kwao kwa kutumia njia za kuzuia mimba</string>
+    <string name="dq_local_rh_1_c">Kupanga mikutano ya familia</string>
+    <string name="dq_local_rh_1_d">Kuamua shule watakazosoma watoto</string>
+    <string name="dq_local_rh_1_exp">Upangaji uzazi huwawezesha watu binafsi na wanandoa kuamua idadi ya watoto wao na nafasi kati ya kuzaliwa kwao kupitia matumizi ya njia za kuzuia mimba na taarifa.</string>
+
+    <string name="dq_local_rh_2">Ni ipi kati ya hizi ni njia ya muda mrefu isiyo ya kudumu ya kuzuia mimba (inayoweza kuondolewa)?</string>
+    <string name="dq_local_rh_2_a">Kondomu</string>
+    <string name="dq_local_rh_2_b">Vidonge vya kuzuia mimba</string>
+    <string name="dq_local_rh_2_c">Kitanzi (IUD)</string>
+    <string name="dq_local_rh_2_d">Njia ya dharura ya kuzuia mimba</string>
+    <string name="dq_local_rh_2_exp">Kitanzi (IUD) ni njia ya muda mrefu isiyo ya kudumu ya kuzuia mimba, ambayo hudumu miaka 5-12 kutegemea aina yake. Njia nyingine za muda mrefu ni pamoja na vipandikizi (implants).</string>
+
+    <string name="dq_local_rh_3">Ni njia ipi bora zaidi ya kuzuia magonjwa ya zinaa?</string>
+    <string name="dq_local_rh_3_a">Kutumia viuavijasumu mara kwa mara</string>
+    <string name="dq_local_rh_3_b">Kutumia kondomu ipasavyo na kila mara</string>
+    <string name="dq_local_rh_3_c">Kujiosha baada ya kujamiiana</string>
+    <string name="dq_local_rh_3_d">Kutumia vidonge vya kuzuia mimba</string>
+    <string name="dq_local_rh_3_exp">Kutumia kondomu ipasavyo na kila mara ndiyo njia bora zaidi ya kuzuia magonjwa ya zinaa, mbali na kujizuia kabisa kufanya ngono. Vidonge vya kuzuia mimba huzuia mimba lakini havikingi dhidi ya magonjwa ya zinaa.</string>
+
+    <!-- Emergency -->
+    <string name="dq_local_em_1">Mkao wa kupona (recovery position) hutumika kwa ajili ya nini?</string>
+    <string name="dq_local_em_1_a">Mkao wa kulala ili kujisikia vizuri</string>
+    <string name="dq_local_em_1_b">Kumlaza kwa ubavu mtu aliyepoteza fahamu lakini anapumua ili njia yake ya hewa ibaki wazi</string>
+    <string name="dq_local_em_1_c">Mkao wa kufanya mazoezi ya kujisukuma kwa mikono</string>
+    <string name="dq_local_em_1_d">Mkao wa kumpa mtu dawa</string>
+    <string name="dq_local_em_1_exp">Mkao wa kupona hutumika kwa watu waliopoteza fahamu ambao wanapumua kawaida. Huiweka njia ya hewa wazi na kuzuia kukabwa na matapishi au majimaji.</string>
+
+    <string name="dq_local_em_2">Ni zipi dalili za kiharusi?</string>
+    <string name="dq_local_em_2_a">Ngozi kuwasha na kupiga chafya</string>
+    <string name="dq_local_em_2_b">Uso kulegea, mkono kuwa dhaifu, shida ya kuongea</string>
+    <string name="dq_local_em_2_c">Maumivu ya tumbo na kichefuchefu</string>
+    <string name="dq_local_em_2_d">Maumivu na uvimbe wa viungo</string>
+    <string name="dq_local_em_2_exp">Kumbuka FAST: Face (uso kulegea), Arm (mkono kuwa dhaifu), Speech (shida ya kuongea), Time (wakati wa kuita huduma za dharura). Kiharusi kinahitaji matibabu ya haraka ili kuzuia madhara kwenye ubongo.</string>
+
+    <string name="dq_local_em_3">Ufanye nini ikiwa mtu anapata degedege (kifafa)?</string>
+    <string name="dq_local_em_3_a">Weka kitu mdomoni mwake</string>
+    <string name="dq_local_em_3_b">Mshikilie chini kwa nguvu</string>
+    <string name="dq_local_em_3_c">Ondoa vitu vigumu karibu naye na ulinde kichwa chake</string>
+    <string name="dq_local_em_3_d">Mwagie maji usoni</string>
+    <string name="dq_local_em_3_exp">Wakati wa degedege, ondoa vitu vigumu au vyenye ncha kali karibu naye, linda kichwa chake, na USIWEKE kitu chochote mdomoni mwake wala kumshikilia kwa nguvu. Mlaze kwa ubavu baada ya degedege kukoma.</string>
+</resources>

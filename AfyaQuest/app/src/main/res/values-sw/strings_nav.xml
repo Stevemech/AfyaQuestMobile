@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Bottom navigation -->
+    <string name="nav_home">Nyumbani</string>
+    <string name="nav_learn">Jifunze</string>
+    <string name="nav_tasks">Kazi</string>
+    <string name="nav_me">Mimi</string>
+
+    <!-- Learn hub -->
+    <string name="learn_title">Jifunze</string>
+    <string name="learn_tab_videos">Video</string>
+    <string name="learn_tab_lessons">Masomo</string>
+    <string name="ask_fred">Muulize Fred</string>
+
+    <!-- Shared guidance -->
+    <string name="continue_label">Endelea</string>
+    <string name="next_up">Kinachofuata</string>
+    <string name="done_today">Imekamilika leo</string>
+    <string name="tasks_done_today_format">%1$d kati ya %2$d zimekamilika leo</string>
+    <string name="all_done_today">Umemaliza zote kwa leo!</string>
+    <string name="xp_earned_format">+%1$d XP</string>
+    <string name="back_to_home">Rudi Nyumbani</string>
+    <string name="step_of_format">Hatua %1$d kati ya %2$d</string>
+    <string name="required_label">Lazima</string>
+    <string name="not_started">Haijaanzishwa</string>
+    <string name="stay">Baki</string>
+    <string name="leave">Ondoka</string>
+    <string name="something_went_wrong">Hitilafu imetokea. Tafadhali jaribu tena.</string>
+</resources>

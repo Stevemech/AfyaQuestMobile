@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Daily itinerary (map) -->
+    <string name="field_map_progress_label">Vituo vilivyotembelewa</string>
+    <string name="field_map_load_error">Imeshindwa kupakia njia ya leo.</string>
+    <string name="field_map_confirm_visited_title">Thibitisha ziara ya %1$s?</string>
+    <string name="field_map_confirm_visited_message">Itahesabiwa kuwa imekamilika kwa leo.</string>
+    <string name="field_map_confirm_visited_yes">Ndiyo, imetembelewa</string>
+    <string name="field_map_legend_facility">Kituo cha afya</string>
+    <string name="field_map_location_title">Washa huduma ya mahali ili uone njia yako</string>
+    <string name="field_map_location_body">Njia inaanzia mahali ulipo. Taarifa za mahali ulipo zinabaki kwenye simu hii.</string>
+    <string name="field_map_location_button">Washa huduma ya mahali</string>
+    <string name="field_map_all_visited_subtitle">Umetembelea vituo vyote. Malizia kwa ripoti yako ya kila siku.</string>
+    <string name="field_map_fill_report">Jaza ripoti ya kila siku</string>
+    <string name="field_facilities_empty">Bado hakuna vituo vya afya vilivyoorodheshwa kwa eneo lako</string>
+    <string name="field_facilities_disclaimer">Maeneo yametoka OpenStreetMap. Piga simu kabla ya kwenda ili kuthibitisha saa za kazi na huduma zinazotolewa.</string>
+
+    <!-- Tasks (assignments) -->
+    <string name="field_tasks_overdue">Imechelewa</string>
+    <string name="field_tasks_review">Pitia tena</string>
+    <string name="field_tasks_no_link_hint">Hakuna cha kufungua kwa kazi hii. Muulize msimamizi wako.</string>
+    <string name="field_tasks_type_generic">Kazi</string>
+    <string name="field_tasks_open_video">Tazama video</string>
+    <string name="field_tasks_open_lesson">Fungua somo</string>
+    <string name="field_tasks_open_report">Fungua ripoti</string>
+
+    <!-- Chat with Fred -->
+    <string name="field_chat_suggestions_title">Jaribu kumuuliza Fred:</string>
+    <string name="field_chat_suggest_dehydration">Dalili za upungufu wa maji mwilini kwa mtoto</string>
+    <string name="field_chat_suggest_report">Ninajazaje ripoti ya kila siku?</string>
+    <string name="field_chat_suggest_pregnancy">Ni lini nimpe mwanamke mjamzito rufaa?</string>
+    <string name="field_chat_suggest_handwashing">Hatua za kunawa mikono ipasavyo</string>
+    <string name="field_chat_resend">Tuma tena</string>
+    <string name="field_chat_waiting_for_connection">Itatumwa utakaporudi mtandaoni</string>
+</resources>

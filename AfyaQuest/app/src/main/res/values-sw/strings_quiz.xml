@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Module quiz -->
+    <string name="quiz_title_format">Jaribio la %1$s</string>
+    <string name="quiz_complete_title">Jaribio limekamilika!</string>
+    <string name="quiz_complete_retake_title">Jaribio limekamilika tena!</string>
+    <string name="quiz_result_format">Umejibu %1$d kati ya %2$d kwa usahihi (%3$d%%)</string>
+    <string name="quiz_back_to_module">Rudi kwenye moduli</string>
+    <string name="quiz_try_again">Jaribu tena</string>
+    <string name="quiz_leave_title">Uondoke kwenye jaribio?</string>
+    <string name="quiz_leave_message">Majibu yako yatapotea.</string>
+    <string name="quiz_correct_count_desc">Majibu sahihi hadi sasa</string>
+    <string name="quiz_saving_desc">Inahifadhi matokeo yako</string>
+    <string name="quiz_score_label">Alama</string>
+    <string name="quiz_percentage_label">Asilimia</string>
+</resources>

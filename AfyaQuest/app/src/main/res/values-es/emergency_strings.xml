@@ -23,4 +23,6 @@
     <string name="emergency_mechanism_trauma">Lesión</string>
     <string name="emergency_mechanism_medical">Enfermedad</string>
     <string name="emergency_mechanism_unknown">Causa desconocida</string>
+    <string name="emergency_voice_missing">La voz para «%1$s» no está instalada en este teléfono; se está usando otra voz.</string>
+    <string name="emergency_voice_install">Instalar voz</string>
 </resources>

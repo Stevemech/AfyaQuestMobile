@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">AfyaQuest</string>
+
+    <!-- Common -->
+    <string name="ok">Sawa</string>
+    <string name="cancel">Ghairi</string>
+    <string name="delete">Futa</string>
+    <string name="delete_report_title">Futa Ripoti</string>
+    <string name="delete_report_confirm">Una uhakika unataka kufuta ripoti hii? Hatua hii haiwezi kutenduliwa.</string>
+    <string name="save">Hifadhi</string>
+    <string name="submit">Wasilisha</string>
+    <string name="back">Rudi</string>
+    <string name="next">Endelea</string>
+    <string name="done">Maliza</string>
+    <string name="loading">Inapakia…</string>
+    <string name="error">Hitilafu</string>
+
+    <!-- Authentication -->
+    <string name="login">Ingia</string>
+    <string name="register">Jisajili</string>
+    <string name="logout">Toka</string>
+    <string name="email">Barua pepe</string>
+    <string name="password">Nenosiri</string>
+    <string name="confirm_password">Thibitisha Nenosiri</string>
+    <string name="full_name">Jina Kamili</string>
+    <string name="phone_number">Nambari ya Simu</string>
+    <string name="forgot_password">Umesahau nenosiri?</string>
+    <string name="welcome_back">Karibu</string>
+    <string name="sign_in_subtitle">Ingia ili uendelee na safari yako ya afya</string>
+    <string name="sign_in">Ingia</string>
+    <string name="no_account">Huna akaunti?</string>
+    <string name="sign_up">Jisajili</string>
+    <string name="show_password">Onyesha nenosiri</string>
+    <string name="hide_password">Ficha nenosiri</string>
+
+    <!-- Registration -->
+    <string name="create_account">Fungua Akaunti</string>
+    <string name="join_afyaquest">Jiunge na AfyaQuest</string>
+    <string name="start_journey_subtitle">Anza safari yako kama Mhudumu wa Afya ya Jamii</string>
+    <string name="organization">Shirika</string>
+    <string name="phone_number_optional">Nambari ya Simu (Si lazima)</string>
+    <string name="password_requirement_hint">Nenosiri lazima liwe na herufi 6 au zaidi, pamoja na alama moja</string>
+    <string name="passwords_do_not_match">Manenosiri hayalingani</string>
+    <string name="registration_successful">Umejisajili! Tafadhali angalia barua pepe yako ili kuthibitisha.</string>
+    <string name="registration_failed">Usajili haukufaulu</string>
+    <string name="already_have_account">Tayari una akaunti?</string>
+
+    <!-- Forgot Password Dialog -->
+    <string name="password_reset_title">Weka Upya Nenosiri</string>
+    <string name="forgot_password_title">Umesahau Nenosiri</string>
+    <string name="password_reset_success">Nenosiri lako limewekwa upya. Sasa unaweza kuingia kwa nenosiri lako jipya.</string>
+    <string name="enter_email_for_code">Weka anwani yako ya barua pepe na tutakutumia msimbo wa uthibitisho.</string>
+    <string name="enter_code_and_password">Weka msimbo wa uthibitisho uliotumwa kwa %s na nenosiri lako jipya.</string>
+    <string name="enter_your_email">Weka barua pepe yako</string>
+    <string name="login_failed">Imeshindwa kuingia</string>
+
+    <!-- Splash -->
+    <string name="empowering_cha">Kuwawezesha Wahudumu wa Afya ya Jamii</string>
+    <string name="afyaquest_logo">Nembo ya AfyaQuest</string>
+
+    <!-- Map Actions -->
+    <string name="directions">Maelekezo</string>
+    <string name="get_directions">Pata Maelekezo</string>
+    <string name="mark_visited">Nimetembelea</string>
+
+    <!-- Video Player -->
+    <string name="video_not_available">Video haipatikani</string>
+
+    <!-- Sync (additional) -->
+    <string name="items_pending_count">Vipengele %d vinasubiri</string>
+    <string name="sync">Sawazisha</string>
+
+    <!-- Language names (for picker) -->
+    <string name="english">English</string>
+    <string name="espanol">Español</string>
+    <string name="kaqchikel">Kaqchikel</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard">Nyumbani</string>
+    <string name="welcome">Karibu</string>
+    <string name="streak">Mfululizo</string>
+    <string name="total_xp">Jumla ya XP</string>
+    <string name="lives">Maisha</string>
+    <string name="level">Kiwango</string>
+    <string name="rank">Cheo</string>
+    <string name="rank_beginner">Anayeanza</string>
+    <string name="rank_novice">Mwanafunzi</string>
+    <string name="rank_apprentice">Mwanagenzi</string>
+    <string name="rank_practitioner">Mtendaji</string>
+    <string name="rank_expert">Mtaalamu</string>
+    <string name="rank_master">Bingwa</string>
+    <string name="rank_grand_master">Bingwa Mkuu</string>
+    <string name="daily_todo">Kazi za Leo</string>
+    <string name="learning_center">Kituo cha Kujifunzia</string>
+    <string name="xp_value_format">%d XP</string>
+    <string name="level_value">Kiwango %d</string>
+    <string name="xp_to_level_format">XP %1$d zaidi hadi Kiwango %2$d</string>
+
+    <!-- Clock In/Out -->
+    <string name="clock_in">Ingia Kazini</string>
+    <string name="clock_out">Toka Kazini</string>
+    <string name="status_active">Kazini</string>
+    <string name="status_inactive">Nje ya zamu</string>
+    <string name="clock_in_confirm">Una uhakika unataka kuingia kazini?</string>
+    <string name="clock_out_confirm">Una uhakika unataka kutoka kazini?</string>
+    <string name="confirm">Thibitisha</string>
+
+    <!-- Daily Tasks -->
+    <string name="daily_questions">Maswali ya Kila Siku</string>
+    <string name="daily_questions_desc">Jibu maswali yako matatu ya kila siku ili upate XP yako ya leo!</string>
+    <string name="daily_itinerary">Ratiba ya Ziara ya Kila Siku</string>
+    <string name="daily_itinerary_desc">Tazama hapa wagonjwa wako na maeneo uliyopangiwa kutembelea!</string>
+    <string name="daily_report">Ripoti ya Kila Siku</string>
+    <string name="daily_report_desc">Jaza ripoti mwishoni mwa siku.</string>
+
+    <!-- Learning Center -->
+    <string name="video_modules">Moduli za Video</string>
+    <string name="video_modules_desc">Tazama video za mafunzo na ufanye majaribio!</string>
+    <string name="interactive_lessons">Masomo Shirikishi</string>
+    <string name="interactive_lessons_desc">Soma masomo na upate XP kwa kuyakamilisha!</string>
+    <string name="chat_with_steve">Ongea na Fred</string>
+    <string name="chat_with_steve_desc">Muulize Fred, msaidizi wako wa afya anayetumia akili bandia, swali lolote!</string>
+
+    <!-- Profile -->
+    <string name="profile">Wasifu</string>
+    <string name="overview">Muhtasari</string>
+    <string name="achievements">Mafanikio</string>
+    <string name="reports">Ripoti</string>
+    <string name="settings">Mipangilio</string>
+    <string name="reflections">Tafakari</string>
+
+    <!-- Achievements -->
+    <string name="achievements_unlocked">Mafanikio Yaliyofunguliwa</string>
+    <string name="achievements_locked">Mafanikio Ambayo Bado Hayajafunguliwa</string>
+    <string name="unlocked_on">Tarehe ya kufunguliwa</string>
+    <string name="progress">Maendeleo</string>
+
+    <!-- Weekly Reflections -->
+    <string name="weekly_reflection">Tafakari ya Wiki</string>
+    <string name="success_story">Hadithi ya Mafanikio</string>
+    <string name="challenges_faced">Changamoto Ulizokumbana Nazo</string>
+    <string name="lessons_learned">Mambo Uliyojifunza</string>
+    <string name="goals_next_week">Malengo ya Wiki Ijayo</string>
+    <string name="overall_rating">Tathmini ya Jumla</string>
+
+    <!-- Settings -->
+    <string name="language">Lugha</string>
+    <string name="theme">Mandhari</string>
+    <string name="notifications">Arifa</string>
+    <string name="account">Akaunti</string>
+    <string name="about">Kuhusu</string>
+    <string name="privacy_policy">Sera ya Faragha</string>
+    <string name="terms_of_service">Masharti ya Huduma</string>
+
+    <!-- Theme -->
+    <string name="light_theme">Mandhari ya Mwanga</string>
+    <string name="dark_theme">Mandhari ya Giza</string>
+    <string name="system_default">Chaguomsingi la Mfumo</string>
+
+    <!-- Sync Status -->
+    <string name="offline">Hakuna mtandao</string>
+    <string name="syncing">Inasawazisha…</string>
+    <string name="all_synced">Vyote vimesawazishwa</string>
+    <string name="sync_now">Sawazisha Sasa</string>
+    <string name="items_pending">vipengele vinasubiri</string>
+    <string name="changes_will_sync">Mabadiliko yatasawazishwa ukipata mtandao</string>
+
+    <!-- Questions / Daily Questions -->
+    <string name="question">Swali</string>
+    <string name="correct">Sahihi!</string>
+    <string name="incorrect">Si sahihi</string>
+    <string name="explanation">Maelezo:</string>
+    <string name="continue_text">Endelea</string>
+    <string name="failed_to_load_questions">Imeshindwa kupakia maswali</string>
+    <string name="unknown_error">Hitilafu isiyojulikana</string>
+    <string name="go_back">Rudi Nyuma</string>
+    <string name="no_questions_available">Hakuna maswali yanayopatikana</string>
+    <string name="question_progress">Swali %1$d kati ya %2$d</string>
+    <string name="next_question">Swali Linalofuata →</string>
+    <string name="finish_quiz">Maliza Jaribio</string>
+    <string name="points_label">Alama %d</string>
+    <string name="quiz_complete">🎉 Jaribio Limekamilika!</string>
+    <string name="quiz_score_summary">Umejibu kwa usahihi maswali %1$d kati ya %2$d!</string>
+    <string name="lives_gained">Maisha Uliyopata</string>
+    <string name="lives_lost">Maisha Uliyopoteza</string>
+    <string name="current_lives">Maisha ya Sasa</string>
+
+    <!-- XP and Gamification -->
+    <string name="xp_earned">XP Ulizopata</string>
+    <string name="points">Alama</string>
+    <string name="level_up">Umepanda Kiwango!</string>
+    <string name="congratulations">Hongera!</string>
+
+    <!-- Map / Daily Itinerary -->
+    <string name="map">Ramani</string>
+    <string name="client_houses">Nyumba za Wateja</string>
+    <string name="client_stops">Ziara za Wateja</string>
+    <string name="health_facilities">Vituo vya Afya</string>
+    <string name="mark_as_visited">Weka kuwa Imetembelewa</string>
+    <string name="visited">Imetembelewa</string>
+    <string name="pending">Inasubiri</string>
+    <string name="cancelled">Imeghairiwa</string>
+    <string name="all">Zote</string>
+    <string name="to_visit">Za Kutembelea</string>
+    <string name="scheduled">Imepangwa</string>
+    <string name="you_are_here">Uko hapa</string>
+    <string name="your_location">Mahali ulipo</string>
+    <string name="your_stops_for_the_day">Ziara zako za leo!</string>
+    <string name="no_stops_for_today">Hakuna ziara leo.</string>
+    <string name="map_location_disclaimer">Mahali ulipo hutambuliwa kwa GPS ya kifaa chako ukitoa ruhusa.</string>
+    <string name="close">Funga</string>
+    <string name="address">Anwani</string>
+    <string name="description">Maelezo</string>
+    <string name="distance">Umbali</string>
+    <string name="last_visit">Ziara ya mwisho</string>
+    <string name="next_visit">Ziara ijayo</string>
+    <string name="services">Huduma</string>
+
+    <!-- Reports / Daily Report -->
+    <string name="patients_visited">Wagonjwa Waliotembelewa</string>
+    <string name="vaccines_administered">Chanjo Zilizotolewa</string>
+    <string name="health_education_sessions">Vipindi vya Elimu ya Afya</string>
+    <string name="referrals">Rufaa</string>
+    <string name="challenges">Changamoto</string>
+    <string name="notes">Madokezo</string>
+    <string name="daily_report_intro">Jaza ripoti yako ya kila siku ili ufuatilie shughuli zako na upate XP!</string>
+    <string name="patients_visited_label">Idadi ya Wagonjwa Waliotembelewa *</string>
+    <string name="vaccinations_administered_label">Chanjo Zilizotolewa *</string>
+    <string name="health_education_topics_label">Mada za Elimu ya Afya Zilizofundishwa *</string>
+    <string name="challenges_faced_label">Changamoto Ulizokumbana Nazo</string>
+    <string name="additional_notes">Madokezo ya Ziada</string>
+    <string name="submit_report">Wasilisha Ripoti</string>
+    <string name="required_fields_note">* Sehemu za lazima</string>
+    <string name="report_submitted">Ripoti imewasilishwa!</string>
+    <string name="submission_failed">Imeshindwa kuwasilisha</string>
+
+    <!-- Video Modules -->
+    <string name="categories">Kategoria</string>
+    <string name="no_videos_available">Hakuna video zinazopatikana</string>
+    <string name="videos_watched">Video Ulizotazama</string>
+    <string name="quizzes_complete">Majaribio Yaliyokamilika</string>
+    <string name="watch_video">Tazama Video</string>
+    <string name="watch_again">Tazama Tena</string>
+    <string name="take_quiz">Fanya Jaribio</string>
+    <string name="retake_quiz">Rudia Jaribio</string>
+    <string name="watched">✓ Imetazamwa</string>
+    <string name="quiz_check">Jaribio ✓</string>
+
+    <!-- Video Modules (with actual S3 video content) -->
+    <string name="video_module_8_title">Moduli ya 8: Mfumo wa Uzazi wa Mwanamume</string>
+    <string name="video_module_8_desc">Kuelewa muundo na kazi ya mfumo wa uzazi wa mwanamume</string>
+    <string name="video_module_9_title">Moduli ya 9: Mfumo wa Uzazi wa Mwanamke</string>
+    <string name="video_module_9_desc">Kuelewa muundo na kazi ya mfumo wa uzazi wa mwanamke</string>
+    <string name="video_module_10_title">Moduli ya 10: Mfumo wa Mkojo</string>
+    <string name="video_module_10_desc">Kuelewa viungo, kazi zake na matatizo ya kawaida ya mfumo wa mkojo</string>
+
+    <string name="video_category_basics">Tathmini ya Afya</string>
+    <string name="video_category_sanitation">Usafi wa Mazingira</string>
+    <string name="video_category_maternal">Afya ya Mama</string>
+    <string name="video_category_immunization">Chanjo</string>
+    <string name="video_category_emergency">Dharura</string>
+    <string name="video_category_nutrition">Lishe</string>
+    <string name="video_category_disease_prevention">Kuzuia Magonjwa</string>
+
+    <!-- Interactive Lessons -->
+    <string name="lessons_completed">Masomo %1$d/%2$d Yamekamilika</string>
+    <string name="no_lessons_available">Hakuna masomo yanayopatikana</string>
+    <string name="lesson">Somo</string>
+
+    <!-- Map / Daily Itinerary (sample data) -->
+    <string name="facility_type_hospital">Hospitali</string>
+    <string name="facility_type_clinic">Kliniki</string>
+    <string name="facility_type_health_center">Kituo cha Afya</string>
+
+    <string name="service_emergency">Dharura</string>
+    <string name="service_maternity">Huduma za Uzazi</string>
+    <string name="service_pediatrics">Matibabu ya Watoto</string>
+    <string name="service_surgery">Upasuaji</string>
+    <string name="service_outpatient">Wagonjwa wa Nje</string>
+    <string name="service_laboratory">Maabara</string>
+    <string name="service_xray">Eksirei</string>
+    <string name="service_primary_care">Huduma ya Msingi ya Afya</string>
+    <string name="service_vaccination">Chanjo</string>
+    <string name="service_family_planning">Uzazi wa Mpango</string>
+    <string name="service_pharmacy">Duka la Dawa</string>
+    <string name="service_mental_health">Afya ya Akili</string>
+
+    <string name="time_just_now">Sasa hivi</string>
+    <string name="mark_complete_xp">Weka kuwa Imekamilika (+%d XP)</string>
+    <string name="lesson_completed">Somo limekamilika!</string>
+    <string name="min_format">⏱️ dakika %s</string>
+    <string name="xp_format">💎 %d XP</string>
+    <string name="difficulty_easy">Rahisi</string>
+    <string name="difficulty_medium">Wastani</string>
+    <string name="difficulty_hard">Ngumu</string>
+
+    <!-- Lesson categories -->
+    <string name="category_hygiene">Usafi</string>
+    <string name="category_nutrition">Lishe</string>
+    <string name="category_maternal_health">Afya ya Mama</string>
+    <string name="category_child_care">Malezi ya Watoto</string>
+    <string name="category_disease_prevention">Kuzuia Magonjwa</string>
+    <string name="category_first_aid">Huduma ya Kwanza</string>
+    <string name="category_medication">Dawa</string>
+    <string name="category_health_education">Elimu ya Afya</string>
+
+    <!-- Lesson 1: Handwashing -->
+    <string name="lesson_1_title">Mbinu Sahihi za Kunawa Mikono</string>
+    <string name="lesson_1_description">Jifunze hatua 7 za kunawa mikono ipasavyo ili kuzuia maambukizi ya magonjwa</string>
+    <string name="lesson_1_content"># Mbinu Sahihi za Kunawa Mikono\n\n## Kwa Nini Kunawa Mikono ni Muhimu\nKunawa mikono ni mojawapo ya njia bora zaidi za kuzuia kuenea kwa magonjwa na maambukizi.\n\n## Hatua 7\n\n1. **Lowesha mikono** kwa maji safi yanayotiririka\n2. **Paka sabuni** na usugue hadi itoe povu\n3. **Sugua viganja pamoja**\n4. **Sugua katikati ya vidole**\n5. **Safisha migongo ya mikono**\n6. **Safisha chini ya kucha**\n7. **Suuza vizuri**\n\n## Wakati wa Kunawa Mikono\n- Kabla ya kuandaa chakula\n- Kabla ya kula\n- Baada ya kutumia choo\n- Baada ya kukohoa au kupiga chafya\n- Baada ya kugusa wanyama\n\n## Muda\nNawa mikono kwa angalau **sekunde 20** - karibu sawa na muda wa kuimba wimbo wa \"Happy Birthday\" mara mbili!</string>
+
+    <!-- Lesson 2: Nutrition -->
+    <string name="lesson_2_title">Lishe Bora kwa Watoto</string>
+    <string name="lesson_2_description">Kuelewa mahitaji ya lishe ya watoto wanaokua</string>
+    <string name="lesson_2_content"># Lishe Bora kwa Watoto\n\n## Makundi Muhimu ya Vyakula\n\n### 1. Protini\n- Maharagwe, dengu, mayai, samaki, nyama\n- Hujenga misuli imara na husaidia ukuaji\n\n### 2. Wanga\n- Ugali, wali, viazi, mkate\n- Hutoa nguvu kwa shughuli za kila siku\n\n### 3. Matunda na Mboga\n- Mboga za majani zenye rangi ya kijani kibichi, maembe, ndizi, nyanya\n- Chanzo kizuri cha vitamini na madini\n\n### 4. Vyakula vya Maziwa\n- Maziwa, mtindi (ikiwezekana)\n- Huimarisha mifupa na meno\n\n## Vidokezo vya Kupanga Milo\n- Toa vyakula mbalimbali kila siku\n- Jumuisha matunda na mboga za rangi mbalimbali\n- Hakikisha kiasi cha chakula kinatosha\n- Toa maji safi ya kunywa</string>
+
+    <!-- Lesson 3: Prenatal -->
+    <string name="lesson_3_title">Misingi ya Huduma ya Kabla ya Kujifungua</string>
+    <string name="lesson_3_description">Mambo muhimu ya afya ya mama wakati wa ujauzito</string>
+    <string name="lesson_3_content"># Misingi ya Huduma ya Kabla ya Kujifungua\n\n## Uchunguzi wa Mara kwa Mara\nHudhuria kliniki ya wajawazito angalau mara 4 wakati wa ujauzito:\n- Ziara ya kwanza kabla ya wiki 16\n- Ziara ya pili kati ya wiki 16-28\n- Ziara ya tatu kati ya wiki 28-32\n- Ziara ya nne kati ya wiki 32-40\n\nHuduma ya kabla ya kujifungua ni bure.\n\n## Lishe Wakati wa Ujauzito\n- Ongeza kiasi cha chakula\n- Tumia virutubisho vya madini ya chuma na asidi ya foliki\n- Kunywa maji safi ya kutosha\n\n## Dalili za Hatari\nTafuta msaada mara moja iwapo kuna:\n- Maumivu makali ya kichwa\n- Kutoona vizuri\n- Kutokwa na damu ukeni\n- Maumivu makali ya tumbo\n- Mtoto kucheza tumboni kidogo kuliko kawaida\n\n## Kuzuia Malaria\n- Lala ndani ya chandarua chenye dawa\n- Tumia dawa za kinga kama ulivyoandikiwa</string>
+
+    <!-- Lesson 4: Vaccination -->
+    <string name="lesson_4_title">Ratiba ya Chanjo za Watoto</string>
+    <string name="lesson_4_description">Kuelewa ni lini na kwa nini watoto wanahitaji chanjo</string>
+    <string name="lesson_4_content"># Ratiba ya Chanjo za Watoto\n\n## Wakati wa Kuzaliwa\n- BCG (kifua kikuu)\n- Polio 0\n\n## Wiki 6\n- Polio 1\n- Pentavalent 1\n- PCV 1\n\n## Wiki 10\n- Polio 2\n- Pentavalent 2\n- PCV 2\n\n## Wiki 14\n- Polio 3\n- Pentavalent 3\n- PCV 3\n\n## Miezi 9\n- Surua\n- Homa ya manjano\n\n## Kwa Nini Chanjo ni Muhimu\nChanjo huwakinga watoto dhidi ya magonjwa hatari na huokoa maisha.</string>
+
+    <!-- Lesson 5: Malaria -->
+    <string name="lesson_5_title">Kuzuia Malaria</string>
+    <string name="lesson_5_description">Mbinu za kuzuia malaria katika jamii yako</string>
+    <string name="lesson_5_content"># Kuzuia Malaria\n\n## Matumizi ya Vyandarua\n- Lala ndani ya chandarua chenye dawa\n- Shona matundu mara moja\n- Weka dawa upya kwenye vyandarua kila baada ya miezi 6-12\n\n## Kudhibiti Mazingira\n- Ondoa maji yaliyotuama\n- Weka mazingira safi\n- Fyeka vichaka karibu na nyumba\n\n## Kugundua Mapema\nAngalia dalili hizi:\n- Homa\n- Kutetemeka kwa baridi\n- Maumivu ya kichwa\n- Maumivu ya mwili\n\n## Matibabu\n- Tafuta msaada wa matibabu mara moja\n- Maliza dozi yote ya dawa\n- Pumzika na unywe vinywaji vya kutosha</string>
+
+    <!-- Lesson 6: CPR -->
+    <string name="lesson_6_title">Misingi ya CPR</string>
+    <string name="lesson_6_description">Mbinu za CPR za kuokoa maisha kwa watu wazima na watoto</string>
+    <string name="lesson_6_content"># Misingi ya CPR\n\n## Wakati wa Kufanya CPR\n- Mtu amepoteza fahamu\n- Hapumui, au anatweta tu\n- Hakuna mapigo ya moyo\n\n## Hatua kwa Watu Wazima\n\n### 1. Omba Msaada\nPiga simu kwa huduma za dharura mara moja\n\n### 2. Mkao\nMlaze mtu chali juu ya sehemu ngumu iliyo sawa\n\n### 3. Kuweka Mikono\nKatikati ya kifua, kati ya chuchu\n\n### 4. Kubonyeza Kifua\n- Bonyeza kwa nguvu na kwa haraka\n- Angalau inchi 2 kwenda chini\n- Kasi: mara 100-120 kwa dakika\n- Bonyeza mara 30\n\n### 5. Kumpa Pumzi\n- Inamisha kichwa chake nyuma\n- Inua kidevu\n- Mpe pumzi 2\n\n### 6. Rudia\nEndelea na mzunguko: kubonyeza mara 30, pumzi 2\n\n## Kwa Watoto\n- Tumia mkono mmoja kubonyeza kifua\n- Kina kidogo zaidi: takriban inchi 2\n- Uwiano ule ule: 30:2</string>
+
+    <!-- Chat -->
+    <string name="chat">Gumzo</string>
+    <string name="type_message">Andika ujumbe wako…</string>
+    <string name="send">Tuma</string>
+    <string name="online">Mtandaoni</string>
+    <string name="fred_ai_assistant">Fred - Msaidizi wa AI</string>
+    <string name="send_message">Tuma ujumbe</string>
+
+    <!-- Fred\'s messages (localized) -->
+    <string name="fred_greeting">Habari! Mimi ni Fred, msaidizi wako wa afya wa AI katika AfyaQuest. Niko hapa kukusaidia kuhusu elimu ya afya, mbinu za kusoma, na maswali yoyote kuhusu programu hii. Ungependa kujifunza nini leo? 😊</string>
+    <string name="fred_response_hello">Habari! 😊 Mimi ni Fred, msaidizi wako wa afya wa AI. Niko hapa kukusaidia kuhusu elimu ya afya, mbinu za kusoma, na maswali yoyote kuhusu AfyaQuest. Ungependa kujifunza nini leo?</string>
+    <string name="fred_response_handwashing">Swali zuri kuhusu kunawa mikono! 🧼 Kumbuka hatua 7: lowesha mikono, paka sabuni, sugua viganja, kati ya vidole, migongo ya mikono, chini ya kucha, kisha suuza vizuri kwa angalau sekunde 20. Hii ni mojawapo ya njia bora za kuzuia maambukizi ya magonjwa!</string>
+    <string name="fred_response_malaria">Kuzuia malaria ni muhimu sana! 🦟 Njia kuu ni: kulala ndani ya chandarua chenye dawa, kuondoa maji yaliyotuama, kuweka mazingira safi, na kutafuta msaada wa matibabu mara moja dalili zikitokea (homa, kutetemeka kwa baridi, maumivu ya kichwa). Daima maliza dozi kamili ya dawa ukiandikiwa.</string>
+    <string name="fred_response_vaccination">Chanjo ni muhimu sana kwa afya ya mtoto! 💉 Watoto wanapaswa kupata chanjo wanapozaliwa (BCG, Polio 0), wakiwa na wiki 6, wiki 10 na wiki 14 (dozi za Polio, Pentavalent na PCV), na wakiwa na miezi 9 (Surua, Homa ya manjano). Chanjo hizi hulinda dhidi ya magonjwa hatari na huokoa maisha!</string>
+    <string name="fred_response_nutrition">Lishe bora ni muhimu sana! 🥗 Watoto wanahitaji protini (maharagwe, mayai, samaki), wanga (ugali, wali), matunda na mboga (mboga za majani ya kijani kibichi, maembe), na maziwa yanapopatikana. Wape vyakula vya aina mbalimbali vyenye rangi tofauti, na maji safi ya kutosha kila siku.</string>
+    <string name="fred_response_xp">Unataka kupata XP zaidi? 💎 Kamilisha maswali yako ya kila siku (XP 30 kwa kila jibu sahihi), wasilisha ripoti za kila siku (XP 50), maliza masomo shirikishi (XP 50-100), na tazama moduli za video! Endeleza mfululizo wako upate XP za ziada. Unaweza!</string>
+    <string name="fred_response_streak">Mfululizo ni ahadi yako ya kila siku! 🔥 Ingia na ukamilishe angalau shughuli moja kila siku ili kudumisha mfululizo wako. Mifululizo mirefu hukupatia XP za ziada na huonyesha bidii yako katika kujifunza. Usikatize mfululizo!</string>
+    <string name="fred_response_thanks">Karibu sana! 😊 Niko hapa kila wakati kukusaidia katika safari yako ya kujifunza. Endelea na kazi nzuri kama Mhudumu wa Afya ya Jamii - unaleta mabadiliko ya kweli katika jamii yako! Usisite kuniuliza chochote wakati wowote.</string>
+    <string name="fred_response_cpr">CPR ni ujuzi unaookoa maisha! 🚨 Kumbuka: hakikisha kama mtu amepoteza fahamu na hapumui, omba msaada, mlaze chali, weka mikono katikati ya kifua, bonyeza kifua mara 30 (mara 100-120 kwa dakika, kina cha inchi 2), kisha mpe pumzi 2 za uokoaji. Rudia mzunguko wa 30:2.</string>
+    <string name="fred_response_default">Hilo ni swali la kuvutia! Niko hapa kukusaidia kuhusu elimu ya afya, mbinu za kusoma, na mwongozo wa kutumia programu. Unaweza kuniambia zaidi kuhusu kile ungependa kujifunza? Ninaweza kukusaidia kuhusu mada kama kunawa mikono, lishe, kuzuia malaria, chanjo, CPR, afya ya mama mjamzito, na mengine mengi! 📚</string>
+    <string name="fred_error">Samahani, nimepata hitilafu. Tafadhali jaribu tena.</string>
+
+    <string name="new_report">Ripoti Mpya</string>
+    <string name="report_history">Historia</string>
+    <string name="no_reports_yet">Bado hujawasilisha ripoti yoyote. Wasilisha ripoti yako ya kwanza ya kila siku!</string>
+    <string name="fill_required_fields">Tafadhali jaza sehemu zote zinazohitajika</string>
+    <string name="report_submitted_success">Ripoti imewasilishwa kikamilifu!</string>
+    <string name="your_activity_summary">Muhtasari wa Shughuli Zako</string>
+    <string name="total_reports_count">Ripoti</string>
+    <string name="synced_status">Imesawazishwa ✓</string>
+    <string name="pending_sync_status">Inasubiri Kusawazishwa</string>
+    <string name="your_reports">Ripoti Zako</string>
+
+    <!-- Input Assist (Speech-to-Text / Handwriting) -->
+    <string name="speech_to_text">Sauti kuwa maandishi</string>
+    <string name="handwriting_input">Mwandiko</string>
+    <string name="draw_here">Chora hapa</string>
+    <string name="clear">Futa</string>
+    <string name="recognizing">Inatambua…</string>
+    <string name="speech_not_available">Utambuzi wa sauti haupatikani</string>
+    <string name="downloading_model">Inapakua modeli ya mwandiko…</string>
+    <string name="handwriting_model_ready">Modeli ya mwandiko iko tayari</string>
+
+    <!-- Assignments -->
+    <string name="assignments">Kazi</string>
+    <string name="assigned_to_you">Kazi Ulizopewa</string>
+    <string name="view_all">Tazama Zote</string>
+    <string name="no_assignments">Hakuna Kazi</string>
+    <string name="no_assignments_desc">Msimamizi wako bado hajakupa kazi yoyote. Angalia tena baadaye!</string>
+    <string name="failed_to_load_assignments">Imeshindwa kupakia kazi</string>
+    <string name="retry">Jaribu tena</string>
+    <string name="refresh">Onyesha upya</string>
+    <string name="total_assigned">Jumla</string>
+    <string name="mandatory">Lazima</string>
+    <string name="modules">Moduli</string>
+    <string name="lessons">Masomo</string>
+    <string name="completed">Imekamilika</string>
+    <string name="in_progress">Inaendelea</string>
+    <string name="assigned">Umepewa</string>
+    <string name="due_date_label">Tarehe ya mwisho: %s</string>
+    <string name="assigned_on">Ulipewa: %s</string>
+    <string name="go_to_modules">Nenda kwenye Moduli</string>
+    <string name="go_to_lessons">Nenda kwenye Masomo</string>
+    <string name="go_to_report">Nenda kwenye Ripoti</string>
+    <string name="open">Fungua</string>
+    <string name="more_assignments">+ kazi nyingine %d</string>
+
+    <!-- Errors -->
+    <string name="error_network">Hitilafu ya mtandao. Tafadhali jaribu tena.</string>
+    <string name="error_generic">Hitilafu imetokea. Tafadhali jaribu tena.</string>
+    <string name="error_login_failed">Imeshindwa kuingia. Tafadhali kagua taarifa zako za kuingia.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_general">Mipangilio ya Jumla</string>
+    <string name="settings_profile_info">Taarifa za Wasifu</string>
+    <string name="settings_view_profile">Tazama maelezo ya wasifu wako</string>
+    <string name="settings_change_password">Badilisha Nenosiri</string>
+    <string name="settings_update_password">Sasisha nenosiri lako</string>
+    <string name="settings_about_app">Kuhusu AfyaQuest</string>
+    <string name="settings_version">Toleo 1.0.0</string>
+    <string name="settings_danger_zone">Eneo la Hatari</string>
+    <string name="settings_sign_out_desc">Toka kwenye akaunti yako</string>
+    <string name="settings_select_language">Chagua Lugha</string>
+    <string name="logout_confirm">Una uhakika unataka kutoka?</string>
+    <string name="settings_name">Jina</string>
+    <string name="settings_phone">Simu</string>
+    <string name="settings_organization">Shirika</string>
+    <string name="settings_role">Wadhifa</string>
+    <string name="password_changed">Nenosiri Limebadilishwa</string>
+    <string name="reset_password">Weka Upya Nenosiri</string>
+    <string name="enter_code">Weka Msimbo</string>
+    <string name="password_changed_success">Nenosiri lako limebadilishwa!</string>
+    <string name="send_code_email_desc">Tutatuma msimbo wa uthibitisho kwenye barua pepe yako:</string>
+    <string name="enter_code_instructions">Weka msimbo wa uthibitisho uliotumwa kwa %s pamoja na nenosiri lako jipya.</string>
+    <string name="verification_code">Msimbo wa Uthibitisho</string>
+    <string name="new_password">Nenosiri Jipya</string>
+    <string name="confirm_new_password">Thibitisha Nenosiri Jipya</string>
+    <string name="send_code">Tuma Msimbo</string>
+    <string name="no_email_found">Hakuna barua pepe iliyopatikana kwa akaunti yako</string>
+    <string name="enter_verification_code_error">Weka msimbo wa uthibitisho</string>
+    <string name="password_min_length">Nenosiri lazima liwe na angalau herufi 8</string>
+    <string name="passwords_dont_match">Manenosiri hayalingani</string>
+
+    <!-- Profile Screen -->
+    <string name="status_label">Hali</string>
+    <string name="quick_stats">Takwimu kwa Ufupi</string>
+    <string name="day_streak">Mfululizo wa Siku</string>
+    <string name="stat_lessons_completed">Masomo Yaliyokamilika</string>
+    <string name="stat_videos_watched">Video Zilizotazamwa</string>
+    <string name="stat_quizzes_completed">Majaribio Yaliyokamilika</string>
+    <string name="stat_reports_submitted">Ripoti Zilizowasilishwa</string>
+    <string name="unlocked_count">Zilizofunguliwa (%d)</string>
+    <string name="locked_count">Zilizofungwa (%d)</string>
+    <string name="unlocked_on_format">Ilifunguliwa %s</string>
+    <string name="weekly_reflections_title">Tafakari za Kila Wiki</string>
+    <string name="no_reflections_yet">Bado hakuna tafakari. Anza kuwasilisha tafakari za kila wiki ili kufuatilia maendeleo yako!</string>
+    <string name="week_of_format">Wiki ya %s</string>
+    <string name="success_format">Mafanikio: %s</string>
+    <string name="submitted_format">Imewasilishwa: %s</string>
+
+    <!-- Quiz -->
+    <string name="score_label">Alama</string>
+    <string name="percentage_label">Asilimia</string>
+    <string name="quiz_title_8">Mfumo wa Uzazi wa Mwanaume</string>
+    <string name="quiz_title_9">Mfumo wa Uzazi wa Mwanamke</string>
+    <string name="quiz_title_10">Mfumo wa Mkojo</string>
+
+    <!-- Module 8 Quiz: Male Reproductive System -->
+    <string name="quiz_8_q1">Kazi kuu ya mfumo wa uzazi wa mwanaume ni ipi?</string>
+    <string name="quiz_8_q1_a">Kudhibiti joto la mwili</string>
+    <string name="quiz_8_q1_b">Kutengeneza homoni pekee</string>
+    <string name="quiz_8_q1_c">Kutengeneza na kusafirisha mbegu za kiume na kutengeneza homoni za kiume</string>
+    <string name="quiz_8_q1_d">Kuchuja damu</string>
+    <string name="quiz_8_q1_exp">Kazi kuu ya mfumo wa uzazi wa mwanaume ni kutengeneza na kusafirisha mbegu za kiume, na kutengeneza homoni za kiume kama vile testosteroni.</string>
+
+    <string name="quiz_8_q2">Ni sehemu gani huruhusu mkojo na shahawa kutoka nje ya mwili?</string>
+    <string name="quiz_8_q2_a">Mrija wa mbegu (vas deferens)</string>
+    <string name="quiz_8_q2_b">Tezi dume</string>
+    <string name="quiz_8_q2_c">Mrija wa mkojo (urethra)</string>
+    <string name="quiz_8_q2_d">Kifuko cha shahawa (seminal vesicle)</string>
+    <string name="quiz_8_q2_exp">Mrija wa mkojo (urethra) ni njia moja inayotumiwa na mkojo na shahawa kutoka nje ya mwili.</string>
+
+    <string name="quiz_8_q3">Uume una sehemu kuu mbili zipi?</string>
+    <string name="quiz_8_q3_a">Shina na mfuko wa korodani</string>
+    <string name="quiz_8_q3_b">Shina na kichwa cha uume</string>
+    <string name="quiz_8_q3_c">Kichwa cha uume na mrija wa mkojo</string>
+    <string name="quiz_8_q3_d">Shina na mrija wa mbegu (vas deferens)</string>
+    <string name="quiz_8_q3_exp">Uume umeundwa na shina (sehemu kuu ya uume) na kichwa cha uume (ncha yake ya mviringo).</string>
+
+    <string name="quiz_8_q4">Kazi kuu ya korodani ni ipi?</string>
+    <string name="quiz_8_q4_a">Kutengeneza mkojo</string>
+    <string name="quiz_8_q4_b">Kuhifadhi majimaji ya shahawa</string>
+    <string name="quiz_8_q4_c">Kutengeneza mbegu za kiume na testosteroni</string>
+    <string name="quiz_8_q4_d">Kudhibiti shinikizo la damu</string>
+    <string name="quiz_8_q4_exp">Korodani zinahusika na kutengeneza mbegu za kiume na homoni ya testosteroni.</string>
+
+    <string name="quiz_8_q5">Mrija wa mbegu (vas deferens) huunganisha korodani na:</string>
+    <string name="quiz_8_q5_a">Tezi dume</string>
+    <string name="quiz_8_q5_b">Mrija wa mkojo (urethra)</string>
+    <string name="quiz_8_q5_c">Kibofu cha mkojo</string>
+    <string name="quiz_8_q5_d">Kifuko cha shahawa (seminal vesicle)</string>
+    <string name="quiz_8_q5_exp">Mrija wa mbegu (vas deferens) ni mrija unaobeba mbegu za kiume kutoka kwenye korodani kuelekea mrija wa mkojo wakati wa kumwaga shahawa.</string>
+
+    <string name="quiz_8_q6">Vifuko vya shahawa (seminal vesicles) hasa hutengeneza:</string>
+    <string name="quiz_8_q6_a">Testosteroni</string>
+    <string name="quiz_8_q6_b">Mkojo</string>
+    <string name="quiz_8_q6_c">Majimaji yanayolisha mbegu za kiume na kuunda shahawa</string>
+    <string name="quiz_8_q6_d">Seli za mbegu za kiume</string>
+    <string name="quiz_8_q6_exp">Vifuko vya shahawa hutengeneza majimaji yenye virutubisho ambayo ndiyo sehemu kubwa ya shahawa, na husaidia kulisha mbegu za kiume.</string>
+
+    <string name="quiz_8_q7">Tezi dume huchangia shahawa kwa kutengeneza:</string>
+    <string name="quiz_8_q7_a">Mbegu za kiume</string>
+    <string name="quiz_8_q7_b">Majimaji mengine ya shahawa yaliyobaki</string>
+    <string name="quiz_8_q7_c">Mkojo</string>
+    <string name="quiz_8_q7_d">Homoni pekee</string>
+    <string name="quiz_8_q7_exp">Tezi dume hutengeneza majimaji meupe kama maziwa yanayochanganyika na mbegu za kiume na majimaji ya vifuko vya shahawa ili kuunda shahawa.</string>
+
+    <string name="quiz_8_q8">Ni homoni gani inayochukuliwa kuwa androjeni muhimu zaidi?</string>
+    <string name="quiz_8_q8_a">Estrojeni</string>
+    <string name="quiz_8_q8_b">Projesteroni</string>
+    <string name="quiz_8_q8_c">Testosteroni</string>
+    <string name="quiz_8_q8_d">Insulini</string>
+    <string name="quiz_8_q8_exp">Testosteroni ndiyo homoni kuu ya kiume na androjeni muhimu zaidi; inahusika na sifa za kiume na kazi ya uzazi.</string>
+
+    <string name="quiz_8_q9">Testosteroni inahusika na lipi kati ya haya?</string>
+    <string name="quiz_8_q9_a">Sauti nzito na kuongezeka kwa misuli</string>
+    <string name="quiz_8_q9_b">Kuganda kwa damu</string>
+    <string name="quiz_8_q9_c">Figo kuchuja damu</string>
+    <string name="quiz_8_q9_d">Kutengeneza vimeng\'enya vya mmeng\'enyo wa chakula</string>
+    <string name="quiz_8_q9_exp">Testosteroni husababisha sifa za pili za kiume, zikiwemo sauti nzito na kuongezeka kwa misuli.</string>
+
+    <string name="quiz_8_q10">Ni lipi kati ya haya linalomaanisha ugumu wa kusimamisha uume au kuudumisha ukiwa umesimama?</string>
+    <string name="quiz_8_q10_a">Ugumba</string>
+    <string name="quiz_8_q10_b">Magonjwa ya zinaa (STI)</string>
+    <string name="quiz_8_q10_c">Upungufu wa nguvu za kiume</string>
+    <string name="quiz_8_q10_d">Uwezo mdogo wa mbegu za kiume kusogea</string>
+    <string name="quiz_8_q10_exp">Upungufu wa nguvu za kiume ni hali ya kushindwa kusimamisha uume au kuudumisha ukiwa umesimama kwa muda wa kutosha kufanya tendo la ndoa.</string>
+
+    <!-- Module 9 Quiz: Female Reproductive System -->
+    <string name="quiz_9_q1">Ipi kati ya hizi ni sehemu kuu ya mfumo wa uzazi wa mwanamke?</string>
+    <string name="quiz_9_q1_a">Tezi dume</string>
+    <string name="quiz_9_q1_b">Ovari</string>
+    <string name="quiz_9_q1_c">Korodani</string>
+    <string name="quiz_9_q1_d">Mrija wa mbegu (vas deferens)</string>
+    <string name="quiz_9_q1_exp">Ovari ni sehemu kuu ya mfumo wa uzazi wa mwanamke. Tezi dume, korodani na mrija wa mbegu (vas deferens) ni sehemu za mfumo wa uzazi wa mwanaume.</string>
+
+    <string name="quiz_9_q2">Kazi kuu ya ovari ni ipi?</string>
+    <string name="quiz_9_q2_a">Kulinda matundu ya nje</string>
+    <string name="quiz_9_q2_b">Kutengeneza mayai</string>
+    <string name="quiz_9_q2_c">Kuzaa mtoto</string>
+    <string name="quiz_9_q2_d">Kuhifadhi mbegu za kiume</string>
+    <string name="quiz_9_q2_exp">Ovari hutengeneza mayai (ova) na pia hutengeneza homoni kama estrojeni na projesteroni.</string>
+
+    <string name="quiz_9_q3">Mirija ya uzazi (fallopian tubes) huunganisha ovari na:</string>
+    <string name="quiz_9_q3_a">Uke</string>
+    <string name="quiz_9_q3_b">Sehemu ya nje ya uke (vulva)</string>
+    <string name="quiz_9_q3_c">Mji wa mimba (uterasi)</string>
+    <string name="quiz_9_q3_d">Tezi ya pituitari</string>
+    <string name="quiz_9_q3_exp">Mirija ya uzazi husafirisha mayai kutoka kwenye ovari hadi kwenye mji wa mimba, na kwa kawaida yai hurutubishwa ndani ya mirija hii.</string>
+
+    <string name="quiz_9_q4">Kijusi hukua wapi wakati wa ujauzito?</string>
+    <string name="quiz_9_q4_a">Uke</string>
+    <string name="quiz_9_q4_b">Ovari</string>
+    <string name="quiz_9_q4_c">Mirija ya uzazi</string>
+    <string name="quiz_9_q4_d">Mji wa mimba (uterasi)</string>
+    <string name="quiz_9_q4_exp">Mji wa mimba (uterasi) ni kiungo ambamo yai lililorutubishwa hujipandikiza na kijusi hukua katika kipindi chote cha ujauzito.</string>
+
+    <string name="quiz_9_q5">Uke una kazi gani kati ya hizi?</string>
+    <string name="quiz_9_q5_a">Hutengeneza mayai</string>
+    <string name="quiz_9_q5_b">Hulinda matundu ya nje</string>
+    <string name="quiz_9_q5_c">Huunganisha mji wa mimba na nje ya mwili, na huruhusu mbegu za kiume kuingia</string>
+    <string name="quiz_9_q5_d">Hutengeneza homoni</string>
+    <string name="quiz_9_q5_exp">Uke ni njia inayounganisha mji wa mimba na nje ya mwili. Huruhusu mbegu za kiume kuingia, ni njia ya kujifungua mtoto, na huruhusu damu ya hedhi kutoka.</string>
+
+    <string name="quiz_9_q6">Sehemu ya nje ya uke (vulva) inahusika hasa na:</string>
+    <string name="quiz_9_q6_a">Kutengeneza homoni</string>
+    <string name="quiz_9_q6_b">Kulinda matundu ya nje yasiumie</string>
+    <string name="quiz_9_q6_c">Kusafirisha mayai</string>
+    <string name="quiz_9_q6_d">Kusaidia ukuaji wa kijusi</string>
+    <string name="quiz_9_q6_exp">Vulva ni sehemu za siri za nje za mwanamke, na kazi yake kuu ni kulinda matundu ya uke na ya mrija wa mkojo dhidi ya kuumia na maambukizi.</string>
+
+    <string name="quiz_9_q7">Ni tezi zipi zinazodhibiti mzunguko wa hedhi?</string>
+    <string name="quiz_9_q7_a">Tezi ya koromeo (thyroid) na tezi za adrenali</string>
+    <string name="quiz_9_q7_b">Ovari na tezi ya pituitari</string>
+    <string name="quiz_9_q7_c">Kongosho na ovari</string>
+    <string name="quiz_9_q7_d">Mji wa mimba na ini</string>
+    <string name="quiz_9_q7_exp">Mzunguko wa hedhi hudhibitiwa na homoni kutoka kwenye ovari (estrojeni na projesteroni) na tezi ya pituitari (FSH na LH).</string>
+
+    <string name="quiz_9_q8">Kwa wastani, mzunguko wa hedhi huchukua takriban:</string>
+    <string name="quiz_9_q8_a">Siku 14</string>
+    <string name="quiz_9_q8_b">Siku 21</string>
+    <string name="quiz_9_q8_c">Siku 28</string>
+    <string name="quiz_9_q8_d">Siku 35</string>
+    <string name="quiz_9_q8_exp">Kwa wastani, mzunguko wa hedhi huchukua takriban siku 28, ingawa mzunguko wa siku 21–35 huchukuliwa kuwa wa kawaida.</string>
+
+    <string name="quiz_9_q9">Mimba nje ya kizazi (ectopic pregnancy) mara nyingi hutokea ndani ya:</string>
+    <string name="quiz_9_q9_a">Mji wa mimba</string>
+    <string name="quiz_9_q9_b">Uke</string>
+    <string name="quiz_9_q9_c">Mrija wa uzazi</string>
+    <string name="quiz_9_q9_d">Sehemu ya nje ya uke (vulva)</string>
+    <string name="quiz_9_q9_exp">Mimba nje ya kizazi hutokea yai lililorutubishwa linapojipandikiza nje ya mji wa mimba. Mrija wa uzazi ndio mahali inapotokea mara nyingi zaidi.</string>
+
+    <string name="quiz_9_q10">Kondo la nyuma lililo chini (placenta previa) ni hali ambayo:</string>
+    <string name="quiz_9_q10_a">Kondo la nyuma hujitenga na mji wa mimba kabla ya kujifungua</string>
+    <string name="quiz_9_q10_b">Kondo la nyuma huziba shingo ya mji wa mimba</string>
+    <string name="quiz_9_q10_c">Kijusi hukua nje ya mji wa mimba</string>
+    <string name="quiz_9_q10_d">Tishu za ndani ya mji wa mimba hukua nje ya mji wa mimba</string>
+    <string name="quiz_9_q10_exp">Placenta previa hutokea kondo la nyuma linapofunika shingo ya kizazi (shingo ya mji wa mimba) kwa sehemu au kabisa, jambo linaloweza kusababisha matatizo wakati wa kujifungua.</string>
+
+    <!-- Module 10 Quiz: Urinary System -->
+    <string name="quiz_10_q1">Ni kiungo kipi kati ya hivi ambacho SI sehemu ya mfumo wa mkojo?</string>
+    <string name="quiz_10_q1_a">Figo</string>
+    <string name="quiz_10_q1_b">Mrija wa figo (ureta)</string>
+    <string name="quiz_10_q1_c">Ini</string>
+    <string name="quiz_10_q1_d">Mrija wa mkojo (urethra)</string>
+    <string name="quiz_10_q1_exp">Ini ni kiungo cha mfumo wa usagaji chakula, si sehemu ya mfumo wa mkojo. Figo, mirija ya figo (ureta) na mrija wa mkojo (urethra) ni viungo muhimu vya mfumo wa mkojo.</string>
+
+    <string name="quiz_10_q2">Ubongo una umuhimu gani katika kukojoa?</string>
+    <string name="quiz_10_q2_a">Hutoa ishara ya kutolewa kwa homoni zinazoanzisha uchujaji wa sumu kutoka kwenye damu</string>
+    <string name="quiz_10_q2_b">Huratibu kujazwa na kutolewa kwa mkojo kwenye kibofu</string>
+    <string name="quiz_10_q2_c">Husaidia mkojo kuingia kwenye kibofu</string>
+    <string name="quiz_10_q2_d">Hugundua mlundikano wa sumu kwenye damu</string>
+    <string name="quiz_10_q2_exp">Ubongo hupokea ishara kutoka kwenye kibofu na huamua wakati wa kutoa au kuzuia mkojo kwa kudhibiti misuli inayohusika katika kukojoa.</string>
+
+    <string name="quiz_10_q3">Ni hali ipi kati ya hizi ni ya kawaida inayotokana na matatizo ya mfumo wa mkojo?</string>
+    <string name="quiz_10_q3_a">Maambukizi ya njia ya mkojo (UTI)</string>
+    <string name="quiz_10_q3_b">Nimonia</string>
+    <string name="quiz_10_q3_c">Shinikizo la damu</string>
+    <string name="quiz_10_q3_d">Degedege</string>
+    <string name="quiz_10_q3_exp">Maambukizi ya njia ya mkojo (UTI) ni mojawapo ya hali zinazoathiri mfumo wa mkojo mara nyingi zaidi. Nimonia, shinikizo la damu na degedege si magonjwa ya mfumo wa mkojo.</string>
+
+    <string name="quiz_10_q4">Ni nini kinachoweza kusababisha maambukizi ya njia ya mkojo?</string>
+    <string name="quiz_10_q4_a">Mlundikano wa sumu kwenye damu</string>
+    <string name="quiz_10_q4_b">Kunywa maji mengi kupita kiasi</string>
+    <string name="quiz_10_q4_c">Bakteria kuingia sehemu yoyote ya njia ya mkojo</string>
+    <string name="quiz_10_q4_d">Kukaa kwenye choo kimoja na mtu mwenye maambukizi ya njia ya mkojo</string>
+    <string name="quiz_10_q4_exp">UTI husababishwa na bakteria wanaoingia kwenye njia ya mkojo, mara nyingi E. coli kutoka kwenye mfumo wa usagaji chakula. UTI haienezwi kupitia viti vya choo, wala haisababishwi na kunywa maji.</string>
+
+    <string name="quiz_10_q5">Ipi kati ya hizi SI dalili ya maambukizi ya njia ya mkojo?</string>
+    <string name="quiz_10_q5_a">Maumivu na hisia ya kuungua wakati wa kukojoa</string>
+    <string name="quiz_10_q5_b">Mkojo usio angavu na wenye damu</string>
+    <string name="quiz_10_q5_c">Hamu ya kukojoa mara kwa mara na ghafla</string>
+    <string name="quiz_10_q5_d">Majimaji mazito na meupe kutoka sehemu za siri</string>
+    <string name="quiz_10_q5_exp">Majimaji mazito na meupe kutoka sehemu za siri kwa kawaida huhusishwa na maambukizi ya fangasi, si UTI. Kuungua wakati wa kukojoa, mkojo usio angavu au wenye damu, na hamu ya kukojoa mara kwa mara ni dalili za kawaida za UTI.</string>
+
+    <string name="quiz_10_q6">Maambukizi ya njia ya mkojo huwapata wanawake zaidi kuliko wanaume.</string>
+    <string name="quiz_10_q6_a">Kweli</string>
+    <string name="quiz_10_q6_b">Si kweli</string>
+    <string name="quiz_10_q6_exp">Kweli. Wanawake wana mrija wa mkojo mfupi zaidi, hivyo ni rahisi kwa bakteria kufika kwenye kibofu. Kwa sababu hiyo, UTI ni ya kawaida zaidi kwa wanawake.</string>
+
+    <string name="quiz_10_q7">Mawe kwenye figo ni nini?</string>
+    <string name="quiz_10_q7_a">Mlundikano wa sumu zenye asidi zinazoharibu ganda la figo</string>
+    <string name="quiz_10_q7_b">Mabonge magumu ya chumvi na madini</string>
+    <string name="quiz_10_q7_c">Sehemu zinazosaidia kuchuja sumu kutoka kwenye damu</string>
+    <string name="quiz_10_q7_d">Protini zinazosaidia kutengeneza mkojo</string>
+    <string name="quiz_10_q7_exp">Mawe kwenye figo ni mabonge magumu ya chumvi na madini yanayojitengeneza ndani ya figo, na yanaweza kusababisha maumivu makali yanapopita kwenye njia ya mkojo.</string>
+
+    <string name="quiz_10_q8">Ipi kati ya hizi SI dalili ya mawe kwenye figo?</string>
+    <string name="quiz_10_q8_a">Kipandauso kikali</string>
+    <string name="quiz_10_q8_b">Maumivu makali ya mgongo wa chini na tumbo</string>
+    <string name="quiz_10_q8_c">Homa kali</string>
+    <string name="quiz_10_q8_d">Kutapika</string>
+    <string name="quiz_10_q8_exp">Kipandauso kikali si dalili ya kawaida ya mawe kwenye figo. Dalili za kawaida ni maumivu makali ya mgongo wa chini au tumbo, homa na kutapika.</string>
+
+    <string name="quiz_10_q9">Ni ipi ishara ya kutokunywa maji ya kutosha?</string>
+    <string name="quiz_10_q9_a">Mkojo wenye harufu kali</string>
+    <string name="quiz_10_q9_b">Mkojo karibu usio na rangi</string>
+    <string name="quiz_10_q9_c">Hamu ya kukojoa mara kwa mara</string>
+    <string name="quiz_10_q9_d">A na B</string>
+    <string name="quiz_10_q9_exp">Mkojo wenye harufu kali na rangi nzito ni ishara ya upungufu wa maji mwilini. Mkojo karibu usio na rangi huonyesha kwamba mwili una maji ya kutosha.</string>
+
+    <string name="quiz_10_q10">Ni ipi njia ya kudumisha afya ya mfumo wa mkojo?</string>
+    <string name="quiz_10_q10_a">Kujifuta kutoka nyuma kwenda mbele</string>
+    <string name="quiz_10_q10_b">Kunywa maji mara kwa mara</string>
+    <string name="quiz_10_q10_c">Kuzuia hamu ya kukojoa</string>
+    <string name="quiz_10_q10_d">Kukaa chooni kwa muda mrefu</string>
+    <string name="quiz_10_q10_exp">Kunywa maji mara kwa mara husafisha bakteria kutoka kwenye njia ya mkojo. Majibu mengine yote yanaweza kuchangia matatizo ya mfumo wa mkojo.</string>
+</resources>

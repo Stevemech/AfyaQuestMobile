@@ -73,6 +73,7 @@ fun SettingsScreen(
                     subtitle = when (currentLanguage) {
                         LanguageManager.LANGUAGE_SPANISH -> stringResource(R.string.espanol)
                         LanguageManager.LANGUAGE_KAQCHIKEL -> stringResource(R.string.kaqchikel)
+                        LanguageManager.LANGUAGE_SWAHILI -> stringResource(R.string.kiswahili)
                         else -> stringResource(R.string.english)
                     },
                     onClick = { showLanguageDialog = true }
@@ -462,6 +463,8 @@ fun LanguageDialog(
                 LanguageOption(LanguageManager.LANGUAGE_ENGLISH, stringResource(R.string.english), currentLanguage == LanguageManager.LANGUAGE_ENGLISH) { onLanguageSelected(LanguageManager.LANGUAGE_ENGLISH) }
                 Spacer(modifier = Modifier.height(8.dp))
                 LanguageOption(LanguageManager.LANGUAGE_SPANISH, stringResource(R.string.espanol), currentLanguage == LanguageManager.LANGUAGE_SPANISH) { onLanguageSelected(LanguageManager.LANGUAGE_SPANISH) }
+                Spacer(modifier = Modifier.height(8.dp))
+                LanguageOption(LanguageManager.LANGUAGE_SWAHILI, stringResource(R.string.kiswahili), currentLanguage == LanguageManager.LANGUAGE_SWAHILI) { onLanguageSelected(LanguageManager.LANGUAGE_SWAHILI) }
                 Spacer(modifier = Modifier.height(8.dp))
                 LanguageOption(LanguageManager.LANGUAGE_KAQCHIKEL, stringResource(R.string.kaqchikel), currentLanguage == LanguageManager.LANGUAGE_KAQCHIKEL) { onLanguageSelected(LanguageManager.LANGUAGE_KAQCHIKEL) }
             }

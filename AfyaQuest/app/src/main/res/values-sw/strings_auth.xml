@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sign-in / sign-up problems the app can explain itself -->
+    <string name="auth_error_no_connection">Hakuna mtandao. Angalia muunganisho wako kisha ujaribu tena.</string>
+    <string name="auth_error_timeout">Hii inachukua muda mrefu mno. Angalia muunganisho wako kisha ujaribu tena.</string>
+    <string name="auth_error_invalid_credentials">Barua pepe au nenosiri si sahihi.</string>
+    <string name="auth_error_email_not_confirmed">Barua pepe yako bado haijathibitishwa. Fungua kiungo kilicho kwenye barua pepe tuliyokutumia, kisha uingie.</string>
+    <string name="auth_error_account_incomplete">Akaunti hii haijawekwa kikamilifu. Muombe msimamizi wako akusaidie.</string>
+    <string name="auth_error_server">Hitilafu imetokea upande wetu. Tafadhali jaribu tena baada ya muda mfupi.</string>
+    <string name="auth_session_expired">Umetolewa kwenye akaunti kwa sababu muda wako wa kuingia umeisha. Tafadhali ingia tena.</string>
+    <string name="auth_organizations_loading">Inapakia mashirika…</string>
+    <string name="auth_organizations_error">Imeshindwa kupakia orodha ya mashirika.</string>
+    <string name="auth_organization_required">Chagua shirika lako</string>
+    <string name="auth_email_verified">Barua pepe imethibitishwa! Sasa unaweza kuingia.</string>
+</resources>

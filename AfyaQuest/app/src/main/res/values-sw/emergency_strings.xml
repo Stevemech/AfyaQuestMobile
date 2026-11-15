@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Emergency Response Guide (EMT ABCDE triage). Clinical step content lives in
+         assets/triage/triage_tree.json; these are app-chrome strings only. -->
+    <string name="emergency_response">Huduma ya Dharura</string>
+    <string name="emergency_response_subtitle">Msaada wa hatua kwa hatua wakati wa dharura ya kiafya</string>
+    <string name="emergency_start_title">Mwongozo wa Huduma ya Dharura</string>
+    <string name="emergency_start_subtitle">Jibu swali moja baada ya jingine. Mwongozo utakuambia la kufanya baadaye.</string>
+    <string name="emergency_start_button">Anza tathmini</string>
+    <string name="emergency_disclaimer">Zana ya rasimu — haijathibitishwa kwa matumizi ya kitabibu na haichukui nafasi ya huduma ya wataalamu wa afya. Katika dharura halisi, omba msaada.</string>
+    <string name="emergency_phase_scene">Eneo</string>
+    <string name="emergency_phase_primary">Awali</string>
+    <string name="emergency_phase_secondary">Ya pili</string>
+    <string name="emergency_phase_disposition">Matokeo</string>
+    <string name="emergency_new_assessment">Tathmini mpya</string>
+    <string name="emergency_done">Maliza</string>
+    <string name="emergency_hear_step">Gusa ili usikilize hatua hii</string>
+    <string name="emergency_assistant">Msaidizi wa AfyaQuest</string>
+    <string name="emergency_voice_on">Sauti imewashwa — gusa ili uizime</string>
+    <string name="emergency_voice_off">Sauti imezimwa — gusa ili uiwashe</string>
+    <string name="emergency_history">Matukio yaliyopita</string>
+    <string name="emergency_history_empty">Bado hakuna tathmini zilizopita.</string>
+    <string name="emergency_not_synced">Haijasawazishwa</string>
+    <string name="emergency_mechanism_trauma">Jeraha</string>
+    <string name="emergency_mechanism_medical">Ugonjwa</string>
+    <string name="emergency_mechanism_unknown">Chanzo hakijulikani</string>
+    <string name="emergency_voice_missing">Sauti ya %1$s haijasakinishwa kwenye simu hii, kwa hiyo sauti nyingine inasoma.</string>
+    <string name="emergency_voice_install">Sakinisha sauti</string>
+</resources>

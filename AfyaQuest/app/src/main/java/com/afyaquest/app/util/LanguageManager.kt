@@ -26,6 +26,7 @@ class LanguageManager @Inject constructor(
         const val LANGUAGE_ENGLISH = "en"
         const val LANGUAGE_SPANISH = "es"
         const val LANGUAGE_KAQCHIKEL = "cak"
+        const val LANGUAGE_SWAHILI = "sw"
 
         /** SharedPreferences file name - also read by MainActivity.attachBaseContext. */
         const val LANGUAGE_PREFS_NAME = "language_prefs"
@@ -140,6 +141,7 @@ class LanguageManager @Inject constructor(
             LANGUAGE_ENGLISH -> "English"
             LANGUAGE_SPANISH -> "Español"
             LANGUAGE_KAQCHIKEL -> "Kaqchikel"
+            LANGUAGE_SWAHILI -> "Kiswahili"
             else -> "English"
         }
     }
@@ -148,7 +150,8 @@ class LanguageManager @Inject constructor(
         return listOf(
             LANGUAGE_ENGLISH to "English",
             LANGUAGE_SPANISH to "Español",
-            LANGUAGE_KAQCHIKEL to "Kaqchikel"
+            LANGUAGE_KAQCHIKEL to "Kaqchikel",
+            LANGUAGE_SWAHILI to "Kiswahili"
         )
     }
 

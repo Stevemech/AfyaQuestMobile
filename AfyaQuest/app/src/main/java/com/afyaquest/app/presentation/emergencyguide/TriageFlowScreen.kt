@@ -3,6 +3,8 @@ package com.afyaquest.app.presentation.emergencyguide
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
+import android.speech.tts.TextToSpeech
 import android.view.WindowManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -78,6 +80,7 @@ fun TriageFlowScreen(
     val state by viewModel.state.collectAsState()
     val language by viewModel.currentLanguage.collectAsState()
     val voiceEnabled by viewModel.voiceEnabled.collectAsState()
+    val missingVoice by viewModel.missingVoice.collectAsState()
     val engine = viewModel.engine
 
     // Hardware back steps to the previous question until we're at the first one.
@@ -164,6 +167,10 @@ fun TriageFlowScreen(
                         )
                     }
                     SurfaceLanguageToggle(current = language, onSelect = viewModel::setLanguage)
+                }
+
+                if (voiceEnabled && missingVoice != null && missingVoice == language) {
+                    MissingVoiceBanner(language = language)
                 }
 
                 AssistantBadge(
@@ -344,7 +351,7 @@ private fun AnswerCard(label: String, onClick: () -> Unit) {
     }
 }
 
-/** EN | ES toggle recolored for a light surface (the flow has no app bar). */
+/** EN | ES | SW toggle recolored for a light surface (the flow has no app bar). */
 @Composable
 private fun SurfaceLanguageToggle(current: String, onSelect: (String) -> Unit) {
     Row(
@@ -356,7 +363,8 @@ private fun SurfaceLanguageToggle(current: String, onSelect: (String) -> Unit) {
     ) {
         val options = listOf(
             LanguageManager.LANGUAGE_ENGLISH to "EN",
-            LanguageManager.LANGUAGE_SPANISH to "ES"
+            LanguageManager.LANGUAGE_SPANISH to "ES",
+            LanguageManager.LANGUAGE_SWAHILI to "SW"
         )
         options.forEach { (code, label) ->
             // Any legacy/unknown saved language renders as English (the fallback).
@@ -491,4 +499,45 @@ private tailrec fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null
+}
+
+/**
+ * Shown when the phone has no text-to-speech voice for the active language (common for
+ * Swahili on phones set to English): the steps are still read, but in another voice.
+ * The button opens the system screen that downloads voice data.
+ */
+@Composable
+private fun MissingVoiceBanner(language: String) {
+    val context = LocalContext.current
+    val languageName = when (language) {
+        LanguageManager.LANGUAGE_SPANISH -> stringResource(R.string.espanol)
+        LanguageManager.LANGUAGE_SWAHILI -> stringResource(R.string.kiswahili)
+        else -> stringResource(R.string.english)
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(start = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(R.string.emergency_voice_missing, languageName),
+            fontSize = 13.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.weight(1f)
+        )
+        TextButton(onClick = {
+            runCatching {
+                context.startActivity(
+                    Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                )
+            }
+        }) {
+            Text(stringResource(R.string.emergency_voice_install))
+        }
+    }
 }

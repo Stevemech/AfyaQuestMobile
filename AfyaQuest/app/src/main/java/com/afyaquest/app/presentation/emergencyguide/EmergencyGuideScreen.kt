@@ -201,7 +201,7 @@ fun EmergencyEntryCard(onClick: () -> Unit) {
     }
 }
 
-/** A simple EN | ES segmented toggle for the top bar. */
+/** A simple EN | ES | SW segmented toggle for the top bar. */
 @Composable
 fun EmergencyLanguageToggle(current: String, onSelect: (String) -> Unit) {
     Row(
@@ -213,7 +213,8 @@ fun EmergencyLanguageToggle(current: String, onSelect: (String) -> Unit) {
     ) {
         val options = listOf(
             LanguageManager.LANGUAGE_ENGLISH to "EN",
-            LanguageManager.LANGUAGE_SPANISH to "ES"
+            LanguageManager.LANGUAGE_SPANISH to "ES",
+            LanguageManager.LANGUAGE_SWAHILI to "SW"
         )
         options.forEach { (code, label) ->
             val active = current == code

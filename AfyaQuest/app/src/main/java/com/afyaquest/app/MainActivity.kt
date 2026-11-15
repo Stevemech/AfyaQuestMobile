@@ -83,6 +83,15 @@ class MainActivity : ComponentActivity() {
                 val localizedContext = remember(currentLanguage) {
                     val locale = Locale(currentLanguage)
                     val overrideConfig = Configuration().apply { setLocale(locale) }
+                    // Dialogs get a fresh ComposeView built on the Activity's own context, not
+                    // this wrapper, so their text kept the language the app was opened in.
+                    // Updating the Activity's resources makes dialogs follow the choice too.
+                    val activityRes = activity.resources
+                    @Suppress("DEPRECATION")
+                    activityRes.updateConfiguration(
+                        Configuration(activityRes.configuration).apply { setLocale(locale) },
+                        activityRes.displayMetrics
+                    )
                     ContextThemeWrapper(activity, 0).apply {
                         applyOverrideConfiguration(overrideConfig)
                     }

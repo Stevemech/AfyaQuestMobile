@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Interactive lessons: list (Learn hub tab) and lesson detail -->
+    <string name="lesson_ui_progress_label">Masomo yaliyokamilika</string>
+    <string name="lesson_ui_number_format">Somo %1$d</string>
+    <string name="lesson_ui_next_lesson">Somo linalofuata</string>
+    <string name="lesson_ui_back_to_lessons">Rudi kwenye masomo</string>
+    <string name="lesson_ui_all_done_title">Masomo yote yamekamilika!</string>
+    <string name="lesson_ui_all_done_message">Kazi nzuri. Unaweza kusoma tena somo lolote hapa chini.</string>
+    <string name="lesson_ui_not_found">Somo halikupatikana</string>
+    <string name="lesson_ui_completed_message">Kazi nzuri! Endelea ili upate XP zaidi.</string>
+    <string name="lesson_ui_reading_progress">Maendeleo ya kusoma</string>
+    <string name="lesson_ui_read_hint">Soma hadi mwisho, kisha weka alama kuwa somo limekamilika ili upate XP.</string>
+</resources>
