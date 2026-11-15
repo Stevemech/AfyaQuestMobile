@@ -124,6 +124,9 @@ class EmergencyTriageViewModel @Inject constructor(
 
     fun stopSpeaking() = audioManager.stop()
 
+    /** Language whose voice is missing on this phone (the screen offers to install it), or null. */
+    val missingVoice: StateFlow<String?> = audioManager.missingVoice
+
     override fun onCleared() {
         audioManager.stop()
         super.onCleared()

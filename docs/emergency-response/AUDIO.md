@@ -11,8 +11,15 @@ instructions). Audio resolves in this order:
 **Kaqchikel (`cak`) is never synthesized.** No mainstream TTS engine supports it,
 and forcing it through Spanish phonemes mangles the orthography (`'`, `ä`, `k'`,
 `tz'`, `x`). Until Kaqchikel clips are recorded, cak stays **text-only** — the
-"Tap to hear" button simply doesn't appear in cak. English and Spanish use device
-TTS today as an interim until es-GT clips are recorded.
+"Tap to hear" button simply doesn't appear in cak. English, Spanish and Swahili
+use device TTS today as an interim until native clips are recorded.
+
+**Swahili (`sw`)** uses Google's Kenyan Swahili voice (`sw-KE`, then `sw-TZ`).
+Google TTS downloads it on first use and synthesizes on its server
+until the download finishes, so the first step can be silent on a slow or
+offline phone. If the phone has no voice for the active language, the flow shows
+an "Install voice" banner that opens the system voice-data screen. Swahili clips,
+when recorded, go in `assets/audio/sw/` and are listed under `"sw"` in the manifest.
 
 ## How playback is wired (already built — M5)
 

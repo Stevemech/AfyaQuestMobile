@@ -499,6 +499,14 @@ private fun LanguageToggle(
             Spacer(modifier = Modifier.width(4.dp))
 
             LanguageChip(
+                label = "SW",
+                isSelected = currentLanguage == LanguageManager.LANGUAGE_SWAHILI,
+                onClick = { onLanguageSelected(LanguageManager.LANGUAGE_SWAHILI) }
+            )
+
+            Spacer(modifier = Modifier.width(4.dp))
+
+            LanguageChip(
                 label = "CAK",
                 isSelected = currentLanguage == LanguageManager.LANGUAGE_KAQCHIKEL,
                 onClick = { onLanguageSelected(LanguageManager.LANGUAGE_KAQCHIKEL) }

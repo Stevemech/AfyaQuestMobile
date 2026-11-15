@@ -24,4 +24,6 @@
     <string name="emergency_mechanism_trauma">Injury</string>
     <string name="emergency_mechanism_medical">Illness</string>
     <string name="emergency_mechanism_unknown">Unknown cause</string>
+    <string name="emergency_voice_missing">The %1$s voice is not installed on this phone, so another voice is reading.</string>
+    <string name="emergency_voice_install">Install voice</string>
 </resources>

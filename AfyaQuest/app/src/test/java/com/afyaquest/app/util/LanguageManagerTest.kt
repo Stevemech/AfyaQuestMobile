@@ -31,6 +31,7 @@ class LanguageManagerTest {
         assertEquals("English", languageManager.getLanguageDisplayName(LanguageManager.LANGUAGE_ENGLISH))
         assertEquals("Español", languageManager.getLanguageDisplayName(LanguageManager.LANGUAGE_SPANISH))
         assertEquals("Kaqchikel", languageManager.getLanguageDisplayName(LanguageManager.LANGUAGE_KAQCHIKEL))
+        assertEquals("Kiswahili", languageManager.getLanguageDisplayName(LanguageManager.LANGUAGE_SWAHILI))
         assertEquals("English", languageManager.getLanguageDisplayName("unknown"))
     }
 
@@ -38,10 +39,11 @@ class LanguageManagerTest {
     fun `getAvailableLanguages returns all languages`() {
         val languages = languageManager.getAvailableLanguages()
 
-        assertEquals(3, languages.size)
+        assertEquals(4, languages.size)
         assertTrue(languages.contains(LanguageManager.LANGUAGE_ENGLISH to "English"))
         assertTrue(languages.contains(LanguageManager.LANGUAGE_SPANISH to "Español"))
         assertTrue(languages.contains(LanguageManager.LANGUAGE_KAQCHIKEL to "Kaqchikel"))
+        assertTrue(languages.contains(LanguageManager.LANGUAGE_SWAHILI to "Kiswahili"))
     }
 
     @Test
@@ -51,6 +53,9 @@ class LanguageManagerTest {
 
         languageManager.setLanguage(LanguageManager.LANGUAGE_KAQCHIKEL)
         assertEquals(LanguageManager.LANGUAGE_KAQCHIKEL, languageManager.getCurrentLanguageBlocking())
+
+        languageManager.setLanguage(LanguageManager.LANGUAGE_SWAHILI)
+        assertEquals(LanguageManager.LANGUAGE_SWAHILI, languageManager.getCurrentLanguageBlocking())
     }
 
     @Test
@@ -58,6 +63,7 @@ class LanguageManagerTest {
         assertEquals("en", LanguageManager.LANGUAGE_ENGLISH)
         assertEquals("es", LanguageManager.LANGUAGE_SPANISH)
         assertEquals("cak", LanguageManager.LANGUAGE_KAQCHIKEL)
+        assertEquals("sw", LanguageManager.LANGUAGE_SWAHILI)
     }
 
     @Test

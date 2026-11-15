@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Learn hub: video modules workflow (module list -> module detail -> player -> quiz) -->
+
+    <!-- Module titles and descriptions -->
+    <string name="learn_module_1_title">Mifumo ya Mwili</string>
+    <string name="learn_module_1_desc">Jifunze kuhusu mifumo mikuu ya mwili wa binadamu</string>
+    <string name="learn_module_2_title">Magonjwa ya Kawaida ya Watoto</string>
+    <string name="learn_module_2_desc">Tambua na ushughulikie magonjwa ya kawaida ya watoto</string>
+    <string name="learn_module_3_title">Magonjwa Sugu na ya Kuambukiza</string>
+    <string name="learn_module_3_desc">Elewa magonjwa sugu na ya kuambukiza</string>
+    <string name="learn_module_4_title">Afya ya Mama na ya Uzazi</string>
+    <string name="learn_module_4_desc">Afya ya mama, ujauzito na uzazi wa mpango</string>
+    <string name="learn_module_5_title">Huduma ya Kwanza na ya Dharura</string>
+    <string name="learn_module_5_desc">Kukabili dharura na mbinu za huduma ya kwanza</string>
+    <string name="learn_module_6_title">Kuzuia na Kudhibiti Maambukizi</string>
+    <string name="learn_module_6_desc">Zuia na udhibiti kuenea kwa maambukizi</string>
+
+    <!-- Module list -->
+    <string name="learn_module_number_format">Moduli %1$d</string>
+    <string name="learn_continue_learning">Endelea kujifunza</string>
+    <string name="learn_all_videos_done">Umetazama video zote!</string>
+    <string name="learn_all_videos_done_hint">Maliza majaribio yaliyobaki ili ukamilishe moduli.</string>
+    <string name="learn_videos_count_format">Video %1$d/%2$d</string>
+    <string name="learn_quizzes_count_format">Majaribio %1$d/%2$d</string>
+    <string name="learn_module_complete">Moduli imekamilika</string>
+
+    <!-- Module detail -->
+    <string name="learn_video_number_format">Video %1$d</string>
+    <string name="learn_video_of_format">Video %1$d kati ya %2$d</string>
+    <string name="learn_watched">Imetazamwa</string>
+    <string name="learn_quiz_done">Jaribio limekamilika</string>
+    <string name="learn_quiz_locked_hint">Tazama video ili ufungue jaribio</string>
+
+    <!-- Video player -->
+    <string name="learn_video_error">Video imeshindwa kucheza. Angalia muunganisho wako kisha ujaribu tena.</string>
+    <string name="learn_video_complete">Video imekamilika</string>
+    <string name="learn_next_video">Video inayofuata</string>
+    <string name="learn_back_to_module">Rudi kwenye moduli</string>
+
+    <!-- Featured videos and focus topics (topic titles reuse category_maternal_health / category_nutrition) -->
+    <string name="learn_featured_title">Zilizopendekezwa</string>
+    <string name="learn_featured_subtitle">Video za afya na lishe za kuanzia</string>
+    <string name="learn_featured_label_format">Imependekezwa · %1$s</string>
+    <string name="learn_topics_title">Mada</string>
+    <string name="learn_topic_label">Mada</string>
+    <string name="learn_topic_maternal_desc">Ujauzito, kujifungua salama, utunzaji wa mtoto mchanga na uzazi wa mpango</string>
+    <string name="learn_topic_nutrition_desc">Kulisha watoto wachanga na watoto, lishe wakati wa ujauzito, na kutambua utapiamlo</string>
+    <string name="learn_lessons_count_format">Masomo %1$d/%2$d</string>
+    <string name="learn_back_to_topic">Rudi kwenye mada</string>
+    <string name="learn_topic_not_found">Mada haikupatikana</string>
+</resources>

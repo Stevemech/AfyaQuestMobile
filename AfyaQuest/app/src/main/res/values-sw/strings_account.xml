@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Account area: profile, settings, login, register -->
+    <string name="account_session_header">Kipindi</string>
+    <string name="account_about_version_format">Toleo %1$s</string>
+    <string name="account_about_description">Msaidizi wa kujifunza na wa kazi za kila siku kwa Wahudumu wa Afya ya Jamii.</string>
+    <string name="account_registered_banner">Akaunti imefunguliwa. Angalia barua pepe yako ili uithibitishe, kisha uingie.</string>
+    <string name="account_section_about_you">Kuhusu wewe</string>
+    <string name="account_section_your_account">Akaunti yako</string>
+    <string name="account_unlocked_cd">Imefunguliwa</string>
+    <string name="account_selected_cd">Imechaguliwa</string>
+</resources>

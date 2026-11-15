@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Language names are shown in their own language, so they are the same in every locale. -->
+    <string name="kiswahili" translatable="false">Kiswahili</string>
+</resources>

@@ -10,6 +10,9 @@ import com.afyaquest.app.domain.triage.AudioManifest
 import com.afyaquest.app.domain.triage.AudioResolver
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,6 +41,17 @@ class TtsAudioManager @Inject constructor(
     @Volatile private var ttsReady = false
 
     private var mediaPlayer: MediaPlayer? = null
+
+    /** The voice picked per language (cached; voices only change if the user installs one). */
+    private val voiceLocales = mutableMapOf<String, Locale>()
+
+    private val _missingVoice = MutableStateFlow<String?>(null)
+
+    /**
+     * The language whose text-to-speech voice is not installed on this phone, or null.
+     * Set when speaking in that language fails to find a voice; the UI offers to install it.
+     */
+    val missingVoice: StateFlow<String?> = _missingVoice.asStateFlow()
 
     private data class Step(val clipPath: String?, val text: String)
 
@@ -133,12 +147,28 @@ class TtsAudioManager @Inject constructor(
 
     private fun speakTts(text: String, index: Int) {
         val engine = tts ?: run { playFrom(index + 1); return }
-        // setLanguage does its own availability check; on failure the engine keeps
-        // its current voice, and speaking with the wrong accent beats silence.
-        // (isLanguageAvailable pre-checks are unreliable on some engines.)
-        engine.setLanguage(Locale(language))
-        engine.speak(text, TextToSpeech.QUEUE_FLUSH, null, "$token:$index")
+        // On failure the engine keeps its current voice, and speaking with the wrong
+        // accent beats silence; the UI is told so it can offer to install the voice.
+        val result = engine.setLanguage(voiceLocale(engine, language))
+        val missing = result == TextToSpeech.LANG_MISSING_DATA ||
+            result == TextToSpeech.LANG_NOT_SUPPORTED
+        _missingVoice.value = if (missing) language else null
+        engine.speak(spokenText(text), TextToSpeech.QUEUE_FLUSH, null, "$token:$index")
     }
+
+    /**
+     * The best installed voice for an app language: the first regional variant the
+     * engine has (e.g. Kenyan Swahili before Tanzanian), else the first candidate.
+     * `Locale("sw")` alone is not matched by every engine, hence the explicit regions.
+     */
+    private fun voiceLocale(engine: TextToSpeech, language: String): Locale =
+        voiceLocales.getOrPut(language) {
+            val candidates = voiceCandidates(language)
+            candidates.firstOrNull {
+                runCatching { engine.isLanguageAvailable(it) >= TextToSpeech.LANG_AVAILABLE }
+                    .getOrDefault(false)
+            } ?: candidates.first()
+        }
 
     private fun loadManifest(): AudioManifest =
         try {
@@ -148,11 +178,32 @@ class TtsAudioManager @Inject constructor(
             AudioManifest()
         }
 
-    private companion object {
-        const val MANIFEST_PATH = "audio/audio_manifest.json"
+    internal companion object {
+        /** Voices to try per app language, most preferred first. */
+        fun voiceCandidates(language: String): List<Locale> = when (language) {
+            "en" -> listOf(Locale.forLanguageTag("en-US"), Locale.forLanguageTag("en-GB"))
+            // Latin American Spanish is closer to the es-GT deployment than Castilian.
+            "es" -> listOf(Locale.forLanguageTag("es-US"), Locale.forLanguageTag("es-MX"),
+                Locale.forLanguageTag("es-ES"))
+            "sw" -> listOf(Locale.forLanguageTag("sw-KE"), Locale.forLanguageTag("sw-TZ"),
+                Locale.forLanguageTag("sw"))
+            else -> listOf(Locale.forLanguageTag(language))
+        }
+
+        /**
+         * The on-screen steps use capitals for emphasis ("SASA", "MARA MOJA", "NOW"). Some
+         * engines spell long all-caps words letter by letter, so words of 4+ capitals are
+         * spoken in lower case; short acronyms (CPR, AED, EMT) are left to be spelled out.
+         */
+        fun spokenText(text: String): String =
+            ALL_CAPS_WORD.replace(text) { it.value.lowercase(Locale.ROOT) }
+
+        private val ALL_CAPS_WORD = Regex("""\b\p{Lu}{4,}\b""")
+
+        private const val MANIFEST_PATH = "audio/audio_manifest.json"
 
         /** How long to keep waiting for the TTS service to bind (10 × 300ms = 3s). */
-        const val TTS_INIT_RETRIES = 10
-        const val TTS_INIT_RETRY_MS = 300L
+        private const val TTS_INIT_RETRIES = 10
+        private const val TTS_INIT_RETRY_MS = 300L
     }
 }

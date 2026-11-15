@@ -237,6 +237,7 @@ fun DailyReportScreen(
 private fun speechLocale(language: String): String = when (language) {
     LanguageManager.LANGUAGE_SPANISH -> "es-GT"
     LanguageManager.LANGUAGE_KAQCHIKEL -> "es-GT"
+    LanguageManager.LANGUAGE_SWAHILI -> "sw-KE"
     else -> "en-US"
 }
 
@@ -246,6 +247,7 @@ private fun speechLocale(language: String): String = when (language) {
 private fun handwritingLocale(language: String): String = when (language) {
     LanguageManager.LANGUAGE_SPANISH -> "es-GT"
     LanguageManager.LANGUAGE_KAQCHIKEL -> "es-GT"
+    LanguageManager.LANGUAGE_SWAHILI -> "sw"
     else -> "en-US"
 }
 

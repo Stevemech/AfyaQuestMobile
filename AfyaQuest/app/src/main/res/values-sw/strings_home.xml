@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home hub (Dashboard) -->
+    <string name="home_todo_progress_label">Zilizokamilika leo</string>
+    <string name="home_score_format">Alama %1$d/%2$d</string>
+    <string name="home_stops_visited_format">Vituo %1$d kati ya %2$d vimetembelewa</string>
+    <string name="home_due_format">Mwisho %1$s</string>
+    <string name="home_task_label">Kazi</string>
+    <string name="home_no_assignments">Hakuna kazi kwa sasa</string>
+    <string name="home_clock_hint">Ingia kazini unapoanza siku yako ya kazi nyanjani</string>
+    <string name="home_clock_error">Imeshindwa kusasisha hali yako. Angalia muunganisho wako kisha ujaribu tena.</string>
+    <string name="home_open_settings">Fungua mipangilio</string>
+</resources>
